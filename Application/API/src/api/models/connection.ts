@@ -4,11 +4,10 @@ const warning = "Create .env file with your database credentials.";
 
 function getConnectionCredentials() : Sequelize {
     return new Sequelize(
-        process.env.PG_URI || warning, {
+        process.env.POSTGRES_URI || warning, {
             dialectOptions: {
-                ssl: true
+                ssl: false // TODO: When ran on an production, set false -> true
             },
-            host: process.env.PG_HOST,
             dialect: 'postgres',
             pool: {
                 max: 5,
@@ -16,7 +15,7 @@ function getConnectionCredentials() : Sequelize {
                 acquire: 30000,
                 idle: 10000
             },
-            models: [__dirname + '\\*.model.ts']
+            models: [__dirname + '/*.model.ts'] // TODO: When ran on windows change / to \\
         });
 }
 
@@ -29,7 +28,6 @@ function getConnection() : Sequelize {
         console.log('Connection has been established successfully.');
     } catch (error) {
         console.error('Unable to connect to the database:', error);
-        console.error('Connection credentials: ', connectionCredentials);
     }
 
     return connectionCredentials;

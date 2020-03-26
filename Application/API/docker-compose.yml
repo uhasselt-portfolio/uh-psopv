@@ -1,0 +1,20 @@
+version: '3'
+services:
+  node:
+    container_name: rest-api
+    restart: always # If application crashes, restart
+    build: . # Where to search for the Dockerfile.
+    environment:
+      PORT: 3000 # Which port the server will run on in Docker, not on our local machine
+    ports:
+      - '80:3000' # Local port : Remote port
+    links:
+      - postgres # Creates a connection between both the containers
+  postgres:
+    container_name: postgres-database
+    image: postgres # Download postgres image from Docker Hub
+    environment:
+      POSTGRES_URI: 'postgres://postgres:12345@postgres-database:5432/postgres'
+      POSTGRES_PASSWORD: 12345 # Must be specified! You know this by looking through the environment section of the docs
+    ports:
+      - '5432:5432' # Local port : Remote port

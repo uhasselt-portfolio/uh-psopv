@@ -36,7 +36,7 @@ class JWTUtil {
 
     public verify(token: string) : boolean | object | string {
         const decryptedToken = this.cypherTool.decrypt(token);
-        console.log("decrypted token: " + decryptedToken);
+
         try {
             return jwt.verify(decryptedToken, this.publicKey, JWTUtil.getOptions());
         } catch(error) {

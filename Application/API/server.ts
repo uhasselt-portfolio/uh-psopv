@@ -6,9 +6,9 @@ import getConnection from "./src/api/models/connection";
 config();
 getConnection().sync();
 
-const port = process.env.SERVER_PORT || 8080;
+const port = 3000; // Specified in the docker-compose file
 const server = http.createServer(app);
 
 server.listen(port);
 
-console.log('Listening on port ', port);
+console.log('Server is successfully running on port', port);
