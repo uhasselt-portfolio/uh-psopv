@@ -1,0 +1,15 @@
+# Node Package Manager
+/node_modules
+bundle.js
+npm-debug.log
+.DS_Store
+nodemon.json
+#/keys
+#.env
+
+# IntelliJ
+*.iml
+/.idea
+
+#Production
+/build
