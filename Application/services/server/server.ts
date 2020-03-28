@@ -6,7 +6,7 @@ import getConnection from "./src/api/models/connection";
 config();
 getConnection().sync();
 
-const port = 3000; // Specified in the docker-compose file
+const port = 3001; // Specified in the docker-compose file
 const server = http.createServer(app);
 
 server.listen(port);

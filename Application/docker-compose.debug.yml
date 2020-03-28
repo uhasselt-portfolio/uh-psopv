@@ -1,0 +1,44 @@
+version: '3.6'
+
+services:
+  client-web-debug:
+    build:
+      context: ./services/client-web
+      dockerfile: Dockerfile.debug
+    stdin_open: true
+    environment:
+      - BROWSER=none
+    volumes:
+      - './services/client-web:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    depends_on:
+      - server-debug
+
+  server-debug:
+    build:
+      context: ./services/server
+      dockerfile: Dockerfile.debug
+    volumes:
+      - './services/server:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    depends_on:
+      - database-debug
+
+  database-debug:
+    image: postgres:12.2 # Download postgres image from Docker Hub
+    environment:
+      POSTGRES_URI: 'postgres://postgres:12345@database-debug:5432/postgres'
+      POSTGRES_PASSWORD: 12345 # Must be specified! You know this by looking through the environment section of the docs
+    ports:
+      - '5432:5432' # Local port : Remote port
+
+  nginx-debug:
+    build:
+      context: ./services/nginx
+      dockerfile: Dockerfile.debug
+    ports:
+      - 80:80
+    restart: always
+    depends_on:
+      - client-web-debug
+      - server-debug
