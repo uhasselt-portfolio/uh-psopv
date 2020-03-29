@@ -27,7 +27,7 @@ class App {
     }
 
     private routes() : void {
-        this.express.use("/user", userRoutes);
+        this.express.use("/api/user", userRoutes);
     }
 }
 

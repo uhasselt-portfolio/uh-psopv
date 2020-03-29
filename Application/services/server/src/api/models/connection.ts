@@ -3,10 +3,12 @@ import {Sequelize} from 'sequelize-typescript';
 const warning = "Create .env file with your database credentials.";
 
 function getConnectionCredentials() : Sequelize {
+    const sslMode: boolean = process.env.NODE_ENV == 'production';
+
     return new Sequelize(
         process.env.POSTGRES_URI || warning, {
             dialectOptions: {
-                ssl: false // TODO: When ran on an production, set false -> true
+                ssl: sslMode
             },
             dialect: 'postgres',
             pool: {

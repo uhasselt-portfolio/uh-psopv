@@ -1,0 +1,44 @@
+version: '3.6'
+
+services:
+  client-web-debug:
+    build:
+      context: ./services/client-web # Location of the Dockerfile
+      dockerfile: Dockerfile.debug # Which Dockerfile
+    stdin_open: true # Enables react-script start to run (interactive mode)
+    volumes: # Which locations on the local machine must be synced with the container
+      - './services/client-web:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    depends_on:
+      - server-debug
+
+  server-debug:
+    build:
+      context: ./services/server # Location of the Dockerfile
+      dockerfile: Dockerfile.debug # Which Dockerfile
+    volumes: # Which locations on the local machine must be synced with the container
+      - './services/server:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    environment: # Variables that can be used in the code
+      - NODE_ENV=debug
+    depends_on:
+      - database-debug
+
+  database-debug:
+    image: postgres:12.2 # Download postgres image from Docker Hub
+    environment:
+      POSTGRES_URI: 'postgres://postgres:12345@database-debug:5432/postgres' # Connection string
+      POSTGRES_PASSWORD: 12345 # Must be specified! You know this by looking through the environment section of the docs
+    ports:
+      - '5432:5432' # Local port : Remote port
+
+  nginx-debug:
+    build:
+      context: ./services/nginx # Location of the Dockerfile
+      dockerfile: Dockerfile.debug # Which Dockerfile
+    ports:
+      - 80:80 # Application entry port
+    restart: always # If crashes, keep restarting
+    depends_on:
+      - client-web-debug
+      - server-debug

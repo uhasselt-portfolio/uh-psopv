@@ -1,0 +1,27 @@
+version: '3.6'
+
+services:
+  client-web-prod:
+    build:
+      context: ./services/client-web # Location of the Dockerfile
+      dockerfile: Dockerfile.prod # Which Dockerfile
+    depends_on:
+      - server-prod
+
+  server-prod:
+    build:
+      context: ./services/server # Location of the Dockerfile
+      dockerfile: Dockerfile.prod # Which Dockerfile
+    environment: # Variables that can be used in the code
+      - NODE_ENV=production
+
+  nginx-prod:
+    build:
+      context: ./services/nginx # Location of the Dockerfile
+      dockerfile: Dockerfile.prod # Which Dockerfile
+    ports:
+      - 80:80 # Application entry port
+    restart: always # If crashes, keep restarting
+    depends_on:
+      - client-web-prod
+      - server-prod
