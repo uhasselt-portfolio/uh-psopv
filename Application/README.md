@@ -11,7 +11,7 @@ Gebruik `http://192.168.99.100/` indien je gebruik maakt van de Docker Toolbox
 ### Algemene uitleg
 Gebruik `docker-compose up` om de `docker-compose.yml` te runnen.
 
-`-f` wordt gebruikt om een specieke `docker-compose.yml` te selecteren
+`-f` wordt gebruikt om een specifieke `docker-compose.yml` te selecteren
 
 **Options:**
 
@@ -29,7 +29,7 @@ De paden van de volumes kunnen toegevoegd worden in de `docker-compose.*.yml` fi
 ### Productie:
 `docker-compose -f docker-compose.prod.yml up`
 
-Productie maakt gebruik van (TODO) een externe database, (TODO )SSL connectie in Nginx en een optimized build van de web applicatie.
+Productie maakt gebruik van een externe database en een optimized build van de web applicatie.
 
 Gebruik deze modus niet om veranderingen aan te brengen, volumes zijn hiervoor niet ingesteld waardoor je veranderingen niet worden doorgevoerd.
 

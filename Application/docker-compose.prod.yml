@@ -3,33 +3,25 @@ version: '3.6'
 services:
   client-web-prod:
     build:
-      context: ./services/client-web
-      dockerfile: Dockerfile.prod
+      context: ./services/client-web # Location of the Dockerfile
+      dockerfile: Dockerfile.prod # Which Dockerfile
     depends_on:
       - server-prod
 
   server-prod:
     build:
-      context: ./services/server
-      dockerfile: Dockerfile.prod
-    depends_on:
-      - database-prod
-
-  database-prod:
-    image: postgres:12.2 # Download postgres image from Docker Hub
-    environment:
-      POSTGRES_URI: 'postgres://postgres:12345@database-prod:5432/postgres'
-      POSTGRES_PASSWORD: 12345 # Must be specified! You know this by looking through the environment section of the docs
-    ports:
-      - '5432:5432' # Local port : Remote port
+      context: ./services/server # Location of the Dockerfile
+      dockerfile: Dockerfile.prod # Which Dockerfile
+    environment: # Variables that can be used in the code
+      - NODE_ENV=production
 
   nginx-prod:
     build:
-      context: ./services/nginx
-      dockerfile: Dockerfile.prod
+      context: ./services/nginx # Location of the Dockerfile
+      dockerfile: Dockerfile.prod # Which Dockerfile
     ports:
-      - 80:80
-    restart: always
+      - 80:80 # Application entry port
+    restart: always # If crashes, keep restarting
     depends_on:
       - client-web-prod
       - server-prod
