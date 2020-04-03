@@ -33,6 +33,9 @@ Volg de instructies die git je geeft. Je gaat waarschijnlijk gewoon een merge mo
 
 Gebruik deze commando's om een feature toe te voegen aan de `development` branch:
 ```
+# Bewaar je feature op jouw branch
+$ git push origin development-<name>
+
 # Switch van jouw branch naar de development branch
 $ git checkout development
 
