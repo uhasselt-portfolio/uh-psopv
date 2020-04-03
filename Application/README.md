@@ -3,14 +3,13 @@
 ## Usage
 Je moet gebruiken van Docker om deze applicatie te kunnen runnen.
 
-Je moet ingelogd zijn met je Docker-ID om de applicatie te kunnen builden.
-
 Gebruik `localhost` indien je gebruik maakt van Windows Pro/Education of een Unix systeem
 
 Gebruik `http://192.168.99.100/` indien je gebruik maakt van de Docker Toolbox
 
-## Algemene uitleg
-Gebruik `docker-compose up` om een `docker-compose.yml` te runnen.
+## De Applicatie Starten
+### Algemene uitleg
+Gebruik `docker-compose up` om de `docker-compose.yml` te runnen.
 
 `-f` wordt gebruikt om een specifieke `docker-compose.yml` te selecteren
 
@@ -19,8 +18,6 @@ Gebruik `docker-compose up` om een `docker-compose.yml` te runnen.
 `--build` wordt gebruikt om een image te maken
 
 `-d` wordt gebruikt om dit commando in de achtergrond te laten runnen.
-
-## De Applicatie Starten
 
 ### Debug
 `docker-compose -f docker-compose.debug.yml up [OPTIONS]`
