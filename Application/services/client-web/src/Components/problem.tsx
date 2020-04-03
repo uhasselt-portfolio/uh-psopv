@@ -30,7 +30,7 @@ class Problem extends Component<ProblemState> {
         this.setState({
             ProblemState: this.props
         });
-    }
+    } 
 
     render() {
 
