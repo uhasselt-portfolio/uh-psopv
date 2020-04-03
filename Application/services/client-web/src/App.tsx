@@ -1,25 +1,28 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import NavBar from './Components/NavBars/navBar';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import Overview from './Components/Tabs/overview';
+import Data from './Components/Tabs/data';
+import Rapportering from './Components/Tabs/rapportering'
+import Users from './Components/Tabs/users';
+import Posts from './Components/Tabs/posts';
+import Problems from './Components/Tabs/pukkelpopProblems';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <NavBar />
+        <Switch>
+          <Route exact path='/' component={Overview} />
+          <Route path='/Rapportering' component={Rapportering} />
+          <Route exact path='/Data' component={Data} /> 
+          <Route path="/Data/Users" component={Users} />
+          <Route path="/Data/Posts" component={Posts} />  
+          <Route path="/Data/Problems" component={Problems} />  
+        </Switch>
+      </div>
+    </BrowserRouter>
   );
 }
 
