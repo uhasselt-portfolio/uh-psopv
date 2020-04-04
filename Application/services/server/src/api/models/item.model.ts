@@ -3,44 +3,33 @@ import {
     AutoIncrement,
     Column,
     CreatedAt,
-    Default,
+    ForeignKey,
     Model,
     PrimaryKey,
     Table,
     UpdatedAt
 } from "sequelize-typescript";
 
-@Table({tableName: "posts"})
-class PostsModel extends Model<PostsModel> {
+import PlanningModel from "./planning.model";
+import ItemTypeModel from "./item_type.model";
+
+@Table({tableName: "items"})
+class ItemModel extends Model<ItemModel> {
 
     @PrimaryKey
     @AutoIncrement
     @Column
     id! : number;
 
+    @ForeignKey(() => PlanningModel)
     @AllowNull(false)
     @Column
-    title! : string;
+    planning_id! : number;
 
+    @ForeignKey(() => ItemTypeModel)
     @AllowNull(false)
     @Column
-    address!: string;
-
-    @AllowNull(false)
-    @Column
-    latitude! : number;
-
-    @AllowNull(false)
-    @Column
-    longitude! : number;
-
-    @Default(5)
-    @Column
-    radius! : number;
-
-    @AllowNull(false)
-    @Column
-    sector! : number;
+    item_type_id! : number;
 
     @UpdatedAt
     @Column
@@ -50,3 +39,5 @@ class PostsModel extends Model<PostsModel> {
     @Column
     created_at!: Date;
 }
+
+export default ItemModel

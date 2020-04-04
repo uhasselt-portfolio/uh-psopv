@@ -10,6 +10,8 @@ import {
     UpdatedAt
 } from "sequelize-typescript";
 import UserModel from "./user.model";
+import PlanningModel from "./planning.model";
+import ProblemTypesModel from "./problem_type.model";
 
 @Table({tableName: "problems"})
 class ProblemModel extends Model<ProblemModel> {
@@ -24,7 +26,7 @@ class ProblemModel extends Model<ProblemModel> {
     @Column
     planning_id! : number;
 
-    @ForeignKey(() => ProblemTypeModel)
+    @ForeignKey(() => ProblemTypesModel)
     @AllowNull(false)
     @Column
     problem_type_id! : number;
@@ -46,3 +48,5 @@ class ProblemModel extends Model<ProblemModel> {
     @Column
     created_at!: Date;
 }
+
+export default ProblemModel

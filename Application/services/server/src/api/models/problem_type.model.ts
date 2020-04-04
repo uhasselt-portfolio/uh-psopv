@@ -1,7 +1,7 @@
 import {AllowNull, AutoIncrement, Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt} from "sequelize-typescript";
 
 @Table({tableName: "problem_types"})
-class ProblemTypesModel extends Model<ProblemTypesModel> {
+class ProblemTypeModel extends Model<ProblemTypeModel> {
 
     @PrimaryKey
     @AutoIncrement
@@ -28,3 +28,5 @@ class ProblemTypesModel extends Model<ProblemTypesModel> {
     @Column
     created_at!: Date;
 }
+
+export default ProblemTypeModel

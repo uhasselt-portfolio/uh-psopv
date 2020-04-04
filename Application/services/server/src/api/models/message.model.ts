@@ -12,7 +12,7 @@ import {
 import UserModel from "./user.model";
 
 @Table({tableName: "messages"})
-class MessagesModel extends Model<MessagesModel> {
+class MessageModel extends Model<MessageModel> {
 
     @PrimaryKey
     @AutoIncrement
@@ -44,3 +44,5 @@ class MessagesModel extends Model<MessagesModel> {
     @Column
     created_at!: Date;
 }
+
+export default MessageModel

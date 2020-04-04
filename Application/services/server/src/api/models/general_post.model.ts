@@ -1,7 +1,8 @@
 import {AllowNull, AutoIncrement, Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt} from "sequelize-typescript";
+import PlanningModel from "./planning.model";
 
 @Table({tableName: "general_posts"})
-class GeneralPosts extends Model<GeneralPosts> {
+class GeneralPostModel extends Model<GeneralPostModel> {
 
     @PrimaryKey
     @AutoIncrement
@@ -28,3 +29,5 @@ class GeneralPosts extends Model<GeneralPosts> {
     @Column
     created_at!: Date;
 }
+
+export default GeneralPostModel
