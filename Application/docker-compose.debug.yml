@@ -16,12 +16,12 @@ services:
 
   client-mobile-debug:
     build:
-      context: ./services/client-mobile
-      dockerfile: Dockerfile.debug
-    stdin_open: true
+      context: ./services/client-mobile # Location of the Dockerfile
+      dockerfile: Dockerfile.debug # Which Dockerfile
+    stdin_open: true # Enables react-script start to run (interactive mode)
     environment:
       - PORT=3002
-    volumes:
+    volumes: # Which locations on the local machine must be synced with the container
       - './services/client-mobile:/usr/src/app'
       - '/usr/src/app/node_modules'
     depends_on:
