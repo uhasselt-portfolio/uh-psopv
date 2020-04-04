@@ -6,8 +6,23 @@ services:
       context: ./services/client-web # Location of the Dockerfile
       dockerfile: Dockerfile.debug # Which Dockerfile
     stdin_open: true # Enables react-script start to run (interactive mode)
+    environment:
+      - PORT=3000
     volumes: # Which locations on the local machine must be synced with the container
       - './services/client-web:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    depends_on:
+      - server-debug
+
+  client-mobile-debug:
+    build:
+      context: ./services/client-mobile
+      dockerfile: Dockerfile.debug
+    stdin_open: true
+    environment:
+      - PORT=3002
+    volumes:
+      - './services/client-mobile:/usr/src/app'
       - '/usr/src/app/node_modules'
     depends_on:
       - server-debug
@@ -37,8 +52,10 @@ services:
       context: ./services/nginx # Location of the Dockerfile
       dockerfile: Dockerfile.debug # Which Dockerfile
     ports:
-      - 80:80 # Application entry port
+      - 80:80 # Web application entry point
+      - 81:81 # Mobile application entry point
     restart: always # If crashes, keep restarting
     depends_on:
       - client-web-debug
+      - client-mobile-debug
       - server-debug
