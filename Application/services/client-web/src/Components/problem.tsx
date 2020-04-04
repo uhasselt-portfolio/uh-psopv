@@ -1,22 +1,25 @@
 import React, {Component} from 'react';
-// import '../css/Problem.css';
+import {Container, Paper, Grid} from '@material-ui/core';
+import ProblemInterface from './Interfaces/problemInterface';
 
 interface ProblemState {
-    ProblemType: string,
-    Priority: Number,
-    Discription: string,
-    TimeStamp?: string, //question mark for optional parameter
-    ShiftName?: string,
-    Post?: string,
-    User?: string,
-    Sender?: string
+    Data: ProblemInterface
 }
 
-class Problem extends Component<ProblemState> {
-    state = {       //the state is pure visual information
-        ProblemState: {
+const paperStyle = {
+    background: 'rgb(240, 255, 255)',
+    padding: '10px',
+    margin: '10px'
+}
+const labelStyle = {
+    padding: '0 10px 0 0'
+}
+
+class Problem extends Component<ProblemInterface, ProblemState> {
+    state: ProblemState = {
+        Data: {
             ProblemType: "",
-            Priority: null,
+            Priority: 0,
             Discription: "",
             TimeStamp: "",
             ShiftName: "",
@@ -28,24 +31,48 @@ class Problem extends Component<ProblemState> {
 
     componentDidMount() {
         this.setState({
-            ProblemState: this.props
+            Data: this.props
         });
     } 
 
     render() {
 
         return(
-            <div className="problem container card">
-                <h4 className="center">{this.state.ProblemState.ProblemType}</h4>
-                <p>{this.state.ProblemState.Discription}</p>
-                <div className="row">
-                    <p className="col">Shift: {this.state.ProblemState.ShiftName}</p>
-                    <p className="col">{this.state.ProblemState.TimeStamp}</p>
-                </div>
-                <p>Post: {this.state.ProblemState.Post}</p>
-                <p>Gaat over: {this.state.ProblemState.User}</p>
-                <p>Gemeld door: {this.state.ProblemState.Sender}</p>
-            </div>
+            <Container>
+                <Paper style={paperStyle}>
+                    <Grid container justify="center">
+                        <Grid item>
+                            <h4 className="center">{this.state.Data.ProblemType}</h4>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item>
+                            <p>{this.state.Data.Discription}</p>
+                        </Grid>
+                    </Grid>
+                    <Grid container justify="space-evenly">
+                        <Grid item style={labelStyle}>
+                            <p className="col">Shift: {this.state.Data.ShiftName}</p>
+                        </Grid>
+                        <Grid item style={labelStyle}>
+                        <p>Post: {this.state.Data.Post}</p>
+                        </Grid>
+                    </Grid>
+                    <Grid container justify="space-evenly">
+                        <Grid item style={labelStyle}>
+                            <p>Gaat over: {this.state.Data.User}</p>
+                        </Grid>
+                        <Grid item style={labelStyle}>
+                            <p>Gemeld door: {this.state.Data.Sender}</p>
+                        </Grid>
+                        <Grid container>
+                            <Grid item style={labelStyle}>
+                                <p className="col">{this.state.Data.TimeStamp}</p>
+                            </Grid>
+                        </Grid>
+                    </Grid>
+                </Paper>
+            </Container>
         );
     }
 }

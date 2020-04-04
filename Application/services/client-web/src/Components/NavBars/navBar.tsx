@@ -4,6 +4,11 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Link } from 'react-router-dom';
 
+const styleSticky = {
+    position: "sticky" as 'sticky',
+    top: 0,
+    zIndex: 2
+} 
 
 interface IProps {
     history?: any
@@ -36,7 +41,7 @@ class NavBar extends Component<IProps, IState> {
 
     render() {
         return(
-            <Paper >
+            <Paper style={styleSticky}>
                 <Tabs
                     value={this.state.value}
                     onChange={this.handleChange}

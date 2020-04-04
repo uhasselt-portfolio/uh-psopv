@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import PostInterface from './Interfaces/postInterface';
+import {Container,Paper,Grid } from '@material-ui/core';
 
 interface State {
     data: PostInterface
@@ -9,9 +10,16 @@ interface Props {
     postdata: PostInterface
 }
 
-class Post extends Component<PostInterface, State> {
-    //post bevat title, address, sector, generalpostname
+const paperStyle = {
+    background: 'rgb(240, 255, 255)',
+    padding: '10px',
+    margin: '10px'
+}
+const labelStyle = {
+    padding: '0 10px 0 0'
+}
 
+class Post extends Component<PostInterface, State> {
     state: State ={
         data: {title: "title", addres: "address", sector: -1, general: "general post"}
     }
@@ -24,18 +32,37 @@ class Post extends Component<PostInterface, State> {
     }
 
     render() {
-
         return(
-            <div className="Post container card post">
-                <h4 className="center">{this.state.data.title}</h4>
-                <div className="row">
-                    <p className="col">adres:</p>
-                    <p className="col">{this.state.data.addres}</p>
-                    <p className="col right">{this.state.data.sector}</p>
-                    <p className="col right">sector:</p>
-                </div>
-                <p>{this.state.data.general}</p>
-            </div>
+            <Container>
+                <Paper style={paperStyle}>
+                    <Grid container justify="center">
+                        <Grid item>
+                            <h4>{this.state.data.title}</h4>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item style={labelStyle}>
+                            <p>adres:</p>
+                        </Grid>
+                        <Grid item>
+                            <p>{this.state.data.addres}</p>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item style={labelStyle}>
+                            <p>sector:</p>
+                        </Grid>
+                        <Grid item>
+                            <p>{this.state.data.sector}</p>
+                        </Grid>
+                    </Grid>
+                    <Grid container>
+                        <Grid item style={labelStyle}>
+                            <p>{this.state.data.general}</p>
+                        </Grid>
+                    </Grid>
+                </Paper>
+            </Container>
         );
     }
 }
