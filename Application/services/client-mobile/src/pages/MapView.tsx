@@ -18,7 +18,8 @@ import { IonButton,
   IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol } from '@ionic/react'; 
 
 
-const SimpleMap = (props: any) => {
+
+const MapView = (props: any) => {
     const [center, setCenter] = useState({lat: 50.9307, lng: 5.3325 });
     const [zoom, setZoom] = useState(11);
     const [Sector, setSector] = useState<string>("Sector 1");
@@ -53,4 +54,4 @@ const SimpleMap = (props: any) => {
     );
 }
 
-export default SimpleMap;
+export default MapView;

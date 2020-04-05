@@ -11,12 +11,19 @@ import { IonButton,
     IonItem, 
     IonLabel,
     IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar } from '@ionic/react';
+import { Link } from 'react-router-dom';
 
 
- type UserProps = {
-     post: string,
-     person: string
-};
+  
+type UserProps = {
+    sector: string,
+    post: string,
+    person: string,
+    shift_start: string,
+    shift_end: string,
+    function: string,
+    street: string
+  };
 
 class ListViewItem  extends Component<UserProps> {
     state = {
@@ -25,38 +32,34 @@ class ListViewItem  extends Component<UserProps> {
         shift_hour_start: '23:59',
         shift_hour_end: '10:00',
         street: 'Dorpsstraat 4, 3520 Zonhoven',
-        sector: 1,
-        post: 1
+        sector: this.props.sector,
+        post: '1'
     };
-
 
     constructor(props: any){
         super(props)
     }
 
-    // increaseIncrement = (product: number) => {
-    //     console.log(product)
-    //     this.setState({count: this.state.count + 1})
-    // }
 
-    // doIncreaseIncrement = () => {
-    //     this.increaseIncrement(1);
-    // }
-
-
-    render() { 
-        return (
-            <IonItem  detail button href="/PostView">
+    render() {
+        function getPost(props: any): string {
+            return '/PostView/'+ props.sector + '/' + props.post;
+        }
+        
+        return (            
+            <Link to={{pathname: getPost(this.props)}}>  
+            <IonItem  detail button>
                 <IonLabel>
                     <h2>Post {this.props.post}</h2>
                     <h3>{this.props.person}</h3>
-                    <p>{this.state.shift_hour_start} - {this.state.shift_hour_end} </p>
-                    <p>{this.state.street}</p>
+                    <p>{this.props.shift_start} - {this.props.shift_end} </p>
+                    <p>{this.props.street}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <h2>Sector {this.state.sector}</h2>
+                    <h2>Sector {this.props.sector}</h2>
                 </IonLabel>
             </IonItem>
+            </Link> 
         );
     }
 }

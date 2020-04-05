@@ -20,14 +20,19 @@ import { IonButton,
 
 
   const users: UserProps[] = [
-    {post: "1", person: "Wouter"},
-    {post: "2", person: "Michiel"}
+    {sector: "1", post: "1", person: "Wouter", shift_start:"10:00", shift_end:"23:59", function:"Straat afzetten", street:"Yolostraat 4, 3500 Hasselt"},
+    {sector: "1", post: "1", person: "Michiel", shift_start:"10:00", shift_end:"23:59", function:"Straat afzetten", street:"Yolostraat 4, 3500 Hasselt"}
   ]
   
   
   type UserProps = {
+    sector: string,
     post: string,
-    person: string
+    person: string,
+    shift_start: string,
+    shift_end: string,
+    function: string,
+    street: string
   };
 
 const ListView: React.FC = () => {
@@ -76,16 +81,19 @@ const ListView: React.FC = () => {
     </IonGrid>
       
       
-      
-    
 
     {/*-- List of Post Items --*/}
     <IonList>
       {users.map((data: UserProps, index: number) => {
           return (
           <ListViewItem
+          sector={data.sector}
           post={data.post}
-          person={data.person}/>)
+          person={data.person}
+          shift_start={data.shift_start}
+          shift_end={data.shift_end}
+          function={data.function}
+          street={data.street}/>)
       })}
     </IonList>
   </IonContent>

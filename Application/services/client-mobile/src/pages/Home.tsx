@@ -1,7 +1,9 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonRouterOutlet } from '@ionic/react';
 import React, { Fragment, useState } from 'react';
 import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
+import { Link, Route, Router, Switch } from 'react-router-dom';
+import PostView from './PostView';
 
 
 const Home: React.FC = () => {
@@ -13,12 +15,11 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
       <IonContent>
-        <IonHeader collapse="condense">
-          <IonToolbar>
-            <IonTitle size="large">Blank</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <ExploreContainer />
+          <Link to={{ 
+                pathname: '/PostView/1/1'
+        }}> PostView </Link>
+        
+
 
       </IonContent>
     </IonPage>

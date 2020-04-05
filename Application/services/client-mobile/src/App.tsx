@@ -12,7 +12,9 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
 import ListView from './pages/ListView';
-import SimpleMap from './pages/MapView';
+import MapView from './pages/MapView';
+import PostView from './pages/PostView'
+
 
 
 import { ellipse, square, triangle } from 'ionicons/icons';
@@ -36,6 +38,10 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Child from './pages/PostView';
+
+
+
 
 const App: React.FC = () => (
   <IonApp>
@@ -43,8 +49,9 @@ const App: React.FC = () => (
       <IonTabs>
         <IonRouterOutlet>
           <Route path="/home" component={Home} exact={true} />
-          <Route path="/MapView" component={SimpleMap} exact={true} />
+          <Route path="/MapView" component={MapView} exact={true} />
           <Route path="/ListView" component={ListView} exact={true} />
+          <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
           <Route path="/" render={() => <Redirect to="/home" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
