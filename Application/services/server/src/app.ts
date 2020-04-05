@@ -2,6 +2,7 @@ import express, {NextFunction, Request, Response} from 'express';
 
 // Routes
 import userRoutes from "./api/routes/user.routes";
+import problemRoutes from "./api/routes/problem.routes";
 
 class App {
 
@@ -28,6 +29,7 @@ class App {
 
     private routes() : void {
         this.express.use("/api/user", userRoutes);
+        this.express.use("/api/problem", problemRoutes);
     }
 }
 

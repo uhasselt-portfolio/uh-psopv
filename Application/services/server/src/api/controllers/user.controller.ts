@@ -89,9 +89,9 @@ export const add = async (req: Request, res: Response) => {
 
 export const modify = async (req: Request, res: Response) => {
     const userID = req.params.id;
-    const modifiedUser = req.body.user;
+    const user = req.body.user;
 
-    if (!modifiedUser)
+    if (!user)
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -100,17 +100,18 @@ export const modify = async (req: Request, res: Response) => {
 
     try {
 
-        const updatedUser = await UserModel.update(modifiedUser, {
+        const result = await UserModel.update(user, {
             returning: true, where: {id: userID}
         });
 
-        const user = updatedUser[1][0];
-        const statusCode = user == null ? 404 : 200;
-        const statusMessage = user == null ? 'fail' : 'success';
+        // TODO: Checking if result is not empty --> index out of range
+        const updatedUser = result[1][0];
+        const statusCode = updatedUser == null ? 404 : 200;
+        const statusMessage = updatedUser == null ? 'fail' : 'success';
 
         res.status(statusCode).send({
             status: statusMessage,
-            data: {user: user},
+            data: {user: updatedUser},
             message: null
         });
 

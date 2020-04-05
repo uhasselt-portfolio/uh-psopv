@@ -18,6 +18,13 @@ export const validateBodyParameters = (method: string): any => {
                 body('password', 'Required parameter').exists()
             ]
         }
+        case 'problem/add': {
+            return[
+                body("planning_id", "You must specify a planning").exists().isNumeric(),
+                body("problem_type_id", "You must specify a problem type").exists().isNumeric(),
+                body("created_by", "You must specify the user that sent the problem").exists().isNumeric(),
+            ]
+        }
     }
 };
 
