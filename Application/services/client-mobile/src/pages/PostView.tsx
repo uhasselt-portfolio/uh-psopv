@@ -4,12 +4,12 @@ import ExploreContainer from '../components/ExploreContainer';
 import './Home.css';
 
 
-const Home: React.FC = () => {
+const PostView: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Blank</IonTitle>
+          <IonTitle>PostView</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -25,4 +25,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default PostView;
