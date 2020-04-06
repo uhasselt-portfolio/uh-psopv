@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
-import DataNavBar from '../NavBars/dataNavBar';
-import Problem from '../problem';
+import DataNavBar from '../NavBars/DataNavBarComp';
+import Problem from '../ProblemComp';
 
 class Problems extends Component {
 

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
-import DataNavBar from '../NavBars/dataNavBar';
-import User from '../user';
-import UserInterface from '../Interfaces/userInterface';
+import DataNavBar from '../NavBars/DataNavBarComp';
+import User from '../UserComp';
+import UserInterface from '../Interfaces/UserDataInterface';
 import {Grid, Button} from '@material-ui/core';
 
 interface UserssState {

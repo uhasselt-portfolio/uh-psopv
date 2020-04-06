@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Container, Paper, Grid} from '@material-ui/core';
-import ProblemInterface from './Interfaces/problemInterface';
+import ProblemInterface from './Interfaces/ProblemDataInterface';
 
 interface ProblemState {
     Data: ProblemInterface

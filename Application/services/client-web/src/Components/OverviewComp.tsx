@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import {Tabs, Tab, Typography, Box, Grid, Button} from '@material-ui/core';
-import Message from './messageCom';
-import Problem from './problem';
-import ProblemInterface from './Interfaces/problemInterface';
-import MessageInterface from './Interfaces/messageInterface';
+import Message from './MessageComp';
+import Problem from './ProblemComp';
+import ProblemInterface from './Interfaces/ProblemDataInterface';
+import MessageInterface from './Interfaces/MessageDataInterface';
 
 const styletextarea = {
     resize : 'vertical'

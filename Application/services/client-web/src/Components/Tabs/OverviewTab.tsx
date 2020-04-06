@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Grid} from '@material-ui/core';
-import OverviewCom from '../overviewComponent'
-import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps"
+import OverviewCom from '../OverviewComp';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 
 const styleBorder = {
     border: 'solid 1px black',

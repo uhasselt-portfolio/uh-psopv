@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import DataNavBar from '../NavBars/dataNavBar';
+import DataNavBar from '../NavBars/DataNavBarComp';
 import Button from '@material-ui/core/Button';
 
 

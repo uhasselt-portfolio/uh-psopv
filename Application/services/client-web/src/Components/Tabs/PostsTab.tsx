@@ -1,8 +1,8 @@
 import React, {Component, FormEvent} from 'react';
-import DataNavBar from '../NavBars/dataNavBar';
-import Post from '../post';
+import DataNavBar from '../NavBars/DataNavBarComp';
+import Post from '../PostComp';
 import {Container, Grid, Button} from '@material-ui/core';
-import PostInterface from '../Interfaces/postInterface';
+import PostInterface from '../Interfaces/PostDataInterface';
 
 interface IState {
     filter: string,

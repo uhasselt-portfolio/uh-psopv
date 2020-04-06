@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import UserInterface from './Interfaces/userInterface';
+import UserInterface from './Interfaces/UserDataInterface';
 import {Container, Grid, Paper} from '@material-ui/core';
 
 interface State {

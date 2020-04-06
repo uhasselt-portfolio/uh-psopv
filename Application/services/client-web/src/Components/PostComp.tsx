@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import PostInterface from './Interfaces/postInterface';
+import PostInterface from './Interfaces/PostDataInterface';
 import {Container,Paper,Grid } from '@material-ui/core';
 
 interface State {

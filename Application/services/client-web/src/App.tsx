@@ -1,12 +1,12 @@
 import React from 'react';
-import NavBar from './Components/NavBars/navBar';
+import NavBar from './Components/NavBars/NavBarComp';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import Overview from './Components/Tabs/overview';
-import Data from './Components/Tabs/data';
-import Rapportering from './Components/Tabs/rapportering'
-import Users from './Components/Tabs/users';
-import Posts from './Components/Tabs/posts';
-import Problems from './Components/Tabs/pukkelpopProblems';
+import Overview from './Components/Tabs/OverviewTab';
+import Data from './Components/Tabs/DataTab';
+import Rapportering from './Components/Tabs/RapporteringTab'
+import Users from './Components/Tabs/UsersTab';
+import Posts from './Components/Tabs/PostsTab';
+import Problems from './Components/Tabs/ProblemsTab';
 
 function App() {
   return (
