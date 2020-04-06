@@ -7,6 +7,7 @@ import Rapportering from './Components/Tabs/RapporteringTab'
 import Users from './Components/Tabs/UsersTab';
 import Posts from './Components/Tabs/PostsTab';
 import Problems from './Components/Tabs/ProblemsTab';
+import PukkelpopMap from './Components/Tabs/MapTab';
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           <Route path="/Data/Users" component={Users} />
           <Route path="/Data/Posts" component={Posts} />  
           <Route path="/Data/Problems" component={Problems} />  
+          <Route path="/Map" component={PukkelpopMap} />
         </Switch>
       </div>
     </BrowserRouter>

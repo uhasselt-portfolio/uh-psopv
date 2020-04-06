@@ -50,15 +50,15 @@ class OverviewCom extends Component {
         ],
         problems: [
             {ProblemType: "problemtype", Priority: 1, Discription: "discription", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender"},
+                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503},
                 {ProblemType: "Afwezigheid", Priority: 1, Discription: "Vrijwilliger is afwezig van zijn post", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender"},
+                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503},
                 {ProblemType: "problemtype", Priority: 1, Discription: "discription", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender"},
+                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503},
                 {ProblemType: "problemtype", Priority: 1, Discription: "discription", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender"},
+                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503},
                 {ProblemType: "problemtype", Priority: 1, Discription: "discription", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender"}
+                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503}
         ]
     }
 
@@ -91,11 +91,8 @@ class OverviewCom extends Component {
         ));
         let ProblemsMap : Array<JSX.Element> = this.state.problems.map(x => (
             <Problem key={Math.random()} ProblemType={x.ProblemType} Priority={x.Priority} Discription={x.Discription} ShiftName={x.ShiftName} 
-            TimeStamp={x.TimeStamp} Post={x.Post} User={x.User} Sender={x.Sender} />
+            TimeStamp={x.TimeStamp} Post={x.Post} User={x.User} Sender={x.Sender} latitude={x.latitude} longitude={x.longitude} />
         ));
-
-        // console.log(MessagesMap);
-        // console.log(ProblemsMap);
 
         return(
             <div>

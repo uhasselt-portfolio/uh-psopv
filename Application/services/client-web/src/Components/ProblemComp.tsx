@@ -25,7 +25,9 @@ class Problem extends Component<ProblemInterface, ProblemState> {
             ShiftName: "",
             Post: "",
             User: "",
-            Sender: ""
+            Sender: "",
+            latitude: 0,
+            longitude: 0
         }
     }
 

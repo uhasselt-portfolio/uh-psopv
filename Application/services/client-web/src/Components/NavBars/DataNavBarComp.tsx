@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const styleSticky = {
     position: "sticky" as 'sticky',
@@ -49,10 +49,10 @@ class DataNavBar extends Component<IProps, IState> {
                     textColor="primary"
                     centered
                 >
-                    <Tab label="Data" component={Link} to="/Data"/>
-                    <Tab label="Vrijwilligers & verantwoordelijken" component={Link} to="/Data/Users"/>
-                    <Tab label="Posten & sectoren" component={Link} to="/Data/Posts"/>
-                    <Tab label="Problemen" component={Link} to="/data/Problems" />
+                    <Tab label="Data" component={NavLink} to="/Data"/>
+                    <Tab label="Vrijwilligers & verantwoordelijken" component={NavLink} to="/Data/Users"/>
+                    <Tab label="Posten & sectoren" component={NavLink} to="/Data/Posts"/>
+                    <Tab label="Problemen" component={NavLink} to="/data/Problems" />
                 </Tabs>
                 </Paper>
         );

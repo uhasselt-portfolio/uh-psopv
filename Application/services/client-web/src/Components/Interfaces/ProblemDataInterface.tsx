@@ -8,7 +8,9 @@ interface ProblemInterface {
     ShiftName?: string,
     Post?: string,
     User?: string,
-    Sender?: string
+    Sender?: string,
+    latitude: Number,
+    longitude: Number
 }
 
 export default ProblemInterface;

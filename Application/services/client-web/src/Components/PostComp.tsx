@@ -21,13 +21,13 @@ const labelStyle = {
 
 class Post extends Component<PostInterface, State> {
     state: State ={
-        data: {title: "title", addres: "address", sector: -1, general: "general post"}
+        data: {title: "title", addres: "address", sector: -1, general: "general post", latitude: 0, longitude: 0}
     }
     constructor(props: PostInterface) {
         super(props);
 
         this.state = {
-            data: {title: props.title, addres: props.addres, sector: props.sector, general: props.general}
+            data: {title: props.title, addres: props.addres, sector: props.sector, general: props.general, latitude: props.latitude, longitude: props.longitude}
         }
     }
 

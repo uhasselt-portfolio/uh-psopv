@@ -68,23 +68,21 @@ class Overview extends Component {
                 options={{icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}}
             />
         ));
-            // console.log(postMarkers);
-            // console.log(problemMarkers);
 
-            const MyMapComponent = withScriptjs(withGoogleMap((props: IPropsMyMapComponent) =>
-                <GoogleMap
-                    defaultZoom={15}
-                    defaultCenter={{ lat: 50.962595, lng: 5.358503 }}
-                >
-                    <Marker
-                        position={{ lat: 50.962595, lng: 5.358503}}
-                        label={"testmarker"}
-                    />
-                    {postMarkers}
-                    {problemMarkers}
+        const MyMapComponent = withScriptjs(withGoogleMap((props: IPropsMyMapComponent) =>
+            <GoogleMap
+                defaultZoom={15}
+                defaultCenter={{ lat: 50.962595, lng: 5.358503 }}
+            >
+                <Marker
+                    position={{ lat: 50.962595, lng: 5.358503}}
+                    label={"testmarker"}
+                />
+                {postMarkers}
+                {problemMarkers}
 
-                </GoogleMap>
-                ));
+            </GoogleMap>
+            ));
 
         return(
             <div>
