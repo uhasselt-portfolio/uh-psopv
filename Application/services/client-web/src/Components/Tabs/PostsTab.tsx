@@ -83,12 +83,26 @@ class Posts extends Component {
         });
     }
 
+    handlePostMarkerClicked = (clicked : string) => {
+        var Selectelement = (document.getElementById("filtertype")) as HTMLSelectElement;
+        Selectelement.value = "post";
+        var Inputelement = (document.getElementById("filterInput")) as HTMLInputElement;
+        Inputelement.value = clicked;
+        this.setState({
+            IState: {
+                ...this.state.IState,
+                filter: "post",
+                filterValue: clicked
+            }
+        });
+    }
+
     render() {
         let filteredPosts: Array<JSX.Element> = this.state.IState.PostsData.map(x =>(
             <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
         ));
         let markers: Array<JSX.Element> = this.state.IState.PostsData.map(x => (
-            <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}}/>
+            <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
         ));
 
         switch(this.state.IState.filter) {
@@ -96,7 +110,7 @@ class Posts extends Component {
                     <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
                 ));
                 markers = this.state.IState.PostsData.filter(post => post.title === this.state.IState.filterValue).map(x =>(
-                    <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}}/>
+                    <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
                 ));
                 break;
             }
@@ -104,7 +118,7 @@ class Posts extends Component {
                     <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude}/>
                 ));
                 markers = this.state.IState.PostsData.filter(post => post.sector.toString() === this.state.IState.filterValue).map(x =>(
-                    <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}}/>
+                    <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
                 ));
                 break;
             }
