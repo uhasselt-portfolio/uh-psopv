@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Container, Paper, Grid} from '@material-ui/core';
-import ProblemInterface from './Interfaces/ProblemDataInterface';
+import ProblemInterface from '../Interfaces/ProblemDataInterface';
 
 interface ProblemState {
     Data: ProblemInterface
@@ -18,14 +18,14 @@ const labelStyle = {
 class Problem extends Component<ProblemInterface, ProblemState> {
     state: ProblemState = {
         Data: {
-            ProblemType: "",
-            Priority: 0,
-            Discription: "",
-            TimeStamp: "",
-            ShiftName: "",
-            Post: "",
-            User: "",
-            Sender: "",
+            problemType: "",
+            priority: 0,
+            discription: "",
+            timeStamp: "",
+            shiftName: "",
+            post: "",
+            user: "",
+            sender: "",
             latitude: 0,
             longitude: 0
         }
@@ -44,32 +44,32 @@ class Problem extends Component<ProblemInterface, ProblemState> {
                 <Paper style={paperStyle}>
                     <Grid container justify="center">
                         <Grid item>
-                            <h4 className="center">{this.state.Data.ProblemType}</h4>
+                            <h4 className="center">{this.state.Data.problemType}</h4>
                         </Grid>
                     </Grid>
                     <Grid container>
                         <Grid item>
-                            <p>{this.state.Data.Discription}</p>
+                            <p>{this.state.Data.discription}</p>
                         </Grid>
                     </Grid>
                     <Grid container justify="space-evenly">
                         <Grid item style={labelStyle}>
-                            <p className="col">Shift: {this.state.Data.ShiftName}</p>
+                            <p className="col">Shift: {this.state.Data.shiftName}</p>
                         </Grid>
                         <Grid item style={labelStyle}>
-                        <p>Post: {this.state.Data.Post}</p>
+                        <p>Post: {this.state.Data.post}</p>
                         </Grid>
                     </Grid>
                     <Grid container justify="space-evenly">
                         <Grid item style={labelStyle}>
-                            <p>Gaat over: {this.state.Data.User}</p>
+                            <p>Gaat over: {this.state.Data.user}</p>
                         </Grid>
                         <Grid item style={labelStyle}>
-                            <p>Gemeld door: {this.state.Data.Sender}</p>
+                            <p>Gemeld door: {this.state.Data.sender}</p>
                         </Grid>
                         <Grid container>
                             <Grid item style={labelStyle}>
-                                <p className="col">{this.state.Data.TimeStamp}</p>
+                                <p className="col">{this.state.Data.timeStamp}</p>
                             </Grid>
                         </Grid>
                     </Grid>

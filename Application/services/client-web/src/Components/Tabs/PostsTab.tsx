@@ -1,9 +1,11 @@
 import React, {Component, FormEvent} from 'react';
 import DataNavBar from '../NavBars/DataNavBarComp';
-import Post from '../PostComp';
+import Post from '../Components/PostComp';
 import {Container, Grid, Button} from '@material-ui/core';
 import PostInterface from '../Interfaces/PostDataInterface';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
+import { AppState } from '../../Redux/Reducers';
+import {connect} from 'react-redux';
 
 const styleBorder = {
     border: 'solid 1px black',
@@ -19,56 +21,31 @@ const styleMap = {
 interface IState {
     filter: string,
     filterValue: string,
-    PostsData: [PostInterface]
 }
 
 interface IPropsMyMapComponent {
     isMarkerShown: boolean
 }
 
+type Props = LinkStateProps // & LinkDispatchProps;
 
-class Posts extends Component {
-    state = {
-        IState: {
+class Posts extends Component<Props> {
+    state: IState = {
             filter: "",
-            filterValue: "",
-            PostsData: [
-                { title: "post", addres: "addres", sector: 1, general: "generalpost", latitude: 50.962595, longitude: 5.358503 },
-                { title: "Parking1", addres: "Visserstraat 27", sector: 1, general: "Parking Controle", latitude: 50.962068, longitude: 5.358836 },
-                { title: "Parking2", addres: "Berglaan 5", sector: 1, general: "Parking Controle", latitude: 50.963642, longitude: 5.359328 },
-                { title: "Parking3", addres: "Hemelstraat 164", sector: 1, general: "Parking Controle", latitude: 50.963257, longitude: 5.356721 },
-                { title: "Parking4", addres: "Pukkelpoplaan 1", sector: 3, general: "Parking Controle", latitude: 50.963902, longitude: 5.355056 },
-                { title: "Drank stand 1", addres: "Terein", sector: 2, general: "Dranken Stand", latitude: 50.964240, longitude: 5.360195 },
-                { title: "Schoonmaak terein", addres: "Terein", sector: 2, general: "Schoonmaak", latitude: 50.961780, longitude: 5.361407 },
-                { title: "Security", addres: "terein", sector: 2, general: "Security", latitude: 50.962595, longitude: 5.358503 },
-                { title: "Straat-affzetting1", addres: "Rodeberg - Geraardslaan", sector: 4, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503 },
-                { title: "Straat-affzetting2", addres: "Addelbaan - Rodeberg", sector: 4, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503 },
-                { title: "Straat-affzetting3", addres: "Visserstraat - Geraardslaan", sector: 1, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503 }
-            ]
-        }
+            filterValue: ""
     }
 
-    handleFilter = (e: React.FormEvent<HTMLFormElement>) => {
+    handleFilterForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        let element = (document.getElementById("filterInput")) as HTMLInputElement;
-        var value = element.value;
-        console.log(value);
-        this.setState({
-            IState: {
-                ...this.state.IState,
-                filterValue: value
-            }
-        })
+        this.handleFilter();
     }
-    handleFilterButton = () => {
+    handleFilter = () => {
         let element = (document.getElementById("filterInput")) as HTMLInputElement;
         var value = element.value;
         console.log(value);
         this.setState({
-            IState: {
-                ...this.state.IState,
+                ...this.state,
                 filterValue: value
-            }
         })
     }
     filterChanged = () => {
@@ -76,10 +53,8 @@ class Posts extends Component {
         var index = element.selectedIndex;
         var value = element.options[index];
         this.setState({
-            IState: {
-                ...this.state.IState,
+                ...this.state,
                 filter: value.value
-            }
         });
     }
 
@@ -89,35 +64,33 @@ class Posts extends Component {
         var Inputelement = (document.getElementById("filterInput")) as HTMLInputElement;
         Inputelement.value = clicked;
         this.setState({
-            IState: {
-                ...this.state.IState,
+                ...this.state,
                 filter: "post",
                 filterValue: clicked
-            }
         });
     }
 
     render() {
-        let filteredPosts: Array<JSX.Element> = this.state.IState.PostsData.map(x =>(
+        let filteredPosts: Array<JSX.Element> = this.props.posts.map(x =>(
             <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
         ));
-        let markers: Array<JSX.Element> = this.state.IState.PostsData.map(x => (
+        let markers: Array<JSX.Element> = this.props.posts.map(x => (
             <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
         ));
 
-        switch(this.state.IState.filter) {
-            case "post" : { filteredPosts = this.state.IState.PostsData.filter(post => post.title === this.state.IState.filterValue).map(x =>(
+        switch(this.state.filter) {
+            case "post" : { filteredPosts = this.props.posts.filter(post => post.title === this.state.filterValue).map(x =>(
                     <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
                 ));
-                markers = this.state.IState.PostsData.filter(post => post.title === this.state.IState.filterValue).map(x =>(
+                markers = this.props.posts.filter(post => post.title === this.state.filterValue).map(x =>(
                     <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
                 ));
                 break;
             }
-            case "sector" : {filteredPosts = this.state.IState.PostsData.filter(post => post.sector.toString() === this.state.IState.filterValue).map(x =>(
+            case "sector" : {filteredPosts = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue).map(x =>(
                     <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude}/>
                 ));
-                markers = this.state.IState.PostsData.filter(post => post.sector.toString() === this.state.IState.filterValue).map(x =>(
+                markers = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue).map(x =>(
                     <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
                 ));
                 break;
@@ -140,9 +113,9 @@ class Posts extends Component {
                     <Grid container>
                         <Grid item style={styleBorder}> {/*opsomming posten*/}
                             <Grid container>
-                                <form onSubmit={this.handleFilter}>
+                                <form onSubmit={this.handleFilterForm}>
                                     <Grid item>
-                                        <select id="filtertype" onChange={this.filterChanged} value={this.state.IState.filter}>
+                                        <select id="filtertype" onChange={this.filterChanged} value={this.state.filter}>
                                             <option value="">No filter</option>
                                             <option value="post">Post</option>
                                             <option value="sector">Sector</option>
@@ -152,7 +125,7 @@ class Posts extends Component {
                                         <input id="filterInput" type="text" placeholder="sector"></input>
                                     </Grid>
                                     <Grid item>
-                                        <Button variant="outlined" onClick={this.handleFilterButton}>filter</Button>
+                                        <Button variant="outlined" onClick={this.handleFilter}>filter</Button>
                                     </Grid>
                                 </form>
                             </Grid>
@@ -176,4 +149,17 @@ class Posts extends Component {
     }
 }
 
-export default Posts;
+interface LinkStateProps {
+    posts: PostInterface[],
+}
+
+const MapStateToProps = (state : AppState): LinkStateProps => {
+    return {
+        posts: state.reducer.Posts,
+    }
+}
+
+// export default Overview
+export default connect(
+    MapStateToProps,
+)(Posts);

@@ -2,18 +2,15 @@ import React, {Component} from 'react';
 import {Tabs, Tab, Typography, Box, Grid, Button} from '@material-ui/core';
 import Message from './MessageComp';
 import Problem from './ProblemComp';
-import ProblemInterface from './Interfaces/ProblemDataInterface';
-import MessageInterface from './Interfaces/MessageDataInterface';
+import ProblemInterface from '../Interfaces/ProblemDataInterface';
+import MessageInterface from '../Interfaces/MessageDataInterface';
+import { AppState } from '../../Redux/Reducers';
+import {connect} from 'react-redux';
+
 
 const styletextarea = {
     resize : 'vertical'
 } as React.CSSProperties;
-
-interface IState {
-    value: number,
-    messages: MessageInterface[],
-    problems: ProblemInterface[]
-}
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -38,28 +35,22 @@ interface TabPanelProps {
     );
   }
 
-class OverviewCom extends Component {
-    state = {
-        value: 0,
-        messages: [
-            {title:"titel", sender:"verstuurder", content:"bericht"},
-            {title:"dronken man", sender:"John Timmermans", content:"Dronken man op parking 1 is verwijderd door de politie"},
-            {title:"auto ongeluk", sender: "An Versteen", content:"Door een auto ongeluk is een deel van parking 3 tijdelijk buiten gebruik"},
-            {title:"vrijwilliger gevonden", sender:"Marlies Dalemans", content:"De ontbrekende vrijwilliger op post POE_WOE is gevonden"},
-            {title:"bier op", sender:"Michiel Delvaux", content:"Het bier bij tab 4 is op"}
-        ],
-        problems: [
-            {ProblemType: "problemtype", Priority: 1, Discription: "discription", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503},
-                {ProblemType: "Afwezigheid", Priority: 1, Discription: "Vrijwilliger is afwezig van zijn post", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503},
-                {ProblemType: "problemtype", Priority: 1, Discription: "discription", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503},
-                {ProblemType: "problemtype", Priority: 1, Discription: "discription", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503},
-                {ProblemType: "problemtype", Priority: 1, Discription: "discription", TimeStamp: "04/04/2020 15:22", ShiftName: "shiftname", 
-                Post: "post", User: "gaat over User", Sender: "sender", latitude: 50.962595, longitude: 5.358503}
-        ]
+interface IState {
+    value: number,
+}
+
+type Props = LinkStateProps // & LinkDispatchProps;
+
+class OverviewCom extends Component<Props> {
+    state: IState = {
+        value: 0
+    }
+
+    componentWillMount() {
+        console.log(this.props);
+        this.setState({
+            ...this.state
+        })
     }
 
     handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
@@ -86,12 +77,12 @@ class OverviewCom extends Component {
 
     render() {
 
-        let MessagesMap : Array<JSX.Element> = this.state.messages.map(x => (
+        let MessagesMap : Array<JSX.Element> = this.props.messages.map(x => (
             <Message key={Math.random()} title={x.title} sender={x.sender} content={x.content}/>
         ));
-        let ProblemsMap : Array<JSX.Element> = this.state.problems.map(x => (
-            <Problem key={Math.random()} ProblemType={x.ProblemType} Priority={x.Priority} Discription={x.Discription} ShiftName={x.ShiftName} 
-            TimeStamp={x.TimeStamp} Post={x.Post} User={x.User} Sender={x.Sender} latitude={x.latitude} longitude={x.longitude} />
+        let ProblemsMap : Array<JSX.Element> = this.props.problems.map(x => (
+            <Problem key={Math.random()} problemType={x.problemType} priority={x.priority} discription={x.discription} shiftName={x.shiftName} 
+            timeStamp={x.timeStamp} post={x.post} user={x.user} sender={x.sender} latitude={x.latitude} longitude={x.longitude} />
         ));
 
         return(
@@ -134,4 +125,19 @@ class OverviewCom extends Component {
     }
 }
 
-export default OverviewCom;
+interface LinkStateProps {
+    messages: MessageInterface[]
+    problems: ProblemInterface[]
+}
+
+const MapStateToProps = (state : AppState): LinkStateProps => {
+    return {
+        messages: state.reducer.Messages,
+        problems: state.reducer.Problems
+    }
+}
+
+// export default Overview
+export default connect(
+    MapStateToProps,
+)(OverviewCom);

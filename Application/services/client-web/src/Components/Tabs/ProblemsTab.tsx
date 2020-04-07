@@ -1,21 +1,35 @@
 import React, {Component} from 'react';
 import DataNavBar from '../NavBars/DataNavBarComp';
-import Problem from '../ProblemComp';
+import Problem from '../Components/ProblemComp';
+import { AppState } from '../../Redux/Reducers';
+import {connect} from 'react-redux';
+import ProblemDataInterface from '../Interfaces/ProblemDataInterface';
 
-class Problems extends Component {
+type Props = LinkStateProps // & LinkDispatchProps;
+
+class Problems extends Component<Props> {
 
     render() {
+        let Problems: Array<JSX.Element> = this.props.problems.map(x => (
+            <Problem problemType={x.problemType}
+                    priority={x.priority}
+                    discription={x.discription}
+                    shiftName={x.shiftName}
+                    timeStamp={x.timeStamp}
+                    post={x.post}
+                    user={x.user}
+                    sender={x.sender}
+                    latitude={x.latitude} 
+                    longitude={x.longitude}
+            />
+        ));
+
         return(
             <div>
                 <DataNavBar/>
                 <h4>Problems</h4>
                 <div>
-                    <Problem ProblemType="afwezigheid" Priority={1} Discription="vrijwiliger is afwezig van zijn post" latitude={0} longitude={0} />
-                    <Problem ProblemType="afwezigheid" Priority={1} Discription="vrijwiliger is afwezig van zijn post" ShiftName="POE_WOE" TimeStamp="14/06/2020 18:05:20" Post="parking1" User="John Vandenberg" Sender="Marc Tongelen" latitude={0} longitude={0}/>
-                    <Problem ProblemType="afwezigheid" Priority={1} Discription="vrijwiliger is afwezig van zijn post" latitude={0} longitude={0}/>
-                    <Problem ProblemType="afwezigheid" Priority={1} Discription="vrijwiliger is afwezig van zijn post" latitude={0} longitude={0}/>
-                    <Problem ProblemType="afwezigheid" Priority={1} Discription="vrijwiliger is afwezig van zijn post" latitude={0} longitude={0}/>
-                    <Problem ProblemType="afwezigheid" Priority={1} Discription="vrijwiliger is afwezig van zijn post" latitude={0} longitude={0}/>
+                    {Problems}
                 </div>
 
             </div>
@@ -23,4 +37,17 @@ class Problems extends Component {
     } 
 }
 
-export default Problems;
+interface LinkStateProps {
+    problems: ProblemDataInterface[]
+}
+
+const MapStateToProps = (state : AppState): LinkStateProps => {
+    return {
+        problems: state.reducer.Problems
+    }
+}
+
+// export default Overview
+export default connect(
+    MapStateToProps,
+)(Problems);

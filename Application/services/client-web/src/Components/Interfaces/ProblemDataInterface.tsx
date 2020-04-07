@@ -1,14 +1,14 @@
 import React from 'react';
 
 interface ProblemInterface {
-    ProblemType: string,
-    Priority: Number,
-    Discription: string,
-    TimeStamp?: string,
-    ShiftName?: string,
-    Post?: string,
-    User?: string,
-    Sender?: string,
+    problemType: string,
+    priority: Number,
+    discription: string,
+    timeStamp: string,
+    shiftName: string,
+    post: string,
+    user: string,
+    sender: string,
     latitude: Number,
     longitude: Number
 }
