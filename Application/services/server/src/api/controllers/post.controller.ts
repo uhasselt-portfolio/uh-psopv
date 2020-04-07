@@ -1,20 +1,18 @@
 import {Request, Response} from "express";
-import UserModel from "../models/user.model";
 import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
-import PlanningModel from "../models/planning.model";
-import ProblemTypeModel from "../models/problem_type.model";
+import PostModel from "../models/post.model";
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const problems = await ProblemModel.findAll();
-        const statusCode = problems == null ? 404 : 200;
+        const posts = await PostModel.findAll();
+        const statusCode = posts == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                problems: problems
+                posts: posts
             },
             message: null
         });
@@ -29,17 +27,17 @@ export const fetchAll = async (req: Request, res: Response) => {
 
 
 export const fetch = async (req: Request, res: Response) => {
-    const problemID = req.params.id;
+    const postID = req.params.id;
 
     try {
-        const problem = await ProblemModel.findByPk(problemID);
-        const statusCode = problem == null ? 404 : 200;
+        const post = await ProblemModel.findByPk(postID);
+        const statusCode = post == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                problem: problem
+                post: post
             },
             message: null
         });
@@ -58,33 +56,20 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by);
-        const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id);
-        const problemTypeExists : ProblemTypeModel | null = await ProblemTypeModel.findByPk(req.body.problem_type_id);
+        const post = PostModel.create({
+            title: req.body.title,
+            address: req.body.address,
+            latitude: req.body.latitude,
+            longitude: req.body.longitude,
+            radius: req.body.radius,
+            sector: req.body.sector,
+        });
 
-        if(userExists && planningExists && problemTypeExists) {
-            const problem = ProblemModel.create({
-                planning_id: req.body.planning_id,
-                problem_type_id: req.body.problem_type_id,
-                created_by: req.body.created_by
-            });
-
-            res.status(201).send({
-                status: 'success',
-                data: {problem: problem},
-                message: null
-            })
-        } else {
-            res.status(404).send({
-                status: 'fail',
-                data: {
-                    planning_id: planningExists,
-                    problem_type_id: problemTypeExists,
-                    created_by: userExists
-                },
-                message: 'Make sure that your specified data is correct'
-            });
-        }
+        res.status(201).send({
+            status: 'success',
+            data: {post: post},
+            message: null
+        })
     } catch (error) {
         res.status(500).send({
             status: 'error',
@@ -95,10 +80,10 @@ export const add = async (req: Request, res: Response) => {
 };
 
 export const modify = async (req: Request, res: Response) => {
-    const problemID = req.params.id;
-    const problem = req.body.problem;
+    const postID = req.params.id;
+    const post = req.body.post;
 
-    if (!problem)
+    if (!post)
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -106,18 +91,18 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await ProblemModel.update(problem, {
-            returning: true, where: {id: problemID}
+        const result = await PostModel.update(post, {
+            returning: true, where: {id: postID}
         });
 
         // TODO: Checking if result is not empty --> index out of range
-        const updatedProblem = result[1][0];
-        const statusCode = updatedProblem == null ? 404 : 200;
+        const updatedPost = result[1][0];
+        const statusCode = updatedPost == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
-            data: {problem: updatedProblem},
+            data: {post: updatedPost},
             message: null
         });
 
@@ -131,11 +116,11 @@ export const modify = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
-    const problemID = req.params.id;
+    const postID = req.params.id;
 
     try {
-        const deletedProblem = await ProblemModel.destroy({where: {id: problemID}});
-        const statusCode = deletedProblem == null ? 404 : 200;
+        const deletedPost = await PostModel.destroy({where: {id: postID}});
+        const statusCode = deletedPost == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
