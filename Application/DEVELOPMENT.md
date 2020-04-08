@@ -37,7 +37,7 @@ Gebruik deze commando's om een feature toe te voegen aan de `development` branch
 $ git branch
 
 # Bewaar je feature op jouw branch
-$ git push origin development-<name>
+$ git push origin development-wouter
 
 # Switch van jouw branch naar de development branch
 $ git checkout development
