@@ -9,7 +9,7 @@ export enum ReduxActionTypes {
     GET_PROBLEMS = "ADD_PROBLEMS",
     PROBLEM_SOLVED = 'PROBLEM_SOLVED',
     GET_MESSAGES = 'ADD_MESSAGES',
-    MESSAGE_READ = 'MESSAGE_READ',
+    MESSAGE_READ = 'MESSAGE_READ'
 }
 
 export interface IReduxBaseAction {
@@ -42,6 +42,12 @@ export interface ActionAddUserType extends IReduxBaseAction {
 export interface ActionProblemSolvedType extends IReduxBaseAction {
     type: ReduxActionTypes.PROBLEM_SOLVED,
     payload: ProblemInterface
+}
+export function ActionProblemSovled(problem: ProblemInterface) : ActionProblemSolvedType {
+    return {
+        type: ReduxActionTypes.PROBLEM_SOLVED,
+        payload: problem
+    };
 }
 
 export interface ActionAddMessageType extends IReduxBaseAction {

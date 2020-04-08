@@ -42,20 +42,22 @@ class Posts extends Component<Props> {
     handleFilter = () => {
         let element = (document.getElementById("filterInput")) as HTMLInputElement;
         var value = element.value;
-        console.log(value);
         this.setState({
                 ...this.state,
                 filterValue: value
         })
     }
     filterChanged = () => {
-        var element = (document.getElementById("filtertype")) as HTMLSelectElement;
-        var index = element.selectedIndex;
-        var value = element.options[index];
+        var filterElement = (document.getElementById("filtertype")) as HTMLSelectElement;
+        var index = filterElement.selectedIndex;
+        var filterValue = filterElement.options[index];
+        let valueElement = (document.getElementById("filterInput")) as HTMLInputElement;
+        var valueValue = valueElement.value;
         this.setState({
-                ...this.state,
-                filter: value.value
+                filterValue: valueValue,
+                filter: filterValue.value
         });
+ 
     }
 
     handlePostMarkerClicked = (clicked : string) => {
@@ -108,7 +110,7 @@ class Posts extends Component<Props> {
 
         return(
             <div>
-                <DataNavBar />
+                <DataNavBar tab={2}/>
                 <Container>
                     <Grid container>
                         <Grid item style={styleBorder}> {/*opsomming posten*/}

@@ -102,7 +102,7 @@ class Users extends Component<Props> {
 
         return(
             <div>
-                <DataNavBar/>
+                <DataNavBar tab={1}/>
                 <h4 className="center">Users</h4>
                 <Grid container justify="center" direction='row' >
                     <form onSubmit={this.handleFilterForm} id="filter">

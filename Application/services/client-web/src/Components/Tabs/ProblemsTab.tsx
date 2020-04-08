@@ -10,7 +10,7 @@ type Props = LinkStateProps // & LinkDispatchProps;
 class Problems extends Component<Props> {
 
     render() {
-        let Problems: Array<JSX.Element> = this.props.problems.map(x => (
+        let Problems: Array<JSX.Element> = this.props.problems.filter(problem => ! problem.solved).map(x => (
             <Problem problemType={x.problemType}
                     priority={x.priority}
                     discription={x.discription}
@@ -21,12 +21,15 @@ class Problems extends Component<Props> {
                     sender={x.sender}
                     latitude={x.latitude} 
                     longitude={x.longitude}
+                    solved={x.solved}
+                    id={x.id}
+                    key={x.id.toString()}
             />
         ));
 
         return(
             <div>
-                <DataNavBar/>
+                <DataNavBar tab={3}/>
                 <h4>Problems</h4>
                 <div>
                     {Problems}
@@ -42,8 +45,9 @@ interface LinkStateProps {
 }
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
+    const openProblems: ProblemDataInterface[] = state.reducer.Problems.filter(problem => ! problem.solved);
     return {
-        problems: state.reducer.Problems
+        problems: openProblems
     }
 }
 

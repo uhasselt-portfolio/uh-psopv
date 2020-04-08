@@ -1,6 +1,7 @@
 import React from 'react';
 
 interface ProblemInterface {
+    id: Number,
     problemType: string,
     priority: Number,
     discription: string,
@@ -10,7 +11,8 @@ interface ProblemInterface {
     user: string,
     sender: string,
     latitude: Number,
-    longitude: Number
+    longitude: Number,
+    solved: boolean
 }
 
 export default ProblemInterface;

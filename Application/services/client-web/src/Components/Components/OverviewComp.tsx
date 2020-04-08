@@ -81,8 +81,8 @@ class OverviewCom extends Component<Props> {
             <Message key={Math.random()} title={x.title} sender={x.sender} content={x.content}/>
         ));
         let ProblemsMap : Array<JSX.Element> = this.props.problems.map(x => (
-            <Problem key={Math.random()} problemType={x.problemType} priority={x.priority} discription={x.discription} shiftName={x.shiftName} 
-            timeStamp={x.timeStamp} post={x.post} user={x.user} sender={x.sender} latitude={x.latitude} longitude={x.longitude} />
+            <Problem key={Math.random()} id={x.id} problemType={x.problemType} priority={x.priority} discription={x.discription} shiftName={x.shiftName} 
+            timeStamp={x.timeStamp} post={x.post} user={x.user} sender={x.sender} latitude={x.latitude} longitude={x.longitude} solved={x.solved}/>
         ));
 
         return(

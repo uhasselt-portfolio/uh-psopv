@@ -10,6 +10,7 @@ import Problems from './Components/Tabs/ProblemsTab';
 import PukkelpopMap from './Components/Tabs/MapTab';
 import ProblemDetails from './Components/Tabs/ProblemDetails';
 import PostDetails from './Components/Tabs/PostDetails';
+import UserDetails from './Components/Tabs/UserDetails';
 
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
@@ -30,6 +31,7 @@ function App() {
             <Route path="/Map" component={PukkelpopMap} />
             <Route path="/Data/Problem" component={ProblemDetails} />
             <Route path="/data/Post" component={PostDetails} />
+            <Route path="/data/User" component={UserDetails} />
           </Switch>
         </div>
       </BrowserRouter>

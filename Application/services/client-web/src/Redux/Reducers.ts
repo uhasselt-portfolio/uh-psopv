@@ -18,15 +18,15 @@ const initialState : State = {
     ],
     Problems: [
         {problemType: "problemtype", priority: 1, discription: "discription", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 
-                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503},
+                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503, solved:false, id:0},
             {problemType: "Afwezigheid", priority: 1, discription: "Vrijwilliger is afwezig van zijn post", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 
-                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503},
+                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503, solved:false, id:1},
             {problemType: "problemtype", priority: 1, discription: "discription", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 
-                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503},
+                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5., solved:false, id: 2},
             {problemType: "problemtype", priority: 1, discription: "discription", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 
-                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503},
+                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503, solved:false, id: 3},
             {problemType: "problemtype", priority: 1, discription: "discription", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 
-                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503}
+                post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503, solved:false, id: 4}
     ],
     Users: [{name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permissions:false, association:"vereneging", latitude: 50.965100, longitude: 5.364983},
         {name: "naam2", lastname:"lastname2", gsmNumber:"gsmnummer2", email:"email2", has_internet:false, permissions:true, latitude: 50, longitude: 0 },
@@ -52,7 +52,7 @@ const initialState : State = {
     ]
 }
 
-type Actions = ActionAddPostType | ActionAddProblemType | ActionAddUserType | ActionProblemSolvedType | ActionAddMessageType | ActionMessageReadType
+export type Actions = ActionAddPostType | ActionAddProblemType | ActionAddUserType | ActionProblemSolvedType | ActionAddMessageType | ActionMessageReadType
 
 // ADD_POST = 'ADD_POST',
 // ADD_USER = 'ADD_USER',
@@ -67,6 +67,17 @@ const reducer =  function(state: State = initialState, action: Actions) : State 
         case ReduxActionTypes.GET_USERS : return {...state, Users : [...action.payload]};
         case ReduxActionTypes.GET_PROBLEMS : return {...state, Problems: [...action.payload]};
         case ReduxActionTypes.GET_MESSAGES : return {...state, Messages: [...action.payload]};
+        case ReduxActionTypes.PROBLEM_SOLVED : {
+            let otherProblems = state.Problems.filter(problem => problem.id !== action.payload.id);
+            let solvedProblem = {
+                ...action.payload,
+                solved: true
+            }
+            return {
+                ...state,
+                Problems: [...otherProblems, solvedProblem]
+            }
+        }
         //TODO other actions
         default : return state;
     }
