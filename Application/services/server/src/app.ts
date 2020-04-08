@@ -4,6 +4,9 @@ import express, {NextFunction, Request, Response} from 'express';
 import userRoutes from "./api/routes/user.routes";
 import importRoutes from "./api/routes/import.routes";
 import problemRoutes from "./api/routes/problem.routes";
+import itemRoutes from "./api/routes/item.routes";
+import shiftRoutes from "./api/routes/shift.routes";
+import postRoutes from "./api/routes/post.routes";
 
 class App {
 
@@ -32,6 +35,9 @@ class App {
         this.express.use("/api/user", userRoutes);
         this.express.use("/api/import", importRoutes);
         this.express.use("/api/problem", problemRoutes);
+        this.express.use("/api/item", itemRoutes);
+        this.express.use("/api/post", postRoutes);
+        this.express.use("/api/shift", shiftRoutes);
     }
 }
 

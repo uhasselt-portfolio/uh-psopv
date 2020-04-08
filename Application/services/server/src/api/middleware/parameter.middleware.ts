@@ -40,6 +40,12 @@ export const validateBodyParameters = (method: string): any => {
                 body(["begin", "end"], "You must specify a begin and ending for a shift").exists()
             ]
         }
+        case 'item/add': {
+            return[
+                body("planning_id", "You must specify a planning").exists().isNumeric(),
+                body("item_type_id", "You must specify an item type").exists().isNumeric(),
+            ]
+        }
     }
 };
 
