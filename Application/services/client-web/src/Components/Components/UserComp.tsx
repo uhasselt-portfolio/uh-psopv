@@ -15,7 +15,6 @@ const labelStyle = {
 }
 
 class User extends Component<UserInterface, State> {
-
     state: State = {
         data: {    
             name: "voornaam",
@@ -24,7 +23,9 @@ class User extends Component<UserInterface, State> {
             gsmNumber: "gsm-nummer",
             email: "email",
             permissions: false,
-            association: "vereniging"
+            association: "vereniging",
+            latitude: 0,
+            longitude: 0
         }
     }
 
@@ -39,7 +40,9 @@ class User extends Component<UserInterface, State> {
                 gsmNumber: props.gsmNumber,
                 email: props.email,
                 permissions: props.permissions,
-                association: props.association
+                association: props.association,
+                latitude: props.latitude,
+                longitude: props.longitude
             }
         }
     }

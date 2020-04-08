@@ -5,7 +5,9 @@ import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps
 import {connect} from 'react-redux';
 import PostDataInterface from '../Interfaces/PostDataInterface';
 import ProblemDataInterface from '../Interfaces/ProblemDataInterface';
+import UserDataInterface from '../Interfaces/UserDataInterface';
 import { AppState } from '../../Redux/Reducers';
+import {Redirect} from 'react-router-dom';
 
 
 const styleBorder = {
@@ -22,9 +24,47 @@ interface IPropsMyMapComponent {
     isMarkerShown: boolean
 }
 
+interface IState {
+    problemClicked: boolean,
+    problem: ProblemDataInterface | null,
+    postClicked: boolean,
+    post: PostDataInterface | null,
+    userClicked: boolean,
+    user: UserDataInterface | null
+}
+
 type Props = LinkStateProps // & LinkDispatchProps;
 
 class Overview extends Component<Props> {
+    state : IState = {
+        problemClicked: false,
+        problem: null,
+        postClicked: false,
+        post: null,
+        userClicked: false,
+        user: null
+    }
+
+    problemClicked = (problem: ProblemDataInterface) => {
+        this.setState({
+            problem: problem,
+            problemClicked: true
+        })
+    }
+
+    postClicked =(post: PostDataInterface) => {
+        this.setState({
+            post: post,
+            postClicked: true
+        })
+    }
+
+    userClicked = (user: UserDataInterface) => {
+        this.setState({
+            user: user,
+            userClicked: true
+        })
+    }
 
     render() {
         let postMarkers: Array<JSX.Element> = this.props.posts.map(x => (
@@ -33,6 +73,7 @@ class Overview extends Component<Props> {
                 position={{ lat: x.latitude, lng: x.longitude}}
                 label={x.title}
                 options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}}
+                onClick={() => this.postClicked(x)}
             />
         ));
         let problemMarkers: Array<JSX.Element> = this.props.problems.map(x => (
@@ -41,6 +82,15 @@ class Overview extends Component<Props> {
                 position={{ lat: x.latitude, lng: x.longitude}}
                 label={x.problemType}
                 options={{icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}}
+                onClick={() => this.problemClicked(x)}
+            />
+        ));
+        let UserMarkers: Array<JSX.Element> = this.props.users.map(x => (
+            <Marker 
+            position={{lat: x.latitude, lng: x.longitude}}
+            label={x.lastname + " " + x.name}
+            options={{icon:'http://maps.google.com/mapfiles/ms/icons/green.png'}}
+            onClick={() => this.userClicked(x)}
             />
         ));
 
@@ -51,9 +101,35 @@ class Overview extends Component<Props> {
             >
                 {postMarkers}
                 {problemMarkers}
-
+                {UserMarkers}
             </GoogleMap>
             ));
+
+        if (this.state.postClicked) {
+            return (
+                <Redirect to={{
+                    pathname: '/data/Post',
+                    state: this.state.post
+                }}/>
+            );
+        }
+        if (this.state.problemClicked) {
+            return (
+                <Redirect to={{
+                    pathname: '/data/Problem',
+                    state: this.state.problem
+                }} />
+            );
+        }
+        if (this.state.userClicked) {
+            return (
+                <Redirect to={{
+                    pathname: '/data/User',
+                    state: this.state.user
+                }} 
+                />
+            )
+        }
 
         return(
             <div>
@@ -79,13 +155,15 @@ class Overview extends Component<Props> {
 
 interface LinkStateProps {
     posts: PostDataInterface[],
-    problems: ProblemDataInterface[]
+    problems: ProblemDataInterface[],
+    users: UserDataInterface[]
 }
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
         posts: state.reducer.Posts,
-        problems: state.reducer.Problems
+        problems: state.reducer.Problems,
+        users: state.reducer.Users
     }
 }
 

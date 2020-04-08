@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {Container, Paper, Grid} from '@material-ui/core';
 import ProblemInterface from '../Interfaces/ProblemDataInterface';
+import { Link } from 'react-router-dom';
 
 interface ProblemState {
     Data: ProblemInterface
@@ -37,6 +38,10 @@ class Problem extends Component<ProblemInterface, ProblemState> {
         });
     } 
 
+    handleButton = () => {
+
+    }
+
     render() {
 
         return(
@@ -67,9 +72,16 @@ class Problem extends Component<ProblemInterface, ProblemState> {
                         <Grid item style={labelStyle}>
                             <p>Gemeld door: {this.state.Data.sender}</p>
                         </Grid>
-                        <Grid container>
+                        <Grid container justify="space-between">
                             <Grid item style={labelStyle}>
                                 <p className="col">{this.state.Data.timeStamp}</p>
+                            </Grid>
+                            <Grid item>
+                                {/* <Button variant="outlined" onClick={this.handleButton}>Ga naar</Button> */}
+                                <Link to={{
+                                    pathname: '/data/Problem',
+                                    state: this.props
+                                }}>Ga naar</Link>
                             </Grid>
                         </Grid>
                     </Grid>
