@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PostInterface from '../Interfaces/PostDataInterface';
 import {Container,Paper,Grid } from '@material-ui/core';
+import {Link} from 'react-router-dom';
 
 interface State {
     data: PostInterface
@@ -56,9 +57,15 @@ class Post extends Component<PostInterface, State> {
                             <p>{this.state.data.sector}</p>
                         </Grid>
                     </Grid>
-                    <Grid container>
+                    <Grid container justify="space-between">
                         <Grid item style={labelStyle}>
                             <p>{this.state.data.general}</p>
+                        </Grid>
+                        <Grid item>
+                        <Link to={{
+                                    pathname: '/data/Post',
+                                    state: this.props
+                                }}>Ga naar</Link>
                         </Grid>
                     </Grid>
                 </Paper>

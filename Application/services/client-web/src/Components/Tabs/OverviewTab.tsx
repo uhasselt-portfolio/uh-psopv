@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 import PostDataInterface from '../Interfaces/PostDataInterface';
 import ProblemDataInterface from '../Interfaces/ProblemDataInterface';
 import { AppState } from '../../Redux/Reducers';
+import {Redirect} from 'react-router-dom';
 
 
 const styleBorder = {
@@ -22,9 +23,36 @@ interface IPropsMyMapComponent {
     isMarkerShown: boolean
 }
 
+interface IState {
+    problemClicked: boolean,
+    problem: ProblemDataInterface | null,
+    postClicked: boolean,
+    post: PostDataInterface | null
+}
+
 type Props = LinkStateProps // & LinkDispatchProps;
 
 class Overview extends Component<Props> {
+    state : IState = {
+        problemClicked: false,
+        problem: null,
+        postClicked: false,
+        post: null
+    }
+
+    problemClicked = (problem: ProblemDataInterface) => {
+        this.setState({
+            problem: problem,
+            problemClicked: true
+        })
+    }
+
+    postClicked =(post: PostDataInterface) => {
+        this.setState({
+            post: post,
+            postClicked: true
+        })
+    }
 
     render() {
         let postMarkers: Array<JSX.Element> = this.props.posts.map(x => (
@@ -33,6 +61,7 @@ class Overview extends Component<Props> {
                 position={{ lat: x.latitude, lng: x.longitude}}
                 label={x.title}
                 options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}}
+                onClick={() => this.postClicked(x)}
             />
         ));
         let problemMarkers: Array<JSX.Element> = this.props.problems.map(x => (
@@ -41,6 +70,7 @@ class Overview extends Component<Props> {
                 position={{ lat: x.latitude, lng: x.longitude}}
                 label={x.problemType}
                 options={{icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}}
+                onClick={() => this.problemClicked(x)}
             />
         ));
 
@@ -54,6 +84,23 @@ class Overview extends Component<Props> {
 
             </GoogleMap>
             ));
+
+        if (this.state.postClicked) {
+            return (
+                <Redirect to={{
+                    pathname: '/data/Post',
+                    state: this.state.post
+                }}/>
+            );
+        }
+        if (this.state.problemClicked) {
+            return (
+                <Redirect to={{
+                    pathname: '/data/Problem',
+                    state: this.state.problem
+                }} />
+            );
+        }
 
         return(
             <div>
