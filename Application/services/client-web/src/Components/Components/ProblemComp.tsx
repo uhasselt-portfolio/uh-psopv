@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Container, Paper, Grid, Button} from '@material-ui/core';
+import {Container, Paper, Grid} from '@material-ui/core';
 import ProblemInterface from '../Interfaces/ProblemDataInterface';
 import { Link } from 'react-router-dom';
 

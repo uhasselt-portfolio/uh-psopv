@@ -45,46 +45,56 @@ class Users extends Component<Props> {
 
     render() {
         let filteredUsers : Array<JSX.Element> = this.props.users.map(x =>(
-                                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
-                                        ));
+                            <User 
+                            key={x.gsmNumber} 
+                            name={x.name} 
+                            lastname={x.lastname} 
+                            gsmNumber={x.gsmNumber} 
+                            email={x.email} 
+                            has_internet={x.has_internet} 
+                            permissions={x.permissions} 
+                            association={x.association} 
+                            latitude={x.latitude} 
+                            longitude={x.longitude}  />
+                        ));
         switch (this.state.filter) {
             case "name": { filteredUsers = this.props.users.filter(User => User.name === this.state.filterValue).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association} latitude={x.latitude} longitude={x.longitude}  />
                             ));
                         break;
             }
             case "lastName": { filteredUsers = this.props.users.filter(User => User.lastname === this.state.filterValue).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association} latitude={x.latitude} longitude={x.longitude}/>
                             ));
                         break;
             }
             case "number": { filteredUsers = this.props.users.filter(User => User.gsmNumber === this.state.filterValue).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association} latitude={x.latitude} longitude={x.longitude} />
                             ));
                         break;
             }
             case "vrijwilliger": { filteredUsers = this.props.users.filter(User => ! User.permissions).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association} latitude={x.latitude} longitude={x.longitude} />
                             ));
                         break;
             }
             case "verantwoordelijke": { filteredUsers = this.props.users.filter(User => User.permissions === true).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association} latitude={x.latitude} longitude={x.longitude} />
                             ));
                         break;
             }
             case "association": { filteredUsers = this.props.users.filter(User => (( ! User.permissions) && (User.association === this.state.filterValue))).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association} latitude={x.latitude} longitude={x.longitude} />
                             ));
                         break;
             }
             case "has_internet": { filteredUsers = this.props.users.filter(User => User.has_internet).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association} latitude={x.latitude} longitude={x.longitude} />
                             ));
                         break;
             }
             case "hasnt_internet": { filteredUsers = this.props.users.filter(User => ! User.has_internet).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association} latitude={x.latitude} longitude={x.longitude}/>
                             ));
                         break;
             }
