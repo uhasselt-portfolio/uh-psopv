@@ -44,7 +44,7 @@ class UserDetails extends Component<IProps> {
             <Marker 
             position={{lat: this.props.location.state.latitude, lng: this.props.location.state.longitude}} 
             label={this.props.location.state.lastname + " " + this.props.location.state.name} 
-            options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}}
+            options={{icon: 'http://maps.google.com/mapfiles/ms/icons/green.png'}}
             />
 
         </GoogleMap>

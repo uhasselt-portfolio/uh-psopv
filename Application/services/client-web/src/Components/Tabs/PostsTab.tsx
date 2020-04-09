@@ -61,10 +61,10 @@ class Posts extends Component<Props> {
     }
 
     handlePostMarkerClicked = (clicked : string) => {
-        var Selectelement = (document.getElementById("filtertype")) as HTMLSelectElement;
-        Selectelement.value = "post";
-        var Inputelement = (document.getElementById("filterInput")) as HTMLInputElement;
-        Inputelement.value = clicked;
+        var selectelement = (document.getElementById("filtertype")) as HTMLSelectElement;
+        selectelement.value = "post";
+        var inputelement = (document.getElementById("filterInput")) as HTMLInputElement;
+        inputelement.value = clicked;
         this.setState({
                 ...this.state,
                 filter: "post",
@@ -124,7 +124,7 @@ class Posts extends Component<Props> {
                                         </select>
                                     </Grid>
                                     <Grid item>
-                                        <input id="filterInput" type="text" placeholder="sector"></input>
+                                        <input id="filterInput" type="text" placeholder={this.state.filter}></input>
                                     </Grid>
                                     <Grid item>
                                         <Button variant="outlined" onClick={this.handleFilter}>filter</Button>
@@ -157,11 +157,10 @@ interface LinkStateProps {
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        posts: state.reducer.Posts,
+        posts: state.Globalreducer.Posts,
     }
 }
 
-// export default Overview
 export default connect(
     MapStateToProps,
 )(Posts);

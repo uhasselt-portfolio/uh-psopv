@@ -1,6 +1,7 @@
 import {combineReducers} from 'redux';
-import {ReduxActionTypes, ActionAddPostType, ActionAddProblemType, ActionAddUserType, ActionProblemSolvedType, ActionAddMessageType, ActionMessageReadType} from './Actions';
+import {ReduxActionTypes, ActionProblemSolvedType, ActionMessageReadType, ActionShiftChangedType} from './Actions';
 import State from './State';
+import ShiftDataInterface from '../Components/Interfaces/ShiftDataInterface';
 
 const initialState : State = {
     Posts: [
@@ -49,24 +50,34 @@ const initialState : State = {
         {title:"auto ongeluk", sender: "An Versteen", content:"Door een auto ongeluk is een deel van parking 3 tijdelijk buiten gebruik"},
         {title:"vrijwilliger gevonden", sender:"Marlies Dalemans", content:"De ontbrekende vrijwilliger op post POE_WOE is gevonden"},
         {title:"bier op", sender:"Michiel Delvaux", content:"Het bier bij tab 4 is op"}
+    ],
+    Planning: [ //eigenlijk heeft elke shift met dezelfde naam dezelfde uren
+        {    id: 0, name: "shift", beginDate: '9/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 0, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 1, name: "shift2", beginDate: '9/04/2020 16:00', endDate: '9/04/2020 15:00', post_id: 1, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 2, name: "shift", beginDate: '9/04/2020 17:00', endDate: '9/04/2020 15:00', post_id: 2, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 3, name: "shift", beginDate: '9/04/2020 18:00', endDate: '9/04/2020 15:00', post_id: 3, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 4, name: "shift3", beginDate: '9/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 4, post: 'test', User_id: 0, user: 'user', sector: 1},
+        {    id: 5, name: "shift2", beginDate: '9/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 5, post: 'post', User_id: 0, user: 'test', sector: 1},
+        {    id: 6, name: "shift2", beginDate: '9/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 6, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 7, name: "shift3", beginDate: '10/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 7, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 8, name: "shift2", beginDate: '10/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 8, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 9, name: "shift3", beginDate: '10/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 9, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 10, name: "shift", beginDate: '10/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 10, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 11, name: "shift", beginDate: '10/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 11, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 12, name: "shift2", beginDate: '11/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 12, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 13, name: "shift3", beginDate: '11/04/2020 5:00', endDate: '9/04/2020 15:00', post_id: 13, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 14, name: "shift", beginDate: '11/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 14, post: 'post', User_id: 0, user: 'user', sector: 0}
     ]
 }
 
-export type Actions = ActionAddPostType | ActionAddProblemType | ActionAddUserType | ActionProblemSolvedType | ActionAddMessageType | ActionMessageReadType
+export type Actions = ActionProblemSolvedType | ActionMessageReadType |ActionShiftChangedType;
 
-// ADD_POST = 'ADD_POST',
-// ADD_USER = 'ADD_USER',
-// ADD_PROBLEM = "ADD_PROBLEM",
-// PROBLEM_SOLVED = 'PROBLEM_SOLVED',
-// ADD_MESSAGE = 'ADD_MESSAGE',
-// MESSAGE_READ = 'MESSAGE_READ'
-
-const reducer =  function(state: State = initialState, action: Actions) : State {
+const Problemreducer =  function(state: State = initialState, action: Actions) : State {
     switch(action.type) {
-        case ReduxActionTypes.GET_POSTS : return {...state, Posts: [...action.payload]};
-        case ReduxActionTypes.GET_USERS : return {...state, Users : [...action.payload]};
-        case ReduxActionTypes.GET_PROBLEMS : return {...state, Problems: [...action.payload]};
-        case ReduxActionTypes.GET_MESSAGES : return {...state, Messages: [...action.payload]};
+        // case ReduxActionTypes.GET_POSTS : return {...state, Posts: [...action.payload]};
+        // case ReduxActionTypes.GET_USERS : return {...state, Users : [...action.payload]};
+        // case ReduxActionTypes.GET_PROBLEMS : return {...state, Problems: [...action.payload]};
+        // case ReduxActionTypes.GET_MESSAGES : return {...state, Messages: [...action.payload]};
         case ReduxActionTypes.PROBLEM_SOLVED : {
             let otherProblems = state.Problems.filter(problem => problem.id !== action.payload.id);
             let solvedProblem = {
@@ -78,15 +89,37 @@ const reducer =  function(state: State = initialState, action: Actions) : State 
                 Problems: [...otherProblems, solvedProblem]
             }
         }
-        //TODO other actions
         default : return state;
     }
 
 }
 
+const Planningreducer = function(state: State = initialState, action: Actions) : State {
+    switch(action.type) {
+        case ReduxActionTypes.SHIFT_CHANGED : {
+            let otherShifts : ShiftDataInterface[]  = state.Planning.filter(shift => shift.id !== action.payload.shift_id);
+            let oldShift : ShiftDataInterface[] = state.Planning.filter(shift => shift.id === action.payload.shift_id);
+            let newShift : ShiftDataInterface = {
+                ...oldShift[0],
+                User_id: action.payload.user_id,
+                user: action.payload.user
+            }
+            return {
+                ...state,
+                Planning : [...otherShifts, newShift]
+            };
+        }
+        default: return state;
+    }
+}
+
+const Globalreducer = function(state: State = initialState, action: Actions) : State {
+    return state;
+}
+
 
 export const rootReducer = combineReducers({
-    reducer
+    Problemreducer, Planningreducer, Globalreducer
 });
 
 

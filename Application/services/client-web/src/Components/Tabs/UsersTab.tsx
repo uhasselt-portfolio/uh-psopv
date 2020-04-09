@@ -120,7 +120,7 @@ class Users extends Component<Props> {
                             </select>
                         </Grid>
                         <Grid item >
-                            <input type="text" id="filterinput" />
+                            <input type="text" id="filterinput" placeholder={this.state.filter}/>
                         </Grid>
                         <Grid item >
                             <Button type="submit" variant="outlined" onClick={this.handleFilter}>Zoek</Button>
@@ -142,7 +142,7 @@ interface LinkStateProps {
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        users: state.reducer.Users
+        users: state.Globalreducer.Users
     }
 }
 

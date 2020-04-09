@@ -29,7 +29,7 @@ class Problems extends Component<Props> {
 
         return(
             <div>
-                <DataNavBar tab={3}/>
+                <DataNavBar tab={4}/>
                 <h4>Problems</h4>
                 <div>
                     {Problems}
@@ -45,7 +45,7 @@ interface LinkStateProps {
 }
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
-    const openProblems: ProblemDataInterface[] = state.reducer.Problems.filter(problem => ! problem.solved);
+    const openProblems: ProblemDataInterface[] = state.Problemreducer.Problems.filter(problem => ! problem.solved);
     return {
         problems: openProblems
     }

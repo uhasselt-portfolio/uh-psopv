@@ -48,6 +48,7 @@ class DataNavBar extends Component<IProps> {
                     <Tab label="Data" component={NavLink} to="/Data"/>
                     <Tab label="Vrijwilligers & verantwoordelijken" component={NavLink} to="/Data/Users"/>
                     <Tab label="Posten & sectoren" component={NavLink} to="/Data/Posts"/>
+                    <Tab label="Planning" component={NavLink} to="/Data/Shifts" />
                     <Tab label="Problemen" component={NavLink} to="/data/Problems" />
                 </Tabs>
                 </Paper>
