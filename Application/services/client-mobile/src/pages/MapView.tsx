@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import GoogleMapReact from 'google-map-react';
-// import Marker from '../components/Marker';
+import ProblemMarker from '../components/ProblemMarker';
 import './MapView.css'
 import { IonButton, 
   IonListHeader, 
@@ -18,11 +18,11 @@ import { IonButton,
   IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol } from '@ionic/react'; 
 
 
-
-const MapView = (props: any) => {
+const MapView: React.FC = (props: any) => {
     const [center, setCenter] = useState({lat: 50.9307, lng: 5.3325 });
     const [zoom, setZoom] = useState(11);
     const [Sector, setSector] = useState<string>("Sector 1");
+    
 
     return (
       <div className="Container">
@@ -38,16 +38,16 @@ const MapView = (props: any) => {
           </div>
         <div className="GoogleMaps">
           <GoogleMapReact
-            bootstrapURLKeys={{ key: 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDyMg3eezA_aKnVp1Hvsya23xwxCey32JA&libraries=geometry,drawing,places' }}
+            bootstrapURLKeys={{ key: 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDyMg3eezA_aKnVp1Hvsya23xwxCey32JA' }}
             defaultCenter={center}
             defaultZoom={zoom}
           >
-          {/* <Marker
+          <ProblemMarker
             lat={50.9307}
             lng={5.3325}
             name="My Marker"
             color="blue"
-          /> */}
+          />
         </GoogleMapReact>
       </div>
     </div>

@@ -1,25 +1,44 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSelect, IonSelectOption, IonInput, IonTextarea } from '@ionic/react';
-import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
+import React, { Fragment, useState } from 'react';
 import ExploreContainer from '../components/ExploreContainer';
-import './PostView.css';
-import { RouteComponentProps } from 'react-router';
-import Shift from '../components/Shift';
-import './SendNotifications.css'
-import { caretDown } from 'ionicons/icons';
+import './ListView.css';
+import ContactItem from '../components/Contact_Item'
+
+import { IonButton, 
+  IonListHeader, 
+  IonHeader, 
+  IonPage, 
+  IonTitle, 
+  IonToolbar, 
+  IonList, 
+  IonItem, 
+  IonLabel,
+  IonText,
+  IonSelect,
+  IonSelectOption,
+  IonRow,
+  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol } from '@ionic/react';
 
 
-
-const SendNotifications: React.FC = () => {
-  const [receiver, setReceiver] = useState<string>();
-  const [description, setDescription] = useState<string>();
-  const [title, setTitle] = useState<string>();
-
+  const users: UserProps[] = [
+    {id: 1, name: "wouter", task: "admin"},
+    {id: 2, name: "Michiel", task: "Vrijwilliger"},
+    {id: 3, name: "Maria", task: "Vrijwilliger"},
+    {id: 4, name: "Lode", task: "Vrijwilliger"}
+  ]
   
+  
+  type UserProps = {
+    id: number,
+    name: string,
+    task: string
+  };
+
+const Contacts: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Notificaties versturen</IonTitle>
+          <IonTitle>Contacts</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent>
@@ -28,26 +47,23 @@ const SendNotifications: React.FC = () => {
             <IonTitle size="large">Blank</IonTitle>
           </IonToolbar>
         </IonHeader>
-    
+        <IonContent>
 
-
-        <IonItem>
-          <IonLabel>Ontvanger</IonLabel>
-          <IonSelect interface="popover" value={receiver} placeholder="Selecteer" onIonChange={e => setReceiver(e.detail.value)}>
-            <IonSelectOption value="Admin">Admin</IonSelectOption>
-            <IonSelectOption value="Verantwoordelijke">Verantwoordelijke</IonSelectOption>
-          </IonSelect>
-        </IonItem>
-
-        <IonItem>
-            <IonInput value={title} placeholder="Enter Titel" onIonChange={e => setTitle(e.detail.value!)}></IonInput>
-        </IonItem>
-        <IonItem>
-            <IonTextarea className="textArea" value={description} placeholder="Enter bericht" onIonChange={e => setDescription(e.detail.value!)}></IonTextarea>
-        </IonItem>
+    {/*-- List of Post Items --*/}
+    <IonList>
+      {users.map((data: UserProps, index: number) => {
+          return (
+          <ContactItem
+          id={data.id}
+          name={data.name}
+          task={data.task}/>)
+      })}
+    </IonList>
+  </IonContent>
+        
       </IonContent>
     </IonPage>
   );
 };
 
-export default SendNotifications;
+export default Contacts;

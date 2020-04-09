@@ -1,8 +1,8 @@
 
 import React from 'react';
-import './Marker.css';
+import './ProblemMarker.css';
 
-const Marker = (props: any) => {
+const ProblemMarker = (props: any) => {
     const { color, name, id } = props;
     return (
       <div className="marker"
@@ -12,4 +12,4 @@ const Marker = (props: any) => {
     );
   };
 
-  export default Marker;
+  export default ProblemMarker;

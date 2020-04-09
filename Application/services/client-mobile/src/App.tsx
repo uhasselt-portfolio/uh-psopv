@@ -10,12 +10,12 @@ import {
   IonTabs
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import Home from './pages/Home';
 import ListView from './pages/ListView';
 import MapView from './pages/MapView';
 import PostView from './pages/PostView'
 import Notifications from './pages/Notifications';
 import SendNotifications from './pages/SendNotifications';
+import Contacts from './pages/Contacts';
 
 
 import { ellipse, square, triangle } from 'ionicons/icons';
@@ -49,12 +49,13 @@ const App: React.FC = () => (
       <IonReactRouter>
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/MapView" component={MapView} exact={true} />
           <Route path="/ListView" component={ListView} exact={true} />
+          <Route path="/MapView" component={MapView} exact={true} />
+          <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
           <Route path="/Notifications" component={Notifications} exact={true} />
           <Route path="/SendNotifications" component={SendNotifications} exact={true} />
-          <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
-          <Route path="/" render={() => <Redirect to="/home" />} exact={true} />
+          <Route path="/Contacts" component={Contacts} exact={true} />
+          <Route path="/" render={() => <Redirect to="/ListView" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
           <IonTabButton tab="MapView" href="/MapView">
@@ -72,6 +73,10 @@ const App: React.FC = () => (
           <IonTabButton tab="SendNotifications" href="/SendNotifications">
             <IonIcon icon={square} />
             <IonLabel>Send</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="Contacts" href="/Contacts">
+            <IonIcon icon={square} />
+            <IonLabel>Contacts</IonLabel>
           </IonTabButton>
         </IonTabBar>
         </IonTabs>
