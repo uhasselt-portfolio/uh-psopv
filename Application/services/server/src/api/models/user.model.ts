@@ -40,6 +40,7 @@ class UserModel extends Model<UserModel> {
 
     @AllowNull(false)
     @IsEmail
+    @Unique
     @Column
     email!: string;
 
