@@ -74,7 +74,7 @@ class Posts extends Component<Props> {
 
     render() {
         let filteredPosts: Array<JSX.Element> = this.props.posts.map(x =>(
-            <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
+            <Post key={Math.random()} id={x.id} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
         ));
         let markers: Array<JSX.Element> = this.props.posts.map(x => (
             <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
@@ -82,7 +82,7 @@ class Posts extends Component<Props> {
 
         switch(this.state.filter) {
             case "post" : { filteredPosts = this.props.posts.filter(post => post.title === this.state.filterValue).map(x =>(
-                    <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
+                    <Post key={Math.random()} id={x.id} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
                 ));
                 markers = this.props.posts.filter(post => post.title === this.state.filterValue).map(x =>(
                     <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
@@ -90,7 +90,7 @@ class Posts extends Component<Props> {
                 break;
             }
             case "sector" : {filteredPosts = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue).map(x =>(
-                    <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude}/>
+                    <Post key={Math.random()} id={x.id} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude}/>
                 ));
                 markers = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue).map(x =>(
                     <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>

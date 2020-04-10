@@ -11,7 +11,8 @@ export enum ReduxActionTypes {
     // GET_MESSAGES = 'ADD_MESSAGES',
     MESSAGE_READ = 'MESSAGE_READ',
     MESSAGE_SEND = 'MESSAGE_SEND',
-    SHIFT_CHANGED = 'SHIFT_CHANGED'
+    SHIFT_CHANGED = 'SHIFT_CHANGED',
+    GENERATE_PDF = 'GENERATE_PDF'
 }
 
 export interface IReduxBaseAction {
@@ -90,6 +91,15 @@ export function ActionMessageRead(messageId: Number) : ActionMessageReadType {
     }
 }
 
+export interface ActionGeneratePdf extends IReduxBaseAction {
+    type: ReduxActionTypes.GENERATE_PDF
+}
+export function ActionGeneratePdf() : ActionGeneratePdf {
+    //TODO let the server generate a new pdf
+    return {
+        type: ReduxActionTypes.GENERATE_PDF
+    }
+}
 
 // export interface ActionAddPostType extends IReduxBaseAction {
 //     type: ReduxActionTypes.GET_POSTS,

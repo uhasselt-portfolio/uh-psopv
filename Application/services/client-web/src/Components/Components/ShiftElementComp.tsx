@@ -15,7 +15,7 @@ interface IProps {
     postId: Number,
     post: string,
     userId: Number,
-    user: string;
+    user: string,
     shiftId: Number
 }
 

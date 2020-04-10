@@ -44,31 +44,32 @@ class Shift extends Component<IProps> {
     }
 
     render() {
+
         let list : Array<JSX.Element> = this.props.jobs.sort((x,y) => x.postId.valueOf() - y.postId.valueOf()).map(x => (
             <ShiftElement post={x.post} postId={x.postId} user={x.user} userId={x.userId} shiftId={x.shiftId}/>
         ));
             
         return(
-            <Paper style={paperStyle}>
-                <Grid container justify="flex-start">
-                    <Grid item style={labelStyle}>
-                        <p>{this.props.shiftname}</p>
+                <Paper style={paperStyle}>
+                    <Grid container justify="flex-start">
+                        <Grid item style={labelStyle}>
+                            <p>{this.props.shiftname}</p>
+                        </Grid>
+                        <Grid item style={labelStyle}>
+                            <p>strarts om: {this.props.begindate}</p>
+                        </Grid>
+                        <Grid item style={labelStyle}>
+                            <p>eindigd om: {this.props.enddate}</p>
+                        </Grid>
+                        <Grid item style={labelStyle}> 
+                            { ! this.state.dropdwon && <Button variant="contained" startIcon={<ArrowDropDownIcon />} onClick={this.handleButton}>Shift inhoud</Button>}
+                            {this.state.dropdwon && <Button variant="contained" startIcon={<ArrowDropUpIcon />} onClick={this.handleButton}>Shift inhoud</Button>}
+                        </Grid>
+                        <Grid container justify="center">
+                            {this.state.dropdwon && list}
+                        </Grid>
                     </Grid>
-                    <Grid item style={labelStyle}>
-                        <p>strarts om: {this.props.begindate}</p>
-                    </Grid>
-                    <Grid item style={labelStyle}>
-                        <p>eindigd om: {this.props.enddate}</p>
-                    </Grid>
-                    <Grid item style={labelStyle}> 
-                        { ! this.state.dropdwon && <Button variant="contained" startIcon={<ArrowDropDownIcon />} onClick={this.handleButton}>Shift inhoud</Button>}
-                        {this.state.dropdwon && <Button variant="contained" startIcon={<ArrowDropUpIcon />} onClick={this.handleButton}>Shift inhoud</Button>}
-                    </Grid>
-                    <Grid container justify="center">
-                        {this.state.dropdwon && list}
-                    </Grid>
-                </Grid>
-            </Paper>
+                </Paper>
         );
     }
 }

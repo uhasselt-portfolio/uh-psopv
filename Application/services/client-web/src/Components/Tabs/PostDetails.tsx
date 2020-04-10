@@ -3,20 +3,39 @@ import DataNavBar from '../NavBars/DataNavBarComp';
 import {Grid} from '@material-ui/core';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import PostInterface from '../Interfaces/PostDataInterface';
+import { AppState } from '../../Redux/Reducers';
+import {connect} from 'react-redux';
+import ShiftDataInterface from '../Interfaces/ShiftDataInterface';
+import Shift from '../Components/ShiftComp';
 
 const styleBorder = {
     border: 'solid 1px black',
-    width: '40%',
+    width: '50%',
     height: '100%',
     padding: '5px',
 } 
 const styleMap = {
     height: '600px',
-    width: '60%'
+    width: '50%'
 }
 
 interface IPropsMyMapComponent {
     isMarkerShown: boolean
+}
+
+interface job {
+    postId: Number,
+    post: string,
+    userId: Number,
+    user: string,
+    shiftId: Number
+}
+
+interface ShiftProps {
+    shiftname: string,
+    begindate: string,
+    enddate: string,
+    jobs: job[]
 }
 
 interface IProps {
@@ -25,7 +44,51 @@ interface IProps {
     }
 }
 
-class PostDetails extends Component<IProps> {
+type Props = IProps & LinkStateProps;
+
+class PostDetails extends Component<Props> {
+
+    organizePlanning = (ownshifts: ShiftDataInterface[]): ShiftProps[] => {
+        let allShifts : ShiftDataInterface[] = ownshifts;
+        let shifts : ShiftProps[] = [];
+
+        while (allShifts.length > 0) {
+            let temp : ShiftDataInterface[] = allShifts.filter(shift => shift.name === allShifts[0].name);
+            let tempJobs : job[] = [];
+            for (let i : number = 0; i < temp.length; ++i) {
+                tempJobs = [...tempJobs, {
+                    postId: temp[i].post_id,
+                    post: temp[i].post,
+                    user: temp[i].user,
+                    userId: temp[i].User_id,
+                    shiftId: temp[i].id
+                }];
+            }
+            let tempProps : ShiftProps = {
+                shiftname: temp[0].name,
+                begindate: temp[0].beginDate,
+                enddate: temp[0].endDate,
+                jobs: tempJobs
+            };
+            shifts = [...shifts, tempProps];
+            allShifts = allShifts.filter(shift => shift.name !== temp[0].name);
+        }
+        return shifts
+    }
+
+    filterPlanning = () : Array<JSX.Element> => {
+        let ownShifts : ShiftDataInterface[] = this.props.planning.filter(shift => shift.post_id === this.props.location.state.id);
+        let shifts: ShiftProps[] = this.organizePlanning(ownShifts).sort((x,y) => {
+            if (x.shiftname <= y.shiftname)
+                return -1;
+            else
+                return 1;
+        });
+        let shiftUi : Array<JSX.Element> = shifts.map(x => (
+            <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs} />
+        ));
+        return shiftUi;
+    }
 
     render() {
         const MyMapComponent = withScriptjs(withGoogleMap((props: IPropsMyMapComponent) =>
@@ -42,24 +105,37 @@ class PostDetails extends Component<IProps> {
         </GoogleMap>
         ));
 
+        let shiftUi = this.filterPlanning();
+
         return(
             <div>
                 <DataNavBar tab={-1}/>
-                <Grid container>
+                <Grid container direction="row">
                     <Grid item style={styleBorder}>
-                        <Grid container justify="center">
+                        <Grid container direction="column">
                             <Grid item>
-                                <h4>{this.props.location.state.title}</h4>
+                                <Grid container>
+                                    <Grid item >
+                                        <Grid container justify="center">
+                                            <Grid item>
+                                                <h4>{this.props.location.state.title}</h4>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item>
+                                            <p>Adres: {this.props.location.state.addres}</p>
+                                        </Grid>
+                                        <Grid item>
+                                            <p>Sector: {this.props.location.state.sector}</p>
+                                        </Grid>
+                                        <Grid item>
+                                            <p>{this.props.location.state.general}</p>
+                                        </Grid>
+                                    </Grid>
+                                </Grid>
                             </Grid>
-                        </Grid>
-                        <Grid item>
-                            <p>Adres: {this.props.location.state.addres}</p>
-                        </Grid>
-                        <Grid item>
-                            <p>Sector: {this.props.location.state.sector}</p>
-                        </Grid>
-                        <Grid item>
-                            <p>{this.props.location.state.general}</p>
+                            <Grid item> {/*List*/ }
+                                {shiftUi}
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid item style={styleMap}>
@@ -77,5 +153,17 @@ class PostDetails extends Component<IProps> {
     }
 }
 
+interface LinkStateProps {
+    planning: ShiftDataInterface[]
+}
 
-export default PostDetails
+const MapStateToProps = (state : AppState): LinkStateProps => {
+    return {
+        planning: state.Planningreducer.Planning
+    };
+}
+
+// export default Overview
+export default connect(
+    MapStateToProps,
+)(PostDetails);

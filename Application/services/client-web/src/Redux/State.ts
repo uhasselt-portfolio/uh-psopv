@@ -9,5 +9,6 @@ export default interface State {
     Problems: ProblemDataInterface[],
     Messages: MessageDataInterface[],
     Users: UserDataInterface[],
-    Planning: ShiftDataInterface[]
+    Planning: ShiftDataInterface[],
+    pdfGenerated: boolean
 }
