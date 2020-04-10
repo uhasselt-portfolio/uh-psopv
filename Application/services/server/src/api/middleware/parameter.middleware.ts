@@ -59,6 +59,13 @@ export const validateBodyParameters = (method: string): any => {
                 body("name", "You must specify a name for the association").exists()
             ]
         }
+        case 'general_post/add': {
+            return [
+                body("name", "You must specify a name for the general post").exists(),
+                body("minimumAge", "You must specify a minimum age for the general post").exists(),
+                body("description", "You must specify a description for the general post").exists()
+            ]
+        }
     }
 };
 

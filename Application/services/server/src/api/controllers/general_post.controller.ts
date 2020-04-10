@@ -1,19 +1,17 @@
 import {Request, Response} from "express";
-import UserModel from "../models/user.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
-
-import MessageModel from "../models/message.model";
+import GeneralPostModel from "../models/general_post.model";
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const messages = await MessageModel.findAll();
-        const statusCode = messages == null ? 404 : 200;
+        const generalPosts = await GeneralPostModel.findAll();
+        const statusCode = generalPosts == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                messages: messages
+                generalPost: generalPosts
             },
             message: null
         });
@@ -28,17 +26,17 @@ export const fetchAll = async (req: Request, res: Response) => {
 
 
 export const fetch = async (req: Request, res: Response) => {
-    const messageID = req.params.id;
+    const generalPostID = req.params.id;
 
     try {
-        const message = await MessageModel.findByPk(messageID);
-        const statusCode = message == null ? 404 : 200;
+        const generalPost = await GeneralPostModel.findByPk(generalPostID);
+        const statusCode = generalPost == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                message: message
+                generalPost: generalPost
             },
             message: null
         });
@@ -57,30 +55,17 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by);
+        const generalPost = await GeneralPostModel.create({
+            name: req.body.name,
+            minimum_age: req.body.minimumAge,
+            description: req.body.description
+        });
 
-        if(userExists) {
-            const message = await MessageModel.create({
-                title: req.body.title,
-                message: req.body.message,
-                created_by: req.body.created_by,
-                priority: req.body.priority
-            });
-
-            res.status(201).send({
-                status: 'success',
-                data: {message: message},
-                message: null
-            })
-        } else {
-            res.status(404).send({
-                status: 'fail',
-                data: {
-                    user_id: userExists,
-                },
-                message: 'Make sure that your specified data is correct'
-            });
-        }
+        res.status(201).send({
+            status: 'success',
+            data: {generalPost: generalPost},
+            message: null
+        })
     } catch (error) {
         res.status(500).send({
             status: 'error',
@@ -91,10 +76,10 @@ export const add = async (req: Request, res: Response) => {
 };
 
 export const modify = async (req: Request, res: Response) => {
-    const messageID = req.params.id;
-    const message = req.body.message;
+    const generalPostID = req.params.id;
+    const generalPost = req.body.generalPost;
 
-    if (!message)
+    if (!generalPost)
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -102,19 +87,19 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await MessageModel.update(message, {
-            returning: true, where: {id: messageID}
+        const result = await GeneralPostModel.update(generalPost, {
+            returning: true, where: {id: generalPostID}
         });
 
-        const updatedMessage = result[1][0];
-        const statusCode = updatedMessage == null ? 404 : 200;
+        const updatedGeneralPost = result[1][0];
+        const statusCode = updatedGeneralPost == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
-        const errorMessage = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
+        const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
-            data: {message: updatedMessage},
-            message: errorMessage
+            data: {generalPost: updatedGeneralPost},
+            message: message
         });
 
     } catch (error) {
@@ -127,11 +112,11 @@ export const modify = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
-    const messageID = req.params.id;
+    const generalPostID = req.params.id;
 
     try {
-        const deletedMessage = await MessageModel.destroy({where: {id: messageID}});
-        const statusCode = deletedMessage == null ? 404 : 200;
+        const deletedGeneralPost = await GeneralPostModel.destroy({where: {id: generalPostID}});
+        const statusCode = deletedGeneralPost == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({

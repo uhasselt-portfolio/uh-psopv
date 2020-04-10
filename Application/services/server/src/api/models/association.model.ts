@@ -1,4 +1,14 @@
-import {AllowNull, AutoIncrement, Column, Model, NotNull, PrimaryKey, Table} from "sequelize-typescript";
+import {
+    AllowNull,
+    AutoIncrement,
+    Column,
+    CreatedAt,
+    Model,
+    NotNull,
+    PrimaryKey,
+    Table,
+    UpdatedAt
+} from "sequelize-typescript";
 
 @Table({tableName: "associations", })
 class AssociationModel extends Model {
@@ -10,6 +20,14 @@ class AssociationModel extends Model {
     @AllowNull(false)
     @Column
     name!: string;
+
+    @UpdatedAt
+    @Column
+    updated_at!: Date;
+
+    @CreatedAt
+    @Column
+    created_at!: Date;
 }
 
 export default AssociationModel

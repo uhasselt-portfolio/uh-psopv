@@ -9,6 +9,7 @@ import shiftRoutes from "./api/routes/shift.routes";
 import messageRoutes from "./api/routes/message.routes";
 import postRoutes from "./api/routes/post.routes";
 import associationRoutes from "./api/routes/association.routes";
+import generalPostRoutes from "./api/routes/general_post.routes";
 
 class App {
 
@@ -42,6 +43,7 @@ class App {
         this.express.use("/api/shift", shiftRoutes);
         this.express.use("/api/message", messageRoutes);
         this.express.use("/api/association", associationRoutes);
+        this.express.use("/api/general_post", generalPostRoutes);
     }
 }
 
