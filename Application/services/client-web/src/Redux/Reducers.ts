@@ -1,7 +1,8 @@
 import {combineReducers} from 'redux';
-import {ReduxActionTypes, ActionProblemSolvedType, ActionMessageReadType, ActionShiftChangedType} from './Actions';
+import {ReduxActionTypes, ActionProblemSolvedType, ActionMessageReadType, ActionShiftChangedType, ActionMessageSendType} from './Actions';
 import State from './State';
 import ShiftDataInterface from '../Components/Interfaces/ShiftDataInterface';
+import MessageInterface from '../Components/Interfaces/MessageDataInterface';
 
 const initialState : State = {
     Posts: [
@@ -45,11 +46,11 @@ const initialState : State = {
         {name: "Sam", lastname:"Coppens", gsmNumber:"0475125699", email:"Sam.Coppens@live.be", has_internet: true, permissions: true, latitude: 50, longitude: 0}
     ],
     Messages: [
-        {title:"titel", sender:"verstuurder", content:"bericht"},
-        {title:"dronken man", sender:"John Timmermans", content:"Dronken man op parking 1 is verwijderd door de politie"},
-        {title:"auto ongeluk", sender: "An Versteen", content:"Door een auto ongeluk is een deel van parking 3 tijdelijk buiten gebruik"},
-        {title:"vrijwilliger gevonden", sender:"Marlies Dalemans", content:"De ontbrekende vrijwilliger op post POE_WOE is gevonden"},
-        {title:"bier op", sender:"Michiel Delvaux", content:"Het bier bij tab 4 is op"}
+        {id: 0,title:"titel", sender:"verstuurder", content:"bericht", read: false},
+        {id: 1,title:"dronken man", sender:"John Timmermans", content:"Dronken man op parking 1 is verwijderd door de politie", read: false},
+        {id: 2,title:"auto ongeluk", sender: "An Versteen", content:"Door een auto ongeluk is een deel van parking 3 tijdelijk buiten gebruik", read: false},
+        {id: 3,title:"vrijwilliger gevonden", sender:"Marlies Dalemans", content:"De ontbrekende vrijwilliger op post POE_WOE is gevonden", read: false},
+        {id: 4,title:"bier op", sender:"Michiel Delvaux", content:"Het bier bij tab 4 is op", read: false}
     ],
     Planning: [ //eigenlijk heeft elke shift met dezelfde naam dezelfde uren
         {    id: 0, name: "shift", beginDate: '9/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 0, post: 'post', User_id: 0, user: 'user', sector: 1},
@@ -70,7 +71,7 @@ const initialState : State = {
     ]
 }
 
-export type Actions = ActionProblemSolvedType | ActionMessageReadType |ActionShiftChangedType;
+export type Actions = ActionProblemSolvedType | ActionMessageReadType |ActionShiftChangedType | ActionMessageSendType;
 
 const Problemreducer =  function(state: State = initialState, action: Actions) : State {
     switch(action.type) {
@@ -113,13 +114,35 @@ const Planningreducer = function(state: State = initialState, action: Actions) :
     }
 }
 
+const MessageReducer = function(state: State = initialState, action: Actions) : State {
+    switch(action.type) {
+        case ReduxActionTypes.MESSAGE_SEND : {
+            console.log("message send");
+            return state;
+        }
+        case ReduxActionTypes.MESSAGE_READ : {
+            let otherMessages : MessageInterface[] = state.Messages.filter(message => message.id !== action.payload.messageId);
+            let oldMessage : MessageInterface[] = state.Messages.filter(message => message.id === action.payload.messageId);
+            let newMessage : MessageInterface = {
+                ...oldMessage[0],
+                read: true
+            }
+            return {
+                ...state,
+                Messages : [...otherMessages, newMessage]
+            }
+        }
+        default: return state;
+    }
+}
+
 const Globalreducer = function(state: State = initialState, action: Actions) : State {
     return state;
 }
 
 
 export const rootReducer = combineReducers({
-    Problemreducer, Planningreducer, Globalreducer
+    Problemreducer, Planningreducer, Globalreducer, MessageReducer
 });
 
 

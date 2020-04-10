@@ -10,6 +10,7 @@ export enum ReduxActionTypes {
     PROBLEM_SOLVED = 'PROBLEM_SOLVED',
     // GET_MESSAGES = 'ADD_MESSAGES',
     MESSAGE_READ = 'MESSAGE_READ',
+    MESSAGE_SEND = 'MESSAGE_SEND',
     SHIFT_CHANGED = 'SHIFT_CHANGED'
 }
 
@@ -48,10 +49,47 @@ export function ActionShiftChanged(changedShiftid: Number, newUser: string) : Ac
     }
 }
 
+
+    // EVERYBODY: 'EVERYBODY',
+    // VOLUNTEER: 'VOLUNTEER',
+    // SECTORMANAGER: 'SECTORMANAGER'
+export interface ActionMessageSendType extends IReduxBaseAction {
+    type: ReduxActionTypes.MESSAGE_SEND,
+    payload: {
+        receiver: string,
+        user: string,
+        title: string,
+        content: string
+    }
+}
+export function ActionMessageSend(receiver: string, user: string, title: string, content: string) : ActionMessageSendType{
+    //TODO send action to server
+    return {
+        type: ReduxActionTypes.MESSAGE_SEND,
+        payload: {
+            receiver,
+            user,
+            title,
+            content
+        }
+    }
+}
+
 export interface ActionMessageReadType extends IReduxBaseAction {
     type: ReduxActionTypes.MESSAGE_READ,
-    payload: MessageInterface
+    payload: {
+        messageId: Number
+    }
 }
+export function ActionMessageRead(messageId: Number) : ActionMessageReadType {
+    return {
+        type: ReduxActionTypes.MESSAGE_READ,
+        payload: {
+            messageId
+        }
+    }
+}
+
 
 // export interface ActionAddPostType extends IReduxBaseAction {
 //     type: ReduxActionTypes.GET_POSTS,
