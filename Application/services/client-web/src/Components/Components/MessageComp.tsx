@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import MessageInterface from './Interfaces/messageInterface';
+import MessageInterface from '../Interfaces/MessageDataInterface';
 import {Grid, Paper} from '@material-ui/core';
 
 interface IState {

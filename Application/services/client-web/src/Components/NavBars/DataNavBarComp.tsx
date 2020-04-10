@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
 const styleSticky = {
     position: "sticky" as 'sticky',
-    top: 0,
+    top: 37,
     zIndex: 2
 } 
 
@@ -18,15 +18,15 @@ interface IState {
     value: String
 }
 
-class NavBar extends Component<IProps, IState> {
+class DataNavBar extends Component<IProps, IState> {
     state = {
-        value: "/"
+        value: "/Data"
     }
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            value: "/"
+            value: "/Data"
         }
         this.handleChange = this.handleChange.bind(this);
     }
@@ -49,14 +49,15 @@ class NavBar extends Component<IProps, IState> {
                     textColor="primary"
                     centered
                 >
-                    <Tab label="Overview" component={Link} to="/"/>
-                    <Tab label="Rapportering" component={Link} to="/Rapportering"/>
-                    <Tab label="Data" component={Link} to="/Data"/>
+                    <Tab label="Data" component={NavLink} to="/Data"/>
+                    <Tab label="Vrijwilligers & verantwoordelijken" component={NavLink} to="/Data/Users"/>
+                    <Tab label="Posten & sectoren" component={NavLink} to="/Data/Posts"/>
+                    <Tab label="Problemen" component={NavLink} to="/data/Problems" />
                 </Tabs>
                 </Paper>
         );
     }
 }
 
-export default NavBar;
+export default DataNavBar;
 

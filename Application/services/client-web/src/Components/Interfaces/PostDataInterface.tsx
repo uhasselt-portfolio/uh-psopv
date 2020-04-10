@@ -5,6 +5,8 @@ interface PostInterface {
     addres: string,
     sector: Number,
     general: string,
+    latitude: Number,
+    longitude: Number
 }
 
 export default PostInterface;

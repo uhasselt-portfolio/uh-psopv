@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 
 const styleSticky = {
     position: "sticky" as 'sticky',
-    top: 37,
+    top: 0,
     zIndex: 2
 } 
 
@@ -18,15 +18,15 @@ interface IState {
     value: String
 }
 
-class DataNavBar extends Component<IProps, IState> {
+class NavBar extends Component<IProps, IState> {
     state = {
-        value: "/Data"
+        value: "/"
     }
 
     constructor(props: IProps) {
         super(props);
         this.state = {
-            value: "/Data"
+            value: "/"
         }
         this.handleChange = this.handleChange.bind(this);
     }
@@ -49,15 +49,15 @@ class DataNavBar extends Component<IProps, IState> {
                     textColor="primary"
                     centered
                 >
+                    <Tab label="Overview" component={Link} to="/"/>
+                    <Tab label="Rapportering" component={Link} to="/Rapportering"/>
+                    <Tab label="map" component={Link} to="/Map" />
                     <Tab label="Data" component={Link} to="/Data"/>
-                    <Tab label="Vrijwilligers & verantwoordelijken" component={Link} to="/Data/Users"/>
-                    <Tab label="Posten & sectoren" component={Link} to="/Data/Posts"/>
-                    <Tab label="Problemen" component={Link} to="/data/Problems" />
                 </Tabs>
                 </Paper>
         );
     }
 }
 
-export default DataNavBar;
+export default NavBar;
 
