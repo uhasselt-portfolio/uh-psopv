@@ -11,7 +11,7 @@ export const fetchAll = async (req: Request, res: Response) => {
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                itemTypes: problemTypes
+                problemTypes: problemTypes
             },
             message: null
         });
