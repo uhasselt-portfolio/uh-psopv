@@ -4,6 +4,10 @@ import {connect} from 'react-redux';
 import {Dispatch} from 'redux';
 import {ActionShiftChanged} from '../../Redux/Actions';
 import {Actions} from '../../Redux/Reducers';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
+import ItemInterface from '../Interfaces/ItemDataInterface';
+import Item from './ItemComp';
 
 const style= {
     border: 'solid 1px black',
@@ -16,18 +20,21 @@ interface IProps {
     post: string,
     userId: Number,
     user: string,
-    shiftId: Number
+    shiftId: Number,
+    items: ItemInterface[]
 }
 
 interface IState {
-    changing: boolean
+    changing: boolean,
+    dropdown: boolean
 }
 
 type Props = LinkDispatchToProps & IProps;
 
 class ShiftElement extends Component<Props> {
     state : IState = {
-        changing : false
+        changing : false,
+        dropdown: false
     }
 
     handleButtonSwitchChange = () => {
@@ -47,7 +54,17 @@ class ShiftElement extends Component<Props> {
         })
     }
 
+    handleDropButton = () => {
+        this.setState({
+            dropdown: ! this.state.dropdown
+        })
+    }
+
     render() {
+        let list : Array<JSX.Element> = this.props.items.map(x => (
+            <Item name={x.itemType}/>
+        ));
+
         return(
             <Grid container justify="space-evenly" style={style}> {/*TODO als ik er een from rondzet wordt de layout niet meer goed, maar form is wel meerwaarde*/}
                     <Grid item>
@@ -57,6 +74,10 @@ class ShiftElement extends Component<Props> {
                         { ! this.state.changing && <p>vrijwilliger: {this.props.user}</p>}
                         { this.state.changing && <input type="text" id="input" placeholder={this.props.user} />}
                     </Grid>
+                    <Grid item> 
+                            { ! this.state.dropdown && <Button variant="contained" startIcon={<ArrowDropDownIcon />} onClick={this.handleDropButton}>Items</Button>}
+                            {this.state.dropdown && <Button variant="contained" startIcon={<ArrowDropUpIcon />} onClick={this.handleDropButton}>Items</Button>}
+                        </Grid>
                     <Grid item>
                         { ! this.state.changing && <Button variant="outlined" onClick={this.handleButtonSwitchChange}>change</Button>}
                         { this.state.changing && 
@@ -69,6 +90,9 @@ class ShiftElement extends Component<Props> {
                                 </Grid>
                             </Grid>
                         }
+                    </Grid>
+                    <Grid container justify="center">
+                        {this.state.dropdown && list}
                     </Grid>
             </Grid>
         );

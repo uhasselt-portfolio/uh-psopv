@@ -7,6 +7,7 @@ import { AppState } from '../../Redux/Reducers';
 import {connect} from 'react-redux';
 import ShiftDataInterface from '../Interfaces/ShiftDataInterface';
 import Shift from '../Components/ShiftComp';
+import ItemInterface from '../Interfaces/ItemDataInterface';
 
 const styleBorder = {
     border: 'solid 1px black',
@@ -28,7 +29,8 @@ interface job {
     post: string,
     userId: Number,
     user: string,
-    shiftId: Number
+    shiftId: Number,
+    items: ItemInterface[]
 }
 
 interface ShiftProps {
@@ -61,7 +63,8 @@ class PostDetails extends Component<Props> {
                     post: temp[i].post,
                     user: temp[i].user,
                     userId: temp[i].User_id,
-                    shiftId: temp[i].id
+                    shiftId: temp[i].id,
+                    items: this.getItems(temp[i].id)
                 }];
             }
             let tempProps : ShiftProps = {
@@ -75,6 +78,9 @@ class PostDetails extends Component<Props> {
         }
         return shifts
     }
+    getItems = (shiftId: Number) : ItemInterface[] => {
+        return this.props.items.filter(item => item.shiftId === shiftId);
+    }
 
     filterPlanning = () : Array<JSX.Element> => {
         let ownShifts : ShiftDataInterface[] = this.props.planning.filter(shift => shift.post_id === this.props.location.state.id);
@@ -85,7 +91,7 @@ class PostDetails extends Component<Props> {
                 return 1;
         });
         let shiftUi : Array<JSX.Element> = shifts.map(x => (
-            <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs} />
+            <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs}/>
         ));
         return shiftUi;
     }
@@ -154,12 +160,14 @@ class PostDetails extends Component<Props> {
 }
 
 interface LinkStateProps {
-    planning: ShiftDataInterface[]
+    planning: ShiftDataInterface[],
+    items: ItemInterface[]
 }
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        planning: state.Planningreducer.Planning
+        planning: state.Planningreducer.planning,
+        items: state.Globalreducer.items
     };
 }
 

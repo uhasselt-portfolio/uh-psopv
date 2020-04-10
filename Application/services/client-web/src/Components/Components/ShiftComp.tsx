@@ -2,7 +2,8 @@ import React, {Component} from 'react';
 import {Grid, Paper, Button} from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowDropUpIcon from '@material-ui/icons/ArrowDropUp';
-import ShiftElement from './ShiftElementComp'
+import ShiftElement from './ShiftElementComp';
+import ItemInterface from '../Interfaces/ItemDataInterface';
 
 const labelStyle = {
     padding: '0 10px 0 0'
@@ -17,8 +18,9 @@ interface job {
     postId: Number,
     post: string,
     userId: Number,
-    user: string;
-    shiftId: Number
+    user: string,
+    shiftId: Number,
+    items: ItemInterface[]
 }
 
 interface IProps {
@@ -46,7 +48,7 @@ class Shift extends Component<IProps> {
     render() {
 
         let list : Array<JSX.Element> = this.props.jobs.sort((x,y) => x.postId.valueOf() - y.postId.valueOf()).map(x => (
-            <ShiftElement post={x.post} postId={x.postId} user={x.user} userId={x.userId} shiftId={x.shiftId}/>
+            <ShiftElement post={x.post} postId={x.postId} user={x.user} userId={x.userId} shiftId={x.shiftId} items={x.items}/>
         ));
             
         return(

@@ -142,7 +142,7 @@ interface LinkStateProps {
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        users: state.Globalreducer.Users
+        users: state.Globalreducer.users
     }
 }
 

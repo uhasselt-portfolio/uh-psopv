@@ -175,8 +175,8 @@ interface LinkStateProps {
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        messages: state.MessageReducer.Messages,
-        problems: state.Problemreducer.Problems
+        messages: state.MessageReducer.messages,
+        problems: state.Problemreducer.problems
     }
 }
 

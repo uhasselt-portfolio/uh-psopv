@@ -5,6 +5,7 @@ import { AppState } from '../../Redux/Reducers';
 import {connect} from 'react-redux';
 import ShiftInterface from '../Interfaces/ShiftDataInterface';
 import Shift from '../Components/ShiftComp';
+import ItemInterface from '../Interfaces/ItemDataInterface';
 
 interface IState {
     filter: string,
@@ -16,7 +17,8 @@ interface job {
     post: string,
     userId: Number,
     user: string,
-    shiftId: Number
+    shiftId: Number,
+    items: ItemInterface[]
 }
 
 interface ShiftProps {
@@ -76,7 +78,8 @@ class Planning extends Component<Props> {
                         post: temp[i].post,
                         user: temp[i].user,
                         userId: temp[i].User_id,
-                        shiftId: temp[i].id
+                        shiftId: temp[i].id,
+                        items: this.getItems(temp[i].id)
                     }];
                 }
             }
@@ -93,7 +96,9 @@ class Planning extends Component<Props> {
         }
         return shifts
     }
-
+    getItems = (shiftId: Number) : ItemInterface[] => {
+        return this.props.items.filter(item => item.shiftId === shiftId);
+    }
 
     // organizePlanning = (): ShiftProps[] => {
     //     let allShifts : ShiftInterface[] = this.props.shifts;
@@ -136,13 +141,13 @@ class Planning extends Component<Props> {
                     <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs} />
                 ));
             case "startDate": return shifts.filter(shift => shift.begindate === this.state.filterValue).map(x => (
-                    <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs} />
+                    <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs}/>
                 ));
             case "endDate": return shifts.filter(shift => shift.enddate === this.state.filterValue).map(x => (
-                    <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs} />
+                    <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs}/>
                 ));
             default: return shifts.map(x => (
-                    <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs} />
+                    <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs}/>
                 ));
         }
     }
@@ -188,11 +193,13 @@ class Planning extends Component<Props> {
 
 interface LinkStateProps {
     shifts: ShiftInterface[],
+    items: ItemInterface[]
 }
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        shifts: state.Planningreducer.Planning
+        shifts: state.Planningreducer.planning,
+        items: state.Globalreducer.items
     }
 }
 

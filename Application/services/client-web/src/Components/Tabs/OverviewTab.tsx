@@ -161,9 +161,9 @@ interface LinkStateProps {
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        posts: state.Globalreducer.Posts,
-        problems: state.Globalreducer.Problems,
-        users: state.Globalreducer.Users
+        posts: state.Globalreducer.posts,
+        problems: state.Globalreducer.problems,
+        users: state.Globalreducer.users
     }
 }
 

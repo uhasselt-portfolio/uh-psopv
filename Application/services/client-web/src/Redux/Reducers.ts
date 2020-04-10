@@ -5,7 +5,7 @@ import ShiftDataInterface from '../Components/Interfaces/ShiftDataInterface';
 import MessageInterface from '../Components/Interfaces/MessageDataInterface';
 
 const initialState : State = {
-    Posts: [
+    posts: [
         { id: 0, title: "post", addres: "addres", sector: 1, general: "generalpost", latitude: 50.962595, longitude: 5.358503 },
         { id: 1,title: "Parking1", addres: "Visserstraat 27", sector: 1, general: "Parking Controle", latitude: 50.962068, longitude: 5.358836 },
         { id: 2,title: "Parking2", addres: "Berglaan 5", sector: 1, general: "Parking Controle", latitude: 50.963642, longitude: 5.359328 },
@@ -18,7 +18,7 @@ const initialState : State = {
         { id: 8,title: "Straat-affzetting2", addres: "Addelbaan - Rodeberg", sector: 4, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503 },
         { id: 10,title: "Straat-affzetting3", addres: "Visserstraat - Geraardslaan", sector: 1, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503 }
     ],
-    Problems: [
+    problems: [
         {problemType: "problemtype", priority: 1, discription: "discription", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 
                 post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503, solved:false, id:0},
             {problemType: "Afwezigheid", priority: 1, discription: "Vrijwilliger is afwezig van zijn post", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 
@@ -30,7 +30,7 @@ const initialState : State = {
             {problemType: "problemtype", priority: 1, discription: "discription", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 
                 post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503, solved:false, id: 4}
     ],
-    Users: [{name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permissions:false, association:"vereneging", latitude: 50.965100, longitude: 5.364983},
+    users: [{name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permissions:false, association:"vereneging", latitude: 50.965100, longitude: 5.364983},
         {name: "naam2", lastname:"lastname2", gsmNumber:"gsmnummer2", email:"email2", has_internet:false, permissions:true, latitude: 50, longitude: 0 },
         {name: "John", lastname:"verbrugen", gsmNumber:"0478536954", email:"john.verbrugen@hotmail.com", has_internet: true, permissions: false, association:"scouts Kiewit", latitude: 50, longitude: 0},
         {name: "Marie", lastname:"Torfs", gsmNumber:"0475636984", email:"Marie.Torfs@gmail.Com", has_internet: true, permissions: false, association:"scouts Kiewit", latitude: 50, longitude: 0},
@@ -45,14 +45,14 @@ const initialState : State = {
         {name: "Liesbeth", lastname:"Saenen", gsmNumber:"0475896412", email:"Saenen.Liesbeth@gmail.com", has_internet: true, permissions: false, association:"VZWKiewit", latitude: 50, longitude: 0},
         {name: "Sam", lastname:"Coppens", gsmNumber:"0475125699", email:"Sam.Coppens@live.be", has_internet: true, permissions: true, latitude: 50, longitude: 0}
     ],
-    Messages: [
+    messages: [
         {id: 0,title:"titel", sender:"verstuurder", content:"bericht", read: false},
         {id: 1,title:"dronken man", sender:"John Timmermans", content:"Dronken man op parking 1 is verwijderd door de politie", read: false},
         {id: 2,title:"auto ongeluk", sender: "An Versteen", content:"Door een auto ongeluk is een deel van parking 3 tijdelijk buiten gebruik", read: false},
         {id: 3,title:"vrijwilliger gevonden", sender:"Marlies Dalemans", content:"De ontbrekende vrijwilliger op post POE_WOE is gevonden", read: false},
         {id: 4,title:"bier op", sender:"Michiel Delvaux", content:"Het bier bij tab 4 is op", read: false}
     ],
-    Planning: [ //eigenlijk heeft elke shift met dezelfde naam dezelfde uren
+    planning: [ //eigenlijk heeft elke shift met dezelfde naam dezelfde uren
         {    id: 0, name: "shift", beginDate: '9/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 0, post: 'post', User_id: 0, user: 'user', sector: 1},
         {    id: 1, name: "shift2", beginDate: '9/04/2020 16:00', endDate: '9/04/2020 15:00', post_id: 1, post: 'post', User_id: 0, user: 'user', sector: 1},
         {    id: 2, name: "shift", beginDate: '9/04/2020 17:00', endDate: '9/04/2020 15:00', post_id: 2, post: 'post', User_id: 0, user: 'user', sector: 1},
@@ -69,6 +69,23 @@ const initialState : State = {
         {    id: 13, name: "shift3", beginDate: '11/04/2020 5:00', endDate: '9/04/2020 15:00', post_id: 13, post: 'post', User_id: 0, user: 'user', sector: 0},
         {    id: 14, name: "shift", beginDate: '11/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 14, post: 'post', User_id: 0, user: 'user', sector: 0}
     ],
+    items: [
+        {id: 0, shiftId: 0, itemType: "Fluo hesje"},
+        {id: 1, shiftId: 1, itemType: "Fluo hesje"},
+        {id: 2, shiftId: 2, itemType: "Fluo hesje"},
+        {id: 3, shiftId: 3, itemType: "Fluo hesje"},
+        {id: 4, shiftId: 4, itemType: "Fluo hesje"},
+        {id: 5, shiftId: 5, itemType: "Fluo hesje"},
+        {id: 6, shiftId: 6, itemType: "Fluo hesje"},
+        {id: 7, shiftId: 7, itemType: "Fluo hesje"},
+        {id: 8, shiftId: 8, itemType: "Fluo hesje"},
+        {id: 9, shiftId: 9, itemType: "Fluo hesje"},
+        {id: 10, shiftId: 10, itemType: "Fluo hesje"},
+        {id: 11, shiftId: 11, itemType: "Fluo hesje"},
+        {id: 12, shiftId: 12, itemType: "Fluo hesje"},
+        {id: 13, shiftId: 13, itemType: "Fluo hesje"},
+        {id: 14, shiftId: 14, itemType: "Fluo hesje"}
+    ],
     pdfGenerated: false
 }
 
@@ -77,14 +94,14 @@ export type Actions = ActionProblemSolvedType | ActionMessageReadType |ActionShi
 const Problemreducer =  function(state: State = initialState, action: Actions) : State {
     switch(action.type) {
         case ReduxActionTypes.PROBLEM_SOLVED : {
-            let otherProblems = state.Problems.filter(problem => problem.id !== action.payload.id);
+            let otherProblems = state.problems.filter(problem => problem.id !== action.payload.id);
             let solvedProblem = {
                 ...action.payload,
                 solved: true
             }
             return {
                 ...state,
-                Problems: [...otherProblems, solvedProblem]
+                problems: [...otherProblems, solvedProblem]
             }
         }
         default : return state;
@@ -95,8 +112,8 @@ const Problemreducer =  function(state: State = initialState, action: Actions) :
 const Planningreducer = function(state: State = initialState, action: Actions) : State {
     switch(action.type) {
         case ReduxActionTypes.SHIFT_CHANGED : {
-            let otherShifts : ShiftDataInterface[]  = state.Planning.filter(shift => shift.id !== action.payload.shift_id);
-            let oldShift : ShiftDataInterface[] = state.Planning.filter(shift => shift.id === action.payload.shift_id);
+            let otherShifts : ShiftDataInterface[]  = state.planning.filter(shift => shift.id !== action.payload.shift_id);
+            let oldShift : ShiftDataInterface[] = state.planning.filter(shift => shift.id === action.payload.shift_id);
             let newShift : ShiftDataInterface = {
                 ...oldShift[0],
                 User_id: action.payload.user_id,
@@ -104,7 +121,7 @@ const Planningreducer = function(state: State = initialState, action: Actions) :
             }
             return {
                 ...state,
-                Planning : [...otherShifts, newShift]
+                planning : [...otherShifts, newShift]
             };
         }
         default: return state;
@@ -118,15 +135,15 @@ const MessageReducer = function(state: State = initialState, action: Actions) : 
             return state;
         }
         case ReduxActionTypes.MESSAGE_READ : {
-            let otherMessages : MessageInterface[] = state.Messages.filter(message => message.id !== action.payload.messageId);
-            let oldMessage : MessageInterface[] = state.Messages.filter(message => message.id === action.payload.messageId);
+            let otherMessages : MessageInterface[] = state.messages.filter(message => message.id !== action.payload.messageId);
+            let oldMessage : MessageInterface[] = state.messages.filter(message => message.id === action.payload.messageId);
             let newMessage : MessageInterface = {
                 ...oldMessage[0],
                 read: true
             }
             return {
                 ...state,
-                Messages : [...otherMessages, newMessage]
+                messages : [...otherMessages, newMessage]
             }
         }
         default: return state;

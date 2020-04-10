@@ -45,7 +45,7 @@ interface LinkStateProps {
 }
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
-    const openProblems: ProblemDataInterface[] = state.Problemreducer.Problems.filter(problem => ! problem.solved);
+    const openProblems: ProblemDataInterface[] = state.Problemreducer.problems.filter(problem => ! problem.solved);
     return {
         problems: openProblems
     }
