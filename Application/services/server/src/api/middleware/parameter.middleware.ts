@@ -14,7 +14,7 @@ export const validateBodyParameters = (method: string): any => {
         }
         case 'user/authenticate' : {
             return [
-                body('phone_number', 'Invalid phone number').exists().isMobilePhone("any"),
+                body('email', 'Invalid email format').exists().isEmail(),
                 body('password', 'Required parameter').exists()
             ]
         }

@@ -166,7 +166,7 @@ export const authenticate = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const user: UserModel | null = await UserModel.findOne({where: {phone_number: req.body.phone_number}});
+        const user: UserModel | null = await UserModel.findOne({where: {email: req.body.email}});
 
         if (user && await user.validatePassword(req.body.password)) {
             const payload = {
