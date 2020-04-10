@@ -10,6 +10,8 @@ import messageRoutes from "./api/routes/message.routes";
 import postRoutes from "./api/routes/post.routes";
 import associationRoutes from "./api/routes/association.routes";
 import generalPostRoutes from "./api/routes/general_post.routes";
+import problemTypeRoutes from "./api/routes/problem_type.routes";
+import itemTypeRoutes from "./api/routes/item_type.routes";
 
 class App {
 
@@ -44,6 +46,8 @@ class App {
         this.express.use("/api/message", messageRoutes);
         this.express.use("/api/association", associationRoutes);
         this.express.use("/api/general_post", generalPostRoutes);
+        this.express.use("/api/item_type", itemTypeRoutes);
+        this.express.use("/api/problem_type", problemRoutes);
     }
 }
 
