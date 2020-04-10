@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
+import {bindActionCreators} from "redux";
+
 import { IonButton, 
     IonListHeader, 
     IonHeader, 
@@ -14,60 +16,48 @@ import { IonButton,
 import { Link } from 'react-router-dom';
 import './Notification_Item.css';
 import { read } from 'fs';
+import {store} from '../redux/store';
+import { connect } from "react-redux";
+import { notifications } from 'ionicons/icons';
+import { setNotificationStatus } from '../redux/actions'
 
-
-  
-type notificationProps = {
-    from_person: string,
-    title: string,
-    description: string,
-    time: string,
-    read: boolean,
+type index = {
+    index: number,
   };
 
-class NotificationItem  extends Component<notificationProps> {
-    
-
+class NotificationItem  extends Component<any | index> {
     constructor(props: any){
         super(props)
     }
 
-    state = {
-        from_person: this.props.from_person,
-        title: this.props.title,
-        description: this.props.description,
-        time: this.props.time,
-        read: this.props.read,
-    }
-
-    onMenuItemClicked = () => {
-        this.setState({read: !this.state.read});
+    onMenuItemClicked = (selected: any) => {
+        this.props.setNotificationStatus(true);
     }
     
-
-
     render() {
-        if (this.state.read){
-            return (            
+       let data = this.props.notificationData[this.props.index]; // makes "this.props.." shorter, because it was a bit too long
+
+        if (data.read){
+            return (  
                 <IonItem className="ReadItem">
                     <IonLabel>
-                        <h2> <b>{this.state.from_person}:</b> {this.state.title}</h2>
-                        <p>{this.state.description}</p>
+                        <h2> <b>{data.from_person}:</b> {data.title}</h2>
+                        <p>{data.description}</p>
                     </IonLabel>
                     <IonLabel class="right_text">
-                        <h2>{this.state.time}</h2>
+                        <h2>{data.time}</h2>
                     </IonLabel>
                 </IonItem>
             );
         } else{
             return(
-                <IonItem className="NotReadItem" onClick={this.onMenuItemClicked}>
+                <IonItem className="NotReadItem" onClick={() => this.onMenuItemClicked(this.props)}>
                     <IonLabel>
-                        <h2> <b>{this.state.from_person}:</b> {this.state.title}</h2>
-                        <p>{this.state.description}</p>
+                        <h2> <b>{data.from_person}:</b> {data.title}</h2>
+                        <p>{data.description}</p>
                     </IonLabel>
                     <IonLabel class="right_text">
-                        <h2>{this.state.time}</h2>
+                        <h2>{data.time}</h2>
                     </IonLabel>
                 </IonItem>
             )
@@ -75,5 +65,11 @@ class NotificationItem  extends Component<notificationProps> {
         
     }
 }
- 
-export default NotificationItem;
+const mapStateToProps = (state: any) => {
+    console.log(state);
+    return {notificationData: state.notificationData};
+  }
+  
+  
+export default connect(mapStateToProps, { setNotificationStatus })(NotificationItem);
+

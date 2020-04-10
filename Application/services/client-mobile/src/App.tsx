@@ -16,8 +16,7 @@ import PostView from './pages/PostView'
 import Notifications from './pages/Notifications';
 import SendNotifications from './pages/SendNotifications';
 import Contacts from './pages/Contacts';
-
-
+import NotificationItem from './components/Notification_Item'
 import { ellipse, square, triangle } from 'ionicons/icons';
 
 
@@ -41,10 +40,15 @@ import '@ionic/react/css/display.css';
 import './theme/variables.css';
 import Child from './pages/PostView';
 
+import {Provider} from 'react-redux';
+import {store} from './redux/store';
+
+
 
 
 
 const App: React.FC = () => (
+  <Provider store={store}>
   <IonApp>
       <IonReactRouter>
       <IonTabs>
@@ -58,10 +62,10 @@ const App: React.FC = () => (
           <Route path="/" render={() => <Redirect to="/ListView" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
-          <IonTabButton tab="MapView" href="/MapView">
+          {/* <IonTabButton tab="MapView" href="/MapView">
             <IonIcon icon={ellipse} />
             <IonLabel>Map</IonLabel>
-          </IonTabButton>
+          </IonTabButton> */}
           <IonTabButton tab="ListView" href="/ListView">
             <IonIcon icon={square} />
             <IonLabel>List</IonLabel>
@@ -82,6 +86,7 @@ const App: React.FC = () => (
         </IonTabs>
       </IonReactRouter>
   </IonApp>
+  </Provider>
 );
 
 export default App;
