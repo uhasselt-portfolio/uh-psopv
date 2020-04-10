@@ -1,19 +1,17 @@
 import {Request, Response} from "express";
-import UserModel from "../models/user.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
-
-import MessageModel from "../models/message.model";
+import ProblemTypeModel from "../models/problem_type.model";
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const messages = await MessageModel.findAll();
-        const statusCode = messages == null ? 404 : 200;
+        const problemTypes = await ProblemTypeModel.findAll();
+        const statusCode = problemTypes == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                messages: messages
+                problemTypes: problemTypes
             },
             message: null
         });
@@ -28,17 +26,17 @@ export const fetchAll = async (req: Request, res: Response) => {
 
 
 export const fetch = async (req: Request, res: Response) => {
-    const messageID = req.params.id;
+    const problemTypeID = req.params.id;
 
     try {
-        const message = await MessageModel.findByPk(messageID);
-        const statusCode = message == null ? 404 : 200;
+        const problemType = await ProblemTypeModel.findByPk(problemTypeID);
+        const statusCode = problemType == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                message: message
+                problemType: problemType
             },
             message: null
         });
@@ -57,30 +55,17 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by);
+        const problemType = await ProblemTypeModel.create({
+            title: req.body.title,
+            priority: req.body.priority,
+            description: req.body.description,
+        });
 
-        if(userExists) {
-            const message = await MessageModel.create({
-                title: req.body.title,
-                message: req.body.message,
-                created_by: req.body.created_by,
-                priority: req.body.priority
-            });
-
-            res.status(201).send({
-                status: 'success',
-                data: {message: message},
-                message: null
-            })
-        } else {
-            res.status(404).send({
-                status: 'fail',
-                data: {
-                    user_id: userExists,
-                },
-                message: 'Make sure that your specified data is correct'
-            });
-        }
+        res.status(201).send({
+            status: 'success',
+            data: {problemType: problemType},
+            message: null
+        })
     } catch (error) {
         res.status(500).send({
             status: 'error',
@@ -91,10 +76,10 @@ export const add = async (req: Request, res: Response) => {
 };
 
 export const modify = async (req: Request, res: Response) => {
-    const messageID = req.params.id;
-    const message = req.body.message;
+    const problemTypeID = req.params.id;
+    const problemType = req.body.problemType;
 
-    if (!message)
+    if (!problemType)
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -102,19 +87,19 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await MessageModel.update(message, {
-            returning: true, where: {id: messageID}
+        const result = await ProblemTypeModel .update(problemType, {
+            returning: true, where: {id: problemTypeID}
         });
 
-        const updatedMessage = result[1][0];
-        const statusCode = updatedMessage == null ? 404 : 200;
+        const updatedProblemType = result[1][0];
+        const statusCode = updatedProblemType == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
-        const errorMessage = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
+        const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
-            data: {message: updatedMessage},
-            message: errorMessage
+            data: {problemType: updatedProblemType},
+            message: message
         });
 
     } catch (error) {
@@ -127,11 +112,11 @@ export const modify = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
-    const messageID = req.params.id;
+    const problemTypeID = req.params.id;
 
     try {
-        const deletedMessage = await MessageModel.destroy({where: {id: messageID}});
-        const statusCode = deletedMessage == null ? 404 : 200;
+        const deletedProblemType = await ProblemTypeModel.destroy({where: {id: problemTypeID}});
+        const statusCode = deletedProblemType == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
