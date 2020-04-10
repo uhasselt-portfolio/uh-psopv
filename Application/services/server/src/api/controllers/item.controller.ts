@@ -64,7 +64,7 @@ export const add = async (req: Request, res: Response) => {
         const itemTypeExists : ItemTypeModel | null = await ItemTypeModel.findByPk(req.body.item_type_id);
 
         if(planningExists && itemTypeExists) {
-            const item = ItemModel.create({
+            const item = await ItemModel.create({
                 planning_id: req.body.planning_id,
                 item_type_id: req.body.item_type_id
             });
@@ -109,15 +109,15 @@ export const modify = async (req: Request, res: Response) => {
             returning: true, where: {id: itemID}
         });
 
-        // TODO: Checking if result is not empty --> index out of range
         const updatedItem = result[1][0];
         const statusCode = updatedItem == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
+        const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {item: updatedItem},
-            message: null
+            message: message
         });
 
     } catch (error) {

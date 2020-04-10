@@ -55,7 +55,7 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const shift = ShiftModel.create({
+        const shift = await ShiftModel.create({
             name: req.body.name,
             begin: req.body.begin,
             end: req.body.end
@@ -91,15 +91,15 @@ export const modify = async (req: Request, res: Response) => {
             returning: true, where: {id: shiftID}
         });
 
-        // TODO: Checking if result is not empty --> index out of range
         const updatedShift = result[1][0];
         const statusCode = updatedShift == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
+        const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {shift: updatedShift},
-            message: null
+            message: message
         });
 
     } catch (error) {

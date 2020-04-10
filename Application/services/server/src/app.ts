@@ -6,7 +6,9 @@ import importRoutes from "./api/routes/import.routes";
 import problemRoutes from "./api/routes/problem.routes";
 import itemRoutes from "./api/routes/item.routes";
 import shiftRoutes from "./api/routes/shift.routes";
+import messageRoutes from "./api/routes/message.routes";
 import postRoutes from "./api/routes/post.routes";
+import associationRoutes from "./api/routes/association.routes";
 
 class App {
 
@@ -38,6 +40,8 @@ class App {
         this.express.use("/api/item", itemRoutes);
         this.express.use("/api/post", postRoutes);
         this.express.use("/api/shift", shiftRoutes);
+        this.express.use("/api/message", messageRoutes);
+        this.express.use("/api/association", associationRoutes);
     }
 }
 

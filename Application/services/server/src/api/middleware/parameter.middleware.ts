@@ -36,7 +36,7 @@ export const validateBodyParameters = (method: string): any => {
         }
         case 'shift/add': {
             return[
-                body("name", "You must specify a title for a shift").exists(),
+                body("name", "You must specify a name for a shift").exists(),
                 body(["begin", "end"], "You must specify a begin and ending for a shift").exists()
             ]
         }
@@ -44,6 +44,19 @@ export const validateBodyParameters = (method: string): any => {
             return[
                 body("planning_id", "You must specify a planning").exists().isNumeric(),
                 body("item_type_id", "You must specify an item type").exists().isNumeric(),
+            ]
+        }
+        case 'message/add': {
+            return[
+                body("title", "You must specify a title for the message").exists(),
+                body("message", "You must specify a message").exists(),
+                body("created_by", "You must specify the user that sent the message").exists().isNumeric(),
+                body("priority", "You must specify the priority of the message").exists().isNumeric(),
+            ]
+        }
+        case 'association/add': {
+            return[
+                body("name", "You must specify a name for the association").exists()
             ]
         }
     }

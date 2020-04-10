@@ -64,7 +64,7 @@ export const add = async (req: Request, res: Response) => {
         const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by);
 
         if(userExists) {
-            const message = MessageModel.create({
+            const message = await MessageModel.create({
                 title: req.body.title,
                 message: req.body.message,
                 created_by: req.body.created_by,
@@ -110,15 +110,15 @@ export const modify = async (req: Request, res: Response) => {
             returning: true, where: {id: userID}
         });
 
-        // TODO: Checking if result is not empty --> index out of range
         const updatedMessage = result[1][0];
         const statusCode = updatedMessage == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
+        const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {message: updatedMessage},
-            message: null
+            message: message
         });
 
     } catch (error) {
