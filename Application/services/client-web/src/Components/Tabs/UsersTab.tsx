@@ -45,46 +45,46 @@ class Users extends Component<Props> {
 
     render() {
         let filteredUsers : Array<JSX.Element> = this.props.users.map(x =>(
-                                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
-                                        ));
+                            <User userId={x.id} />
+                        ));
         switch (this.state.filter) {
             case "name": { filteredUsers = this.props.users.filter(User => User.name === this.state.filterValue).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} userId={x.id}  />
                             ));
                         break;
             }
             case "lastName": { filteredUsers = this.props.users.filter(User => User.lastname === this.state.filterValue).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} userId={x.id}/>
                             ));
                         break;
             }
             case "number": { filteredUsers = this.props.users.filter(User => User.gsmNumber === this.state.filterValue).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
             case "vrijwilliger": { filteredUsers = this.props.users.filter(User => ! User.permissions).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
             case "verantwoordelijke": { filteredUsers = this.props.users.filter(User => User.permissions === true).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
             case "association": { filteredUsers = this.props.users.filter(User => (( ! User.permissions) && (User.association === this.state.filterValue))).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
             case "has_internet": { filteredUsers = this.props.users.filter(User => User.has_internet).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
             case "hasnt_internet": { filteredUsers = this.props.users.filter(User => ! User.has_internet).map(x =>(
-                            <User key={x.gsmNumber} name={x.name} lastname={x.lastname} gsmNumber={x.gsmNumber} email={x.email} has_internet={x.has_internet} permissions={x.permissions} association={x.association}  />
+                            <User key={x.gsmNumber} userId={x.id}/>
                             ));
                         break;
             }
@@ -92,8 +92,7 @@ class Users extends Component<Props> {
 
         return(
             <div>
-                <DataNavBar/>
-                <h4 className="center">Users</h4>
+                <DataNavBar tab={1}/>
                 <Grid container justify="center" direction='row' >
                     <form onSubmit={this.handleFilterForm} id="filter">
                         <Grid item>
@@ -110,7 +109,7 @@ class Users extends Component<Props> {
                             </select>
                         </Grid>
                         <Grid item >
-                            <input type="text" id="filterinput" />
+                            <input type="text" id="filterinput" placeholder={this.state.filter}/>
                         </Grid>
                         <Grid item >
                             <Button type="submit" variant="outlined" onClick={this.handleFilter}>Zoek</Button>
@@ -132,7 +131,7 @@ interface LinkStateProps {
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        users: state.reducer.Users
+        users: state.Globalreducer.users
     }
 }
 
