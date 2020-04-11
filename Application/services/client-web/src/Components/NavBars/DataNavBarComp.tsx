@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Paper from '@material-ui/core/Paper';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
-import { NavLink } from 'react-router-dom';
+import { NavLink} from 'react-router-dom';
 
 const styleSticky = {
     position: "sticky" as 'sticky',
@@ -11,31 +11,27 @@ const styleSticky = {
 } 
 
 interface IProps {
-    history?: any
+    tab: Number
 }
 
 interface IState {
-    value: String
+    value: Number
 }
 
-class DataNavBar extends Component<IProps, IState> {
-    state = {
-        value: "/Data"
+class DataNavBar extends Component<IProps> {
+    state: IState = {
+        value: 0
     }
 
-    constructor(props: IProps) {
-        super(props);
-        this.state = {
-            value: "/Data"
-        }
-        this.handleChange = this.handleChange.bind(this);
-    }
-    componentDidMount() {
-
-    }
-    handleChange(event: any, value: any) {
+    componentWillMount() {
         this.setState({
-            value
+            value: this.props.tab
+        })
+    }
+
+    handleChange = (event: any, value: any) => {
+        this.setState({
+            value: value
         });
     }
 
@@ -52,6 +48,7 @@ class DataNavBar extends Component<IProps, IState> {
                     <Tab label="Data" component={NavLink} to="/Data"/>
                     <Tab label="Vrijwilligers & verantwoordelijken" component={NavLink} to="/Data/Users"/>
                     <Tab label="Posten & sectoren" component={NavLink} to="/Data/Posts"/>
+                    <Tab label="Planning" component={NavLink} to="/Data/Shifts" />
                     <Tab label="Problemen" component={NavLink} to="/data/Problems" />
                 </Tabs>
                 </Paper>

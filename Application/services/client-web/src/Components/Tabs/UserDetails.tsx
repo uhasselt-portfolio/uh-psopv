@@ -44,7 +44,7 @@ class UserDetails extends Component<IProps> {
             <Marker 
             position={{lat: this.props.location.state.latitude, lng: this.props.location.state.longitude}} 
             label={this.props.location.state.lastname + " " + this.props.location.state.name} 
-            options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}}
+            options={{icon: 'http://maps.google.com/mapfiles/ms/icons/green.png'}}
             />
 
         </GoogleMap>
@@ -52,13 +52,11 @@ class UserDetails extends Component<IProps> {
 
         let permissionsView : JSX.Element = <div></div>;
         if (this.props.location.state.permissions) {    //verantwoordelijke
-            permissionsView = <Grid container justify="center">
-                                <Grid item style={labelStyle}>
+            permissionsView =   <Grid item style={labelStyle}>
                                     <p>verantwoordelijke</p>
                                 </Grid>
-                            </Grid>
         } else {    //vrijwilliger
-            permissionsView = <Grid container justify="space-evenly">
+            permissionsView = <Grid container justify="space-between">
                                 <Grid item style={labelStyle}>
                                     <p className="col s2">vrijwilliger</p>
                                 </Grid>
@@ -77,7 +75,7 @@ class UserDetails extends Component<IProps> {
 
         return(
             <div>
-                <DataNavBar />
+                <DataNavBar tab={-1}/>
                 <Grid container>
                     <Grid item style={styleBorder}>
                         <Grid container justify="center">
@@ -85,30 +83,28 @@ class UserDetails extends Component<IProps> {
                                 <h4>{this.props.location.state.name} {this.props.location.state.lastname}</h4>
                             </Grid>
                         </Grid>
-                        <Grid container justify="space-evenly">
-                            <Grid item>
-                                <Grid container>
-                                    <Grid item style={labelStyle}>
-                                        <p>nummer: </p>
-                                    </Grid>
-                                    <Grid item>
-                                        <p>{this.props.location.state.gsmNumber}</p>
-                                    </Grid>
+                        <Grid item>
+                            <Grid container>
+                                <Grid item style={labelStyle}>
+                                    <p>nummer: </p>
+                                </Grid>
+                                <Grid item>
+                                    <p>{this.props.location.state.gsmNumber}</p>
                                 </Grid>
                             </Grid>
-                            <Grid item>
-                                <Grid container>
-                                    <Grid item style={labelStyle}>
-                                        <p>email: </p>
-                                    </Grid>
-                                    <Grid item>
-                                        <p>{this.props.location.state.email}</p>
-                                    </Grid>
+                        <Grid item>
+                            <Grid container>
+                                <Grid item style={labelStyle}>
+                                    <p>email: </p>
+                                </Grid>
+                                <Grid item>
+                                    <p>{this.props.location.state.email}</p>
                                 </Grid>
                             </Grid>
                         </Grid>
+                        </Grid>
                         {permissionsView}
-                        <Grid container justify="center">
+                        <Grid container justify="space-between">
                             <Grid item>
                                 <form action="#">
                                         {this.props.location.state.has_internet &&                             

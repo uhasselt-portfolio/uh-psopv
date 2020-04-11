@@ -1,7 +1,11 @@
 import React, {Component} from 'react';
-import {Container, Paper, Grid} from '@material-ui/core';
+import {Container, Paper, Grid, Button} from '@material-ui/core';
 import ProblemInterface from '../Interfaces/ProblemDataInterface';
 import { Link } from 'react-router-dom';
+import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
+import {ActionProblemSovled} from '../../Redux/Actions';
+import {Actions} from '../../Redux/Reducers';
 
 interface ProblemState {
     Data: ProblemInterface
@@ -16,7 +20,9 @@ const labelStyle = {
     padding: '0 10px 0 0'
 }
 
-class Problem extends Component<ProblemInterface, ProblemState> {
+type Props = LinkDispatchProps & ProblemInterface;
+
+class Problem extends Component<Props> {
     state: ProblemState = {
         Data: {
             problemType: "",
@@ -28,7 +34,9 @@ class Problem extends Component<ProblemInterface, ProblemState> {
             user: "",
             sender: "",
             latitude: 0,
-            longitude: 0
+            longitude: 0,
+            solved: false,
+            id: -1
         }
     }
 
@@ -38,9 +46,10 @@ class Problem extends Component<ProblemInterface, ProblemState> {
         });
     } 
 
-    handleButton = () => {
-
+    handleSolved = () => {
+        this.props.problemSolved(this.state.Data);
     }
+
 
     render() {
 
@@ -84,6 +93,11 @@ class Problem extends Component<ProblemInterface, ProblemState> {
                                 }}>Ga naar</Link>
                             </Grid>
                         </Grid>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <Button variant="outlined" onClick={this.handleSolved}>Probleem opgelost</Button>
+                            </Grid>
+                        </Grid>
                     </Grid>
                 </Paper>
             </Container>
@@ -91,4 +105,25 @@ class Problem extends Component<ProblemInterface, ProblemState> {
     }
 }
 
-export default Problem;
+interface LinkStateToProps {
+
+}
+
+interface LinkDispatchProps {
+    problemSolved: (problem: ProblemInterface) => void
+}
+
+const MapDispatchToProps = (
+    dispatch: Dispatch<Actions>,
+    // ownProps: OwnProps
+): LinkDispatchProps => {
+    return {
+        problemSolved: (problem: ProblemInterface) => {dispatch(ActionProblemSovled(problem))}
+    };
+}
+
+// export default Overview
+export default connect(
+    null,
+    MapDispatchToProps
+)(Problem);

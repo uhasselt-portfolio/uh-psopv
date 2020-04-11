@@ -47,7 +47,7 @@ class ProblemDetails extends Component<IProps> {
 
         return(
             <div>
-                <DataNavBar />
+                <DataNavBar tab={-1 }/>
                 <Grid container>
                     <Grid item style={styleBorder}>
                         <Grid container justify="center">

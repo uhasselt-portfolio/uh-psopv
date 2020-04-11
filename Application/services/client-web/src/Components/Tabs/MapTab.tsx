@@ -95,7 +95,7 @@ class PukkelpopMap extends Component<Props> {
         if (this.state.postClicked) {
             return (
                 <Redirect to={{
-                    pathname: '/data/Post',
+                    pathname: '/Data/Post',
                     state: this.state.post
                 }}/>
             );
@@ -103,7 +103,7 @@ class PukkelpopMap extends Component<Props> {
         if (this.state.problemClicked) {
             return (
                 <Redirect to={{
-                    pathname: '/data/Problem',
+                    pathname: '/Data/Problem',
                     state: this.state.problem
                 }} />
             );
@@ -111,7 +111,7 @@ class PukkelpopMap extends Component<Props> {
         if (this.state.userClicked) {
             return (
                 <Redirect to={{
-                    pathname: '/data/User',
+                    pathname: '/Data/User',
                     state: this.state.user
                 }} 
                 />
@@ -140,9 +140,9 @@ interface LinkStateProps {
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        posts: state.reducer.Posts,
-        problems: state.reducer.Problems,
-        users: state.reducer.Users
+        posts: state.Globalreducer.posts,
+        problems: state.Globalreducer.problems,
+        users: state.Globalreducer.users
     }
 }
 

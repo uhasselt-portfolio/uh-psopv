@@ -10,6 +10,9 @@ import Problems from './Components/Tabs/ProblemsTab';
 import PukkelpopMap from './Components/Tabs/MapTab';
 import ProblemDetails from './Components/Tabs/ProblemDetails';
 import PostDetails from './Components/Tabs/PostDetails';
+import UserDetails from './Components/Tabs/UserDetails';
+import Planning from './Components/Tabs/PlanningTab';
+import Settings from './Components/Tabs/Settings';
 
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
@@ -29,7 +32,10 @@ function App() {
             <Route path="/Data/Problems" component={Problems} />  
             <Route path="/Map" component={PukkelpopMap} />
             <Route path="/Data/Problem" component={ProblemDetails} />
-            <Route path="/data/Post" component={PostDetails} />
+            <Route path="/Data/Post" component={PostDetails} />
+            <Route path="/Data/User" component={UserDetails} />
+            <Route path="/Data/Shifts" component={Planning} />
+            <Route path="/Settings" component={Settings} />
           </Switch>
         </div>
       </BrowserRouter>

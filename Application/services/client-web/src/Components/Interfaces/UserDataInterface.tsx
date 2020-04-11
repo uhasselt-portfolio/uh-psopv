@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface UserInterface {
     name: string,
     lastname: string,
