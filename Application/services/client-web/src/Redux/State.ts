@@ -12,5 +12,6 @@ export default interface State {
     users: UserDataInterface[],
     planning: ShiftDataInterface[],
     items: ItemDataInterface[],
-    pdfGenerated: boolean
+    pdfGenerated: boolean,
+    positionDelay: Number
 }

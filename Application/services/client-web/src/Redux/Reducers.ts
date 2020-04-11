@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux';
-import {ReduxActionTypes, ActionProblemSolvedType, ActionMessageReadType, ActionShiftChangedType, ActionMessageSendType, ActionGeneratePdf} from './Actions';
+import {ReduxActionTypes, ActionProblemSolvedType, ActionMessageReadType, ActionShiftChangedType, ActionMessageSendType, ActionGeneratePdfType, ActionChangeDelayType} from './Actions';
 import State from './State';
 import ShiftDataInterface from '../Components/Interfaces/ShiftDataInterface';
 import MessageInterface from '../Components/Interfaces/MessageDataInterface';
@@ -86,10 +86,11 @@ const initialState : State = {
         {id: 13, shiftId: 13, itemType: "Fluo hesje"},
         {id: 14, shiftId: 14, itemType: "Fluo hesje"}
     ],
-    pdfGenerated: false
+    pdfGenerated: false,
+    positionDelay: 15
 }
 
-export type Actions = ActionProblemSolvedType | ActionMessageReadType |ActionShiftChangedType | ActionMessageSendType |ActionGeneratePdf;
+export type Actions = ActionProblemSolvedType | ActionMessageReadType |ActionShiftChangedType | ActionMessageSendType | ActionGeneratePdfType | ActionChangeDelayType;
 
 const Problemreducer =  function(state: State = initialState, action: Actions) : State {
     switch(action.type) {
@@ -155,6 +156,10 @@ const Globalreducer = function(state: State = initialState, action: Actions) : S
         case ReduxActionTypes.GENERATE_PDF : return {
             ...state,
             pdfGenerated: true
+        };
+        case ReduxActionTypes.CHANGE_CONTROL_DELAY : return {
+            ...state,
+            positionDelay: action.payload.newDelay
         };
     }
     return state;

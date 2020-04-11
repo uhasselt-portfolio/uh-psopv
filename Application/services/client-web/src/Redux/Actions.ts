@@ -12,7 +12,8 @@ export enum ReduxActionTypes {
     MESSAGE_READ = 'MESSAGE_READ',
     MESSAGE_SEND = 'MESSAGE_SEND',
     SHIFT_CHANGED = 'SHIFT_CHANGED',
-    GENERATE_PDF = 'GENERATE_PDF'
+    GENERATE_PDF = 'GENERATE_PDF',
+    CHANGE_CONTROL_DELAY = 'CHANGE_CONTROL_DELAY'
 }
 
 export interface IReduxBaseAction {
@@ -91,13 +92,29 @@ export function ActionMessageRead(messageId: Number) : ActionMessageReadType {
     }
 }
 
-export interface ActionGeneratePdf extends IReduxBaseAction {
+export interface ActionGeneratePdfType extends IReduxBaseAction {
     type: ReduxActionTypes.GENERATE_PDF
 }
-export function ActionGeneratePdf() : ActionGeneratePdf {
+export function ActionGeneratePdf() : ActionGeneratePdfType {
     //TODO let the server generate a new pdf
     return {
         type: ReduxActionTypes.GENERATE_PDF
+    }
+}
+
+export interface ActionChangeDelayType extends IReduxBaseAction {
+    type: ReduxActionTypes.CHANGE_CONTROL_DELAY,
+    payload: {
+        newDelay: Number
+    }
+}
+export function ActionChangeDelay(delay: Number) : ActionChangeDelayType {
+    //TODO server
+    return {
+        type: ReduxActionTypes.CHANGE_CONTROL_DELAY,
+        payload: {
+            newDelay: delay
+        }
     }
 }
 

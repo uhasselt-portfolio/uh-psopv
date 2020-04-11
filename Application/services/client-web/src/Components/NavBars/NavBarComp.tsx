@@ -51,6 +51,7 @@ class NavBar extends Component<IProps, IState> {
                     <Tab label="Rapportering" component={Link} to="/Rapportering"/>
                     <Tab label="map" component={Link} to="/Map" />
                     <Tab label="Data" component={Link} to="/Data"/>
+                    <Tab label="Instellingen" component={Link} to="/Settings"/>
                 </Tabs>
                 </Paper>
         );
