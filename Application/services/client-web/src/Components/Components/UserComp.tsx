@@ -1,9 +1,14 @@
 import React, {Component} from 'react';
 import UserInterface from '../Interfaces/UserDataInterface';
 import {Container, Grid, Paper} from '@material-ui/core';
+import {connect} from 'react-redux';
+import {Dispatch} from 'redux';
+import {ActionChangeUserConnection} from '../../Redux/Actions';
+import {Actions} from '../../Redux/Reducers';
+import { AppState } from '../../Redux/Reducers';
 
-interface State {
-    data: UserInterface
+interface IProps {
+    userId: Number
 }
 const paperStyle = {
     background: 'rgb(240, 255, 255)',
@@ -14,57 +19,29 @@ const labelStyle = {
     padding: '0 10px 0 0'
 }
 
-class User extends Component<UserInterface, State> {
-    state: State = {
-        data: {    
-            name: "voornaam",
-            lastname: "achternaam",
-            has_internet: true,
-            gsmNumber: "gsm-nummer",
-            email: "email",
-            permissions: false,
-            association: "vereniging",
-            latitude: 0,
-            longitude: 0
-        }
-    }
+type Props = LinkDispatchProps & LinkStateToProps & IProps
 
-    constructor(props: UserInterface) {
-        super(props);
-
-        this.state = {
-            data: {    
-                name: props.name,
-                lastname: props.lastname,
-                has_internet: props.has_internet,
-                gsmNumber: props.gsmNumber,
-                email: props.email,
-                permissions: props.permissions,
-                association: props.association,
-                latitude: props.latitude,
-                longitude: props.longitude
-            }
-        }
-    }
+class User extends Component<Props> {
 
     handleChangeInternet = () => {
-        this.setState({
-            data: {
-                ...this.state.data,
-                has_internet: ! this.state.data.has_internet
-            }
-        });
-        //TODO do change globally
+        this.props.changeConnection(this.props.userData.id, ! this.props.userData.has_internet);
     }
 
     render() {
-        if (this.state.data.permissions) {
+        if (this.props.userData.id === -1) {
+            return(
+                <div>
+                    <p>Er is iets fout gegaan, deze gebruiker bestaat niet</p>
+                </div>
+            )
+        }
+        if (this.props.userData.permissions) {
             return (     
                 <Container>
                     <Paper style={paperStyle}>
                     <Grid container justify="center">
                             <Grid item>
-                                <h4>{this.state.data.name} {this.state.data.lastname}</h4>
+                                <h4>{this.props.userData.name} {this.props.userData.lastname}</h4>
                             </Grid>
                         </Grid>
                         <Grid container justify="space-evenly">
@@ -74,7 +51,7 @@ class User extends Component<UserInterface, State> {
                                         <p>nummer: </p>
                                     </Grid>
                                     <Grid item>
-                                        <p>{this.state.data.gsmNumber}</p>
+                                        <p>{this.props.userData.gsmNumber}</p>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -84,7 +61,7 @@ class User extends Component<UserInterface, State> {
                                         <p>email: </p>
                                     </Grid>
                                     <Grid item>
-                                        <p>{this.state.data.email}</p>
+                                        <p>{this.props.userData.email}</p>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -97,13 +74,13 @@ class User extends Component<UserInterface, State> {
                         <Grid container justify="center">
                             <Grid item>
                                 <form action="#">
-                                        {this.state.data.has_internet &&                             
+                                        {this.props.userData.has_internet &&                             
                                             <label>
                                                 <input type="checkbox" checked={true} onChange={this.handleChangeInternet}/>
                                                 <span> heeft een internet verbinding </span>
                                             </label>
                                         }
-                                        { ! this.state.data.has_internet && 
+                                        { ! this.props.userData.has_internet && 
                                             <label>
                                                 <input type="checkbox" checked={false}onChange={this.handleChangeInternet}/>
                                                 <span> heeft geen internet verbinding </span>
@@ -121,7 +98,7 @@ class User extends Component<UserInterface, State> {
                     <Paper style={paperStyle}>
                         <Grid container justify="center">
                             <Grid item>
-                                <h4 className="center">{this.state.data.name} {this.state.data.lastname}</h4>
+                                <h4 className="center">{this.props.userData.name} {this.props.userData.lastname}</h4>
                             </Grid>
                         </Grid>
                         <Grid container justify="space-evenly">
@@ -131,7 +108,7 @@ class User extends Component<UserInterface, State> {
                                         <p className="col s2">nummer: </p>
                                     </Grid>
                                     <Grid item>
-                                        <p className="col s2">{this.state.data.gsmNumber}</p>
+                                        <p className="col s2">{this.props.userData.gsmNumber}</p>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -141,7 +118,7 @@ class User extends Component<UserInterface, State> {
                                         <p className="col s2">email: </p>
                                     </Grid>
                                     <Grid item>
-                                        <p className="col s3">{this.state.data.email}</p>
+                                        <p className="col s3">{this.props.userData.email}</p>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -156,7 +133,7 @@ class User extends Component<UserInterface, State> {
                                         <p className="col s2">vereniging: </p>
                                     </Grid>
                                     <Grid item>
-                                        <p className="col s4">{this.state.data.association}</p>
+                                        <p className="col s4">{this.props.userData.association}</p>
                                     </Grid>
                                 </Grid>
                             </Grid>
@@ -164,13 +141,13 @@ class User extends Component<UserInterface, State> {
                         <Grid container justify="center">
                             <Grid item>
                                 <form action="#">
-                                        {this.state.data.has_internet &&                             
+                                        {this.props.userData.has_internet &&                             
                                             <label>
                                                 <input type="checkbox" checked={true} onChange={this.handleChangeInternet}/>
                                                 <span className="col"> heeft een internet verbinding </span>
                                             </label>
                                         }
-                                        { ! this.state.data.has_internet && 
+                                        { ! this.props.userData.has_internet && 
                                             <label>
                                                 <input type="checkbox" checked={false}onChange={this.handleChangeInternet}/>
                                                 <span className="col"> heeft geen internet verbinding </span>
@@ -186,4 +163,50 @@ class User extends Component<UserInterface, State> {
     }
 }
 
-export default User;
+interface LinkStateToProps {
+    userData : UserInterface
+}
+const MapStateToProps = (state: AppState, ownProps: IProps) : LinkStateToProps => {
+    let users : UserInterface[] = state.UserReducer.users.filter(user => user.id === ownProps.userId);
+    if (users.length > 0) {
+        let userData : UserInterface = users[0];
+        return {
+            userData: userData
+        };
+    } else {
+        return {
+            userData : {
+                id: -1,
+                name: "no existing user",
+                lastname: "",
+                has_internet: true,
+                gsmNumber: "",
+                email: "",
+                permissions: false,
+                association: "",
+                latitude: 0,
+                longitude: 0
+            }
+        }
+    }
+
+}
+
+interface LinkDispatchProps {
+    changeConnection: (userid: Number, connection: boolean) => void
+}
+
+const MapDispatchToProps = (
+    dispatch: Dispatch<Actions>,
+    // ownProps: OwnProps
+): LinkDispatchProps => {
+    return {
+        changeConnection: (userid: Number, connection: boolean) => {dispatch(ActionChangeUserConnection(userid,connection))}
+    };
+}
+
+// export default Overview
+export default connect(
+    MapStateToProps,
+    MapDispatchToProps 
+)(User);
