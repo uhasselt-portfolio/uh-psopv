@@ -1,20 +1,17 @@
 import {Request, Response} from "express";
-import UserModel from "../models/user.model";
-import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
-import PlanningModel from "../models/planning.model";
-import ProblemTypeModel from "../models/problem_type.model";
+import GeneralPostModel from "../models/general_post.model";
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const problems = await ProblemModel.findAll();
-        const statusCode = problems == null ? 404 : 200;
+        const generalPosts = await GeneralPostModel.findAll();
+        const statusCode = generalPosts == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                problems: problems
+                generalPost: generalPosts
             },
             message: null
         });
@@ -29,17 +26,17 @@ export const fetchAll = async (req: Request, res: Response) => {
 
 
 export const fetch = async (req: Request, res: Response) => {
-    const problemID = req.params.id;
+    const generalPostID = req.params.id;
 
     try {
-        const problem = await ProblemModel.findByPk(problemID);
-        const statusCode = problem == null ? 404 : 200;
+        const generalPost = await GeneralPostModel.findByPk(generalPostID);
+        const statusCode = generalPost == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                problem: problem
+                generalPost: generalPost
             },
             message: null
         });
@@ -58,33 +55,17 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by);
-        const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id);
-        const problemTypeExists : ProblemTypeModel | null = await ProblemTypeModel.findByPk(req.body.problem_type_id);
+        const generalPost = await GeneralPostModel.create({
+            name: req.body.name,
+            minimum_age: req.body.minimumAge,
+            description: req.body.description
+        });
 
-        if(userExists && planningExists && problemTypeExists) {
-            const problem = await ProblemModel.create({
-                planning_id: req.body.planning_id,
-                problem_type_id: req.body.problem_type_id,
-                created_by: req.body.created_by
-            });
-
-            res.status(201).send({
-                status: 'success',
-                data: {problem: problem},
-                message: null
-            })
-        } else {
-            res.status(404).send({
-                status: 'fail',
-                data: {
-                    planning_id: planningExists,
-                    problem_type_id: problemTypeExists,
-                    created_by: userExists
-                },
-                message: 'Make sure that your specified data is correct'
-            });
-        }
+        res.status(201).send({
+            status: 'success',
+            data: {generalPost: generalPost},
+            message: null
+        })
     } catch (error) {
         res.status(500).send({
             status: 'error',
@@ -95,10 +76,10 @@ export const add = async (req: Request, res: Response) => {
 };
 
 export const modify = async (req: Request, res: Response) => {
-    const problemID = req.params.id;
-    const problem = req.body.problem;
+    const generalPostID = req.params.id;
+    const generalPost = req.body.generalPost;
 
-    if (!problem)
+    if (!generalPost)
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -106,18 +87,18 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await ProblemModel.update(problem, {
-            returning: true, where: {id: problemID}
+        const result = await GeneralPostModel.update(generalPost, {
+            returning: true, where: {id: generalPostID}
         });
 
-        const updatedProblem = result[1][0];
-        const statusCode = updatedProblem == null ? 404 : 200;
+        const updatedGeneralPost = result[1][0];
+        const statusCode = updatedGeneralPost == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
         const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
-            data: {problem: updatedProblem},
+            data: {generalPost: updatedGeneralPost},
             message: message
         });
 
@@ -131,11 +112,11 @@ export const modify = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
-    const problemID = req.params.id;
+    const generalPostID = req.params.id;
 
     try {
-        const deletedProblem = await ProblemModel.destroy({where: {id: problemID}});
-        const statusCode = deletedProblem == null ? 404 : 200;
+        const deletedGeneralPost = await GeneralPostModel.destroy({where: {id: generalPostID}});
+        const statusCode = deletedGeneralPost == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({

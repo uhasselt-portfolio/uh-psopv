@@ -56,7 +56,7 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const post = PostModel.create({
+        const post = await PostModel.create({
             title: req.body.title,
             address: req.body.address,
             latitude: req.body.latitude,
@@ -95,15 +95,15 @@ export const modify = async (req: Request, res: Response) => {
             returning: true, where: {id: postID}
         });
 
-        // TODO: Checking if result is not empty --> index out of range
         const updatedPost = result[1][0];
         const statusCode = updatedPost == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
+        const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {post: updatedPost},
-            message: null
+            message: message
         });
 
     } catch (error) {

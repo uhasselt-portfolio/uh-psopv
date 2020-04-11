@@ -9,7 +9,6 @@ import {
     Table,
     UpdatedAt
 } from "sequelize-typescript";
-import PlanningModel from "./planning.model";
 
 @Table({tableName: "posts"})
 class PostModel extends Model<PostModel> {

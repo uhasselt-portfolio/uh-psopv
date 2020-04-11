@@ -4,17 +4,19 @@ import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PlanningModel from "../models/planning.model";
 import ProblemTypeModel from "../models/problem_type.model";
+import ItemModel from "../models/item.model";
+import ItemTypeModel from "../models/item_type.model";
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const problems = await ProblemModel.findAll();
-        const statusCode = problems == null ? 404 : 200;
+        const items = await ItemModel.findAll();
+        const statusCode = items == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                problems: problems
+                items: items
             },
             message: null
         });
@@ -29,17 +31,17 @@ export const fetchAll = async (req: Request, res: Response) => {
 
 
 export const fetch = async (req: Request, res: Response) => {
-    const problemID = req.params.id;
+    const itemID = req.params.id;
 
     try {
-        const problem = await ProblemModel.findByPk(problemID);
-        const statusCode = problem == null ? 404 : 200;
+        const item = await ItemModel.findByPk(itemID);
+        const statusCode = item == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                problem: problem
+                item: item
             },
             message: null
         });
@@ -58,20 +60,18 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by);
         const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id);
-        const problemTypeExists : ProblemTypeModel | null = await ProblemTypeModel.findByPk(req.body.problem_type_id);
+        const itemTypeExists : ItemTypeModel | null = await ItemTypeModel.findByPk(req.body.item_type_id);
 
-        if(userExists && planningExists && problemTypeExists) {
-            const problem = await ProblemModel.create({
+        if(planningExists && itemTypeExists) {
+            const item = await ItemModel.create({
                 planning_id: req.body.planning_id,
-                problem_type_id: req.body.problem_type_id,
-                created_by: req.body.created_by
+                item_type_id: req.body.item_type_id
             });
 
             res.status(201).send({
                 status: 'success',
-                data: {problem: problem},
+                data: {item: item},
                 message: null
             })
         } else {
@@ -79,8 +79,7 @@ export const add = async (req: Request, res: Response) => {
                 status: 'fail',
                 data: {
                     planning_id: planningExists,
-                    problem_type_id: problemTypeExists,
-                    created_by: userExists
+                    item_type_id: itemTypeExists
                 },
                 message: 'Make sure that your specified data is correct'
             });
@@ -95,10 +94,10 @@ export const add = async (req: Request, res: Response) => {
 };
 
 export const modify = async (req: Request, res: Response) => {
-    const problemID = req.params.id;
-    const problem = req.body.problem;
+    const itemID = req.params.id;
+    const item = req.body.item;
 
-    if (!problem)
+    if (!item)
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -106,18 +105,18 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await ProblemModel.update(problem, {
-            returning: true, where: {id: problemID}
+        const result = await ItemModel.update(item, {
+            returning: true, where: {id: itemID}
         });
 
-        const updatedProblem = result[1][0];
-        const statusCode = updatedProblem == null ? 404 : 200;
+        const updatedItem = result[1][0];
+        const statusCode = updatedItem == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
         const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
-            data: {problem: updatedProblem},
+            data: {item: updatedItem},
             message: message
         });
 
@@ -131,11 +130,11 @@ export const modify = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
-    const problemID = req.params.id;
+    const itemID = req.params.id;
 
     try {
-        const deletedProblem = await ProblemModel.destroy({where: {id: problemID}});
-        const statusCode = deletedProblem == null ? 404 : 200;
+        const deletedItem = await ItemModel.destroy({where: {id: itemID}});
+        const statusCode = deletedItem == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({

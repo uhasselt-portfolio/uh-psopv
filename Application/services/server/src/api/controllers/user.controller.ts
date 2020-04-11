@@ -2,6 +2,7 @@ import UserModel from '../models/user.model';
 import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import JWTUtil from "../utils/jwt.util";
+import AssociationModel from "../models/association.model";
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
@@ -55,6 +56,15 @@ export const add = async (req: Request, res: Response) => {
 
     try {
         const userExists = await UserModel.findOne({where: {phone_number: req.body.phone_number}});
+        const associationExists = await AssociationModel.findByPk(req.body.association_id);
+
+        if(!associationExists) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'Association doesn\'t exist'
+            })
+        }
 
         if (!userExists) {
             const user = await UserModel.create({
@@ -81,6 +91,7 @@ export const add = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
+        console.log(error);
         res.status(500).send({
             status: 'error',
             data: null,
@@ -106,15 +117,15 @@ export const modify = async (req: Request, res: Response) => {
             returning: true, where: {id: userID}
         });
 
-        // TODO: Checking if result is not empty --> index out of range
         const updatedUser = result[1][0];
         const statusCode = updatedUser == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
+        const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {user: updatedUser},
-            message: null
+            message: message
         });
 
     } catch (error) {
@@ -155,7 +166,7 @@ export const authenticate = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const user: UserModel | null = await UserModel.findOne({where: {phone_number: req.body.phone_number}});
+        const user: UserModel | null = await UserModel.findOne({where: {email: req.body.email}});
 
         if (user && await user.validatePassword(req.body.password)) {
             const payload = {
