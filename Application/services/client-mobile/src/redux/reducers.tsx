@@ -46,7 +46,13 @@ const initialState : State = {
     ]
 }
 
-      
+const userReducer = function (state: State = initialState, action: any): State {
+    switch (action.type) {
+        default:
+            return state
+    }
+}
+
 const notificationReducer = function (state: State = initialState, action: any): State {
     switch (action.type) {
         case SET_NOTIFICATION_READ:
