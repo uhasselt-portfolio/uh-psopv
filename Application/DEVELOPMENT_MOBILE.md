@@ -21,6 +21,10 @@ ionic serve
 ```
 
 #### Run het project in een Android emulator
+Build het project eerst
+```
+npm run build
+```
 We voegen een Android emulator toe aan de capacitor:
 ```
 ionic cap add android
@@ -36,7 +40,3 @@ De versie van Android en het model van de smartphone maakt niet uit.
 
 #### Wat als ik een wit scherm krijg?
 Verander het model van de smartphone, bv: Pixel 2a => Pixel 3a XL
-
-
-
-
