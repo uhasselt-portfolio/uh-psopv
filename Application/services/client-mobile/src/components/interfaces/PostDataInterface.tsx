@@ -1,7 +1,7 @@
 import React from 'react';
 
 interface PostInterface {
-    name: string,
+    title: string,
     addres: string,
     sector: string,
     general: string,

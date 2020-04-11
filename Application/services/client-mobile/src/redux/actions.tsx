@@ -19,6 +19,7 @@ import axios from 'axios';
 export const SET_NOTIFICATION_READ = 'SET_NOTIFICATION_READ'
 export const GET_NOTIFICATION_STATUS = 'GET_NOTIFICATION_STATUS'
 export const FETCH_MESSAGE = 'FETCH_MESSAGE'
+export const ADD_MESSAGE = 'ADD_MESSAGE'
 
 
 export const fetchNoticationData = () => async (dispatch: Redux.Dispatch) => {
@@ -30,12 +31,19 @@ export const fetchNoticationData = () => async (dispatch: Redux.Dispatch) => {
 
 
 export function getNotificationStatus() {
-    return { type: SET_NOTIFICATION_READ }
+    return { type: GET_NOTIFICATION_STATUS }
 }
 
 export const setNotificationStatus = (data: any) => {
     return {
         type: SET_NOTIFICATION_READ,
+        payload: data
+    }
+}
+
+export const addMessage = (data: any) => {
+    return {
+        type: ADD_MESSAGE,
         payload: data
     }
 }

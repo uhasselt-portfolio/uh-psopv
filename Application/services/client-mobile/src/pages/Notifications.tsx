@@ -119,6 +119,4 @@ const MapDispatchToProps = (
   }
 );
 
-
-
 export default connect(mapStateToProps, MapDispatchToProps)(Notifications);

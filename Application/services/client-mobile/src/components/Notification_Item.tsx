@@ -23,16 +23,7 @@ import { setNotificationStatus, fetchNoticationData } from '../redux/actions'
 import MessageDataInterface from '../components/interfaces/MessageDataInterface';
 
 
-// interface index {
-//     index: number
-//   };
-
-type index = {
-    index: number
-};
-
- 
-class NotificationItem extends Component<any | index> {
+class NotificationItem extends Component<any> {
     constructor(props: any){
         super(props)
     }

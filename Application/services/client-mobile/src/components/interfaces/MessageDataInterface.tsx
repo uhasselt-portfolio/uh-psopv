@@ -2,6 +2,7 @@ import React from 'react';
 
 interface MessageInterface {
     id: number,
+    receiver_id: number,
     title: string,
     sender: string,
     content: string,

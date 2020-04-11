@@ -1,13 +1,16 @@
 import React from 'react';
 
 interface UserInterface {
-    name: string,
-    lastname: string,
+    id: number,
+    first_name: string,
+    last_name: string,
     has_internet: boolean,
-    gsmNumber: string,
+    phone_number: string,
     email: string,
     permissions: boolean,
     association?: string
+    sector?: string,
+    role: string,
     latitude: Number,
     longitude: Number
 }
