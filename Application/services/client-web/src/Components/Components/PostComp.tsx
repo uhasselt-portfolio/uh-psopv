@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PostInterface from '../Interfaces/PostDataInterface';
 import {Container,Paper,Grid } from '@material-ui/core';
+import {Link} from 'react-router-dom';
 
 interface State {
     data: PostInterface
@@ -21,13 +22,13 @@ const labelStyle = {
 
 class Post extends Component<PostInterface, State> {
     state: State ={
-        data: {title: "title", addres: "address", sector: -1, general: "general post", latitude: 0, longitude: 0}
+        data: {id: -1, title: "title", addres: "address", sector: -1, general: "general post", latitude: 0, longitude: 0}
     }
     constructor(props: PostInterface) {
         super(props);
 
         this.state = {
-            data: {title: props.title, addres: props.addres, sector: props.sector, general: props.general, latitude: props.latitude, longitude: props.longitude}
+            data: {id: props.id, title: props.title, addres: props.addres, sector: props.sector, general: props.general, latitude: props.latitude, longitude: props.longitude}
         }
     }
 
@@ -56,9 +57,15 @@ class Post extends Component<PostInterface, State> {
                             <p>{this.state.data.sector}</p>
                         </Grid>
                     </Grid>
-                    <Grid container>
+                    <Grid container justify="space-between">
                         <Grid item style={labelStyle}>
                             <p>{this.state.data.general}</p>
+                        </Grid>
+                        <Grid item>
+                        <Link to={{
+                                    pathname: '/data/Post',
+                                    state: this.props
+                                }}>Ga naar</Link>
                         </Grid>
                     </Grid>
                 </Paper>

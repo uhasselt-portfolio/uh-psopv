@@ -1,6 +1,5 @@
-import React from 'react';
-
 interface PostInterface {
+    id: Number,
     title: string,
     addres: string,
     sector: Number,
