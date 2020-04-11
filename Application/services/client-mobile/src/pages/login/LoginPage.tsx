@@ -1,25 +1,24 @@
 import React from "react";
 import {IonPage, IonHeader, IonToolbar, IonTitle, IonContent, IonList, IonItem, IonButton, IonInput, IonLabel, IonText} from "@ionic/react";
-
-interface IProps {
-
-}
+import {loginUser} from './LoginAction';
+import {connect} from "react-redux";
+import {bindActionCreators} from "redux";
 
 interface IState {
     email?: string;
     password?: string;
 }
 
-class Login extends React.Component<IProps, IState> {
+class LoginPage extends React.Component<any, IState> {
 
-    constructor(props: IProps) {
+    constructor(props: any) {
         super(props);
         this.state = {email: "", password: ""}
     }
 
     handleFormSubmit(event: any) : void {
         event.preventDefault();
-        console.log(this.state);
+        this.props.loginUser(this.state.email, this.state.password)
     }
 
     render(): React.ReactNode {
@@ -39,6 +38,16 @@ class Login extends React.Component<IProps, IState> {
                         </IonToolbar>
                     </IonHeader>
                     <IonList>
+                        <IonItem>
+                            <IonLabel position="stacked">Status:
+                                <IonText color={this.props.isUserLoggedIn ? 'success' : 'secondary'}>
+                                    {this.props.isUserLoggedIn ? ' Aangemeld!' : ' Niet aangemeld'}
+                                </IonText>
+                            </IonLabel>
+                            <IonLabel position="stacked">
+                                <IonText color="danger">{this.props.errorMessage}</IonText>
+                            </IonLabel>
+                        </IonItem>
                         <IonItem>
                             <IonLabel position="stacked">E-mail
                                 <IonText color="danger">*</IonText>
@@ -73,4 +82,18 @@ class Login extends React.Component<IProps, IState> {
     }
 }
 
-export default Login;
+function mapStateToProps(state: any) {
+    return({
+        isUserLoggedIn: state.login.isUserLoggedIn,
+        errorMessage: state.login.errorMessage
+    })
+}
+
+function mapDispatchToProps(dispatch: any) {
+    return bindActionCreators({
+        loginUser
+    }, dispatch);
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
+// export default LoginPage;
