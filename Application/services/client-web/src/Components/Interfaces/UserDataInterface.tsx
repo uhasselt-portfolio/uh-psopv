@@ -1,4 +1,5 @@
 interface UserInterface {
+    id: Number,
     name: string,
     lastname: string,
     has_internet: boolean,

@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import {Grid, Button} from '@material-ui/core';
-import ItemInterface from '../Interfaces/ItemDataInterface';
+import {Grid} from '@material-ui/core';
 
 const style= {
     border: 'solid 1px black',
