@@ -4,12 +4,10 @@ import { Component } from 'react';
 import axios from 'axios';
 
 
-
-// export const fetchUser = () => async (dispatch: Redux.Dispatch) => {
-//     const result = await Axios.get("https://psopv.herokuapp.com/user/fetch/all");
-//     dispatch({ type: "FETCH_USER", payload: result.data});
-// };
-
+// export const fetchNoticationData = () => async (dispatch: Redux.Dispatch) => {
+//     const result = await axios.get("https://jsonplaceholder.typicode.com/posts");
+//     dispatch({ type: "FETCH_MESSAGE", payload: result.data});
+// }
 // export const setNotificationRead = (data: boolean) => async (dispatch: Redux.Dispatch) => {
 //     dispatch({type: "UPDATE_NOTIFICATION_READ", payload: data});
 // };
@@ -20,20 +18,25 @@ import axios from 'axios';
 
 export const SET_NOTIFICATION_READ = 'SET_NOTIFICATION_READ'
 export const GET_NOTIFICATION_STATUS = 'GET_NOTIFICATION_STATUS'
+export const FETCH_MESSAGE = 'FETCH_MESSAGE'
+
 
 export const fetchNoticationData = () => async (dispatch: Redux.Dispatch) => {
-    const result = await axios.get("http://localhost/api/message/fetch/all");
+    const result = await axios.get("https://jsonplaceholder.typicode.com/posts");
+    dispatch({ type: "FETCH_MESSAGE", payload: result.data});
+}
+    
+
+
+
+export function getNotificationStatus() {
+    return { type: SET_NOTIFICATION_READ }
 }
 
-
-
-// export function getNotificationStatus() {
-//     return { type: GET_NOTIFICATION_STATUS }
-// }
-export const setNotificationStatus = (read: boolean) => {
+export const setNotificationStatus = (data: any) => {
     return {
         type: SET_NOTIFICATION_READ,
-        payload: read
+        payload: data
     }
 }
 

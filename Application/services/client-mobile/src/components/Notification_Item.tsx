@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Component } from 'react';
 import 'bootstrap/dist/css/bootstrap.css';
-import {bindActionCreators} from "redux";
+import {bindActionCreators, Dispatch} from "redux";
 
 import { IonButton, 
     IonListHeader, 
@@ -18,58 +18,81 @@ import './Notification_Item.css';
 import { read } from 'fs';
 import {store} from '../redux/store';
 import { connect } from "react-redux";
-import { notifications } from 'ionicons/icons';
-import { setNotificationStatus } from '../redux/actions'
+import { notifications, trendingUpSharp } from 'ionicons/icons';
+import { setNotificationStatus, fetchNoticationData } from '../redux/actions'
+import MessageDataInterface from '../components/interfaces/MessageDataInterface';
+
+
+// interface index {
+//     index: number
+//   };
 
 type index = {
-    index: number,
-  };
+    index: number
+};
 
-class NotificationItem  extends Component<any | index> {
+ 
+class NotificationItem extends Component<any | index> {
     constructor(props: any){
         super(props)
     }
-
-    onMenuItemClicked = (selected: any) => {
-        this.props.setNotificationStatus(true);
-    }
     
-    render() {
-       let data = this.props.notificationData[this.props.index]; // makes "this.props.." shorter, because it was a bit too long
 
-        if (data.read){
-            return (  
-                <IonItem className="ReadItem">
-                    <IonLabel>
-                        <h2> <b>{data.from_person}:</b> {data.title}</h2>
-                        <p>{data.description}</p>
-                    </IonLabel>
-                    <IonLabel class="right_text">
-                        <h2>{data.time}</h2>
-                    </IonLabel>
-                </IonItem>
-            );
-        } else{
-            return(
-                <IonItem className="NotReadItem" onClick={() => this.onMenuItemClicked(this.props)}>
-                    <IonLabel>
-                        <h2> <b>{data.from_person}:</b> {data.title}</h2>
-                        <p>{data.description}</p>
-                    </IonLabel>
-                    <IonLabel class="right_text">
-                        <h2>{data.time}</h2>
-                    </IonLabel>
-                </IonItem>
-            )
-        }
-        
+    handleOnMenuItemClicked = (data: any) => {
+        this.props.messageRead(data);
+      }
+
+    render(){
+        let data = this.props.notificationReducer.Messages.find(((message: { id: any; }) => message.id === this.props.id)); // makes "this.props.." shorter, because it was a bit too long
+
+       if (data.read){
+        return (  
+            <IonItem className="ReadItem">
+                <IonLabel>
+                    <h2> <b>{data.sender}:</b> {data.title}</h2>
+                    <p>{data.content}</p>
+                </IonLabel>
+                <IonLabel class="right_text">
+                    <h2>{data.time_send}</h2>
+                </IonLabel>
+            </IonItem>
+        );
+    } else{
+        return(
+            <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
+                <IonLabel>
+                <h2> <b>{data.sender}:</b> {data.title}</h2>
+                    <p>{data.content}</p>
+                </IonLabel>
+                <IonLabel class="right_text">
+                    <h2>{data.time_send}</h2>
+                </IonLabel>
+            </IonItem>
+        )
+    }
     }
 }
-const mapStateToProps = (state: any) => {
-    console.log(state);
-    return {notificationData: state.notificationData};
-  }
-  
-  
-export default connect(mapStateToProps, { setNotificationStatus })(NotificationItem);
 
+
+
+const mapStateToProps = (state: any) => {
+    return {
+        notificationReducer: state.notificationReducer};
+  }
+
+const mapDispatchToProps = (
+    dispatch: Dispatch<any>,
+    ): any => ({
+        messageRead: bindActionCreators(setNotificationStatus, dispatch)
+    }
+);
+  
+export default connect(mapStateToProps, mapDispatchToProps)(NotificationItem);
+
+
+
+  
+
+  
+  
+  

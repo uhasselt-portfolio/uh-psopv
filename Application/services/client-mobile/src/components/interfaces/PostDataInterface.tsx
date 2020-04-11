@@ -1,14 +1,12 @@
 import React from 'react';
 
-interface PostDataInterface {
-    sector: number,
-    post: number,
-    post_street: string,
-    shift_id: number,
-    shift_start_hour: string,
-    shift_end_hour: string,
-    person1: string,
-    person2: string,
+interface PostInterface {
+    name: string,
+    addres: string,
+    sector: string,
+    general: string,
+    latitude: Number,
+    longitude: Number
 }
 
-export default PostDataInterface;
+export default PostInterface;

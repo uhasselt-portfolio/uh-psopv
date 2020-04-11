@@ -1,9 +1,12 @@
-import React, { Fragment, useState, Component } from 'react';
+import React, { Fragment, useState, Component} from 'react';
 import ExploreContainer from '../components/ExploreContainer';
 import './ListView.css';
 import NotificationItem from '../components/Notification_Item'
 import {store} from '../redux/store';
 import { connect } from "react-redux";
+import { ThunkDispatch } from "redux-thunk";
+import { Dispatch, bindActionCreators } from "redux";
+
 
 import { IonButton, 
   IonListHeader, 
@@ -14,13 +17,11 @@ import { IonButton,
   IonList, 
   IonItem, 
   IonLabel,
-  IonText,
-  IonSelect,
-  IonSelectOption,
-  IonRow,
-  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol } from '@ionic/react';
-import NotificationDataInterface from '../components/interfaces/NotificationDataInterface';
+  IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar } from '@ionic/react';
 import PostDataInterface from '../components/interfaces/PostDataInterface';
+import { setNotificationStatus } from '../redux/actions';
+import './Notifications.css';
+import State from '../redux/state';
 
 
   // const users: notificationProps[] = [
@@ -32,19 +33,49 @@ import PostDataInterface from '../components/interfaces/PostDataInterface';
 
 
 class Notifications extends Component<any> {
-    // constructor(props: any) {
-    //   super(props);
-    // }
+//   renderListItem(index: number) {
+//     let data = this.props.notificationReducer.Messages[index]; // makes "this.props.." shorter, because it was a bit too long
 
-    renderList(){
-      return this.props.notificationData.map((notification: any, index: number) =>{
-        return (
-        <div>
-        <NotificationItem index={index}/></div>
-        )
-      })
+//      if (data.read){
+//          return (  
+//              <IonItem className="ReadItem">
+//                  <IonLabel>
+//                      <h2> <b>{data.sender}:</b> {data.title}</h2>
+//                      <p>{data.content}</p>
+//                  </IonLabel>
+//                  <IonLabel class="right_text">
+//                      <h2>"data.time"</h2>
+//                  </IonLabel>
+//              </IonItem>
+//          );
+//      } else{
+//          return(
+//              <IonItem className="NotReadItem" onClick={() => this.handleRead(index)}>
+//                  <IonLabel>
+//                  <h2> <b>{data.sender}:</b> {data.title}</h2>
+//                      <p>{data.content}</p>
+//                  </IonLabel>
+//                  <IonLabel class="right_text">
+//                      <h2>"data.time"</h2>
+//                  </IonLabel>
+//              </IonItem>
+//          )
+//      }
+//  }
 
-    }
+  renderList(){
+    
+    return this.props.notificationReducer.Messages.map((message: any, index: number) =>{
+      return (
+      <NotificationItem {... message}/>
+      )
+    })
+  }
+
+
+  handleRead = (index: number) => {
+    this.props.messageRead(this.props.notificationReducer.Messages[index]);
+  }
 
 
   render(){
@@ -77,8 +108,17 @@ class Notifications extends Component<any> {
 };
 
 const mapStateToProps = (state: any) => {
-  return {notificationData: state.notificationData};
+  console.log(state);
+  return {notificationReducer: state.notificationReducer};
 }
 
+const MapDispatchToProps = (
+  dispatch: Dispatch<any>,
+): any => ({
+    messageRead: bindActionCreators(setNotificationStatus, dispatch)
+  }
+);
 
-export default connect(mapStateToProps)(Notifications);
+
+
+export default connect(mapStateToProps, MapDispatchToProps)(Notifications);

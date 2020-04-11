@@ -1,7 +1,11 @@
-import PostDataInterface from '../components/interfaces/PostDataInterface'
-import NotificationDataInterface from '../components/interfaces/NotificationDataInterface'
+import PostDataInterface from '../components/interfaces/PostDataInterface';
+import ProblemDataInterface from '../components/interfaces/ProblemDataInterface';
+import MessageDataInterface from '../components/interfaces/MessageDataInterface';
+import UserDataInterface from '../components/interfaces/UserDataInterface';
 
 export default interface State {
     Posts: PostDataInterface[],
-    notifications: NotificationDataInterface[],
+    Problems: ProblemDataInterface[],
+    Messages: MessageDataInterface[],
+    Users: UserDataInterface[]
 }
