@@ -86,7 +86,7 @@ export const checkRequiredParameters = (req: Request, res: Response) => {
     const noErrors = errors.isEmpty();
 
     if(!noErrors) {
-        res.status(404).send({
+        res.status(200).send({
             status: 'fail',
             data: errors,
             message: 'Required parameters not provided'
