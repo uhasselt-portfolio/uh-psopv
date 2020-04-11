@@ -21,6 +21,10 @@ ionic serve
 ```
 
 #### Run het project in een Android emulator
+Build het project eerst
+```
+npm run build
+```
 We voegen een Android emulator toe aan de capacitor:
 ```
 ionic cap add android
