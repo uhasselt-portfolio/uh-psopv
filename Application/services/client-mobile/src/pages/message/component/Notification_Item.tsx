@@ -19,8 +19,8 @@ import { read } from 'fs';
 import {store} from '../../../redux/store';
 import { connect } from "react-redux";
 import { notifications, trendingUpSharp } from 'ionicons/icons';
-import { setNotificationStatus, fetchNoticationData } from '../../../redux/actions'
 import MessageDataInterface from '../../../components/interfaces/MessageDataInterface';
+import {fetchMessages} from '../MessageAction'
 
 
 class NotificationItem extends Component<any> {
@@ -34,17 +34,17 @@ class NotificationItem extends Component<any> {
       }
 
     render(){
-        let data = this.props.notificationReducer.Messages.find(((message: { id: any; }) => message.id === this.props.id)); // makes "this.props.." shorter, because it was a bit too long
+        let data = this.props.areMessagesFetched.find(((message: { id: any; }) => message.id === this.props.id)); // makes "this.props.." shorter, because it was a bit too long
 
-       if (data.read){
+       if (true){ // nog aan te passen
         return (  
             <IonItem className="ReadItem">
                 <IonLabel>
-                    <h2> <b>{data.sender}:</b> {data.title}</h2>
-                    <p>{data.content}</p>
+                    <h2> <b>{data.created_by}:</b> {data.title}</h2>
+                    <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <h2>{data.time_send}</h2>
+                    <h2>{data.created_at}</h2>
                 </IonLabel>
             </IonItem>
         );
@@ -52,11 +52,11 @@ class NotificationItem extends Component<any> {
         return(
             <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
                 <IonLabel>
-                <h2> <b>{data.sender}:</b> {data.title}</h2>
-                    <p>{data.content}</p>
+                    <h2> <b>{data.created_by}:</b> {data.title}</h2>
+                    <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <h2>{data.time_send}</h2>
+                    <h2>{data.created_at}</h2>
                 </IonLabel>
             </IonItem>
         )
@@ -64,23 +64,22 @@ class NotificationItem extends Component<any> {
     }
 }
 
-
-
-const mapStateToProps = (state: any) => {
-    return {
-        notificationReducer: state.notificationReducer};
+function mapStateToProps(state: any) {
+    return({
+      areMessagesFetched: state.message.areMessagesFetched,
+      errorMessage: state.message.errorMessage,
+      loading: state.message.loading
+    })
   }
-
-const mapDispatchToProps = (
-    dispatch: Dispatch<any>,
-    ): any => ({
-        messageRead: bindActionCreators(setNotificationStatus, dispatch)
-    }
-);
   
-export default connect(mapStateToProps, mapDispatchToProps)(NotificationItem);
-
-
+  function mapDispatchToProps(dispatch: any) {
+    return bindActionCreators({
+      fetchMessages
+    }, dispatch);
+  }
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(NotificationItem);
+  
 
   
 

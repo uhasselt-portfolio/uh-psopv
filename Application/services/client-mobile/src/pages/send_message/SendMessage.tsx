@@ -6,7 +6,7 @@ import Shift from '../../components/Shift';
 import { caretDown } from 'ionicons/icons';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import {addMessage} from './SendMessageAction'
+import {addMessage, fetchUsers} from './SendMessageAction'
 
 
 
@@ -22,9 +22,14 @@ class SendNotifications extends Component<any> {
     priority: 1
   }
 
-  constructor(props: any){
-    super(props)
+  constructor(props: any) {
+    super(props);
   }
+
+  componentDidMount(){
+    this.props.fetchUsers();
+  }
+
 
   handleSendMessage(){
     this.props.addMessage(this.state.title, this.state.message, this.state.created_by, this.state.priority);
@@ -36,6 +41,36 @@ class SendNotifications extends Component<any> {
 
   handleContentChange(new_message: string | null | undefined){
     this.setState({...this.state, message: new_message});
+  }
+
+  // renderListOfUser(){
+  //   console.log("usersFetched", this.props)
+  //   return <div> </div>
+  //   // return this.props.areUsersFetched.map((data: any, index: number) =>{
+  //   //   return (
+  //   //     <IonSelectOption value="Verantwoordelijke">Verantwoordelijke</IonSelectOption>
+  //   //   )
+  //   // })
+  // }
+
+  renderListOfUser(){
+    console.log("this.props.areMessagesfetched", this.props);
+    if(this.props.loading == true){
+      return <div>Loading...</div>
+    } else {
+      if(this.props.areUsersFetched !== undefined){
+        console.log(this.props.areMessageFetched)
+        if(this.props.areUsersFetched.length <= 0){
+          return <div>No users found</div>
+        } else{
+          return this.props.areUsersFetched.map((data: any, index: number) =>{
+            return (
+              <IonSelectOption value="Verantwoordelijke">{data.first_name} {data.last_name}</IonSelectOption>
+            )
+          })
+        }
+      }
+    }
   }
 
 
@@ -60,8 +95,7 @@ class SendNotifications extends Component<any> {
           <IonItem>
             <IonLabel>Ontvanger</IonLabel>
             <IonSelect interface="popover" value="test" placeholder="Selecteer">
-              <IonSelectOption value="Admin">Admin</IonSelectOption>
-              <IonSelectOption value="Verantwoordelijke">Verantwoordelijke</IonSelectOption>
+              {this.renderListOfUser()}
             </IonSelect>
           </IonItem>
 
@@ -82,15 +116,16 @@ class SendNotifications extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    areMessagesSend: state.message.areMessagesSend,
-    errorMessage: state.message.errorMessage,
-    loading: state.message.loading
+    areUsersFetched: state.user.areUsersFetched,
+    errorMessage: state.user.errorMessage,
+    loading: state.user.loading
   })
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    addMessage
+    addMessage,
+    fetchUsers
   }, dispatch);
 }
 

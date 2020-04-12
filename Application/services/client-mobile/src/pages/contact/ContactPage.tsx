@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import ExploreContainer from '../../components/ExploreContainer';
-import ContactItem from '../../components/Contact_Item'
+import ContactItem from './components/Contact_Item'
 
 import { IonButton, 
   IonListHeader, 

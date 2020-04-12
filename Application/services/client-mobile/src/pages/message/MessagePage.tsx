@@ -46,16 +46,7 @@ class Notifications extends Component<any> {
         } else{
           return this.props.areMessagesFetched.map((data: any, index: number) =>{
             return (
-              <IonItem className="ReadItem">
-                      <IonLabel>
-                          <h2> <b>{data.created_by}:</b> {data.title}</h2>
-                          <p>{data.message}</p>
-                      </IonLabel>
-                      <IonLabel class="right_text">
-                          <h2>{data.created_at}</h2>
-                      </IonLabel>
-                  </IonItem>
-            // <NotificationItem {... message}/>
+            <NotificationItem {... data}/>
             )
           })
         }
@@ -126,4 +117,3 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
-// export default LoginPage;
