@@ -16,13 +16,8 @@ import { caretDown, call, mail } from 'ionicons/icons';
 
 
   
-type UserProps = {
-    id: number,
-    name: string,
-    task: string,
-  };
 
-class ContactItem  extends Component<UserProps> {
+class ContactItem  extends Component<any> {
 
     constructor(props: any){
         super(props)
@@ -34,12 +29,12 @@ class ContactItem  extends Component<UserProps> {
             return '/PostView/'+ props.id;
         }
         
-        return (            
+        return (     
             <Link to={{pathname: getPost(this.props)}}>  
             <IonItem  detail button>
                 <IonLabel>
-                    <h1>{this.props.name}</h1>
-                    <p>{this.props.task}</p>
+                    <h1>{this.props.first_name} {this.props.last_name}</h1>
+                    <p>{this.props.permissions}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
                     <IonButton>

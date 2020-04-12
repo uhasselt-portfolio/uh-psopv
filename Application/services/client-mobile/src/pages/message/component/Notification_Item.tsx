@@ -31,7 +31,7 @@ class NotificationItem extends Component<any> {
 
     handleOnMenuItemClicked = (data: any) => {
         this.props.messageRead(data);
-      }
+    }
 
     render(){
         let data = this.props.areMessagesFetched.find(((message: { id: any; }) => message.id === this.props.id)); // makes "this.props.." shorter, because it was a bit too long

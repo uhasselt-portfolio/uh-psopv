@@ -43,15 +43,6 @@ class SendNotifications extends Component<any> {
     this.setState({...this.state, message: new_message});
   }
 
-  // renderListOfUser(){
-  //   console.log("usersFetched", this.props)
-  //   return <div> </div>
-  //   // return this.props.areUsersFetched.map((data: any, index: number) =>{
-  //   //   return (
-  //   //     <IonSelectOption value="Verantwoordelijke">Verantwoordelijke</IonSelectOption>
-  //   //   )
-  //   // })
-  // }
 
   renderListOfUser(){
     console.log("this.props.areMessagesfetched", this.props);
@@ -116,9 +107,9 @@ class SendNotifications extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    areUsersFetched: state.user.areUsersFetched,
-    errorMessage: state.user.errorMessage,
-    loading: state.user.loading
+    areUsersFetched: state.sendMessage.areUsersFetched,
+    errorMessage: state.sendMessage.errorMessage,
+    loading: state.sendMessage.loading
   })
 }
 
@@ -129,11 +120,5 @@ function mapDispatchToProps(dispatch: any) {
   }, dispatch);
 }
 
-// const MapDispatchToProps = (
-//   dispatch: Dispatch<any>,
-// ): any => ({
-//     addMessage: bindActionCreators(addMessage, dispatch)
-//   }
-// );
 
 export default connect(mapStateToProps, mapDispatchToProps)(SendNotifications);

@@ -35,12 +35,10 @@ class Notifications extends Component<any> {
   }
 
   renderList(){
-    console.log("this.props.areMessagesfetched", this.props);
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
       if(this.props.areMessagesFetched !== undefined){
-        console.log(this.props.areMessageFetched)
         if(this.props.areMessagesFetched.length <= 0){
           return <div> No messages found. </div>
         } else{
@@ -88,18 +86,6 @@ class Notifications extends Component<any> {
     );
     }
 };
-
-// const mapStateToProps = (state: any) => {
-//   console.log(state);
-//   return {notificationReducer: state.notificationReducer};
-// }
-
-// const MapDispatchToProps = (dispatch: Dispatch<any>,): any => ({
-//     messageRead: bindActionCreators(setNotificationStatus, dispatch)
-//   }
-// );
-
-// export default connect(mapStateToProps, MapDispatchToProps)(Notifications);
 
 function mapStateToProps(state: any) {
   return({
