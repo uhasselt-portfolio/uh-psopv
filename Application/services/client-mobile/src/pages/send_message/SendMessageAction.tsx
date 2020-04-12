@@ -8,13 +8,16 @@ export const MESSAGE_ADD_FAIL = 'MESSAGE_ADD_FAIL'
 export const addMessage = (title: string | undefined, message: string | undefined, created_by: number | undefined, priority: number | undefined) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: MESSAGE_ADD_START})
-        console.log(title, message)
-        const response = await axios.post('localhost/api/message/add', {
+        
+        const response = await axios.post('http://localhost/api/message/add', {
             title: title,
 	        message: message,
 	        created_by: created_by,
 	        priority: priority
         });
+
+        console.log("test", title, message)
+
 
         dispatch({type: MESSAGE_ADD_SUCCESS})
     } catch(error){

@@ -27,7 +27,7 @@ class SendNotifications extends Component<any> {
   }
 
   handleSendMessage(){
-    this.props.addMessage(this.state);
+    this.props.addMessage(this.state.title, this.state.message, this.state.created_by, this.state.priority);
   }
 
   handleTitleChange(new_title: string | null | undefined){
@@ -41,8 +41,6 @@ class SendNotifications extends Component<any> {
 
 
   render(){
-
-    console.log(this.props)
       return (
       <IonPage>
         <IonHeader>

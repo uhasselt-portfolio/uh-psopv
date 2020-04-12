@@ -10,7 +10,8 @@ router.get('/fetch/all', fetchAll);
 
 router.get('/fetch/:id', fetch);
 
-router.post('/add', validateBodyParameters('message/add'), add);
+//router.post('/add', validateBodyParameters('message/add'), add);
+router.post('/add', add);
 
 router.patch('/modify/:id', verify, modify);
 
