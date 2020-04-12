@@ -10,14 +10,16 @@ import {
   IonTabs
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import ListView from './pages/ListView';
-import MapView from './pages/MapView';
-import PostView from './pages/PostView'
-import Notifications from './pages/Notifications';
-import SendNotifications from './pages/SendNotifications';
-import Contacts from './pages/Contacts';
-import NotificationItem from './components/Notification_Item'
+import ListView from './pages/list/ListPage';
+// import MapView from './pages/map/MapPage';
+import PostView from './pages/post/PostPage'
+import Notifications from './pages/message/MessagePage';
+import SendNotifications from './pages/send_message/SendMessage';
+import Contacts from './pages/contact/ContactPage';
+import NotificationItem from './pages/message/component/Notification_Item'
 import { ellipse, square, triangle } from 'ionicons/icons';
+import LoginPage from './pages/login/LoginPage';
+
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -38,10 +40,10 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import Child from './pages/PostView';
+import Child from './pages/post/PostPage';
 
 import {Provider} from 'react-redux';
-import {store} from './redux/store';
+import store from './reducers';
 
 
 
@@ -54,14 +56,19 @@ const App: React.FC = () => (
       <IonTabs>
         <IonRouterOutlet>
           <Route path="/ListView" component={ListView} exact={true} />
-          <Route path="/MapView" component={MapView} exact={true} />
+          {/* <Route path="/MapView" component={MapView} exact={true} /> */}
           <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
           <Route path="/Notifications" component={Notifications} exact={true} />
           <Route path="/SendNotifications" component={SendNotifications} exact={true} />
           <Route path="/Contacts" component={Contacts} exact={true} />
+          <Route path="/Login" component={LoginPage} exact={true} />
           <Route path="/" render={() => <Redirect to="/ListView" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
+        <IonTabButton tab="Login" href="/Login">
+            <IonIcon icon={square} />
+            <IonLabel>Login</IonLabel>
+          </IonTabButton>
           {/* <IonTabButton tab="MapView" href="/MapView">
             <IonIcon icon={ellipse} />
             <IonLabel>Map</IonLabel>

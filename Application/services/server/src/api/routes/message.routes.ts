@@ -5,14 +5,15 @@ import {verify} from "../middleware/jwt.middleware";
 
 const router = express.Router();
 
+// TODO: Add middleware back
 router.get('/fetch/all', fetchAll);
 
-router.get('/fetch/:id', verify, fetch);
+router.get('/fetch/:id', fetch);
 
 router.post('/add', validateBodyParameters('message/add'), add);
 
 router.patch('/modify/:id', verify, modify);
 
-router.delete('/delete/:id', verify, remove);
+router.delete('/delete/:id', remove);
 
 export default router;

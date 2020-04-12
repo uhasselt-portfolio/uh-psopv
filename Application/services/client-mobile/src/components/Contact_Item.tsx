@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/css/bootstrap.css';
 import { IonButton, 
     IonListHeader, 
     IonHeader, 

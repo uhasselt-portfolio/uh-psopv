@@ -1,6 +1,5 @@
-import React from 'react';
-
 interface UserInterface {
+    id: Number,
     name: string,
     lastname: string,
     has_internet: boolean,
@@ -8,6 +7,8 @@ interface UserInterface {
     email: string,
     permissions: boolean,
     association?: string
+    latitude: Number,
+    longitude: Number
 }
 
 export default UserInterface;

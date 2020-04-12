@@ -1,11 +1,7 @@
 import {Request, Response} from "express";
 import UserModel from "../models/user.model";
-import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
-import PlanningModel from "../models/planning.model";
-import ProblemTypeModel from "../models/problem_type.model";
-import ItemModel from "../models/item.model";
-import ItemTypeModel from "../models/item_type.model";
+
 import MessageModel from "../models/message.model";
 
 export const fetchAll = async (req: Request, res: Response) => {
@@ -95,10 +91,10 @@ export const add = async (req: Request, res: Response) => {
 };
 
 export const modify = async (req: Request, res: Response) => {
-    const userID = req.params.id;
-    const user = req.body.item;
+    const messageID = req.params.id;
+    const message = req.body.message;
 
-    if (!user)
+    if (!message)
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -106,19 +102,19 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await ItemModel.update(user, {
-            returning: true, where: {id: userID}
+        const result = await MessageModel.update(message, {
+            returning: true, where: {id: messageID}
         });
 
         const updatedMessage = result[1][0];
         const statusCode = updatedMessage == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
-        const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
+        const errorMessage = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {message: updatedMessage},
-            message: message
+            message: errorMessage
         });
 
     } catch (error) {

@@ -42,27 +42,29 @@ class Posts extends Component<Props> {
     handleFilter = () => {
         let element = (document.getElementById("filterInput")) as HTMLInputElement;
         var value = element.value;
-        console.log(value);
         this.setState({
                 ...this.state,
                 filterValue: value
         })
     }
     filterChanged = () => {
-        var element = (document.getElementById("filtertype")) as HTMLSelectElement;
-        var index = element.selectedIndex;
-        var value = element.options[index];
+        var filterElement = (document.getElementById("filtertype")) as HTMLSelectElement;
+        var index = filterElement.selectedIndex;
+        var filterValue = filterElement.options[index];
+        let valueElement = (document.getElementById("filterInput")) as HTMLInputElement;
+        var valueValue = valueElement.value;
         this.setState({
-                ...this.state,
-                filter: value.value
+                filterValue: valueValue,
+                filter: filterValue.value
         });
+ 
     }
 
     handlePostMarkerClicked = (clicked : string) => {
-        var Selectelement = (document.getElementById("filtertype")) as HTMLSelectElement;
-        Selectelement.value = "post";
-        var Inputelement = (document.getElementById("filterInput")) as HTMLInputElement;
-        Inputelement.value = clicked;
+        var selectelement = (document.getElementById("filtertype")) as HTMLSelectElement;
+        selectelement.value = "post";
+        var inputelement = (document.getElementById("filterInput")) as HTMLInputElement;
+        inputelement.value = clicked;
         this.setState({
                 ...this.state,
                 filter: "post",
@@ -72,7 +74,7 @@ class Posts extends Component<Props> {
 
     render() {
         let filteredPosts: Array<JSX.Element> = this.props.posts.map(x =>(
-            <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
+            <Post key={Math.random()} id={x.id} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
         ));
         let markers: Array<JSX.Element> = this.props.posts.map(x => (
             <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
@@ -80,7 +82,7 @@ class Posts extends Component<Props> {
 
         switch(this.state.filter) {
             case "post" : { filteredPosts = this.props.posts.filter(post => post.title === this.state.filterValue).map(x =>(
-                    <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
+                    <Post key={Math.random()} id={x.id} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} />
                 ));
                 markers = this.props.posts.filter(post => post.title === this.state.filterValue).map(x =>(
                     <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
@@ -88,7 +90,7 @@ class Posts extends Component<Props> {
                 break;
             }
             case "sector" : {filteredPosts = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue).map(x =>(
-                    <Post key={Math.random()} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude}/>
+                    <Post key={Math.random()} id={x.id} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude}/>
                 ));
                 markers = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue).map(x =>(
                     <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
@@ -108,7 +110,7 @@ class Posts extends Component<Props> {
 
         return(
             <div>
-                <DataNavBar />
+                <DataNavBar tab={2}/>
                 <Container>
                     <Grid container>
                         <Grid item style={styleBorder}> {/*opsomming posten*/}
@@ -122,7 +124,7 @@ class Posts extends Component<Props> {
                                         </select>
                                     </Grid>
                                     <Grid item>
-                                        <input id="filterInput" type="text" placeholder="sector"></input>
+                                        <input id="filterInput" type="text" placeholder={this.state.filter}></input>
                                     </Grid>
                                     <Grid item>
                                         <Button variant="outlined" onClick={this.handleFilter}>filter</Button>
@@ -155,11 +157,10 @@ interface LinkStateProps {
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        posts: state.reducer.Posts,
+        posts: state.Globalreducer.posts,
     }
 }
 
-// export default Overview
 export default connect(
     MapStateToProps,
 )(Posts);

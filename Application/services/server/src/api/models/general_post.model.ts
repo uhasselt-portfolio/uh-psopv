@@ -15,7 +15,7 @@ class GeneralPostModel extends Model<GeneralPostModel> {
 
     @AllowNull(false)
     @Column
-    minimum_age! : number;
+    minimum_age! : string;
 
     @AllowNull(false)
     @Column

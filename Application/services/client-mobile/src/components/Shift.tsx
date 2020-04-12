@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Component } from 'react';
 
-import 'bootstrap/dist/css/bootstrap.css';
+// import 'bootstrap/dist/css/bootstrap.css';
 import { IonButton, 
     IonListHeader, 
     IonCardHeader,
