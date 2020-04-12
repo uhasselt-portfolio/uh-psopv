@@ -11,7 +11,7 @@ import { IonButton,
     IonItem, 
     IonLabel,
     IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar } from '@ionic/react';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 
 
   
@@ -41,13 +41,14 @@ class ListViewItem  extends Component<UserProps> {
     }
 
 
+
     render() {
         function getPost(props: any): string {
             return '/PostView/'+ props.sector + '/' + props.post;
         }
         
-        return (            
-            <Link to={{pathname: getPost(this.props)}}>  
+        return (           
+            <Link to={{pathname: getPost(this.props)}}> 
             <IonItem  detail button>
                 <IonLabel>
                     <h2>Post {this.props.post}</h2>
@@ -59,7 +60,7 @@ class ListViewItem  extends Component<UserProps> {
                     <h2>Sector {this.props.sector}</h2>
                 </IonLabel>
             </IonItem>
-            </Link> 
+            </Link>
         );
     }
 }

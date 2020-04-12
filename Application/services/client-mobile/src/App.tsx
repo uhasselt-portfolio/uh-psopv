@@ -19,7 +19,7 @@ import Contacts from './pages/contact/ContactPage';
 import NotificationItem from './pages/message/component/Notification_Item'
 import { ellipse, square, triangle } from 'ionicons/icons';
 import LoginPage from './pages/login/LoginPage';
-
+import PersonPage from './pages/person/PersonPage';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -58,6 +58,7 @@ const App: React.FC = () => (
           <Route path="/ListView" component={ListView} exact={true} />
           {/* <Route path="/MapView" component={MapView} exact={true} /> */}
           <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
+          <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
           <Route path="/Notifications" component={Notifications} exact={true} />
           <Route path="/SendNotifications" component={SendNotifications} exact={true} />
           <Route path="/Contacts" component={Contacts} exact={true} />
