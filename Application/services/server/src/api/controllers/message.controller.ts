@@ -82,6 +82,7 @@ export const add = async (req: Request, res: Response) => {
             });
         }
     } catch (error) {
+        console.log(error);
         res.status(500).send({
             status: 'error',
             data: null,
@@ -89,6 +90,43 @@ export const add = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const toggleSeen = async (req: Request, res: Response) => {
+    const messageID = req.params.id
+
+    const message = await MessageModel.findByPk(messageID);
+
+    if(!message) {
+        return res.status(404).send({
+            status: 'fail',
+            data: null,
+            message: 'Message doesn\'t exist'
+        });
+    }
+
+    try {
+        const result = await MessageModel.update({seen: !message.seen}, {
+            returning: true, where: {id: messageID}
+        });
+
+        const updatedMessage = result[1][0];
+        const statusCode = updatedMessage == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {message: updatedMessage},
+            message: ''
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
 
 export const modify = async (req: Request, res: Response) => {
     const messageID = req.params.id;
