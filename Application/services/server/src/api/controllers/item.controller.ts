@@ -7,9 +7,13 @@ import ProblemTypeModel from "../models/problem_type.model";
 import ItemModel from "../models/item.model";
 import ItemTypeModel from "../models/item_type.model";
 
+const eagerLoadingOptions = {
+    include: [{model: PlanningModel, all: true}, {model: ItemTypeModel, all: true}]
+}
+
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const items = await ItemModel.findAll();
+        const items = await ItemModel.findAll(eagerLoadingOptions);
         const statusCode = items == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -34,7 +38,7 @@ export const fetch = async (req: Request, res: Response) => {
     const itemID = req.params.id;
 
     try {
-        const item = await ItemModel.findByPk(itemID);
+        const item = await ItemModel.findByPk(itemID, eagerLoadingOptions);
         const statusCode = item == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -60,14 +64,14 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id);
-        const itemTypeExists : ItemTypeModel | null = await ItemTypeModel.findByPk(req.body.item_type_id);
+        const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id, eagerLoadingOptions);
+        const itemTypeExists : ItemTypeModel | null = await ItemTypeModel.findByPk(req.body.item_type_id, eagerLoadingOptions);
 
         if(planningExists && itemTypeExists) {
             const item = await ItemModel.create({
                 planning_id: req.body.planning_id,
                 item_type_id: req.body.item_type_id
-            });
+            }, eagerLoadingOptions);
 
             res.status(201).send({
                 status: 'success',

@@ -1,25 +1,24 @@
 import {Request, Response} from "express";
 import UserModel from "../models/user.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
-
-import MessageModel from "../models/message.model";
 import PlanningModel from "../models/planning.model";
-import ItemTypeModel from "../models/item_type.model";
+import ShiftModel from "../models/shift.model";
+import PostModel from "../models/post.model";
 
 const eagerLoadingOptions = {
-    include: [{model: UserModel, all: true}]
+    include: [{model: UserModel, all: true}, {model: ShiftModel, all: true}, {model: PostModel, all: true}]
 }
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const messages = await MessageModel.findAll(eagerLoadingOptions);
-        const statusCode = messages == null ? 404 : 200;
+        const plannings = await PlanningModel.findAll(eagerLoadingOptions);
+        const statusCode = plannings == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                messages: messages
+                plannings: plannings
             },
             message: null
         });
@@ -34,17 +33,17 @@ export const fetchAll = async (req: Request, res: Response) => {
 
 
 export const fetch = async (req: Request, res: Response) => {
-    const messageID = req.params.id;
+    const planningID = req.params.id;
 
     try {
-        const message = await MessageModel.findByPk(messageID, eagerLoadingOptions);
-        const statusCode = message == null ? 404 : 200;
+        const planning = await PlanningModel.findByPk(planningID, eagerLoadingOptions);
+        const statusCode = planning == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                message: message
+                planning: planning
             },
             message: null
         });
@@ -63,19 +62,20 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by_id);
+        const userExists : UserModel | null = await UserModel.findByPk(req.body.user_id, eagerLoadingOptions);
+        const shiftExists : ShiftModel | null = await ShiftModel.findByPk(req.body.shift_id, eagerLoadingOptions);
+        const postExists : PostModel | null = await PostModel.findByPk(req.body.post_id, eagerLoadingOptions);
 
-        if(userExists) {
-            const message = await MessageModel.create({
-                title: req.body.title,
-                message: req.body.message,
-                created_by_id: req.body.created_by_id,
-                priority: req.body.priority
-            });
+        if(userExists && shiftExists && postExists) {
+            const planning = await PlanningModel.create({
+                user_id: req.body.user_id,
+                shift_id: req.body.shift_id,
+                post_id: req.body.post_id
+            }, eagerLoadingOptions);
 
             res.status(201).send({
                 status: 'success',
-                data: {message: message},
+                data: {planning: planning},
                 message: null
             })
         } else {
@@ -83,12 +83,13 @@ export const add = async (req: Request, res: Response) => {
                 status: 'fail',
                 data: {
                     user_id: userExists,
+                    shift_id: shiftExists,
+                    postExists: postExists
                 },
                 message: 'Make sure that your specified data is correct'
             });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).send({
             status: 'error',
             data: null,
@@ -97,48 +98,11 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
-export const toggleSeen = async (req: Request, res: Response) => {
-    const messageID = req.params.id
-
-    const message = await MessageModel.findByPk(messageID);
-
-    if(!message) {
-        return res.status(404).send({
-            status: 'fail',
-            data: null,
-            message: 'Message doesn\'t exist'
-        });
-    }
-
-    try {
-        const result = await MessageModel.update({seen: !message.seen}, {
-            returning: true, where: {id: messageID}
-        });
-
-        const updatedMessage = result[1][0];
-        const statusCode = updatedMessage == null ? 404 : 200;
-        const statusMessage = statusCode == 200 ? 'success' : 'fail';
-
-        res.status(statusCode).send({
-            status: statusMessage,
-            data: {message: updatedMessage},
-            message: ''
-        });
-
-    } catch (error) {
-        res.status(500).send({
-            status: 'error',
-            data: null,
-            message: 'Internal Server Error'
-        });
-    }
-}
-
 export const modify = async (req: Request, res: Response) => {
-    const messageID = req.params.id;
-    const message = req.body.message;
+    const planningID = req.params.id;
+    const planning = req.body.planning;
 
-    if (!message)
+    if (!planning)
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -146,19 +110,19 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await MessageModel.update(message, {
-            returning: true, where: {id: messageID}
+        const result = await PlanningModel.update(planning, {
+            returning: true, where: {id: planningID}
         });
 
-        const updatedMessage = result[1][0];
-        const statusCode = updatedMessage == null ? 404 : 200;
+        const updatedPlanning = result[1][0];
+        const statusCode = updatedPlanning == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
-        const errorMessage = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
+        const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
-            data: {message: updatedMessage},
-            message: errorMessage
+            data: {planning: updatedPlanning},
+            message: message
         });
 
     } catch (error) {
@@ -171,11 +135,11 @@ export const modify = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
-    const messageID = req.params.id;
+    const planningID = req.params.id;
 
     try {
-        const deletedMessage = await MessageModel.destroy({where: {id: messageID}});
-        const statusCode = deletedMessage == null ? 404 : 200;
+        const deletedPlanning = await PlanningModel.destroy({where: {id: planningID}});
+        const statusCode = deletedPlanning == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
