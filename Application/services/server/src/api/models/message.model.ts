@@ -36,6 +36,11 @@ class MessageModel extends Model<MessageModel> {
     @Column
     priority! : number;
 
+    @AllowNull(false)
+    @Default(false)
+    @Column
+    seen! : boolean
+
     @UpdatedAt
     @Column
     updated_at!: Date;
