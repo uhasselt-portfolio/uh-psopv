@@ -1,6 +1,6 @@
 import {
     AllowNull,
-    AutoIncrement,
+    AutoIncrement, BelongsTo,
     Column,
     CreatedAt, Default,
     ForeignKey,
@@ -19,26 +19,35 @@ class ProblemModel extends Model<ProblemModel> {
     @PrimaryKey
     @AutoIncrement
     @Column
-    id! : number;
+    id!: number;
 
     @ForeignKey(() => PlanningModel)
     @AllowNull(false)
     @Column
-    planning_id! : number;
+    planning_id!: number;
+
+    @BelongsTo(() => PlanningModel)
+    planning!: PlanningModel
 
     @ForeignKey(() => ProblemTypesModel)
     @AllowNull(false)
     @Column
-    problem_type_id! : number;
+    problem_type_id!: number;
+
+    @BelongsTo(() => ProblemTypesModel)
+    problem_type!: ProblemTypesModel
 
     @ForeignKey(() => UserModel)
     @AllowNull(false)
     @Column
-    created_by! : number;
+    created_by_id!: number;
+
+    @BelongsTo(() => UserModel)
+    created_by!: UserModel
 
     @Default(false)
     @Column
-    solved! : boolean;
+    solved!: boolean;
 
     @UpdatedAt
     @Column

@@ -3,10 +3,16 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import JWTUtil from "../utils/jwt.util";
 import AssociationModel from "../models/association.model";
+import PlanningModel from "../models/planning.model";
+import ItemTypeModel from "../models/item_type.model";
+
+const eagerLoadingOptions = {
+    include: [{model: UserModel, all: true}]
+}
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const users = await UserModel.findAll();
+        const users = await UserModel.findAll(eagerLoadingOptions);
         const statusCode = users == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -18,6 +24,7 @@ export const fetchAll = async (req: Request, res: Response) => {
             message: null
         });
     } catch (error) {
+        console.log(error)
         res.status(500).send({
             status: 'error',
             data: null,
@@ -30,7 +37,7 @@ export const fetch = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
     try {
-        const user = await UserModel.findByPk(userID);
+        const user = await UserModel.findByPk(userID, eagerLoadingOptions);
         const statusCode = user == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -91,7 +98,6 @@ export const add = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        console.log(error);
         res.status(500).send({
             status: 'error',
             data: null,

@@ -1,6 +1,6 @@
 import {
     AllowNull,
-    AutoIncrement,
+    AutoIncrement, BelongsTo,
     Column,
     CreatedAt,
     ForeignKey,
@@ -26,10 +26,16 @@ class ItemModel extends Model<ItemModel> {
     @Column
     planning_id! : number;
 
+    @BelongsTo(() => PlanningModel)
+    planning!: PlanningModel;
+
     @ForeignKey(() => ItemTypeModel)
     @AllowNull(false)
     @Column
     item_type_id! : number;
+
+    @BelongsTo(() => ItemTypeModel)
+    item_type!: ItemTypeModel;
 
     @UpdatedAt
     @Column

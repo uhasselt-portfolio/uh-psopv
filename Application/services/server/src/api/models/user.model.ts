@@ -7,7 +7,7 @@ import {
     AutoIncrement,
     IsEmail,
     Default,
-    ForeignKey, AllowNull, CreatedAt, Unique, BeforeSave, UpdatedAt
+    ForeignKey, AllowNull, CreatedAt, Unique, BeforeSave, UpdatedAt, BelongsTo
 } from "sequelize-typescript";
 import bcrypt from 'bcrypt';
 
@@ -65,6 +65,9 @@ class UserModel extends Model<UserModel> {
     @AllowNull(false)
     @Column
     association_id!: number;
+
+    @BelongsTo(() => AssociationModel)
+    association!: AssociationModel;
 
     @UpdatedAt
     @Column
