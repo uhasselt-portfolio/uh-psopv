@@ -9,6 +9,7 @@ nodemon.json
 
 # production
 /build
+/android
 
 # IntelliJ
 *.iml
