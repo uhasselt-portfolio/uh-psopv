@@ -4,10 +4,16 @@ import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PlanningModel from "../models/planning.model";
 import ProblemTypeModel from "../models/problem_type.model";
+import ShiftModel from "../models/shift.model";
+import PostModel from "../models/post.model";
+
+const eagerLoadingOptions = {
+    include: [{model: PlanningModel, all: true}, {model: ProblemTypeModel, all: true}, {model: UserModel, all: true}]
+}
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const problems = await ProblemModel.findAll();
+        const problems = await ProblemModel.findAll(eagerLoadingOptions);
         const statusCode = problems == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -32,7 +38,7 @@ export const fetch = async (req: Request, res: Response) => {
     const problemID = req.params.id;
 
     try {
-        const problem = await ProblemModel.findByPk(problemID);
+        const problem = await ProblemModel.findByPk(problemID, eagerLoadingOptions);
         const statusCode = problem == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -58,9 +64,9 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by);
-        const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id);
-        const problemTypeExists : ProblemTypeModel | null = await ProblemTypeModel.findByPk(req.body.problem_type_id);
+        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by, eagerLoadingOptions);
+        const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id, eagerLoadingOptions);
+        const problemTypeExists : ProblemTypeModel | null = await ProblemTypeModel.findByPk(req.body.problem_type_id, eagerLoadingOptions);
 
         if(userExists && planningExists && problemTypeExists) {
             const problem = await ProblemModel.create({

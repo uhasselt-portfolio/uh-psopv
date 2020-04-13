@@ -1,5 +1,5 @@
 import {
-    AllowNull, AutoIncrement,
+    AllowNull, AutoIncrement, BelongsTo,
     Column,
     CreatedAt,
     Default,
@@ -17,24 +17,32 @@ class MessageModel extends Model<MessageModel> {
     @PrimaryKey
     @AutoIncrement
     @Column
-    id! : number;
+    id!: number;
 
     @AllowNull(false)
     @Column
-    title! : string;
+    title!: string;
 
     @AllowNull(false)
     @Column
-    message! : string;
+    message!: string;
 
     @ForeignKey(() => UserModel)
     @AllowNull(false)
     @Column
-    created_by! : number;
+    created_by_id!: number;
+
+    @BelongsTo(() => UserModel)
+    created_by!: UserModel
 
     @AllowNull(false)
     @Column
-    priority! : number;
+    priority!: number;
+
+    @AllowNull(false)
+    @Default(false)
+    @Column
+    seen!: boolean
 
     @UpdatedAt
     @Column

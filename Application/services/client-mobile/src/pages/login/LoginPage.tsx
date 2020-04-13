@@ -41,7 +41,8 @@ class LoginPage extends React.Component<any, IState> {
                         <IonItem>
                             <IonLabel position="stacked">Status:
                                 <IonText color={this.props.isUserLoggedIn ? 'success' : 'secondary'}>
-                                    {this.props.isUserLoggedIn ? ' Aangemeld!' : ' Niet aangemeld'}
+                                    {this.props.isUserLoggedIn ? ' Aangemeld!' : ''}
+                                    {this.props.process ? ' Aanmelden...' : ''}
                                 </IonText>
                             </IonLabel>
                             <IonLabel position="stacked">
@@ -85,6 +86,7 @@ class LoginPage extends React.Component<any, IState> {
 function mapStateToProps(state: any) {
     return({
         isUserLoggedIn: state.login.isUserLoggedIn,
+        process: state.login.process,
         errorMessage: state.login.errorMessage
     })
 }

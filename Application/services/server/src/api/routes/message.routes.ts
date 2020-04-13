@@ -1,5 +1,5 @@
 import * as express from "express";
-import {add, fetch, fetchAll, modify, remove} from "../controllers/message.controller";
+import {add, fetch, fetchAll, modify, remove, toggleSeen} from "../controllers/message.controller";
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 import {verify} from "../middleware/jwt.middleware";
 
@@ -15,6 +15,8 @@ router.post('/add', add);
 
 router.patch('/modify/:id', verify, modify);
 
-router.delete('/delete/:id', remove);
+router.patch('/toggle-seen/:id', toggleSeen);
+
+router.delete('/delete/:id', verify, remove);
 
 export default router;

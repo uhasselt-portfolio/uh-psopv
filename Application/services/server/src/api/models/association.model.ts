@@ -1,14 +1,14 @@
 import {
     AllowNull,
-    AutoIncrement,
+    AutoIncrement, BelongsToMany,
     Column,
     CreatedAt,
     Model,
-    NotNull,
     PrimaryKey,
     Table,
     UpdatedAt
 } from "sequelize-typescript";
+import UserModel from "./user.model";
 
 @Table({tableName: "associations", })
 class AssociationModel extends Model {
