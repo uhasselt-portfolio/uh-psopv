@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonRow, IonGrid, IonCol } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
 import ExploreContainer from '../../components/ExploreContainer';
 import { RouteComponentProps } from 'react-router';
@@ -41,7 +41,21 @@ class PersonPage extends Component<any>{
                     </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                    sdafdsaf
+                  <IonGrid>
+                    <IonRow>
+                        <IonCol size="3">Rol:</IonCol>
+                        <IonCol>{user.permissions}</IonCol>
+                    </IonRow>
+                    <IonRow>
+                        <IonCol size="3">Tel:</IonCol>
+                        <IonCol>{user.phone_number}</IonCol>
+                    </IonRow>
+                    <IonRow>
+                        <IonCol size="3">E-Mail:</IonCol>
+                        <IonCol>{user.email}</IonCol>
+                    </IonRow>
+                  </IonGrid>
+                    
                 </IonCardContent>
                 
                 </IonCard>
