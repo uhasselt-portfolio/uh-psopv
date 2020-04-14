@@ -8,11 +8,11 @@ const router = express.Router();
 // TODO: Add middleware back
 router.get('/fetch/all', fetchAll);
 
-router.get('/fetch/:id', verify, fetch);
+router.get('/fetch/:id', fetch);
 
 router.post('/add', validateBodyParameters('message/add'), add);
 
-router.patch('/modify/:id', verify, modify);
+router.patch('/modify/:id', modify);
 
 router.patch('/toggle-seen/:id', toggleSeen);
 

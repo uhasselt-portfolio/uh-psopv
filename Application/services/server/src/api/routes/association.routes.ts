@@ -7,11 +7,11 @@ const router = express.Router();
 
 router.get('/fetch/all', fetchAll);
 
-router.get('/fetch/:id', verify, fetch);
+router.get('/fetch/:id', fetch);
 
 router.post('/add', validateBodyParameters('association/add'), add);
 
-router.patch('/modify/:id', verify, modify);
+router.patch('/modify/:id', modify);
 
 router.delete('/delete/:id', verify, remove);
 
