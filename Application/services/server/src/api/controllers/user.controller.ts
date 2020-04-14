@@ -80,7 +80,7 @@ export const add = async (req: Request, res: Response) => {
                 password: req.body.password,
                 phone_number: req.body.phone_number,
                 email: req.body.email,
-                permissions: req.body.permissions,
+                permission: req.body.permission,
                 association_id: req.body.association_id
             });
 
@@ -180,7 +180,7 @@ export const authenticate = async (req: Request, res: Response) => {
                 last_name: user.last_name,
                 phone_number: user.phone_number,
                 email: user.email,
-                permissions: user.permissions,
+                permission: user.permission,
                 association_id: user.association_id
             };
 

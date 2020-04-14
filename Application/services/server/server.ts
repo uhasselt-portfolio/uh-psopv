@@ -3,10 +3,13 @@ import {config} from "dotenv";
 import app from "./src/app";
 import getConnection from "./src/api/models/connection";
 import seedDatabase from "./src/api/seeder/seeder";
+import {Sequelize} from "sequelize-typescript";
 
-config(); // Init .env file
-getConnection().then(connect => {
-    connect.sync();
+const startServer = async () => {
+    config();
+
+    const connection: Sequelize = await getConnection();
+    await connection.sync();
 
     const port = 3001; // Specified in nginx folder
     const server = http.createServer(app); // Init server
@@ -16,12 +19,11 @@ getConnection().then(connect => {
     if(process.env.NODE_ENV == 'production') {
         console.log('Production back-end server started successfully');
     } else {
-        seedDatabase().then(() => {
-            console.log('Debug back-end server started successfully');
-        });
+
+        await seedDatabase();
+
+        console.log('Debug back-end server started successfully');
     }
+}
 
-}).catch(() => {
-    console.log('Couldn\'t start server because of a database connection problem')
-})
-
+startServer();

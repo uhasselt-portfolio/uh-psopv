@@ -11,7 +11,7 @@ import {
 } from "sequelize-typescript";
 import bcrypt from 'bcrypt';
 
-type PermissionLevel = 1 | 2 | 3;
+type PermissionLevel = 'Admin' | 'Moderator' | 'User';
 
 @Table({tableName: "users"})
 class UserModel extends Model<UserModel> {
@@ -46,7 +46,7 @@ class UserModel extends Model<UserModel> {
 
     @AllowNull(false)
     @Column
-    permissions!: PermissionLevel;
+    permission!: PermissionLevel;
 
     @Default(0)
     @Column
