@@ -25,7 +25,7 @@ class ContactItem  extends Component<any> {
 
     render() {
         function getPost(props: any): string {
-            return '/PersonPage/1'
+            return '/PersonPage/'+props.id
         }
         
         return (    
@@ -41,7 +41,6 @@ class ContactItem  extends Component<any> {
                     <IonButton href={"mailto:" + this.props.email}>
                         <IonIcon class="text_end" icon={mail}/>
                     </IonButton>
-
                 </IonLabel>
             </IonItem>
         );

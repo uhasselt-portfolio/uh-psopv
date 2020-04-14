@@ -3,11 +3,12 @@ import React, { Fragment, useState, Component, ReactNode, useEffect } from 'reac
 import ExploreContainer from '../../components/ExploreContainer';
 import { RouteComponentProps } from 'react-router';
 import Shift from '../../components/Shift';
-import { caretDown } from 'ionicons/icons';
+import { caretDown, call, mail } from 'ionicons/icons';
 import { match } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {fetchUsers} from '../contact/ContactAction'
+import './PersonPage.css'
 
 class PersonPage extends Component<any>{
     constructor(props: any) {
@@ -34,25 +35,74 @@ class PersonPage extends Component<any>{
                 </IonHeader>
 
         
+                
                 <IonCard>
                 <IonCardHeader>
                     <IonCardTitle>
-                        Rol
+                        Contact
+                    </IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <IonGrid>
+                    <IonRow className="center_content">
+                        <IonCol size="3">Tel:</IonCol>
+                        <IonCol>{user.phone_number}</IonCol>
+                        <IonCol>
+                          <IonButton className="contact_btn"  href={"tel:" + user.phone_number}>
+                            <IonIcon class="text_end" icon={call}/>
+                          </IonButton >
+                        </IonCol>
+                    </IonRow>
+                    <IonRow className="center_content">
+                        <IonCol size="3">E-Mail:</IonCol>
+                        <IonCol>{user.email}</IonCol>
+                        <IonCol >
+                          <IonButton className="contact_btn" href={"mailto:" + user.email}>
+                            <IonIcon class="text_end" icon={mail}/>
+                          </IonButton >
+                        </IonCol>
+                    </IonRow>
+                  </IonGrid>
+                </IonCardContent>
+                </IonCard>
+
+                <IonCard>
+                <IonCardHeader>
+                    <IonCardTitle>
+                        Pukkelpop
                     </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
                   <IonGrid>
                     <IonRow>
                         <IonCol size="3">Rol:</IonCol>
-                        <IonCol>{user.permissions}</IonCol>
+                        <IonCol>todo...</IonCol>
                     </IonRow>
                     <IonRow>
-                        <IonCol size="3">Tel:</IonCol>
-                        <IonCol>{user.phone_number}</IonCol>
+                        <IonCol size="3">Shift:</IonCol>
+                        <IonCol>todo...</IonCol>
                     </IonRow>
                     <IonRow>
-                        <IonCol size="3">E-Mail:</IonCol>
-                        <IonCol>{user.email}</IonCol>
+                        <IonCol size="3">Sector:</IonCol>
+                        <IonCol>todo...</IonCol>
+                    </IonRow>
+                    <IonRow>
+                        <IonCol size="3">Post:</IonCol>
+                        <IonCol>todo...</IonCol>
+                    </IonRow>
+                  </IonGrid>
+                </IonCardContent>
+                </IonCard>
+                <IonCard>
+                <IonCardHeader>
+                    <IonCardTitle>
+                        Pukkelpop
+                    </IonCardTitle>
+                </IonCardHeader>
+                <IonCardContent>
+                  <IonGrid>
+                    <IonRow>
+                        <IonCol>probleem 1 todo...</IonCol>
                     </IonRow>
                   </IonGrid>
                     

@@ -35,6 +35,7 @@ class Notifications extends Component<any> {
   }
 
   renderList(){
+    console.log(this.props)
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
