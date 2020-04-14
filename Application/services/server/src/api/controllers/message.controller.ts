@@ -3,11 +3,11 @@ import UserModel from "../models/user.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 
 import MessageModel from "../models/message.model";
-import PlanningModel from "../models/planning.model";
-import ItemTypeModel from "../models/item_type.model";
 
 const eagerLoadingOptions = {
-    include: [{model: UserModel, all: true}]
+    include: [{model: MessageModel, all: true,
+        include: [{model: UserModel, all: true}]
+    }]
 }
 
 export const fetchAll = async (req: Request, res: Response) => {

@@ -6,7 +6,7 @@ import ShiftModel from "../models/shift.model";
 import PostModel from "../models/post.model";
 
 const eagerLoadingOptions = {
-    include: [{model: UserModel, all: true}, {model: ShiftModel, all: true}, {model: PostModel, all: true}]
+    include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}]
 }
 
 export const fetchAll = async (req: Request, res: Response) => {

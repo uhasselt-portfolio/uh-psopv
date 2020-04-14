@@ -24,7 +24,6 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-
 export const fetch = async (req: Request, res: Response) => {
     const shiftID = req.params.id;
 

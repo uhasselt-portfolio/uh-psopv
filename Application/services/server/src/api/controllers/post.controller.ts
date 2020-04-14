@@ -3,11 +3,10 @@ import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PostModel from "../models/post.model";
 import GeneralPostModel from "../models/general_post.model";
-import UserModel from "../models/user.model";
-import ProblemTypeModel from "../models/problem_type.model";
+
 
 const eagerLoadingOptions = {
-    include: [{model: GeneralPostModel, all: true}]
+    include: [{model: PostModel, all: true}]
 }
 
 
