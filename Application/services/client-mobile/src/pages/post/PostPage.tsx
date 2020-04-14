@@ -5,6 +5,8 @@ import './PostPage.css';
 import { RouteComponentProps } from 'react-router';
 import Shift from '../../components/Shift';
 import { caretDown } from 'ionicons/icons';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 const checkboxList = [
   { val: 'Fluo Band', isChecked: false },
@@ -122,4 +124,19 @@ const PostView: React.FC<postProps> = ({match}) => {
   );
 };
 
-export default PostView;
+function mapStateToProps(state: any) {
+  return({
+    areUsersFetched: state.contact.areUsersFetched,
+    errorMessage: state.contact.errorMessage,
+    loading: state.contact.loading
+  })
+}
+
+function mapDispatchToProps(dispatch: any) {
+  return bindActionCreators({
+    fetchUsers
+  }, dispatch);
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(PostView);
