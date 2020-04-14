@@ -1,5 +1,4 @@
 import {Sequelize} from 'sequelize-typescript';
-import seedDatabase from './seeder'
 
 const warning = "Create .env file with your database credentials.";
 

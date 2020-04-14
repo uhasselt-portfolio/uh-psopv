@@ -1,4 +1,4 @@
-import associationSeeder from './association-seeder'
+import associationSeeder from './association.seeder'
 
 export default async () => {
     await associationSeeder();

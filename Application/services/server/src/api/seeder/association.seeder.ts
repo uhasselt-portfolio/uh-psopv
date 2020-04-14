@@ -1,4 +1,4 @@
-import AssociationModel from "./association.model";
+import AssociationModel from "../models/association.model";
 
 export default async () => {
     console.log("Started seeding the association table...")

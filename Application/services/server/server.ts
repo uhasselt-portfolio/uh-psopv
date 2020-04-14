@@ -2,7 +2,7 @@ import * as http from 'http';
 import {config} from "dotenv";
 import app from "./src/app";
 import getConnection from "./src/api/models/connection";
-import seedDatabase from "./src/api/models/seeder";
+import seedDatabase from "./src/api/seeder/seeder";
 
 config(); // Init .env file
 getConnection().then(connect => {
