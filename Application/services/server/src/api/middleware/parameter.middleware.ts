@@ -8,7 +8,7 @@ export const validateBodyParameters = (method: string): any => {
                 body('email', 'Invalid email format').exists().isEmail().normalizeEmail(),
                 body('password', 'Password must have at least 5 characters').exists().isLength({min: 5}),
                 body(['first_name', 'last_name'], 'Required parameter').exists(),
-                body(['permissions', 'association_id'], 'Parameter must be numeric').exists().isNumeric(),
+                body(['permission_type_id', 'association_id'], 'Parameter must be numeric').exists().isNumeric(),
                 body('phone_number', 'Invalid phone number').exists().isMobilePhone("any"),
             ]
         }

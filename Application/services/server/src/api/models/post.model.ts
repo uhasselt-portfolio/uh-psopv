@@ -2,7 +2,7 @@ import {
     AllowNull,
     AutoIncrement,
     Column,
-    CreatedAt,
+    CreatedAt, DataType,
     Default,
     Model,
     PrimaryKey,
@@ -27,11 +27,11 @@ class PostModel extends Model<PostModel> {
     address!: string;
 
     @AllowNull(false)
-    @Column
+    @Column(DataType.DOUBLE)
     latitude! : number;
 
     @AllowNull(false)
-    @Column
+    @Column(DataType.DOUBLE)
     longitude! : number;
 
     @Default(5)
