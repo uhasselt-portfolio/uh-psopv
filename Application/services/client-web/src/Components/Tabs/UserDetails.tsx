@@ -51,7 +51,7 @@ class UserDetails extends Component<IProps> {
         ));
 
         let permissionsView : JSX.Element = <div></div>;
-        if (this.props.location.state.permissions) {    //verantwoordelijke
+        if (this.props.location.state.permission) {    //verantwoordelijke
             permissionsView =   <Grid item style={labelStyle}>
                                     <p>verantwoordelijke</p>
                                 </Grid>

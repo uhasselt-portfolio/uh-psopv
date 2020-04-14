@@ -35,7 +35,7 @@ class User extends Component<Props> {
                 </div>
             )
         }
-        if (this.props.userData.permissions) {
+        if (this.props.userData.permission) {
             return (     
                 <Container>
                     <Paper style={paperStyle}>
@@ -174,6 +174,7 @@ const MapStateToProps = (state: AppState, ownProps: IProps) : LinkStateToProps =
             userData: userData
         };
     } else {
+        // TODO: Wouter permission changed
         return {
             userData : {
                 id: -1,
@@ -182,7 +183,7 @@ const MapStateToProps = (state: AppState, ownProps: IProps) : LinkStateToProps =
                 has_internet: true,
                 gsmNumber: "",
                 email: "",
-                permissions: false,
+                permission: 'User',
                 association: "",
                 latitude: 0,
                 longitude: 0
