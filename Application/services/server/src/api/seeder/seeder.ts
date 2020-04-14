@@ -8,6 +8,8 @@ import postSeeder from './post.seeder'
 import planningSeeder from './planning.seeder'
 import itemSeeder from './item.seeder'
 import messageSeeder from './message.seeder'
+import problemTypeSeeder from './problem_types.seeder'
+import problemSeeder from './problem.seeder'
 
 import PermissionTypeModel from "../models/permission_type.model";
 
@@ -31,6 +33,8 @@ export default async () => {
         await planningSeeder();
         await itemSeeder();
         await messageSeeder();
+        await problemTypeSeeder();
+        await problemSeeder();
     } else {
         console.log("Aborted seeding > Database already contains records!")
     }
