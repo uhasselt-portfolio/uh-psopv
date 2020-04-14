@@ -79,7 +79,7 @@ export const add = async (req: Request, res: Response) => {
                 password: req.body.password,
                 phone_number: req.body.phone_number,
                 email: req.body.email,
-                permission_type_id: req.body.permission_type_id,
+                // permission_type_id: req.body.permission_type_id,
                 association_id: req.body.association_id
             });
 

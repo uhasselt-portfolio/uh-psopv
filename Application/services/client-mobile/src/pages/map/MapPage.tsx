@@ -15,8 +15,9 @@ import { caretDown, call, mail } from 'ionicons/icons';
 
 import './MapPage.css';
 import GoogleMapReact from 'google-map-react';
-import ProblemMarker from './components/ProblemMarker'
-import Marker from './components/ProblemMarker'
+import NormalMarker  from './components/NormalMarker';
+import ProblemMarker from './components/ProblemMarker';
+
 
 class MapPage extends Component<any> {
 
@@ -26,8 +27,8 @@ class MapPage extends Component<any> {
 
   static defaultProps = {
     center: {
-      lat: 59.95,
-      lng: 30.33
+      lat: 50.9307,
+      lng: 5.3325
     },
     zoom: 11
   };
@@ -47,10 +48,18 @@ class MapPage extends Component<any> {
           defaultCenter={this.props.center}
           defaultZoom={this.props.zoom}
         >
+
+        <NormalMarker 
+        lat={50.9607} 
+        lng={5.4325} />
+
         <ProblemMarker 
-        lat={59.955413} 
-        lng={30.337844} 
-        />
+          lat={50.9307} 
+          lng={5.3325}
+          icon={{ url: "../../" }}/>
+
+        
+
         </GoogleMapReact>
         </div>
         </IonContent>
