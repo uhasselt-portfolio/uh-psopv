@@ -2,7 +2,6 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, Io
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
 import ExploreContainer from '../../components/ExploreContainer';
 import { RouteComponentProps } from 'react-router';
-import Shift from '../../components/Shift';
 import { caretDown } from 'ionicons/icons';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
@@ -11,10 +10,6 @@ import {addMessage, fetchUsers} from './SendMessageAction'
 
 
 class SendNotifications extends Component<any> {
-  // const [receiver, setReceiver] = useState<string>();
-  // const [description, setDescription] = useState<string>();
-  // const [title, setTitle] = useState<string>();
-  
   state = {
     title: "",
     message: "",

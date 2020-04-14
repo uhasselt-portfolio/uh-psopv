@@ -2,7 +2,6 @@ import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, Io
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
 import ExploreContainer from '../../components/ExploreContainer';
 import { RouteComponentProps } from 'react-router';
-import Shift from '../../components/Shift';
 import { caretDown, call, mail } from 'ionicons/icons';
 import { match } from 'react-router-dom';
 import { connect } from 'react-redux';

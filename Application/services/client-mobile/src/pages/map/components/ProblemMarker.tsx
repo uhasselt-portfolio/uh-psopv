@@ -8,7 +8,7 @@ const ProblemMarker = (props: any) => {
       <div className="marker"
         style={{ backgroundColor: color, cursor: 'pointer'}}
         title={name}
-      />
+      >!</div>
     );
   };
 

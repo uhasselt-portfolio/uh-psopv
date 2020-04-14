@@ -98,7 +98,6 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    setNotificationStatus,
     fetchMessages
   }, dispatch);
 }

@@ -6,6 +6,8 @@ import MessageReducer from './pages/message/MessageReducer';
 import SendMessageReducer from './pages/send_message/SendMessageReducer'
 import ContactReducer from './pages/contact/ContactReducer'
 import PersonReducer from './pages/person/PersonReducer';
+import PostReducer from './pages/post/PostReducer';
+import ListReducer from './pages/list/ListReducer';
 
 export default createStore(
     combineReducers({
@@ -13,7 +15,9 @@ export default createStore(
         message: MessageReducer,
         sendMessage: SendMessageReducer,
         contact: ContactReducer,
-        person: PersonReducer
+        person: PersonReducer,
+        post: PostReducer,
+        list: ListReducer
     }),
     applyMiddleware(reduxThunk)
 )

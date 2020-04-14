@@ -40,7 +40,7 @@ class NotificationItem extends Component<any> {
         return (  
             <IonItem className="ReadItem">
                 <IonLabel>
-                    <h2> <b>{data.created_by}:</b> {data.title}</h2>
+                    <h2> <b>{data.created_by.first_name}:</b> {data.title}</h2>
                     <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">

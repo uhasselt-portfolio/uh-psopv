@@ -44,6 +44,7 @@ import Child from './pages/post/PostPage';
 
 import {Provider} from 'react-redux';
 import store from './reducers';
+import MapPage from './pages/map/MapPage';
 
 
 
@@ -56,7 +57,7 @@ const App: React.FC = () => (
       <IonTabs>
         <IonRouterOutlet>
           <Route path="/ListView" component={ListView} exact={true} />
-          {/* <Route path="/MapView" component={MapView} exact={true} /> */}
+          <Route path="/MapPage" component={MapPage} exact={true} />
           <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
           <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
           <Route path="/Notifications" component={Notifications} exact={true} />
@@ -70,10 +71,10 @@ const App: React.FC = () => (
             <IonIcon icon={square} />
             <IonLabel>Login</IonLabel>
           </IonTabButton>
-          {/* <IonTabButton tab="MapView" href="/MapView">
+          <IonTabButton tab="MapPage" href="/MapPage">
             <IonIcon icon={ellipse} />
             <IonLabel>Map</IonLabel>
-          </IonTabButton> */}
+          </IonTabButton>
           <IonTabButton tab="ListView" href="/ListView">
             <IonIcon icon={square} />
             <IonLabel>List</IonLabel>
