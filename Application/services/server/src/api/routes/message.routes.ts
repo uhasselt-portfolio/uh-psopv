@@ -13,7 +13,7 @@ router.get('/fetch/:id', fetch);
 //router.post('/add', validateBodyParameters('message/add'), add);
 router.post('/add', add);
 
-router.patch('/modify/:id', verify, modify);
+router.patch('/modify/:id', modify);
 
 router.patch('/toggle-seen/:id', toggleSeen);
 

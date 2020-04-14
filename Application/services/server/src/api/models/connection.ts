@@ -2,7 +2,7 @@ import {Sequelize} from 'sequelize-typescript';
 
 const warning = "Create .env file with your database credentials.";
 
-function getConnectionCredentials() : Sequelize {
+function getConnectionCredentials(): Sequelize {
     const sslMode: boolean = process.env.NODE_ENV == 'production';
 
     return new Sequelize(
@@ -21,13 +21,14 @@ function getConnectionCredentials() : Sequelize {
         });
 }
 
-function getConnection() : Sequelize {
+const getConnection = async (): Promise<Sequelize> =>  {
 
     const connectionCredentials = getConnectionCredentials();
 
     try {
-        connectionCredentials.authenticate();
+        await connectionCredentials.authenticate();
         console.log('Connection has been established successfully.');
+
     } catch (error) {
         console.error('Unable to connect to the database:', error);
     }
@@ -36,4 +37,3 @@ function getConnection() : Sequelize {
 }
 
 export default getConnection;
-
