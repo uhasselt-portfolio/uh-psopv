@@ -3,11 +3,10 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import JWTUtil from "../utils/jwt.util";
 import AssociationModel from "../models/association.model";
-import PlanningModel from "../models/planning.model";
-import ItemTypeModel from "../models/item_type.model";
+import ProblemTypeModel from "../models/problem_type.model";
 
 const eagerLoadingOptions = {
-    include: [{model: UserModel, all: true}]
+    include: [{model: UserModel, all: true}, {model: ProblemTypeModel, all: true}]
 }
 
 export const fetchAll = async (req: Request, res: Response) => {
@@ -80,7 +79,7 @@ export const add = async (req: Request, res: Response) => {
                 password: req.body.password,
                 phone_number: req.body.phone_number,
                 email: req.body.email,
-                permission: req.body.permission,
+                permission_type_id: req.body.permission_type_id,
                 association_id: req.body.association_id
             });
 
@@ -175,13 +174,13 @@ export const authenticate = async (req: Request, res: Response) => {
         const user: UserModel | null = await UserModel.findOne({where: {email: req.body.email}});
 
         if (user && await user.validatePassword(req.body.password)) {
-            const payload = {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                phone_number: user.phone_number,
-                email: user.email,
-                permission: user.permission,
-                association_id: user.association_id
+            const payload = {user
+                // first_name: user.first_name,
+                // last_name: user.last_name,
+                // phone_number: user.phone_number,
+                // email: user.email,
+                // permission_type_id: user.permission_type_id.
+                // association_id: user.association_id
             };
 
             res.status(200).send({

@@ -10,8 +10,9 @@ import {
     ForeignKey, AllowNull, CreatedAt, Unique, BeforeSave, UpdatedAt, BelongsTo
 } from "sequelize-typescript";
 import bcrypt from 'bcrypt';
+import PermissionTypeModel from "./permission_type.model";
 
-type PermissionLevel = 'Admin' | 'Moderator' | 'User';
+type PermissionLevel = 1 | 2 | 3;
 
 @Table({tableName: "users"})
 class UserModel extends Model<UserModel> {
@@ -44,9 +45,14 @@ class UserModel extends Model<UserModel> {
     @Column
     email!: string;
 
+    @ForeignKey(() => PermissionTypeModel)
     @AllowNull(false)
+    @Default(1)
     @Column
-    permission!: PermissionLevel;
+    permission_type_id!: PermissionLevel;
+
+    @BelongsTo(() => PermissionTypeModel)
+    permission_type!: PermissionTypeModel;
 
     @Default(0)
     @Column
