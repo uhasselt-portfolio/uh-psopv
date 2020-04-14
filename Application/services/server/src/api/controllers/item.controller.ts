@@ -8,7 +8,9 @@ import ItemModel from "../models/item.model";
 import ItemTypeModel from "../models/item_type.model";
 
 const eagerLoadingOptions = {
-    include: [{model: PlanningModel, all: true}, {model: ItemTypeModel, all: true}]
+    include: [{model: ItemModel, all: true,
+        include: [{model: ItemTypeModel, all: true}, {model: PlanningModel, all: true}]
+    }]
 }
 
 export const fetchAll = async (req: Request, res: Response) => {
