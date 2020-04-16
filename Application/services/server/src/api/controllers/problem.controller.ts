@@ -58,6 +58,32 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+export const fetchUnsolvedProblems = async (req: Request, res: Response) => {
+    try {
+        const problems = await ProblemModel.findAll({where: {solved: false},
+            include: [{model: ProblemModel, all: true,
+                include: [{model: PlanningModel, all: true}]
+            }]
+        });
+        const statusCode = problems == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                problems: problems
+            },
+            message: null
+        });
+    } catch(error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 
 export const add = async (req: Request, res: Response) => {
 
