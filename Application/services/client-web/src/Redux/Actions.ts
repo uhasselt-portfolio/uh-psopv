@@ -1,4 +1,6 @@
-import ProblemInterface from '../Components/Interfaces/ProblemDataInterface';
+import ProblemInterface from '../interfaces/ProblemDataInterface';
+import axios from "axios";
+import Redux from 'redux';
 
 export enum ReduxActionTypes {
     PROBLEM_SOLVED = 'PROBLEM_SOLVED',
@@ -7,7 +9,8 @@ export enum ReduxActionTypes {
     SHIFT_CHANGED = 'SHIFT_CHANGED',
     GENERATE_PDF = 'GENERATE_PDF',
     CHANGE_CONTROL_DELAY = 'CHANGE_CONTROL_DELAY',
-    CHANGE_USER_CONNECTION = 'CHANGE_USER_CONNECTION'
+    CHANGE_USER_CONNECTION = 'CHANGE_USER_CONNECTION',
+    AXIOSTEST = 'AXIOSTEST'
 }
 
 export interface IReduxBaseAction {
@@ -128,4 +131,19 @@ export function ActionChangeUserConnection(userId: Number, connection: boolean) 
             connection
         }
     }
+}
+
+export interface ActionAxiosTestType extends IReduxBaseAction {
+    type: ReduxActionTypes.AXIOSTEST,
+}
+export const ActionAxiosTest = () => async (dispatch: Redux.Dispatch) => {
+    console.log("test");
+    try {
+        
+        const respone = await axios.get('http://localhost/api/user/fetch/all');
+        console.log(respone);
+    } catch (error) {
+        console.log(error);
+    }
+
 }

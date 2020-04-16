@@ -5,7 +5,7 @@ import {verify} from "../middleware/jwt.middleware";
 
 const router = express.Router();
 
-router.get('/fetch/all', verify, fetchAll);
+router.get('/fetch/all',  fetchAll);
 
 router.get('/fetch/:id', verify, fetch);
 

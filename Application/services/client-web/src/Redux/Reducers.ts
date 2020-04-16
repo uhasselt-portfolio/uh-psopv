@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux';
-import {ReduxActionTypes, ActionProblemSolvedType, ActionMessageReadType, ActionShiftChangedType, ActionMessageSendType, ActionGeneratePdfType, ActionChangeDelayType, ActionChangeUserConnectionType} from './Actions';
+import {ReduxActionTypes, ActionProblemSolvedType, ActionMessageReadType, ActionShiftChangedType, ActionMessageSendType, ActionGeneratePdfType, ActionChangeDelayType, ActionChangeUserConnectionType, ActionAxiosTestType} from './Actions';
 import State from './State';
-import ShiftDataInterface from '../Components/Interfaces/ShiftDataInterface';
-import MessageInterface from '../Components/Interfaces/MessageDataInterface';
-import UserInterface from '../Components/Interfaces/UserDataInterface';
+import ShiftDataInterface from '../interfaces/ShiftDataInterface';
+import MessageInterface from '../interfaces/MessageDataInterface';
+import UserInterface from '../interfaces/UserDataInterface';
 
 const initialState : State = {
     posts: [
@@ -88,12 +88,23 @@ const initialState : State = {
         {id: 14, shiftId: 14, itemType: "Fluo hesje"}
     ],
     pdfGenerated: false,
-    positionDelay: 15
+    positionDelay: 15,
+    isProblemFetched : false,
+    loading: false,
+    isMapFetched: false,
+    errorMessage: '',
+    isOverviewFetched: false,
+    isPlanningFetched: false,
+    isPostFetched: false,
+    isSettingsFetched: false,
+    isUsersFetched: false,
+    isProblemSolvedPosted: false,
+    isUserConnectionChanged: false
 }
 
-export type Actions = ActionProblemSolvedType | ActionMessageReadType |ActionShiftChangedType | ActionMessageSendType | ActionGeneratePdfType | ActionChangeDelayType | ActionChangeUserConnectionType;
+export type Actions = ActionProblemSolvedType | ActionMessageReadType |ActionShiftChangedType | ActionMessageSendType | ActionGeneratePdfType | ActionChangeDelayType | ActionChangeUserConnectionType | ActionAxiosTestType;
 
-const Problemreducer =  function(state: State = initialState, action: Actions) : State {
+export const Problemreducer =  function(state: State = initialState, action: Actions) : State {
     switch(action.type) {
         case ReduxActionTypes.PROBLEM_SOLVED : {
             let otherProblems = state.problems.filter(problem => problem.id !== action.payload.id);
@@ -111,7 +122,7 @@ const Problemreducer =  function(state: State = initialState, action: Actions) :
 
 }
 
-const Planningreducer = function(state: State = initialState, action: Actions) : State {
+export const Planningreducer = function(state: State = initialState, action: Actions) : State {
     switch(action.type) {
         case ReduxActionTypes.SHIFT_CHANGED : {
             let otherShifts : ShiftDataInterface[]  = state.planning.filter(shift => shift.id !== action.payload.shift_id);
@@ -130,7 +141,7 @@ const Planningreducer = function(state: State = initialState, action: Actions) :
     }
 }
 
-const MessageReducer = function(state: State = initialState, action: Actions) : State {
+export const MessageReducer = function(state: State = initialState, action: Actions) : State {
     switch(action.type) {
         case ReduxActionTypes.MESSAGE_SEND : {
             console.log("message send");
@@ -152,7 +163,7 @@ const MessageReducer = function(state: State = initialState, action: Actions) : 
     }
 }
 
-const UserReducer = function(state: State = initialState, action: Actions) : State {
+export const UserReducer = function(state: State = initialState, action: Actions) : State {
     switch (action.type) {
         case ReduxActionTypes.CHANGE_USER_CONNECTION : {
             let otherUsers : UserInterface[] = state.users.filter(user => user.id !== action.payload.userId);
@@ -170,7 +181,7 @@ const UserReducer = function(state: State = initialState, action: Actions) : Sta
     }
 }
 
-const Globalreducer = function(state: State = initialState, action: Actions) : State {
+export const Globalreducer = function(state: State = initialState, action: Actions) : State {
     switch (action.type) {
         case ReduxActionTypes.GENERATE_PDF : return {
             ...state,
