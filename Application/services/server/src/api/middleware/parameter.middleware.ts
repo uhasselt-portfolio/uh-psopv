@@ -31,7 +31,8 @@ export const validateBodyParameters = (method: string): any => {
                 body("address", "You must specify an address/street name for the post").exists(),
                 body(["latitude", "longitude"], "You must specify the latitude and longitude and it must be numeric").exists().isNumeric(),
                 body("radius", "You must specify the radius of the post").exists(),
-                body("sector", "You must specify the sector of the post").exists(),
+                body("sector_id", "The sector parameter must be numeric").exists().isNumeric(),
+                body("general_post_id", "The general post parameter must be numeric").exists(),
             ]
         }
         case 'shift/add': {

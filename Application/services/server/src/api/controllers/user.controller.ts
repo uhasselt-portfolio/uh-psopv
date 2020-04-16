@@ -3,10 +3,9 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import JWTUtil from "../utils/jwt.util";
 import AssociationModel from "../models/association.model";
-import ProblemTypeModel from "../models/problem_type.model";
 
 const eagerLoadingOptions = {
-    include: [{model: UserModel, all: true}, {model: ProblemTypeModel, all: true}]
+    include: [{model: UserModel, all: true}]
 }
 
 export const fetchAll = async (req: Request, res: Response) => {

@@ -4,11 +4,11 @@ import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PlanningModel from "../models/planning.model";
 import ProblemTypeModel from "../models/problem_type.model";
-import ShiftModel from "../models/shift.model";
-import PostModel from "../models/post.model";
 
 const eagerLoadingOptions = {
-    include: [{model: PlanningModel, all: true}, {model: ProblemTypeModel, all: true}, {model: UserModel, all: true}]
+    include: [{model: ProblemModel, all: true,
+        include: [{model: PlanningModel, all: true}]
+    }]
 }
 
 export const fetchAll = async (req: Request, res: Response) => {

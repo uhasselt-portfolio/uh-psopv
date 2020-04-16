@@ -1,14 +1,16 @@
 import {
     AllowNull,
-    AutoIncrement,
+    AutoIncrement, BelongsTo,
     Column,
     CreatedAt, DataType,
-    Default,
+    Default, ForeignKey,
     Model,
     PrimaryKey,
     Table,
     UpdatedAt
 } from "sequelize-typescript";
+import PermissionTypeModel from "./permission_type.model";
+import GeneralPostModel from "./general_post.model";
 
 @Table({tableName: "posts"})
 class PostModel extends Model<PostModel> {
@@ -40,7 +42,15 @@ class PostModel extends Model<PostModel> {
 
     @AllowNull(false)
     @Column
-    sector! : number;
+    sector_id! : number;
+
+    @ForeignKey(() => GeneralPostModel)
+    @AllowNull(false)
+    @Column
+    general_post_id! : number;
+
+    @BelongsTo(() => GeneralPostModel)
+    general_post!: GeneralPostModel;
 
     @UpdatedAt
     @Column

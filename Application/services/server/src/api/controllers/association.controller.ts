@@ -1,11 +1,5 @@
 import {Request, Response} from "express";
-import UserModel from "../models/user.model";
-import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
-import PlanningModel from "../models/planning.model";
-import ProblemTypeModel from "../models/problem_type.model";
-import ItemModel from "../models/item.model";
-import ItemTypeModel from "../models/item_type.model";
 import AssociationModel from "../models/association.model";
 
 export const fetchAll = async (req: Request, res: Response) => {
