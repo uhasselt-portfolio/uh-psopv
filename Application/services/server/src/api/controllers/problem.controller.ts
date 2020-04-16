@@ -64,7 +64,7 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by, eagerLoadingOptions);
+        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by_id, eagerLoadingOptions);
         const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id, eagerLoadingOptions);
         const problemTypeExists : ProblemTypeModel | null = await ProblemTypeModel.findByPk(req.body.problem_type_id, eagerLoadingOptions);
 
@@ -72,7 +72,7 @@ export const add = async (req: Request, res: Response) => {
             const problem = await ProblemModel.create({
                 planning_id: req.body.planning_id,
                 problem_type_id: req.body.problem_type_id,
-                created_by: req.body.created_by
+                created_by_id: req.body.created_by_id
             });
 
             res.status(201).send({
@@ -86,7 +86,7 @@ export const add = async (req: Request, res: Response) => {
                 data: {
                     planning_id: planningExists,
                     problem_type_id: problemTypeExists,
-                    created_by: userExists
+                    created_by_id: userExists
                 },
                 message: 'Make sure that your specified data is correct'
             });
