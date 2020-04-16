@@ -54,7 +54,7 @@ class User extends Component<Props> {
                     </Paper>
                 </Container>
             )
-        else if (this.props.userData.permissions) {
+        else if (this.props.userData.permission) {
             return (     
                 <Container>
                     <Paper style={paperStyle}> 

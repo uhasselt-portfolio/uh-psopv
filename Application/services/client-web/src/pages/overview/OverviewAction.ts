@@ -26,9 +26,10 @@ export const fetchProblems = () => async (dispatch : Redux.Dispatch) => {
         })
 
     } catch(error) {
+        console.log("errorrr");
         if (error.response) {
             // Server responded with a code high than 2xx
-            console.log(error.response.data);
+            console.log("first",error.response.data);
             console.log(error.response.status);
             console.log(error.response.headers);
 

@@ -50,9 +50,6 @@ class OverviewComp extends Component<Props> {
     }
 
     componentWillMount() {
-        this.setState({
-            ...this.state
-        })
         this.props.fetchProblems();
     }
 
