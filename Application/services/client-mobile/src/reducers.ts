@@ -8,6 +8,7 @@ import ContactReducer from './pages/contact/ContactReducer'
 import PersonReducer from './pages/person/PersonReducer';
 import PostReducer from './pages/post/PostReducer';
 import ListReducer from './pages/list/ListReducer';
+import MapReducer from './pages/map/MapReducer';
 
 export default createStore(
     combineReducers({
@@ -17,7 +18,8 @@ export default createStore(
         contact: ContactReducer,
         person: PersonReducer,
         post: PostReducer,
-        list: ListReducer
+        list: ListReducer,
+        map: MapReducer
     }),
     applyMiddleware(reduxThunk)
 )
