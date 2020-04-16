@@ -56,6 +56,34 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+export const fetchShift = async (req: Request, res: Response) => {
+    const shiftID = req.params.id;
+
+    try {
+        const plannings = await PlanningModel.findAll({where: {shift_id: shiftID},
+            include: [{model: PlanningModel, all: true,
+                include: [{model: UserModel, all: true}]
+            }]
+        });
+        const statusCode = plannings == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                plannings: plannings
+            },
+            message: null
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 
 export const add = async (req: Request, res: Response) => {
 
