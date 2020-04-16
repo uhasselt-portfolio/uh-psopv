@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, } from 'react';
 import {Container, Paper, Grid, Button} from '@material-ui/core';
 import ProblemInterface from '../interfaces/ProblemDataInterface';
 import { Link } from 'react-router-dom';
@@ -6,9 +6,11 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {problemSolved} from './ComponentActions';
 import { AppState } from '../Redux/store';
+import {Redirect} from 'react-router-dom';
 
 interface IState {
-    Data: ProblemInterface
+    Data: ProblemInterface,
+    Redirecting: boolean
 }
 
 const paperStyle = {
@@ -38,7 +40,8 @@ class Problem extends Component<Props> {
             longitude: 0,
             solved: false,
             id: -1
-        }
+        },
+        Redirecting: false
     }
 
     componentDidMount() {
@@ -64,8 +67,21 @@ class Problem extends Component<Props> {
         this.props.problemSolved(this.state.Data.id);
     }
 
+    handleRedirectButton = () => {
+        this.setState({
+            ...this.state,
+            Redirecting: true
+        })
+    }
 
     render() {
+        if (this.state.Redirecting)
+            return (
+                <Redirect to={{
+                    pathname: '/Data/Post',
+                    state: this.state.Data
+                }}/>
+            );
         return(
             <Container>
                 <Paper style={paperStyle}>
@@ -99,11 +115,7 @@ class Problem extends Component<Props> {
                                 <p className="col">{this.state.Data.timeStamp}</p>
                             </Grid>
                             <Grid item>
-                                {/* <Button variant="outlined" onClick={this.handleButton}>Ga naar</Button> */}
-                                <Link to={{
-                                    pathname: '/data/Problem',
-                                    state: this.props
-                                }}>Ga naar</Link>
+                                <Button variant="outlined" onClick={this.handleRedirectButton}>Ga naar</Button>
                             </Grid>
                         </Grid>
                         <Grid container justify="center">

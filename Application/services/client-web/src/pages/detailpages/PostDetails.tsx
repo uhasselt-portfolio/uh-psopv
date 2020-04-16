@@ -3,7 +3,7 @@ import DataNavBar from '../../navBars/DataNavBarComp';
 import {Grid} from '@material-ui/core';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import PostInterface from '../../interfaces/PostDataInterface';
-import { AppState } from '../../Redux/Reducers';
+import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import ShiftDataInterface from '../../interfaces/ShiftDataInterface';
 import Shift from '../planning/ShiftComp';
@@ -55,7 +55,7 @@ class PostDetails extends Component<Props> {
         let shifts : ShiftProps[] = [];
 
         while (allShifts.length > 0) {
-            let temp : ShiftDataInterface[] = allShifts.filter(shift => shift.name === allShifts[0].name);
+            let temp : ShiftDataInterface[] = allShifts.filter(shift => shift.shiftId=== allShifts[0].shiftId);
             let tempJobs : job[] = [];
             for (let i : number = 0; i < temp.length; ++i) {
                 tempJobs = [...tempJobs, {
@@ -68,13 +68,13 @@ class PostDetails extends Component<Props> {
                 }];
             }
             let tempProps : ShiftProps = {
-                shiftname: temp[0].name,
+                shiftname: temp[0].shiftName,
                 begindate: temp[0].beginDate,
                 enddate: temp[0].endDate,
                 jobs: tempJobs
             };
             shifts = [...shifts, tempProps];
-            allShifts = allShifts.filter(shift => shift.name !== temp[0].name);
+            allShifts = allShifts.filter(shift => shift.shiftId !== temp[0].shiftId);
         }
         return shifts
     }
@@ -166,8 +166,8 @@ interface LinkStateProps {
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        planning: state.Planningreducer.planning,
-        items: state.Globalreducer.items
+        planning: state.PlanningReducer.planning,
+        items: state.PlanningReducer.items //
     };
 }
 

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Redux from 'redux';
+import UserDataInterface from '../interfaces/UserDataInterface';
 
 
 export enum ComponentActions {
@@ -21,7 +22,7 @@ export const problemSolved = (Problemid: Number) => async (dispatch : Redux.Disp
             type: ComponentActions.PROBLEM_SOLVED_POST_START
         });
 
-        const response = await axios.get('http://localhost/api/problem/'); //TODO correct addres
+        const response = await axios.patch('http://localhost/api/problem//modify/:id'); //TODO correct addres
 
         console.log(response);
 
@@ -56,11 +57,25 @@ export const fetchuser = () => async (dispatch: Redux.Dispatch) => {
 
         const response = await axios.get('http://localhost/api/user/fetch/all'); //TODO correct addres
 
-        console.log(response);
+        let users: UserDataInterface[] = [];
+        for (let i = 0; i < response.data.data.users.length; ++i) {
+            users.push({
+                id: response.data.data.users[i].id,
+                name: response.data.data.users[i].first_name,
+                lastname: response.data.data.users[i].last_name,
+                has_internet: response.data.data.users[i].is_connected,
+                gsmNumber: response.data.data.users[i].phone_number,
+                email: response.data.data.users[i].email,
+                permission: response.data.data.users[i].permission_type_id,
+                association: response.data.data.users[i].association.name,
+                latitude: response.data.data.users[i].current_latitude,
+                longitude: response.data.data.users[i].current_longitude
+            })
+        }
 
         dispatch({
             type: ComponentActions.USER_FETCH_SUCCES,
-            payload: response.data.data.users
+            payload: users
         });
     } catch(error) {
         if (error.response) {
@@ -87,13 +102,13 @@ export const changeConnection = (userid: Number, connection: boolean) => async (
             type: ComponentActions.USER_POST_CONNECTION_CHANGED_START
         });
 
-        const response = await axios.get('http://localhost/api/user/post'); //TODO correct addres
+        const response = await axios.patch('http://localhost/api/' + userid); //TODO correct addres
 
         console.log(response);
 
         dispatch({
             type: ComponentActions.USER_POST_CONNECTION_CHANGED_SUCCES,
-            payload: response.data.data.users
+            payload: response.data.data.user
         });
     } catch(error) {
         if (error.response) {

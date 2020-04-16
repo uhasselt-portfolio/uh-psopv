@@ -25,10 +25,14 @@ export default interface State {
     isSettingsFetched: boolean,
     isUsersFetched: boolean,
     isProblemSolvedPosted: boolean,
-    isUserConnectionChanged: boolean
+    isUserConnectionChanged: boolean,
+    loggedIn: UserDataInterface
 }
 
 export const initialState : State = {
+    loggedIn: {
+        id:0, name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permission:'0', association:"vereneging", latitude: 50.965100, longitude: 5.364983
+    },
     posts: [
         { id: 0, title: "post", addres: "addres", sector: 1, general: "generalpost", latitude: 50.962595, longitude: 5.358503 },
         { id: 1,title: "Parking1", addres: "Visserstraat 27", sector: 1, general: "Parking Controle", latitude: 50.962068, longitude: 5.358836 },
@@ -77,21 +81,21 @@ export const initialState : State = {
         {id: 4,title:"bier op", sender:"Michiel Delvaux", content:"Het bier bij tab 4 is op", read: false}
     ],
     planning: [ //eigenlijk heeft elke shift met dezelfde naam dezelfde uren
-        {    id: 0, name: "shift", beginDate: '9/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 0, post: 'post', User_id: 0, user: 'user', sector: 1},
-        {    id: 1, name: "shift2", beginDate: '9/04/2020 16:00', endDate: '9/04/2020 15:00', post_id: 1, post: 'post', User_id: 0, user: 'user', sector: 1},
-        {    id: 2, name: "shift", beginDate: '9/04/2020 17:00', endDate: '9/04/2020 15:00', post_id: 2, post: 'post', User_id: 0, user: 'user', sector: 1},
-        {    id: 3, name: "shift", beginDate: '9/04/2020 18:00', endDate: '9/04/2020 15:00', post_id: 3, post: 'post', User_id: 0, user: 'user', sector: 1},
-        {    id: 4, name: "shift3", beginDate: '9/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 4, post: 'test', User_id: 0, user: 'user', sector: 1},
-        {    id: 5, name: "shift2", beginDate: '9/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 5, post: 'post', User_id: 0, user: 'test', sector: 1},
-        {    id: 6, name: "shift2", beginDate: '9/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 6, post: 'post', User_id: 0, user: 'user', sector: 1},
-        {    id: 7, name: "shift3", beginDate: '10/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 7, post: 'post', User_id: 0, user: 'user', sector: 1},
-        {    id: 8, name: "shift2", beginDate: '10/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 8, post: 'post', User_id: 0, user: 'user', sector: 0},
-        {    id: 9, name: "shift3", beginDate: '10/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 9, post: 'post', User_id: 0, user: 'user', sector: 0},
-        {    id: 10, name: "shift", beginDate: '10/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 10, post: 'post', User_id: 0, user: 'user', sector: 0},
-        {    id: 11, name: "shift", beginDate: '10/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 11, post: 'post', User_id: 0, user: 'user', sector: 0},
-        {    id: 12, name: "shift2", beginDate: '11/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 12, post: 'post', User_id: 0, user: 'user', sector: 0},
-        {    id: 13, name: "shift3", beginDate: '11/04/2020 5:00', endDate: '9/04/2020 15:00', post_id: 13, post: 'post', User_id: 0, user: 'user', sector: 0},
-        {    id: 14, name: "shift", beginDate: '11/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 14, post: 'post', User_id: 0, user: 'user', sector: 0}
+        {    id: 0, shiftName: "shift", shiftId: 1,beginDate: '9/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 0, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 1, shiftName: "shift2",shiftId: 2, beginDate: '9/04/2020 16:00', endDate: '9/04/2020 15:00', post_id: 1, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 2, shiftName: "shift", shiftId: 1,beginDate: '9/04/2020 17:00', endDate: '9/04/2020 15:00', post_id: 2, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 3, shiftName: "shift", shiftId: 1,beginDate: '9/04/2020 18:00', endDate: '9/04/2020 15:00', post_id: 3, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 4, shiftName: "shift3",shiftId: 3, beginDate: '9/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 4, post: 'test', User_id: 0, user: 'user', sector: 1},
+        {    id: 5, shiftName: "shift2",shiftId: 2, beginDate: '9/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 5, post: 'post', User_id: 0, user: 'test', sector: 1},
+        {    id: 6, shiftName: "shift2",shiftId: 2, beginDate: '9/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 6, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 7, shiftName: "shift3",shiftId: 3, beginDate: '10/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 7, post: 'post', User_id: 0, user: 'user', sector: 1},
+        {    id: 8, shiftName: "shift2",shiftId: 2, beginDate: '10/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 8, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 9, shiftName: "shift3",shiftId: 3, beginDate: '10/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 9, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 10, shiftName: "shift", shiftId: 1,beginDate: '10/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 10, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 11, shiftName: "shift", shiftId: 1,beginDate: '10/04/2020 20:00', endDate: '9/04/2020 15:00', post_id: 11, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 12, shiftName: "shift2",shiftId: 2, beginDate: '11/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 12, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 13, shiftName: "shift3",shiftId: 3, beginDate: '11/04/2020 5:00', endDate: '9/04/2020 15:00', post_id: 13, post: 'post', User_id: 0, user: 'user', sector: 0},
+        {    id: 14, shiftName: "shift", shiftId: 1,beginDate: '11/04/2020 15:00', endDate: '9/04/2020 15:00', post_id: 14, post: 'post', User_id: 0, user: 'user', sector: 0}
     ],
     items: [
         {id: 0, shiftId: 0, itemType: "Fluo hesje"},

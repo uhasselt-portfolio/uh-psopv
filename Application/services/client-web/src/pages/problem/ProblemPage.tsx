@@ -32,7 +32,7 @@ class Problems extends Component<Props> {
                     key={x.id.toString()}
             />
         ));
-        console.log("props",this.props)
+        
         return(
             <div>
                 <DataNavBar tab={4}/>

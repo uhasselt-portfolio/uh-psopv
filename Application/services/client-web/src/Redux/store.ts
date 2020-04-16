@@ -1,5 +1,4 @@
 import {createStore, applyMiddleware, combineReducers} from 'redux';
-import {Problemreducer, Planningreducer, Globalreducer, MessageReducer, UserReducer} from './Reducers';
 import reduxThunk from "redux-thunk"
 import ProblemReducer from '../pages/problem/ProblemReducer';
 import MapReducer from '../pages/map/MapReducer';
@@ -12,10 +11,8 @@ import UsersReducer from '../pages/user/UserReducer';
 import ComponentReducer from '../Components/ComponentReducers';
 
 const rootReducer = combineReducers( {
-    MapReducer, OverviewReducer, PlanningReducer, PostReducer, ProblemReducer, RapporeringReducer, SettingsReducer, UsersReducer, ComponentReducer,
-
-
-    Problemreducer, Planningreducer, Globalreducer, MessageReducer, UserReducer
+    MapReducer, OverviewReducer, PlanningReducer, PostReducer, 
+    ProblemReducer, RapporeringReducer, SettingsReducer, UsersReducer, ComponentReducer
 });
 export type AppState = ReturnType<typeof rootReducer>;
 

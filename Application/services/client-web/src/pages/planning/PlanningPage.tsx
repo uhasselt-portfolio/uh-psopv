@@ -70,7 +70,7 @@ class Planning extends Component<Props> {
         let shifts : ShiftProps[] = [];
 
         while (allShifts.length > 0) {
-            let temp : ShiftInterface[] = allShifts.filter(shift => shift.name === allShifts[0].name);
+            let temp : ShiftInterface[] = allShifts.filter(shift => shift.shiftId === allShifts[0].shiftId);
             let tempJobs : job[] = [];
             for (let i : number = 0; i < temp.length; ++i) {
                 if ((this.state.filter === "post" && this.state.filterValue === temp[i].post) ||
@@ -90,48 +90,20 @@ class Planning extends Component<Props> {
             }
             if (tempJobs.length > 0) {
                 let tempProps : ShiftProps = {
-                    shiftname: temp[0].name,
+                    shiftname: temp[0].shiftName,
                     begindate: temp[0].beginDate,
                     enddate: temp[0].endDate,
                     jobs: tempJobs
                 };
                 shifts = [...shifts, tempProps];
             }
-            allShifts = allShifts.filter(shift => shift.name !== temp[0].name);
+            allShifts = allShifts.filter(shift => shift.shiftId !== temp[0].shiftId);
         }
         return shifts
     }
     getItems = (shiftId: Number) : ItemInterface[] => {
         return this.props.items.filter(item => item.shiftId === shiftId);
     }
-
-    // organizePlanning = (): ShiftProps[] => {
-    //     let allShifts : ShiftInterface[] = this.props.shifts;
-    //     let shifts : ShiftProps[] = [];
-
-    //     while (allShifts.length > 0) {
-    //         let temp : ShiftInterface[] = allShifts.filter(shift => shift.name === allShifts[0].name);
-    //         let tempJobs : job[] = [];
-    //         for (let i : number = 0; i < temp.length; ++i) {
-    //             tempJobs = [...tempJobs, {
-    //                 postId: temp[i].post_id,
-    //                 post: temp[i].post,
-    //                 user: temp[i].user,
-    //                 userId: temp[i].User_id,
-    //                 shiftId: temp[i].id
-    //             }];
-    //         }
-    //         let tempProps : ShiftProps = {
-    //             shiftname: temp[0].name,
-    //             begindate: temp[0].beginDate,
-    //             enddate: temp[0].endDate,
-    //             jobs: tempJobs
-    //         };
-    //         shifts = [...shifts, tempProps];
-    //         allShifts = allShifts.filter(shift => shift.name !== temp[0].name);
-    //     }
-    //     return shifts
-    // }
 
     filter = () : Array<JSX.Element> => {
         let shifts: ShiftProps[] = this.organizePlanningFilter().sort((x,y) => {
@@ -159,7 +131,6 @@ class Planning extends Component<Props> {
 
     render () {      
         let shiftUi : Array<JSX.Element> = this.filter();
-
         return(
             <div>
                 <DataNavBar tab={3}/>

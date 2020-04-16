@@ -4,6 +4,7 @@ import Message from './MessageComp';
 import Problem from '../../Components/ProblemComp';
 import ProblemInterface from '../../interfaces/ProblemDataInterface';
 import MessageInterface from '../../interfaces/MessageDataInterface';
+import UserInterface from '../../interfaces/UserDataInterface';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import {fetchMessages, postNewMessage, fetchProblems} from './OverviewAction';
@@ -78,15 +79,15 @@ class OverviewComp extends Component<Props> {
 
         switch (messageReceiver) {
             case "Verantwoordelijke": {
-                this.props.postNewMessage("SECTORMANAGER", receiver, messageTitle,messageContent);
+                this.props.postNewMessage("SECTORMANAGER", receiver, messageTitle,messageContent, this.props.admin.id);
                 break;
             }
             case "Vrijwilliger" : {
-                this.props.postNewMessage("VOLUNTEER", receiver, messageTitle,messageContent);
+                this.props.postNewMessage("VOLUNTEER", receiver, messageTitle,messageContent, this.props.admin.id);
                 break;
             }
             case "iedereen" : {
-                this.props.postNewMessage("EVERYBODY", receiver, messageTitle,messageContent);
+                this.props.postNewMessage("EVERYBODY", receiver, messageTitle,messageContent, this.props.admin.id);
                 break;
             }
         }
@@ -168,20 +169,22 @@ class OverviewComp extends Component<Props> {
 }
 
 interface LinkStateProps {
-    messages: MessageInterface[]
-    problems: ProblemInterface[]
+    messages: MessageInterface[],
+    problems: ProblemInterface[],
+    admin: UserInterface
 }
 
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
         messages: state.OverviewReducer.messages,
-        problems: state.OverviewReducer.problems
+        problems: state.OverviewReducer.problems,
+        admin: state.OverviewReducer.loggedIn
     }
 }
 
 interface LinkDispatchToProps {
     fetchMessages: () => any,
-    postNewMessage: (receiver: string, User: string, title: string, content: string) => any,
+    postNewMessage: (receiver: string, User: string, title: string, content: string, adminId: Number) => any,
     fetchProblems: () => any
 }
 const MapDispatchToProps = (dispatch: any) : LinkDispatchToProps => {

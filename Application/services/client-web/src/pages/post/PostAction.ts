@@ -1,5 +1,6 @@
 import axios from 'axios';
 import Redux from 'redux';
+import PostDataInterface from '../../interfaces/PostDataInterface';
 
 export enum PostActions {
     POST_FETCH_START = 'POST_FETCH_STRART',
@@ -16,9 +17,22 @@ export const fetchPosts = () => async (dispatch : Redux.Dispatch) => {
 
         const response = await axios.get('http://localhost/api/post/fetch/all');
 
+        let posts: PostDataInterface[] = [];
+        for (let i = 0; i < response.data.data.posts.length; ++i) {
+            posts.push({
+                id: response.data.data.posts[i].id,
+                title: response.data.data.posts[i].title,
+                addres: response.data.data.posts[i].address,
+                sector: response.data.data.posts[i].sector_id,
+                general: response.data.data.posts[i].general_post.name,
+                latitude: response.data.data.posts[i].latitude,
+                longitude: response.data.data.posts[i].longitude
+            })
+        }
+
         dispatch({
             type: PostActions.POST_FETCH_SUCCES,
-            payload: response.data.data.posts
+            payload: posts
         });
     } catch(error) {
         if (error.response) {

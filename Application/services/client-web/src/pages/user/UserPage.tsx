@@ -45,13 +45,13 @@ class Users extends Component<Props> {
                 ...this.state,
                 filter: value.value
         });
-        console.log(this.state);
     }
 
     render() {
         let filteredUsers : Array<JSX.Element> = this.props.users.map(x =>(
                             <User userId={x.id} />
                         ));
+
         switch (this.state.filter) {
             case "name": { filteredUsers = this.props.users.filter(User => User.name === this.state.filterValue).map(x =>(
                             <User key={x.gsmNumber} userId={x.id}  />

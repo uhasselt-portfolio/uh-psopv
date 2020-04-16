@@ -1,6 +1,7 @@
 import {OverviewActions} from './OverviewAction';
 import {AnyAction} from 'redux';
 import State, {initialState} from '../../Redux/State';
+import MessageInterface from '../../interfaces/MessageDataInterface';
 
 export default function (state: State = initialState, action : AnyAction): State {
     switch(action.type) {
@@ -39,13 +40,23 @@ export default function (state: State = initialState, action : AnyAction): State
                 isOverviewFetched: true,
                 errorMessage: ""
             }
-        case OverviewActions.OVERVIEW_POST_MESSAGE_READ_SUCCES : 
+        case OverviewActions.OVERVIEW_POST_MESSAGE_READ_SUCCES : {
+            console.log("ee")
+            let otherMessages : MessageInterface[] = state.messages.filter(message => message.id !== action.payload);
+            let oldmessage : MessageInterface[] = state.messages.filter(message => message.id === action.payload);
+            let newMessage : MessageInterface = {
+                ...oldmessage[0],
+                read: true
+            }
             return {
                 ...state,
                 loading: false,
+                messages: [...otherMessages, newMessage],
                 isOverviewFetched: true,
                 errorMessage: ""
             }
+        }
+
         default:
             return state
     }

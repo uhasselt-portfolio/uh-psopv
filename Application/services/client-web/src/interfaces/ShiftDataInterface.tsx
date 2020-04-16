@@ -1,7 +1,8 @@
 
 export default interface ShiftInterface {
     id: Number,
-    name: string,
+    shiftName: string,
+    shiftId: Number,
     beginDate: string,
     endDate: string,
     post_id: Number,
