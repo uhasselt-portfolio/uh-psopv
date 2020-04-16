@@ -1,5 +1,5 @@
 import * as express from "express";
-import {add, fetch, fetchAll, modify, remove} from "../controllers/post.controller";
+import {add, fetch, fetchShift, fetchAll, modify, remove} from "../controllers/planning.controller";
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 import {verify} from "../middleware/jwt.middleware";
 
@@ -9,7 +9,9 @@ router.get('/fetch/all', fetchAll);
 
 router.get('/fetch/:id', fetch);
 
-router.post('/add', validateBodyParameters('post/add'), add);
+router.get('/fetch/shift/:id', fetchShift);
+
+router.post('/add', validateBodyParameters('planning/add'), add);
 
 router.patch('/modify/:id', modify);
 

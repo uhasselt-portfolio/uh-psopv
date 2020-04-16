@@ -7,7 +7,7 @@ const router = express.Router();
 
 router.get('/fetch/all', fetchAll);
 
-router.get('/fetch/:id', verify, fetch);
+router.get('/fetch/:id', fetch);
 
 router.post('/add', validateBodyParameters('shift/add'), add);
 

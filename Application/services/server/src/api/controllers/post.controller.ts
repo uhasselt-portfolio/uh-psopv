@@ -2,10 +2,17 @@ import {Request, Response} from "express";
 import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PostModel from "../models/post.model";
+import GeneralPostModel from "../models/general_post.model";
+
+
+const eagerLoadingOptions = {
+    include: [{model: PostModel, all: true}]
+}
+
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const posts = await PostModel.findAll();
+        const posts = await PostModel.findAll(eagerLoadingOptions);
         const statusCode = posts == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -30,7 +37,7 @@ export const fetch = async (req: Request, res: Response) => {
     const postID = req.params.id;
 
     try {
-        const post = await ProblemModel.findByPk(postID);
+        const post = await ProblemModel.findByPk(postID, eagerLoadingOptions);
         const statusCode = post == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -55,6 +62,16 @@ export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
 
+    const generalPostExists = await GeneralPostModel.findByPk(req.body.general_post_id);
+
+    if(!generalPostExists) {
+        return res.status(404).send({
+            status: 'fail',
+            data: null,
+            message: 'General post doesn\'t exist'
+        });
+    }
+
     try {
         const post = await PostModel.create({
             title: req.body.title,
@@ -62,7 +79,8 @@ export const add = async (req: Request, res: Response) => {
             latitude: req.body.latitude,
             longitude: req.body.longitude,
             radius: req.body.radius,
-            sector: req.body.sector,
+            sector_id: req.body.sector_id,
+            general_post_id: req.body.general_post_id,
         });
 
         res.status(201).send({
@@ -71,6 +89,7 @@ export const add = async (req: Request, res: Response) => {
             message: null
         })
     } catch (error) {
+        console.log(error)
         res.status(500).send({
             status: 'error',
             data: null,

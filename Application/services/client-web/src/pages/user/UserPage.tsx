@@ -68,17 +68,19 @@ class Users extends Component<Props> {
                             ));
                         break;
             }
-            case "vrijwilliger": { filteredUsers = this.props.users.filter(User => ! User.permissions).map(x =>(
+            // TODO: Wouter permission changed
+            case "vrijwilliger": { filteredUsers = this.props.users.filter(User => User.permission === 'User').map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
-            case "verantwoordelijke": { filteredUsers = this.props.users.filter(User => User.permissions === true).map(x =>(
+            case "verantwoordelijke": { filteredUsers = this.props.users.filter(User => User.permission === 'Moderator').map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
-            case "association": { filteredUsers = this.props.users.filter(User => (( ! User.permissions) && (User.association === this.state.filterValue))).map(x =>(
+
+            case "association": { filteredUsers = this.props.users.filter(User => (( ! User.permission) && (User.association === this.state.filterValue))).map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;

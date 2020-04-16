@@ -1,6 +1,6 @@
 import {
     AllowNull,
-    AutoIncrement,
+    AutoIncrement, BelongsTo,
     Column,
     CreatedAt,
     ForeignKey,
@@ -19,22 +19,31 @@ class PlanningModel extends Model<PlanningModel> {
     @PrimaryKey
     @AutoIncrement
     @Column
-    id! : number;
+    id!: number;
 
     @ForeignKey(() => UserModel)
     @AllowNull(false)
     @Column
-    user_id! : number;
+    user_id!: number;
+
+    @BelongsTo(() => UserModel)
+    user!: UserModel
 
     @ForeignKey(() => ShiftModel)
     @AllowNull(false)
     @Column
-    shift_id! : number;
+    shift_id!: number;
+
+    @BelongsTo(() => ShiftModel)
+    shift!: ShiftModel
 
     @ForeignKey(() => PostModel)
     @AllowNull(false)
     @Column
-    post_id! : number;
+    post_id!: number;
+
+    @BelongsTo(() => PostModel)
+    post!: PostModel
 
     @UpdatedAt
     @Column

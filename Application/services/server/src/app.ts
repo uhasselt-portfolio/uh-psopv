@@ -12,6 +12,7 @@ import associationRoutes from "./api/routes/association.routes";
 import generalPostRoutes from "./api/routes/general_post.routes";
 import problemTypeRoutes from "./api/routes/problem_type.routes";
 import itemTypeRoutes from "./api/routes/item_type.routes";
+import planningRoutes from "./api/routes/planning.routes"
 
 class App {
 
@@ -47,7 +48,8 @@ class App {
         this.express.use("/api/association", associationRoutes);
         this.express.use("/api/general_post", generalPostRoutes);
         this.express.use("/api/item_type", itemTypeRoutes);
-        this.express.use("/api/problem_type", problemRoutes);
+        this.express.use("/api/problem_type", problemTypeRoutes);
+        this.express.use("/api/planning", planningRoutes);
     }
 }
 

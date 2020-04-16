@@ -199,6 +199,7 @@ const MapStateToProps = (state: AppState, ownProps: IProps) : LinkStateToProps =
             errormessage: state.ComponentReducer.errorMessage
         };
     } else {
+        // TODO: Wouter permission changed
         return {
             userData : {
                 id: -1,
@@ -207,7 +208,7 @@ const MapStateToProps = (state: AppState, ownProps: IProps) : LinkStateToProps =
                 has_internet: true,
                 gsmNumber: "",
                 email: "",
-                permissions: false,
+                permission: 'User',
                 association: "",
                 latitude: 0,
                 longitude: 0

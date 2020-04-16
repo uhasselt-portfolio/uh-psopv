@@ -1,28 +1,24 @@
 import {Request, Response} from "express";
 import UserModel from "../models/user.model";
-import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PlanningModel from "../models/planning.model";
-import ProblemTypeModel from "../models/problem_type.model";
-import ItemModel from "../models/item.model";
-import ItemTypeModel from "../models/item_type.model";
+import ShiftModel from "../models/shift.model";
+import PostModel from "../models/post.model";
 
 const eagerLoadingOptions = {
-    include: [{model: ItemModel, all: true,
-        include: [{model: ItemTypeModel, all: true}, {model: PlanningModel, all: true}]
-    }]
+    include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}]
 }
 
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const items = await ItemModel.findAll(eagerLoadingOptions);
-        const statusCode = items == null ? 404 : 200;
+        const plannings = await PlanningModel.findAll(eagerLoadingOptions);
+        const statusCode = plannings == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                items: items
+                plannings: plannings
             },
             message: null
         });
@@ -37,17 +33,17 @@ export const fetchAll = async (req: Request, res: Response) => {
 
 
 export const fetch = async (req: Request, res: Response) => {
-    const itemID = req.params.id;
+    const planningID = req.params.id;
 
     try {
-        const item = await ItemModel.findByPk(itemID, eagerLoadingOptions);
-        const statusCode = item == null ? 404 : 200;
+        const planning = await PlanningModel.findByPk(planningID, eagerLoadingOptions);
+        const statusCode = planning == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({
             status: statusMessage,
             data: {
-                item: item
+                planning: planning
             },
             message: null
         });
@@ -60,32 +56,63 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+export const fetchShift = async (req: Request, res: Response) => {
+    const shiftID = req.params.id;
+
+    try {
+        const plannings = await PlanningModel.findAll({where: {shift_id: shiftID},
+            include: [{model: PlanningModel, all: true,
+                include: [{model: UserModel, all: true}]
+            }]
+        });
+        const statusCode = plannings == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                plannings: plannings
+            },
+            message: null
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id, eagerLoadingOptions);
-        const itemTypeExists : ItemTypeModel | null = await ItemTypeModel.findByPk(req.body.item_type_id, eagerLoadingOptions);
+        const userExists : UserModel | null = await UserModel.findByPk(req.body.user_id, eagerLoadingOptions);
+        const shiftExists : ShiftModel | null = await ShiftModel.findByPk(req.body.shift_id, eagerLoadingOptions);
+        const postExists : PostModel | null = await PostModel.findByPk(req.body.post_id, eagerLoadingOptions);
 
-        if(planningExists && itemTypeExists) {
-            const item = await ItemModel.create({
-                planning_id: req.body.planning_id,
-                item_type_id: req.body.item_type_id
+        if(userExists && shiftExists && postExists) {
+            const planning = await PlanningModel.create({
+                user_id: req.body.user_id,
+                shift_id: req.body.shift_id,
+                post_id: req.body.post_id
             }, eagerLoadingOptions);
 
             res.status(201).send({
                 status: 'success',
-                data: {item: item},
+                data: {planning: planning},
                 message: null
             })
         } else {
             res.status(404).send({
                 status: 'fail',
                 data: {
-                    planning_id: planningExists,
-                    item_type_id: itemTypeExists
+                    user_id: userExists,
+                    shift_id: shiftExists,
+                    postExists: postExists
                 },
                 message: 'Make sure that your specified data is correct'
             });
@@ -100,10 +127,10 @@ export const add = async (req: Request, res: Response) => {
 };
 
 export const modify = async (req: Request, res: Response) => {
-    const itemID = req.params.id;
-    const item = req.body.item;
+    const planningID = req.params.id;
+    const planning = req.body.planning;
 
-    if (!item)
+    if (!planning)
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -111,18 +138,18 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await ItemModel.update(item, {
-            returning: true, where: {id: itemID}
+        const result = await PlanningModel.update(planning, {
+            returning: true, where: {id: planningID}
         });
 
-        const updatedItem = result[1][0];
-        const statusCode = updatedItem == null ? 404 : 200;
+        const updatedPlanning = result[1][0];
+        const statusCode = updatedPlanning == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
         const message = statusMessage == 'fail' ? 'The specified ID doesn\'t exist' : null;
 
         res.status(statusCode).send({
             status: statusMessage,
-            data: {item: updatedItem},
+            data: {planning: updatedPlanning},
             message: message
         });
 
@@ -136,11 +163,11 @@ export const modify = async (req: Request, res: Response) => {
 };
 
 export const remove = async (req: Request, res: Response) => {
-    const itemID = req.params.id;
+    const planningID = req.params.id;
 
     try {
-        const deletedItem = await ItemModel.destroy({where: {id: itemID}});
-        const statusCode = deletedItem == null ? 404 : 200;
+        const deletedPlanning = await PlanningModel.destroy({where: {id: planningID}});
+        const statusCode = deletedPlanning == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
         res.status(statusCode).send({

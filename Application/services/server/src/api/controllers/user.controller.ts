@@ -4,9 +4,13 @@ import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import JWTUtil from "../utils/jwt.util";
 import AssociationModel from "../models/association.model";
 
+const eagerLoadingOptions = {
+    include: [{model: UserModel, all: true}]
+}
+
 export const fetchAll = async (req: Request, res: Response) => {
     try {
-        const users = await UserModel.findAll();
+        const users = await UserModel.findAll(eagerLoadingOptions);
         const statusCode = users == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -18,6 +22,7 @@ export const fetchAll = async (req: Request, res: Response) => {
             message: null
         });
     } catch (error) {
+        console.log(error)
         res.status(500).send({
             status: 'error',
             data: null,
@@ -30,7 +35,7 @@ export const fetch = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
     try {
-        const user = await UserModel.findByPk(userID);
+        const user = await UserModel.findByPk(userID, eagerLoadingOptions);
         const statusCode = user == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -73,7 +78,7 @@ export const add = async (req: Request, res: Response) => {
                 password: req.body.password,
                 phone_number: req.body.phone_number,
                 email: req.body.email,
-                permissions: req.body.permissions,
+                permission_type_id: req.body.permission_type_id,
                 association_id: req.body.association_id
             });
 
@@ -91,7 +96,6 @@ export const add = async (req: Request, res: Response) => {
         }
 
     } catch (error) {
-        console.log(error);
         res.status(500).send({
             status: 'error',
             data: null,
@@ -169,13 +173,13 @@ export const authenticate = async (req: Request, res: Response) => {
         const user: UserModel | null = await UserModel.findOne({where: {email: req.body.email}});
 
         if (user && await user.validatePassword(req.body.password)) {
-            const payload = {
-                first_name: user.first_name,
-                last_name: user.last_name,
-                phone_number: user.phone_number,
-                email: user.email,
-                permissions: user.permissions,
-                association_id: user.association_id
+            const payload = {user
+                // first_name: user.first_name,
+                // last_name: user.last_name,
+                // phone_number: user.phone_number,
+                // email: user.email,
+                // permission_type_id: user.permission_type_id.
+                // association_id: user.association_id
             };
 
             res.status(200).send({
