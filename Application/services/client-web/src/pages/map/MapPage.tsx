@@ -8,6 +8,11 @@ import {connect} from 'react-redux';
 import { Redirect } from 'react-router-dom';
 import {bindActionCreators} from 'redux';
 import {fetchMap} from './MapAction';
+import mapStyles from './MapStyles.json';
+
+const defaultMapOptions = {
+    styles: mapStyles
+  };
 
 interface IPropsMyMapComponent {
     isMarkerShown: boolean
@@ -91,6 +96,7 @@ class PukkelpopMap extends Component<Props> {
         <GoogleMap
             defaultZoom={15}
             defaultCenter={{ lat: 50.962595, lng: 5.358503 }}
+            defaultOptions={defaultMapOptions}
         >
             {PostMarkers}
             {ProblemMarkers}

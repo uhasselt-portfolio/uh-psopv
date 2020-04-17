@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import PostInterface from '../interfaces/PostDataInterface';
-import {Container,Paper,Grid } from '@material-ui/core';
+import {Container,Paper,Grid, Button } from '@material-ui/core';
 import {Link} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 
 interface State {
-    data: PostInterface
+    data: PostInterface,
+    redirecting: boolean
 }
 
 const paperStyle = {
@@ -18,17 +20,33 @@ const labelStyle = {
 
 class Post extends Component<PostInterface, State> {
     state: State ={
-        data: {id: -1, title: "title", addres: "address", sector: -1, general: "general post", latitude: 0, longitude: 0}
+        data: {id: -1, title: "title", addres: "address", sector: -1, general: "general post", latitude: 0, longitude: 0},
+        redirecting: false
     }
     constructor(props: PostInterface) {
         super(props);
 
         this.state = {
+            redirecting: false,
             data: {id: props.id, title: props.title, addres: props.addres, sector: props.sector, general: props.general, latitude: props.latitude, longitude: props.longitude}
         }
     }
 
+    handleRedirectButton = () => {
+        this.setState({
+            ...this.state,
+            redirecting: true
+        });
+    }
+
     render() {
+        if (this.state.redirecting)
+        return (
+            <Redirect to={{
+                pathname: '/Data/Post',
+                state: this.state.data
+            }}/>
+        );
         return(
             <Container>
                 <Paper style={paperStyle}>
@@ -58,10 +76,7 @@ class Post extends Component<PostInterface, State> {
                             <p>{this.state.data.general}</p>
                         </Grid>
                         <Grid item>
-                        <Link to={{
-                                    pathname: '/data/Post',
-                                    state: this.props
-                                }}>Ga naar</Link>
+                            <Button variant="outlined" onClick={this.handleRedirectButton}>Ga naar</Button>
                         </Grid>
                     </Grid>
                 </Paper>

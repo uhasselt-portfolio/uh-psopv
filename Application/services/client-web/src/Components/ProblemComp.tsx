@@ -78,7 +78,7 @@ class Problem extends Component<Props> {
         if (this.state.Redirecting)
             return (
                 <Redirect to={{
-                    pathname: '/Data/Post',
+                    pathname: '/Data/Problem',
                     state: this.state.Data
                 }}/>
             );

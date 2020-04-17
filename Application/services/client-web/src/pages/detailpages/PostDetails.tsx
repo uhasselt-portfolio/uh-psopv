@@ -8,6 +8,8 @@ import {connect} from 'react-redux';
 import ShiftDataInterface from '../../interfaces/ShiftDataInterface';
 import Shift from '../planning/ShiftComp';
 import ItemInterface from '../../interfaces/ItemDataInterface';
+import {fetchPlanning} from './DetailActions';
+import {bindActionCreators} from 'redux';
 
 const styleBorder = {
     border: 'solid 1px black',
@@ -46,9 +48,13 @@ interface IProps {
     }
 }
 
-type Props = IProps & LinkStateProps;
+type Props = IProps & LinkStateProps & LinkDispatchToProps;
 
 class PostDetails extends Component<Props> {
+
+    componentWillMount = () => {
+        this.props.fetchPlanning();
+    }
 
     organizePlanning = (ownshifts: ShiftDataInterface[]): ShiftProps[] => {
         let allShifts : ShiftDataInterface[] = ownshifts;
@@ -163,7 +169,6 @@ interface LinkStateProps {
     planning: ShiftDataInterface[],
     items: ItemInterface[]
 }
-
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
         planning: state.PlanningReducer.planning,
@@ -171,7 +176,15 @@ const MapStateToProps = (state : AppState): LinkStateProps => {
     };
 }
 
-// export default Overview
+interface LinkDispatchToProps {
+    fetchPlanning: () => any
+}
+const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
+    return bindActionCreators({
+        fetchPlanning
+    }, dispatch);
+}
+
 export default connect(
-    MapStateToProps,
+    MapStateToProps, MapDispatchToProp
 )(PostDetails);
