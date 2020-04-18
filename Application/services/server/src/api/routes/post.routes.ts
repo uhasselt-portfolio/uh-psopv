@@ -9,6 +9,8 @@ router.get('/fetch/all', fetchAll);
 
 router.get('/fetch/:id', fetch);
 
+router.get('/fetch/all/active');
+
 router.post('/add', validateBodyParameters('post/add'), add);
 
 router.patch('/modify/:id', modify);

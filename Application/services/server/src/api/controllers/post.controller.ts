@@ -57,6 +57,27 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+export const fetchAllActive = async (req: Request, res: Response) => {
+    try {
+        const posts = await PostModel.findAll(eagerLoadingOptions);
+        const statusCode = posts == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                posts: posts
+            },
+            message: null
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
 
 export const add = async (req: Request, res: Response) => {
 
@@ -96,7 +117,7 @@ export const add = async (req: Request, res: Response) => {
             message: 'Internal Server Error'
         });
     }
-};
+}
 
 export const modify = async (req: Request, res: Response) => {
     const postID = req.params.id;

@@ -4,6 +4,8 @@ import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PlanningModel from "../models/planning.model";
 import ShiftModel from "../models/shift.model";
 import PostModel from "../models/post.model";
+import {Sequelize} from "sequelize-typescript";
+import {Op} from "sequelize";
 
 const eagerLoadingOptions = {
     include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}]
@@ -56,14 +58,16 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
-export const fetchShift = async (req: Request, res: Response) => {
-    const shiftID = req.params.id;
+export const fetchCurrentShift = async (req: Request, res: Response) => {
+     try {
 
-    try {
-        const plannings = await PlanningModel.findAll({where: {shift_id: shiftID},
-            include: [{model: PlanningModel, all: true,
-                include: [{model: UserModel, all: true}]
-            }]
+        const where = {
+            begin: {[Op.lt]: Date.now()},
+            end: {[Op.gt]: Date.now()}
+        }
+
+        const plannings = await PlanningModel.findAll({
+            include: [{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
         });
         const statusCode = plannings == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
@@ -76,6 +80,7 @@ export const fetchShift = async (req: Request, res: Response) => {
             message: null
         });
     } catch (error) {
+         console.log(error);
         res.status(500).send({
             status: 'error',
             data: null,
