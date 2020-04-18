@@ -11,7 +11,7 @@ const startServer = async () => {
     const connection: Sequelize = await getConnection();
     await connection.sync();
 
-    const port = 3001; // Specified in nginx folder
+    const port = process.env.PORT; // MUST USE ENVIRONMENT VARIABLE FOR HEROKU DEPLOYMENT
     const server = http.createServer(app); // Init server
 
     server.listen(port); // Start server on port ...
