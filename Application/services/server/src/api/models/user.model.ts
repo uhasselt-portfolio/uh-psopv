@@ -7,9 +7,10 @@ import {
     AutoIncrement,
     IsEmail,
     Default,
-    ForeignKey, AllowNull, CreatedAt, Unique, BeforeSave, UpdatedAt
+    ForeignKey, AllowNull, CreatedAt, Unique, BeforeSave, UpdatedAt, BelongsTo
 } from "sequelize-typescript";
 import bcrypt from 'bcrypt';
+import PermissionTypeModel from "./permission_type.model";
 
 type PermissionLevel = 1 | 2 | 3;
 
@@ -44,9 +45,14 @@ class UserModel extends Model<UserModel> {
     @Column
     email!: string;
 
+    @ForeignKey(() => PermissionTypeModel)
     @AllowNull(false)
+    @Default(1)
     @Column
-    permissions!: PermissionLevel;
+    permission_type_id!: PermissionLevel;
+
+    @BelongsTo(() => PermissionTypeModel)
+    permission_type!: PermissionTypeModel;
 
     @Default(0)
     @Column
@@ -65,6 +71,9 @@ class UserModel extends Model<UserModel> {
     @AllowNull(false)
     @Column
     association_id!: number;
+
+    @BelongsTo(() => AssociationModel)
+    association!: AssociationModel;
 
     @UpdatedAt
     @Column

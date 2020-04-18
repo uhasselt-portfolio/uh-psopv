@@ -2,17 +2,27 @@ import * as http from 'http';
 import {config} from "dotenv";
 import app from "./src/app";
 import getConnection from "./src/api/models/connection";
+import seedDatabase from "./src/api/seeder/seeder";
+import {Sequelize} from "sequelize-typescript";
 
-config(); // Init .env file
-getConnection().sync(); // Connect to database
+const startServer = async () => {
+    config();
 
-const port = 3001; // Specified in nginx folder
-const server = http.createServer(app); // Init server
+    const connection: Sequelize = await getConnection();
+    await connection.sync();
 
-server.listen(port); // Start server on port ...
+    const port = 3001; // Specified in nginx folder
+    const server = http.createServer(app); // Init server
 
-if(process.env.NODE_ENV == 'production') {
-    console.log('Production back-end server started successfully');
-} else {
-    console.log('Debug back-end server started successfully');
+    server.listen(port); // Start server on port ...
+
+    await seedDatabase();
+
+    if(process.env.NODE_ENV == 'production') {
+        console.log('Production back-end server started successfully');
+    } else {
+        console.log('Debug back-end server started successfully');
+    }
 }
+
+startServer();

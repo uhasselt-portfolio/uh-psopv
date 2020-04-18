@@ -2,6 +2,10 @@
 *.iml
 /.idea
 
+/node_modules
+package-lock.json
+package.json
+
 # VS Code
 .vscode/*
 !.vscode/settings.json
