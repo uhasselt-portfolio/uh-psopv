@@ -133,7 +133,6 @@ class Planning extends Component<Props> {
         let shiftUi : Array<JSX.Element> = this.filter();
         return(
             <div>
-                <DataNavBar tab={3}/>
                 <Grid container direction="column">
                     <Grid item> {/*search*/}
                         <Grid container justify="center">

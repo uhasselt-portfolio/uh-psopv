@@ -19,7 +19,6 @@ class Data extends Component {
     render() {
         return(
                 <div>
-                    <DataNavBar tab={0}/>
                     <div className="container">
                         <h4 className="center">Data</h4>
                         {/* <button className="btn" onClick={this.deleteAllData}>verwijder huidige gegevens</button> */}

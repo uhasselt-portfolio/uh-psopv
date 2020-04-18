@@ -10,9 +10,9 @@ interface IState {
 }
 
 const paperStyle = {
-    background: 'rgb(240, 255, 255)',
-    padding: '10px',
-    margin: '10px'
+    margin: '10px',
+    padding: '4px',
+    background: 'rgb(250,250,250)'
 }
 
 type Props = LinkDispatchToProps & MessageInterface;

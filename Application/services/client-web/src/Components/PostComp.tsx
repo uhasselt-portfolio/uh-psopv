@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PostInterface from '../interfaces/PostDataInterface';
 import {Container,Paper,Grid, Button } from '@material-ui/core';
-import {Link} from 'react-router-dom';
 import {Redirect} from 'react-router-dom';
 
 interface State {
@@ -10,7 +9,7 @@ interface State {
 }
 
 const paperStyle = {
-    background: 'rgb(240, 255, 255)',
+    background: 'rgb(250,250,250)',
     padding: '10px',
     margin: '10px'
 }
@@ -18,9 +17,9 @@ const labelStyle = {
     padding: '0 10px 0 0'
 }
 
-class Post extends Component<PostInterface, State> {
+class Post extends Component<PostInterface> {
     state: State ={
-        data: {id: -1, title: "title", addres: "address", sector: -1, general: "general post", latitude: 0, longitude: 0},
+        data: {id: -1, title: "title", addres: "address", sector: -1, general: "general post", latitude: 0, longitude: 0, shifts: [], users: [], activeProblem: false},
         redirecting: false
     }
     constructor(props: PostInterface) {
@@ -28,7 +27,7 @@ class Post extends Component<PostInterface, State> {
 
         this.state = {
             redirecting: false,
-            data: {id: props.id, title: props.title, addres: props.addres, sector: props.sector, general: props.general, latitude: props.latitude, longitude: props.longitude}
+            data: {id: props.id, title: props.title, addres: props.addres, sector: props.sector, general: props.general, latitude: props.latitude, longitude: props.longitude, shifts: props.shifts, users: props.users, activeProblem: props.activeProblem}
         }
     }
 

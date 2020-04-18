@@ -4,21 +4,25 @@ import { Link } from 'react-router-dom';
 
 const styleSticky = {
     position: "sticky" as 'sticky',
+    height: '5%',
     top: 0,
-    zIndex: 2
+    zIndex: 2,
+    padding: '2px'
 } 
+
 
 interface IProps {
     history?: any
 }
 
 interface IState {
-    value: String
+    value: String,
 }
+
 
 class NavBar extends Component<IProps, IState> {
     state = {
-        value: "/"
+        value: "/",
     }
 
     constructor(props: IProps) {
@@ -28,9 +32,7 @@ class NavBar extends Component<IProps, IState> {
         }
         this.handleChange = this.handleChange.bind(this);
     }
-    componentDidMount() {
 
-    }
     handleChange(event: any, value: any) {
         this.setState({
             value

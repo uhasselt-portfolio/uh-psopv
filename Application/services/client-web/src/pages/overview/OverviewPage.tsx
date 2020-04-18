@@ -13,13 +13,12 @@ import {fetch} from './OverviewAction';
 
 
 const styleBorder = {
-    border: 'solid 1px black',
-    width: '40%',
+    width: '45%',
     height: '100%'
 } 
 const styleMap = {
     height: '100%',
-    width: '60%'
+    width: '55%'
 }
 
 interface IPropsMyMapComponent {
@@ -149,7 +148,7 @@ class Overview extends Component<Props> {
                             isMarkerShown
                             googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT9J4RP-_5EPa6k4L9mY5SLld6rrJa-YM&v=3.exp&libraries=geometry,drawing,places"
                             loadingElement={<div style={{ height: `100%` }} />}
-                            containerElement={<div style={{ height: `400px` }} />}
+                            containerElement={<div style={{ height: `700px` }} />}
                             mapElement={<div style={{ height: `100%` }} />}
                         />
                     </Grid>

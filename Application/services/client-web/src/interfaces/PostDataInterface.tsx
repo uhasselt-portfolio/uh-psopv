@@ -5,7 +5,10 @@ interface PostInterface {
     sector: Number,
     general: string,
     latitude: Number,
-    longitude: Number
+    longitude: Number,
+    shifts: Number[],
+    users: Number[][],
+    activeProblem: boolean
 }
 
 export default PostInterface;

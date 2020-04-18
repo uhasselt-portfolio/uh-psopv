@@ -12,7 +12,10 @@ export enum OverviewActions {
     OVERVIEW_MESSAGE_FETCH_SUCCES = 'OVERVIEW_MESSAGE_FETCH_SUCCES',
     OVERVIEW_FETCH_SUCCES = 'OVERVIEW_FETCH_SUCCES',
     OVERVIEW_POST_NEW_MESSAGE_SUCCES = 'OVERVIEW_POST_NEW_MESSAGE',
-    OVERVIEW_POST_MESSAGE_READ_SUCCES = 'OVERVIEW_MESSAGE_READ_SUCCES'
+    OVERVIEW_POST_MESSAGE_READ_SUCCES = 'OVERVIEW_MESSAGE_READ_SUCCES',
+    OVERVIEW_FETCH_POSTS_START = 'OVERVIEW_GET_POSTS_START',
+    OVERVIEW_FETCH_POSTS_SUCCES = 'OVERVIEW_GET_POSTS_SUCCES',
+    OVERVIEW_FETCH_POSTS_FAIL = 'OVERVIEW_GET_POSTS_FAIL'
 };
 
 export const fetchProblems = () => async (dispatch : Redux.Dispatch) => {
@@ -25,13 +28,14 @@ export const fetchProblems = () => async (dispatch : Redux.Dispatch) => {
         const response = await axios.get('http://localhost/api/problem/fetch/all');
         
         let problems: ProblemDataInterface[] = [];
+        console.log(response.data.data.problems[0].problem_type);
 
         for (let i = 0; i < response.data.data.problems.length; ++i) {
             problems.push({
                 id: response.data.data.problems[i].id,
                 problemType: response.data.data.problems[i].problem_type.title,
                 priority: response.data.data.problems[i].problem_type.priority,
-                discription: response.data.data.problems[i].problem_type.discription,
+                discription: response.data.data.problems[i].problem_type.description,
                 timeStamp: response.data.data.problems[i].created_at,
                 shiftName: response.data.data.problems[i].planning.shift.name,
                 post: response.data.data.problems[i].planning.post.title,
@@ -127,7 +131,7 @@ export const fetch = () => async (dispatch: Redux.Dispatch) => {
                 id: responseProblems.data.data.problems[i].id,
                 problemType: responseProblems.data.data.problems[i].problem_type.title,
                 priority: responseProblems.data.data.problems[i].problem_type.priority,
-                discription: responseProblems.data.data.problems[i].problem_type.discription,
+                discription: responseProblems.data.data.problems[i].problem_type.description,
                 timeStamp: responseProblems.data.data.problems[i].created_at,
                 shiftName: responseProblems.data.data.problems[i].planning.shift.name,
                 post: responseProblems.data.data.problems[i].planning.post.title,
@@ -157,6 +161,12 @@ export const fetch = () => async (dispatch: Redux.Dispatch) => {
 
         let posts: PostDataInterface[] = [];
         for (let i = 0; i < responsePosts.data.data.posts.length; ++i) {
+            let shifts: Number[] = [];
+            let workingUsers: Number[][] = [];
+            for (let j = 0; j < 4; ++j) {
+                shifts.push(j);
+                workingUsers.push([1,2]);
+            }
             posts.push({
                 id: responsePosts.data.data.posts[i].id,
                 title: responsePosts.data.data.posts[i].title,
@@ -164,7 +174,10 @@ export const fetch = () => async (dispatch: Redux.Dispatch) => {
                 sector: responsePosts.data.data.posts[i].sector_id,
                 general: responsePosts.data.data.posts[i].general_post.name,
                 latitude: responsePosts.data.data.posts[i].latitude,
-                longitude: responsePosts.data.data.posts[i].longitude
+                longitude: responsePosts.data.data.posts[i].longitude,
+                shifts: shifts, 
+                users: workingUsers,
+                activeProblem: responsePosts.data.data.posts[i].activeProblem
             })
         }
 
@@ -260,6 +273,60 @@ export const postMessageRead = (messageId: Number) => async (dispatch: Redux.Dis
             console.log(error.response.headers);
 
             dispatch({type: OverviewActions.OVERVIEW_FETCH_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    }
+}
+
+export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
+    console.log("in shift planning fetch");
+    try {
+        dispatch({
+            type: OverviewActions.OVERVIEW_FETCH_POSTS_START
+        });
+
+        const response = await axios.get('http://localhost/api/post/fetch/all');
+
+        let posts: PostDataInterface[] = [];
+        for (let i = 0; i < response.data.data.posts.length; ++i) {
+            let shifts: Number[] = [];
+            let workingUsers: Number[][] = [];
+            for (let j = 0; j < 4; ++j) {
+                shifts.push(j);
+                workingUsers.push([1,2]);
+            }
+            posts.push({
+                id: response.data.data.posts[i].id,
+                title: response.data.data.posts[i].title,
+                addres: response.data.data.posts[i].address,
+                sector: response.data.data.posts[i].sector_id,
+                general: response.data.data.posts[i].general_post.name,
+                latitude: response.data.data.posts[i].latitude,
+                longitude: response.data.data.posts[i].longitude,
+                shifts: shifts, 
+                users: workingUsers,
+                activeProblem: true
+            })
+        }
+
+        dispatch({
+            type: OverviewActions.OVERVIEW_FETCH_POSTS_SUCCES,
+            payload: posts
+        })
+
+    } catch(error) {
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: OverviewActions.OVERVIEW_FETCH_POSTS_FAIL, payload: error.response.data.message});
         } else if (error.request) {
             // No response was received from the server
             console.log(error.request);

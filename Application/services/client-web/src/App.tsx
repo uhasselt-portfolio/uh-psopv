@@ -1,20 +1,10 @@
 import React from 'react';
-import NavBar from './navBars/NavBarComp';
+import NavBar from './navBars/NavBar';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-// import Overview from './Components/Tabs/OverviewTab';
-// import Data from './Components/Tabs/DataTab';
-// import Rapportering from './Components/Tabs/RapporteringTab'
-// import Users from './Components/Tabs/UsersTab';
-// import Posts from './Components/Tabs/PostsTab';
-// import Problems from './Components/Tabs/ProblemsTab';
-// import PukkelpopMap from './Components/Tabs/MapTab';
 import ProblemDetails from './pages/detailpages/ProblemDetails';
 import PostDetails from './pages/detailpages/PostDetails';
 import UserDetails from './pages/detailpages/UserDetails';
-// import Planning from './Components/Tabs/PlanningTab';
-// import Settings from './Components/Tabs/Settings';
 import Problems from './pages/problem/ProblemPage';
-
 
 import Planning from './pages/planning/PlanningPage';
 import Settings from './pages/settings/SettingsPage';

@@ -26,7 +26,10 @@ export const fetchPosts = () => async (dispatch : Redux.Dispatch) => {
                 sector: response.data.data.posts[i].sector_id,
                 general: response.data.data.posts[i].general_post.name,
                 latitude: response.data.data.posts[i].latitude,
-                longitude: response.data.data.posts[i].longitude
+                longitude: response.data.data.posts[i].longitude,
+                shifts: [], 
+                users: [],
+                activeProblem: response.data.data.posts[i].activeProblem
             })
         }
 

@@ -56,6 +56,28 @@ export default function (state: State = initialState, action : AnyAction): State
                 errorMessage: ""
             }
         }
+        case OverviewActions.OVERVIEW_FETCH_POSTS_START: 
+        return {
+            ...state,
+            loading: true,
+            isOverviewFetched: false,
+            errorMessage: ""
+        }
+        case OverviewActions.OVERVIEW_FETCH_POSTS_SUCCES : 
+            return {
+                ...state,
+                loading: false,
+                posts: action.payload,
+                isOverviewFetched: true,
+                errorMessage: ""
+            }
+        case OverviewActions.OVERVIEW_FETCH_POSTS_FAIL : 
+            return {
+                ...state,
+                loading: false,
+                isOverviewFetched: false,
+                errorMessage: action.payload
+            }
 
         default:
             return state

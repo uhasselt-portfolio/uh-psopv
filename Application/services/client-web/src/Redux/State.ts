@@ -34,17 +34,17 @@ export const initialState : State = {
         id:0, name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permission:'0', association:"vereneging", latitude: 50.965100, longitude: 5.364983
     },
     posts: [
-        { id: 0, title: "post", addres: "addres", sector: 1, general: "generalpost", latitude: 50.962595, longitude: 5.358503 },
-        { id: 1,title: "Parking1", addres: "Visserstraat 27", sector: 1, general: "Parking Controle", latitude: 50.962068, longitude: 5.358836 },
-        { id: 2,title: "Parking2", addres: "Berglaan 5", sector: 1, general: "Parking Controle", latitude: 50.963642, longitude: 5.359328 },
-        { id: 3,title: "Parking3", addres: "Hemelstraat 164", sector: 1, general: "Parking Controle", latitude: 50.963257, longitude: 5.356721 },
-        { id: 4,title: "Parking4", addres: "Pukkelpoplaan 1", sector: 3, general: "Parking Controle", latitude: 50.963902, longitude: 5.355056 },
-        { id: 5,title: "Drank stand 1", addres: "Terein", sector: 2, general: "Dranken Stand", latitude: 50.964240, longitude: 5.360195 },
-        { id: 6,title: "Schoonmaak terein", addres: "Terein", sector: 2, general: "Schoonmaak", latitude: 50.961780, longitude: 5.361407 },
-        { id: 7,title: "Security", addres: "terein", sector: 2, general: "Security", latitude: 50.962595, longitude: 5.358503 },
-        { id: 9,title: "Straat-affzetting1", addres: "Rodeberg - Geraardslaan", sector: 4, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503 },
-        { id: 8,title: "Straat-affzetting2", addres: "Addelbaan - Rodeberg", sector: 4, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503 },
-        { id: 10,title: "Straat-affzetting3", addres: "Visserstraat - Geraardslaan", sector: 1, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503 }
+        { id: 0, title: "post", addres: "addres", sector: 1, general: "generalpost", latitude: 50.962595, longitude: 5.358503, shifts: [] , users: [], activeProblem: false},
+        { id: 1,title: "Parking1", addres: "Visserstraat 27", sector: 1, general: "Parking Controle", latitude: 50.962068, longitude: 5.358836, shifts: [], users: [], activeProblem: false },
+        { id: 2,title: "Parking2", addres: "Berglaan 5", sector: 1, general: "Parking Controle", latitude: 50.963642, longitude: 5.359328, shifts: [], users: [], activeProblem: false },
+        { id: 3,title: "Parking3", addres: "Hemelstraat 164", sector: 1, general: "Parking Controle", latitude: 50.963257, longitude: 5.356721, shifts: [], users: [], activeProblem: false },
+        { id: 4,title: "Parking4", addres: "Pukkelpoplaan 1", sector: 3, general: "Parking Controle", latitude: 50.963902, longitude: 5.355056, shifts: [], users: [], activeProblem: false },
+        { id: 5,title: "Drank stand 1", addres: "Terein", sector: 2, general: "Dranken Stand", latitude: 50.964240, longitude: 5.360195, shifts: [], users: [], activeProblem: false },
+        { id: 6,title: "Schoonmaak terein", addres: "Terein", sector: 2, general: "Schoonmaak", latitude: 50.961780, longitude: 5.361407, shifts: [], users: [], activeProblem: false },
+        { id: 7,title: "Security", addres: "terein", sector: 2, general: "Security", latitude: 50.962595, longitude: 5.358503, shifts: [], users: [], activeProblem: false },
+        { id: 9,title: "Straat-affzetting1", addres: "Rodeberg - Geraardslaan", sector: 4, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503, shifts: [], users: [], activeProblem: false },
+        { id: 8,title: "Straat-affzetting2", addres: "Addelbaan - Rodeberg", sector: 4, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503, shifts: [], users: [], activeProblem: false },
+        { id: 10,title: "Straat-affzetting3", addres: "Visserstraat - Geraardslaan", sector: 1, general: "Straatafzetting", latitude: 50.962595, longitude: 5.358503, shifts: [], users: [], activeProblem: false }
     ],
     problems: [
         {problemType: "problemtype", priority: 1, discription: "discription", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 

@@ -1,12 +1,22 @@
 import React, {Component} from 'react';
-import DataNavBar from '../../navBars/DataNavBarComp';
 import User from '../../Components/UserComp';
 import UserInterface from '../../interfaces/UserDataInterface';
-import {Grid, Button} from '@material-ui/core';
+import {Grid, Button, TextField, MenuItem} from '@material-ui/core';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchUsers} from './UserAction';
+
+const styleFilter = {
+    background: 'rgb(248,248,248)',
+    padding: '10px',
+    borderRadius: '25px',
+    width: '25%',
+    textAlign: 'center' as 'center'
+}
+const styleFormElement = {
+    margin: '4px'
+}
 
 interface UserssState {
     filter: string,
@@ -37,13 +47,13 @@ class Users extends Component<Props> {
                 filterValue: value
         })
     }
-    filterChanged = () => {
-        var element = (document.getElementById("filtertype")) as HTMLSelectElement;
-        var index = element.selectedIndex;
-        var value = element.options[index];
+    handleFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+        let element = (document.getElementById("filterinput")) as HTMLInputElement;
+        var value = element.value;
         this.setState({
                 ...this.state,
-                filter: value.value
+                filter: event.target.value,
+                filterValue: value
         });
     }
 
@@ -52,45 +62,45 @@ class Users extends Component<Props> {
                             <User userId={x.id} />
                         ));
 
-        switch (this.state.filter) {
-            case "name": { filteredUsers = this.props.users.filter(User => User.name === this.state.filterValue).map(x =>(
+        switch (this.state.filter) {    //TODO controleren of filter
+            case "voornaam": { filteredUsers = this.props.users.filter(User => User.name === this.state.filterValue).map(x =>(
                             <User key={x.gsmNumber} userId={x.id}  />
                             ));
                         break;
             }
-            case "lastName": { filteredUsers = this.props.users.filter(User => User.lastname === this.state.filterValue).map(x =>(
+            case "achternaam": { filteredUsers = this.props.users.filter(User => User.lastname === this.state.filterValue).map(x =>(
                             <User key={x.gsmNumber} userId={x.id}/>
                             ));
                         break;
             }
-            case "number": { filteredUsers = this.props.users.filter(User => User.gsmNumber === this.state.filterValue).map(x =>(
+            case "gsm nummer": { filteredUsers = this.props.users.filter(User => User.gsmNumber === this.state.filterValue).map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
-            // TODO: Wouter permission changed
-            case "vrijwilliger": { filteredUsers = this.props.users.filter(User => User.permission === 'User').map(x =>(
+            //TODO persmissions changed
+            case "vrijwilliger": { filteredUsers = this.props.users.filter(User => User.permission === '1').map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
-            case "verantwoordelijke": { filteredUsers = this.props.users.filter(User => User.permission === 'Moderator').map(x =>(
+            case "verantwoordelijke": { filteredUsers = this.props.users.filter(User => User.permission === '2').map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
 
-            case "association": { filteredUsers = this.props.users.filter(User => (( ! User.permission) && (User.association === this.state.filterValue))).map(x =>(
+            case "vereniging": { filteredUsers = this.props.users.filter(User => (( ! User.permission) && (User.association === this.state.filterValue))).map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
-            case "has_internet": { filteredUsers = this.props.users.filter(User => User.has_internet).map(x =>(
+            case "heeft internet": { filteredUsers = this.props.users.filter(User => User.has_internet).map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
-            case "hasnt_internet": { filteredUsers = this.props.users.filter(User => ! User.has_internet).map(x =>(
+            case "heeft geen internet": { filteredUsers = this.props.users.filter(User => ! User.has_internet).map(x =>(
                             <User key={x.gsmNumber} userId={x.id}/>
                             ));
                         break;
@@ -99,21 +109,29 @@ class Users extends Component<Props> {
 
         return(
             <div>
-                <DataNavBar tab={1}/>
                 <Grid container justify="center" direction='row' >
-                    <form onSubmit={this.handleFilterForm} id="filter">
+                    <form onSubmit={this.handleFilterForm} id="filter" style={styleFilter}>
                         <Grid item>
-                            <select id="filtertype" onChange={this.filterChanged} value={this.state.filter}>
-                                <option value="">noFilter</option>
-                                <option value="name">naam</option>
-                                <option value="lastName">achternaam</option>
-                                <option value="number">gsm nummer</option>
-                                <option value="vrijwilliger">vrijwilliger</option>
-                                <option value="verantwoordelijke">verantwoordelijke</option>
-                                <option value="association">vereniging</option>
-                                <option value="has_internet">heeft internet</option>
-                                <option value="hasnt_internet">heeft geen internet</option>
-                            </select>
+                            <TextField
+                                id="filter"
+                                select
+                                label="filter"
+                                value={this.state.filter}
+                                onChange={this.handleFilterChanged}
+                                helperText="Selecteer een filter"
+                                variant="outlined"
+                                style={styleFormElement}
+                                >
+                                <MenuItem value="Geen filter">Geen filter</MenuItem>
+                                <MenuItem value="voornaam">naam</MenuItem>
+                                <MenuItem value="achternaam">achternaam</MenuItem>
+                                <MenuItem value="gsm nummer">gsm nummer</MenuItem>
+                                <MenuItem value="vrijwilliger">vrijwilliger</MenuItem>
+                                <MenuItem value="verantwoordelijke">verantwoordelijke</MenuItem>
+                                <MenuItem value="vereniging">vereniging</MenuItem>
+                                <MenuItem value="heeft internet">heeft internet</MenuItem>
+                                <MenuItem value="heeft geen internet">heeft geen internet</MenuItem>
+                            </TextField>
                         </Grid>
                         <Grid item >
                             <input type="text" id="filterinput" placeholder={this.state.filter}/>

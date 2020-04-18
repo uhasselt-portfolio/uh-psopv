@@ -1,18 +1,27 @@
 import React, {Component} from 'react';
-import {Tabs, Tab, Typography, Box, Grid, Button} from '@material-ui/core';
+import {Tabs, Tab, Typography, Box, Grid, Button, TextField, MenuItem} from '@material-ui/core';
 import Message from './MessageComp';
-import Problem from '../../Components/ProblemComp';
+import ProblemPreview from './ProblemPreview';
 import ProblemInterface from '../../interfaces/ProblemDataInterface';
 import MessageInterface from '../../interfaces/MessageDataInterface';
 import UserInterface from '../../interfaces/UserDataInterface';
+import PostDataInterface from '../../interfaces/PostDataInterface';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
-import {fetchMessages, postNewMessage, fetchProblems} from './OverviewAction';
+import {fetchMessages, postNewMessage, fetchProblems, fetchPosts} from './OverviewAction';
 import {bindActionCreators} from 'redux';
+import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
+import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
+import NotificationsOutlinedIcon from '@material-ui/icons/NotificationsOutlined';
+import SmsOutlinedIcon from '@material-ui/icons/SmsOutlined';
+import PostPreview from './PostPreview';
 
 const styletextarea = {
     resize : 'vertical'
 } as React.CSSProperties;
+const styleFormElement = {
+    margin: '4px'
+}
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -39,7 +48,8 @@ function TabPanel(props: TabPanelProps) {
 
 interface IState {
     value: number,
-    specificReceiver: boolean
+    specificReceiver: boolean,
+    currentSelected: string
 }
 
 type Props = LinkStateProps & LinkDispatchToProps;
@@ -47,7 +57,8 @@ type Props = LinkStateProps & LinkDispatchToProps;
 class OverviewComp extends Component<Props> {
     state: IState = {
         value: 0,
-        specificReceiver: false
+        specificReceiver: false,
+        currentSelected: 'iedereen'
     }
 
     componentWillMount() {
@@ -58,6 +69,8 @@ class OverviewComp extends Component<Props> {
         if (newValue === 0)
             this.props.fetchProblems();
         else if (newValue === 1)
+            this.props.fetchPosts();
+        else if (newValue === 2)
             this.props.fetchMessages();
         this.setState({
             ...this.state,
@@ -67,9 +80,7 @@ class OverviewComp extends Component<Props> {
 
     handleMessage = () => { //TODO ergens in server moet gecontroleerd worden of de opgegeven user bestaat, zo niet melding geven
                             // zo wel, moeten input velden leeggemaakt worden
-        let element = (document.getElementById("messageReceiver")) as HTMLSelectElement;
-        var index = element.selectedIndex;
-        var messageReceiver = element.options[index].value;
+        var messageReceiver = this.state.currentSelected;
         let messageTitle = ((document.getElementById("messageTitle")) as HTMLInputElement).value;
         let messageContent = ((document.getElementById("messageContent")) as HTMLTextAreaElement).value;
         let receiver : string = "";
@@ -97,18 +108,18 @@ class OverviewComp extends Component<Props> {
         this.handleMessage();
     }
 
-    handleFilterChanged = () => {
-        let element = (document.getElementById("messageReceiver")) as HTMLSelectElement;
-        var Filterindex = element.selectedIndex;
-        if (Filterindex > 0)
+    handleFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.value === 'specifiek')
             this.setState({
                 ...this.state,
-                specificReceiver: true
+                specificReceiver: true,
+                currentSelected: event.target.value
             })
         else 
             this.setState({
                 ...this.state,
-                specificReceiver: false
+                specificReceiver: false,
+                currentSelected: event.target.value
             })
     }
 
@@ -118,47 +129,66 @@ class OverviewComp extends Component<Props> {
         ));
 
         let Problems : Array<JSX.Element> = this.props.problems.filter(problem => ! problem.solved).map(x => (
-            <Problem key={Math.random()} id={x.id} problemType={x.problemType} priority={x.priority} discription={x.discription} shiftName={x.shiftName} 
+            <ProblemPreview key={Math.random()} id={x.id} problemType={x.problemType} priority={x.priority} discription={x.discription} shiftName={x.shiftName} 
             timeStamp={x.timeStamp} post={x.post} user={x.user} sender={x.sender} latitude={x.latitude} longitude={x.longitude} solved={x.solved}/>
+        ));
+        let Posts: Array<JSX.Element> = this.props.posts.map(x => (
+            <PostPreview key={Math.random()} id={x.id} title={x.title} addres={x.addres} general={x.general} sector={x.sector} 
+                latitude={x.latitude} longitude={x.longitude} shifts={x.shifts} users={x.users} activeProblem={x.activeProblem}/>
         ));
 
         return(
             <div>
-                <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example">
-                    <Tab label="Problemen"/>
-                    <Tab label="Berichten"/>
-                    <Tab label="Nieuw bericht"/>
+                <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example"> 
+                    <Tab icon={<ReportProblemOutlinedIcon />} label="problemen"/>
+                    <Tab icon={<ListOutlinedIcon />} label="posten" />
+                    <Tab icon={<NotificationsOutlinedIcon />} label="Berichten"/>
+                    <Tab icon={<SmsOutlinedIcon />} label="Nieuw bericht"/>
                 </Tabs>
             <TabPanel value={this.state.value} index={0}>
                 {(Problems.length > 0) && Problems}
                 {(Problems.length === 0) && <h5>Geen problemen</h5>}
             </TabPanel>
             <TabPanel value={this.state.value} index={1}>
+                {Posts.length > 0 && Posts}
+                {Posts.length === 0 && <h5>Er zijn geen posten</h5>} 
+            </TabPanel>
+            <TabPanel value={this.state.value} index={2}>
                 {(Messages.length > 0) && Messages}
                 {(Messages.length === 0) && <h5>Geen berichten</h5>}
             </TabPanel>
-            <TabPanel value={this.state.value} index={2}>
+            <TabPanel value={this.state.value} index={3}>
                 <Grid container justify="center">
                     <form id="message" onSubmit={this.handleMessageForm}>
                         <Grid item>
-                            <select id="messageReceiver" onChange={this.handleFilterChanged}>
-                                <option>iedereen</option>
-                                <option>Verantwoordelijke</option>
-                                <option>Vrijwilliger</option>
-                            </select>
+                            <TextField
+                                id="messageReceiver"
+                                select
+                                label="Ontvanger"
+                                value={this.state.currentSelected}
+                                onChange={this.handleFilterChanged}
+                                helperText="Selecteer de ontvanger/ontvangers"
+                                variant="outlined"
+                                style={styleFormElement}
+                                >
+                                <MenuItem value={'iedereen'}>iedereen</MenuItem>
+                                <MenuItem value={'vrijwilligers'}>Alle vrijwilligers</MenuItem>
+                                <MenuItem value={'verantwoordelijken'}>Alle verantwoordelijken</MenuItem>
+                                <MenuItem value={'specifiek'}>specifiek</MenuItem>
+                                </TextField>
                         </Grid>
                         {this.state.specificReceiver && 
                             <Grid item>
-                                <input type="text" placeholder="ontvanger" id="receiver" />
+                                <TextField variant="outlined" placeholder="ontvanger" id="receiver" style={styleFormElement}/>
                             </Grid>}
                         <Grid item>
-                            <input type="text" placeholder="titel" id="messageTitle" />
+                            <TextField variant="outlined" type="text" placeholder="titel" id="messageTitle" style={styleFormElement}/>
                         </Grid>
                         <Grid item>
-                            <textarea cols={30} form="message" placeholder="typ hier uw bericht" style={styletextarea} id="messageContent"/>
+                            <TextField multiline variant="outlined" placeholder="type hier uw bericht"  id="messageContent" style={styleFormElement}/>
                         </Grid>
                         <Grid item>
-                            <Button variant="outlined" onClick={this.handleMessage}>verstuur</Button>
+                            <Button variant="outlined" onClick={this.handleMessage} style={styleFormElement}>verstuur</Button>
                         </Grid>
                     </form>
                 </Grid>
@@ -171,31 +201,33 @@ class OverviewComp extends Component<Props> {
 interface LinkStateProps {
     messages: MessageInterface[],
     problems: ProblemInterface[],
-    admin: UserInterface
+    admin: UserInterface,
+    posts: PostDataInterface[]
 }
-
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
         messages: state.OverviewReducer.messages,
         problems: state.OverviewReducer.problems,
-        admin: state.OverviewReducer.loggedIn
+        admin: state.OverviewReducer.loggedIn,
+        posts: state.OverviewReducer.posts
     }
 }
 
 interface LinkDispatchToProps {
     fetchMessages: () => any,
     postNewMessage: (receiver: string, User: string, title: string, content: string, adminId: Number) => any,
-    fetchProblems: () => any
+    fetchProblems: () => any,
+    fetchPosts: () => any
 }
 const MapDispatchToProps = (dispatch: any) : LinkDispatchToProps => {
     return bindActionCreators({
         fetchMessages,
         postNewMessage,
-        fetchProblems
+        fetchProblems,
+        fetchPosts
     }, dispatch);
 }
 
-// export default Overview
 export default connect(
     MapStateToProps, MapDispatchToProps
 )(OverviewComp);

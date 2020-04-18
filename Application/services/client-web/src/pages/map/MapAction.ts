@@ -56,6 +56,8 @@ export const fetchMap = () => async (dispatch : Redux.Dispatch) => {
             })
         }
 
+        console.log(responsePosts);
+
         let posts: PostDataInterface[] = [];
         for (let i = 0; i < responsePosts.data.data.posts.length; ++i) {
             posts.push({
@@ -65,7 +67,10 @@ export const fetchMap = () => async (dispatch : Redux.Dispatch) => {
                 sector: responsePosts.data.data.posts[i].sector_id,
                 general: responsePosts.data.data.posts[i].general_post.name,
                 latitude: responsePosts.data.data.posts[i].latitude,
-                longitude: responsePosts.data.data.posts[i].longitude
+                longitude: responsePosts.data.data.posts[i].longitude,
+                shifts: [], 
+                users: [],
+                activeProblem: false
             })
         }
 

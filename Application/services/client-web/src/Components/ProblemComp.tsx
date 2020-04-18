@@ -1,7 +1,6 @@
 import React, {Component, } from 'react';
 import {Container, Paper, Grid, Button} from '@material-ui/core';
 import ProblemInterface from '../interfaces/ProblemDataInterface';
-import { Link } from 'react-router-dom';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {problemSolved} from './ComponentActions';

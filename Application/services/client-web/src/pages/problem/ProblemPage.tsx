@@ -35,7 +35,6 @@ class Problems extends Component<Props> {
         
         return(
             <div>
-                <DataNavBar tab={4}/>
                 <h4>Problemen</h4>
                 <div>
                     {this.props.loading && 
