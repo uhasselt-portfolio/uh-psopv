@@ -16,12 +16,11 @@ const startServer = async () => {
 
     server.listen(port); // Start server on port ...
 
+    await seedDatabase();
+
     if(process.env.NODE_ENV == 'production') {
         console.log('Production back-end server started successfully');
     } else {
-
-        await seedDatabase();
-
         console.log('Debug back-end server started successfully');
     }
 }
