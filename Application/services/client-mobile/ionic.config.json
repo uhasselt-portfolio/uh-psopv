@@ -3,5 +3,7 @@
   "integrations": {
     "capacitor": {}
   },
-  "type": "react"
+  "type": "react",
+  "NODE_ENV": "production",
+  "REST_API_ROOT": "https://psopv.herokuapp.com"
 }

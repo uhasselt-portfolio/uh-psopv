@@ -14,6 +14,9 @@ ENV POSTGRES_PASSWORD 12345
 ENV POSTGRES_DB postgres
 ENV POSTGRES_URI 'postgres://postgres:12345@database-debug:5432/postgres'
 
+# Connect with nginx
+ENV PORT 3001
+
 RUN npm install
 
 COPY . .
