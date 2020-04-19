@@ -3,7 +3,6 @@ import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {fetchPlannings} from './InfoAction';
-import {getUserId} from '../../../redux/AppStateAction'
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonButton, IonIcon, IonPage, IonContent, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
 import { call } from 'assert';
 import { mail } from 'ionicons/icons';
@@ -158,7 +157,6 @@ function mapStateToProps(state: any) {
       arePlanningsFetched: state.info.arePlanningsFetched,
       errorMessage: state.info.errorMessage,
       loading: state.info.loading,
-      user_id: state.user_id.LoggedUser
     })
   }
   

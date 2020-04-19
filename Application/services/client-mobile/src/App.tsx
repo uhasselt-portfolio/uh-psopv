@@ -46,11 +46,16 @@ import {Provider} from 'react-redux';
 import './theme/variables.css';
 
 
-const App: React.FC = () => (
-  <Provider store={store}>
-  <IonApp>
-      <IonReactRouter>
-      <IonTabs>
+
+class App extends React.Component {
+  state = {
+    id: 2 // TODO USERID
+  }
+
+  renderTabs(){
+    if(this.state.id == 1){ // TODO USERID
+      return(
+        <IonTabs>
         <IonRouterOutlet>
           <Route path="/ListView" component={ListView} exact={true} />
           <Route path="/MapPage" component={MapPage} exact={true} />
@@ -89,9 +94,42 @@ const App: React.FC = () => (
           </IonTabButton>
         </IonTabBar>
         </IonTabs>
-      </IonReactRouter>
-  </IonApp>
+      )
+    } else if (this.state.id == 2){ // TODO USERID
+      return(
+      <IonTabs>
+        <IonRouterOutlet>
+          <Route path="/InfoPage" component={InfoPage} exact={true} />
+          <Route path="/Login" component={LoginPage} exact={true} />
+          <Route path="/" render={() => <Redirect to="/InfoPage" />} exact={true} />
+        </IonRouterOutlet>
+        <IonTabBar slot="bottom">
+        <IonTabButton tab="Login" href="/Login">
+            <IonIcon icon={square} />
+            <IonLabel>Login</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="InfoPage" href="/InfoPage">
+            <IonIcon icon={ellipse} />
+            <IonLabel>Map</IonLabel>
+          </IonTabButton>
+        </IonTabBar>
+      </IonTabs>
+      )
+      
+    }
+  }
+
+  render(){
+    return (
+      <Provider store={store}>
+      <IonApp>
+          <IonReactRouter>
+            {this.renderTabs()}
+          </IonReactRouter>
+      </IonApp>
   </Provider>
-);
+    )
+  }
+}
 
 export default App;
