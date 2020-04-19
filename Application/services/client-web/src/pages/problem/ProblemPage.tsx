@@ -1,11 +1,11 @@
 import React, {Component} from 'react';
-import DataNavBar from '../../navBars/DataNavBarComp';
 import Problem from '../../Components/ProblemComp';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ProblemInterface from '../../interfaces/ProblemDataInterface';
 import {fetchProblem} from './ProblemAction';
 import { AppState } from '../../Redux/store';
+import {Grid } from '@material-ui/core';
 
 type Props = LinkStateProps  & LinkDispatchToProps;
 
@@ -35,7 +35,11 @@ class Problems extends Component<Props> {
         
         return(
             <div>
-                <h4>Problemen</h4>
+                <Grid container justify="center">
+                    <Grid item>
+                        <h4>Problemen</h4>
+                    </Grid>
+                </Grid>
                 <div>
                     {this.props.loading && 
                         <p>Problemen aan het inladen</p>}

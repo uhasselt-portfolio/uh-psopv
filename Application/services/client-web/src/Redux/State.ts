@@ -31,7 +31,7 @@ export default interface State {
 
 export const initialState : State = {
     loggedIn: {
-        id:0, name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permission:'0', association:"vereneging", latitude: 50.965100, longitude: 5.364983
+        id:0, name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permission: 0, association:"vereneging", latitude: 50.965100, longitude: 5.364983
     },
     posts: [
         { id: 0, title: "post", addres: "addres", sector: 1, general: "generalpost", latitude: 50.962595, longitude: 5.358503, shifts: [] , users: [], activeProblem: false},
@@ -58,20 +58,20 @@ export const initialState : State = {
             {problemType: "problemtype", priority: 1, discription: "discription", timeStamp: "04/04/2020 15:22", shiftName: "shiftname", 
                 post: "post", user: "gaat over User", sender: "sender", latitude: 50.962595, longitude: 5.358503, solved:false, id: 4}
     ],
-    users: [{id:0, name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permission:'0', association:"vereneging", latitude: 50.965100, longitude: 5.364983},
-        {id:1, name: "naam2", lastname:"lastname2", gsmNumber:"gsmnummer2", email:"email2", has_internet:false, permission:'1', latitude: 50, longitude: 0 },
-        {id:2, name: "John", lastname:"verbrugen", gsmNumber:"0478536954", email:"john.verbrugen@hotmail.com", has_internet: true, permission: '0', association:"scouts Kiewit", latitude: 50, longitude: 0},
-        {id:3, name: "Marie", lastname:"Torfs", gsmNumber:"0475636984", email:"Marie.Torfs@gmail.Com", has_internet: true, permission: '0', association:"scouts Kiewit", latitude: 50, longitude: 0},
-        {id:4, name: "Arno", lastname:"Timmermans", gsmNumber:"0475633215", email:"TimmermansArno@gmail.com", has_internet: true, permission: '0', association:"scouts Kiewit", latitude: 50, longitude: 0},
-        {id:5, name: "Quinten", lastname:"Degroote", gsmNumber:"0478521478", email:"DegrooteQ@hotmail.com", has_internet: true, permission: '0', association:"scouts Kiewit", latitude: 50, longitude: 0},
-        {id:6, name: "Liese", lastname:"Verbeeck", gsmNumber:"0171589632", email:"LizVerbeeck@hotmail.com", has_internet: false, permission: '0', association:"scouts Kiewit", latitude: 50, longitude: 0},
-        {id:7, name: "Margriet", lastname:"Coene", gsmNumber:"0478526544", email:"CoeneMar@gmail.com", has_internet: true, permission: '1', latitude: 50, longitude: 0},
-        {id:8, name: "Seba", lastname:"DeMilitair", gsmNumber:"0470310450", email:"SebastiaanMili@hotmail.com,", has_internet: true, permission: '1', latitude: 50, longitude: 0},
-        {id:9, name: "Marlies", lastname:"VanZelem", gsmNumber:"0478523698", email:"VanZelemMarles@gmail.com", has_internet: false, permission: '0', association:"VZWKiewit", latitude: 50.964938, longitude: 5.363159},
-        {id:10, name: "Kasper", lastname:"Exspiravit", gsmNumber:"0471258963", email:"Kasper.Exspiravit@gmail.com", has_internet: true, permission: '0', association:"VZWKiewit", latitude: 50, longitude: 0},
-        {id:11, name: "An", lastname:"Nuits", gsmNumber:"047856321", email:"An.Nuits@gmail.com", has_internet: true, permission: '1', latitude: 50, longitude: 0},
-        {id:12, name: "Liesbeth", lastname:"Saenen", gsmNumber:"0475896412", email:"Saenen.Liesbeth@gmail.com", has_internet: true, permission: '0', association:"VZWKiewit", latitude: 50, longitude: 0},
-        {id:13, name: "Sam", lastname:"Coppens", gsmNumber:"0475125699", email:"Sam.Coppens@live.be", has_internet: true, permission: '1', latitude: 50, longitude: 0}
+    users: [{id:0, name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permission: 0, association:"vereneging", latitude: 50.965100, longitude: 5.364983},
+        {id:1, name: "naam2", lastname:"lastname2", gsmNumber:"gsmnummer2", email:"email2", has_internet:false, permission: 1, latitude: 50, longitude: 0 },
+        {id:2, name: "John", lastname:"verbrugen", gsmNumber:"0478536954", email:"john.verbrugen@hotmail.com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
+        {id:3, name: "Marie", lastname:"Torfs", gsmNumber:"0475636984", email:"Marie.Torfs@gmail.Com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
+        {id:4, name: "Arno", lastname:"Timmermans", gsmNumber:"0475633215", email:"TimmermansArno@gmail.com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
+        {id:5, name: "Quinten", lastname:"Degroote", gsmNumber:"0478521478", email:"DegrooteQ@hotmail.com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
+        {id:6, name: "Liese", lastname:"Verbeeck", gsmNumber:"0171589632", email:"LizVerbeeck@hotmail.com", has_internet: false, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
+        {id:7, name: "Margriet", lastname:"Coene", gsmNumber:"0478526544", email:"CoeneMar@gmail.com", has_internet: true, permission:  1, latitude: 50, longitude: 0},
+        {id:8, name: "Seba", lastname:"DeMilitair", gsmNumber:"0470310450", email:"SebastiaanMili@hotmail.com,", has_internet: true, permission:  1, latitude: 50, longitude: 0},
+        {id:9, name: "Marlies", lastname:"VanZelem", gsmNumber:"0478523698", email:"VanZelemMarles@gmail.com", has_internet: false, permission:  0, association:"VZWKiewit", latitude: 50.964938, longitude: 5.363159},
+        {id:10, name: "Kasper", lastname:"Exspiravit", gsmNumber:"0471258963", email:"Kasper.Exspiravit@gmail.com", has_internet: true, permission:  0, association:"VZWKiewit", latitude: 50, longitude: 0},
+        {id:11, name: "An", lastname:"Nuits", gsmNumber:"047856321", email:"An.Nuits@gmail.com", has_internet: true, permission:  1, latitude: 50, longitude: 0},
+        {id:12, name: "Liesbeth", lastname:"Saenen", gsmNumber:"0475896412", email:"Saenen.Liesbeth@gmail.com", has_internet: true, permission:  0, association:"VZWKiewit", latitude: 50, longitude: 0},
+        {id:13, name: "Sam", lastname:"Coppens", gsmNumber:"0475125699", email:"Sam.Coppens@live.be", has_internet: true, permission:  1, latitude: 50, longitude: 0}
     ],
     messages: [
         {id: 0,title:"titel", sender:"verstuurder", content:"bericht", read: false},

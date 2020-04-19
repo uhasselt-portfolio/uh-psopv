@@ -34,7 +34,7 @@ export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
                 post: responePlanning.data.data.plannings[i].post.title,
                 User_id: responePlanning.data.data.plannings[i].user.id,
                 user: responePlanning.data.data.plannings[i].user.first_name + " " + responePlanning.data.data.plannings[i].user.last_name,
-                sector: responePlanning.data.data.plannings[i].post.sectro_id
+                sector: responePlanning.data.data.plannings[i].post.sector_id
             })
         }
 

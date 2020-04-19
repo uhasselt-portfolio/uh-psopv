@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
-import DataNavBar from '../../navBars/DataNavBarComp';
-import {Grid, Button } from '@material-ui/core';
+import {Grid, Button, TextField, MenuItem } from '@material-ui/core';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import ShiftInterface from '../../interfaces/ShiftDataInterface';
@@ -9,9 +8,22 @@ import ItemInterface from '../../interfaces/ItemDataInterface';
 import {bindActionCreators} from 'redux';
 import {fetchPlanning} from './PlanningAction';
 
+const styleFilter = {
+    background: 'rgb(248,248,248)',
+    padding: '10px',
+    borderRadius: '25px',
+    width: '25%',
+    textAlign: 'center' as 'center',
+    margin: '10px'
+}
+const styleFormElement = {
+    margin: '4px'
+}
+
 interface IState {
     filter: string,
     filterValue: string,
+    shiftFilter: string
 }
 
 interface job {
@@ -34,7 +46,8 @@ type Props = LinkStateProps & LinkDispatchToProps;
 class Planning extends Component<Props> {
     state: IState = {
             filter: "",
-            filterValue: ""
+            filterValue: "",
+            shiftFilter: 'All shifts'
     }
 
     componentWillMount = () => {
@@ -53,21 +66,25 @@ class Planning extends Component<Props> {
                 filterValue: value
         })
     }
-    filterChanged = () => {
-        var filterElement = (document.getElementById("filtertype")) as HTMLSelectElement;
-        var index = filterElement.selectedIndex;
-        var filterValue = filterElement.options[index];
+    handleFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         let valueElement = (document.getElementById("filterInput")) as HTMLInputElement;
         var valueValue = valueElement.value;
         this.setState({
                 filterValue: valueValue,
-                filter: filterValue.value
+                filter: event.target.value
+        });
+    }
+
+    handleShiftFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            shiftFilter: event.target.value
         });
     }
 
     organizePlanningFilter = () :ShiftProps[] => {
         let allShifts : ShiftInterface[] = this.props.shifts;
         let shifts : ShiftProps[] = [];
+        console.log(allShifts);
 
         while (allShifts.length > 0) {
             let temp : ShiftInterface[] = allShifts.filter(shift => shift.shiftId === allShifts[0].shiftId);
@@ -127,34 +144,66 @@ class Planning extends Component<Props> {
                     <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs}/>
                 ));
         }
-    }
+    } //TODO filter nakijken
 
     render () {      
         let shiftUi : Array<JSX.Element> = this.filter();
         return(
             <div>
                 <Grid container direction="column">
-                    <Grid item> {/*search*/}
-                        <Grid container justify="center">
-                            <form onSubmit={this.handleFilterForm}>
-                                <Grid item>
-                                    <select id="filtertype" onChange={this.filterChanged} value={this.state.filter}>
-                                        <option value="">No filter</option>
-                                        <option value="post">Post</option>
-                                        <option value="sector">Sector</option>
-                                        <option value="user">Vrijwilliger</option>
-                                        <option value="shift">Shift</option>
-                                        <option value="startDate">Start tijdstip</option>
-                                        <option value="endDate">Eind tijdstip</option>
-                                    </select>
-                                </Grid>
-                                <Grid item>
-                                    <input id="filterInput" type="text" placeholder={this.state.filter}></input>
-                                </Grid>
-                                <Grid item>
-                                    <Button variant="outlined" onClick={this.handleFilter}>filter</Button>
-                                </Grid>
-                            </form>
+                    <Grid container justify="center">
+                        <h4>Planning</h4>
+                    </Grid>
+                    <Grid container justify="center">
+                        <form onSubmit={this.handleFilterForm} style={styleFilter}>
+                            <Grid item>
+                                <TextField
+                                    id="filter"
+                                    select
+                                    label="filter"
+                                    value={this.state.filter}
+                                    onChange={this.handleFilterChanged}
+                                    helperText="Selecteer een filter"
+                                    variant="outlined"
+                                    style={styleFormElement}
+                                    >
+                                    <MenuItem value="No filter">Geen filter</MenuItem>
+                                    <MenuItem value="post">Post</MenuItem>
+                                    <MenuItem value="sector">Sector</MenuItem>
+                                    <MenuItem value="user">Vrijwilliger</MenuItem>
+                                    <MenuItem value="shift">Shift</MenuItem>
+                                    <MenuItem value="startDate">Start tijdstip</MenuItem>
+                                    <MenuItem value="endDate">Eind tijdstip</MenuItem>
+                                </TextField>
+                            </Grid>
+                            <Grid item>
+                                <TextField variant="outlined" id="filterInput" style={styleFormElement} type="text" placeholder={this.state.filter}></TextField>
+                            </Grid>
+                            <Grid item>
+                                <Button variant="outlined" onClick={this.handleFilter} style={styleFormElement}>filter</Button>
+                            </Grid>
+                        </form>
+                    </Grid>
+                    <Grid container justify="center">
+                        <Grid item>
+                            <TextField
+                                id="shiftFilter"
+                                select
+                                label="shiftFilter"
+                                value={this.state.shiftFilter}
+                                onChange={this.handleShiftFilterChanged}
+                                helperText="Selecteer een shift"
+                                variant="outlined"
+                                style={styleFormElement}
+                                >
+                                <MenuItem value="All shifts">Alle shiften</MenuItem>
+                                <MenuItem value="Shift1">Shift1: 04/12/2020 8:00 - 16:00</MenuItem>
+                                <MenuItem value="Shift2">Shift2: 04/12/2020 8:00 - 16:00</MenuItem>
+                                <MenuItem value="Shift3">Shift3: 04/12/2020 8:00 - 16:00</MenuItem>
+                                <MenuItem value="Shift4">Shift4: 04/12/2020 8:00 - 16:00</MenuItem>
+                                <MenuItem value="Shift5">Shift5: 04/12/2020 8:00 - 16:00</MenuItem>
+                                <MenuItem value="Shift6">Shift6: 04/12/2020 8:00 - 16:00</MenuItem>
+                            </TextField>
                         </Grid>
                     </Grid>
                     <Grid item> {/*List*/ }

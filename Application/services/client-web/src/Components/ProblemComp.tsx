@@ -13,9 +13,10 @@ interface IState {
 }
 
 const paperStyle = {
-    background: 'rgb(240, 255, 255)',
+    background: 'rgb(250,250,250)',
     padding: '10px',
-    margin: '10px'
+    margin: '20px',
+    borderRadius: '50px',
 }
 const labelStyle = {
     padding: '0 10px 0 0'
@@ -81,61 +82,67 @@ class Problem extends Component<Props> {
                     state: this.state.Data
                 }}/>
             );
+        let dataSplit : string[] =  this.props.timeStamp.split("T");
+        let yearSplit : string[] = dataSplit[0].split("-");
+        let hourSplit : string[] = dataSplit[1].split(".");
+        let parsedDate : string = yearSplit[2] + "/" + yearSplit[1] + "/" + yearSplit[0];
+        parsedDate += " " + hourSplit[0];
+
         return(
             <Container>
                 <Paper style={paperStyle}>
-                    <Grid container justify="center">
+                    <Grid container justify="center" direction="column">
+                        <Grid container justify="center" direction="row">
+                            <h4>{this.state.Data.problemType}</h4>
+                        </Grid>
                         <Grid item>
-                            <h4 className="center">{this.state.Data.problemType}</h4>
+                                <p>{this.state.Data.discription}</p>
                         </Grid>
-                    </Grid>
-                    <Grid container>
-                        <Grid item>
-                            <p>{this.state.Data.discription}</p>
-                        </Grid>
-                    </Grid>
-                    <Grid container justify="space-evenly">
-                        <Grid item style={labelStyle}>
-                            <p className="col">Shift: {this.state.Data.shiftName}</p>
-                        </Grid>
-                        <Grid item style={labelStyle}>
-                        <p>Post: {this.state.Data.post}</p>
-                        </Grid>
-                    </Grid>
-                    <Grid container justify="space-evenly">
-                        <Grid item style={labelStyle}>
-                            <p>Gaat over: {this.state.Data.user}</p>
-                        </Grid>
-                        <Grid item style={labelStyle}>
-                            <p>Gemeld door: {this.state.Data.sender}</p>
-                        </Grid>
-                        <Grid container justify="space-between">
-                            <Grid item style={labelStyle}>
-                                <p className="col">{this.state.Data.timeStamp}</p>
+                        <Grid container direction="row" justify="space-evenly" >
+                            <Grid item>
+                                <Grid container direction="column">
+                                    <Grid item>
+                                        <p>Shift: {this.state.Data.shiftName}</p>
+                                    </Grid>
+                                    <Grid item>
+                                        <p>Gaat over: {this.state.Data.user}</p>
+                                    </Grid>
+                                    <Grid item>
+                                        <p>{parsedDate}</p>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                             <Grid item>
-                                <Button variant="outlined" onClick={this.handleRedirectButton}>Ga naar</Button>
+                                <Grid container direction="column">
+                                    <Grid item>
+                                        <p>Post: {this.state.Data.post}</p>
+                                    </Grid>
+                                    <Grid item>
+                                        <p>Gemeld door: {this.state.Data.sender}</p>
+                                    </Grid>
+                                    <Grid item>
+                                        <Button variant="outlined" onClick={this.handleRedirectButton}>Ga naar</Button>
+                                    </Grid>
+                                </Grid>
                             </Grid>
                         </Grid>
-                        <Grid container justify="center">
-                            <Grid item>
-                                <Button variant="outlined" onClick={this.handleSolved}>Probleem opgelost</Button>
-                            </Grid>
-                            {this.props.loading && this.props.isProblemSolvedPosted === false &&
-                                <Grid item>
-                                    <p>Modificatie aan het doorgeven</p>
-                                </Grid>}
-                            { ! this.props.loading && this.props.errorMessage !== "" && this.props.isProblemSolvedPosted === false &&
-                                <Grid item>
-                                    <p>Er liep iets fout, probeer opnieuw</p>
-                                </Grid>
-                            }
-                            { ! this.props.loading && this.props.errorMessage === "" && this.props.isProblemSolvedPosted === true &&
-                                <Grid item>
-                                    <p>Aanpassing doorgevoerd</p>
-                                </Grid>
-                            }
+                        <Grid container justify="center" direction="row">
+                            <Button variant="outlined" onClick={this.handleSolved}>Probleem opgelost</Button>
                         </Grid>
+                        {this.props.loading && this.props.isProblemSolvedPosted === false &&
+                            <Grid container justify="center" direction="row">
+                                <p>Modificatie aan het doorgeven</p>
+                            </Grid>}
+                        { ! this.props.loading && this.props.errorMessage !== "" && this.props.isProblemSolvedPosted === false &&
+                            <Grid container justify="center" direction="row">
+                                <p>Er liep iets fout, probeer opnieuw</p>
+                            </Grid>
+                        }
+                        { ! this.props.loading && this.props.errorMessage === "" && this.props.isProblemSolvedPosted === true &&
+                            <Grid container justify="center" direction="row">
+                                <p>Aanpassing doorgevoerd</p>
+                            </Grid>
+                        }
                     </Grid>
                 </Paper>
             </Container>

@@ -10,9 +10,10 @@ interface IProps {
     userId: Number
 }
 const paperStyle = {
-    background: 'rgb(240, 255, 255)',
+    background: 'rgb(250,250,250)',
     padding: '10px',
-    margin: '10px'
+    margin: '10px',
+    borderRadius: '50px',
 }
 const labelStyle = {
     padding: '0 10px 0 0'
@@ -199,7 +200,6 @@ const MapStateToProps = (state: AppState, ownProps: IProps) : LinkStateToProps =
             errormessage: state.ComponentReducer.errorMessage
         };
     } else {
-        // TODO: Wouter permission changed
         return {
             userData : {
                 id: -1,
@@ -208,7 +208,7 @@ const MapStateToProps = (state: AppState, ownProps: IProps) : LinkStateToProps =
                 has_internet: true,
                 gsmNumber: "",
                 email: "",
-                permission: 'User',
+                permission: 1,
                 association: "",
                 latitude: 0,
                 longitude: 0

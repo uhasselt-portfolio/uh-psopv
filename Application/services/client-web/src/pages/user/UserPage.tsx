@@ -79,12 +79,12 @@ class Users extends Component<Props> {
                         break;
             }
             //TODO persmissions changed
-            case "vrijwilliger": { filteredUsers = this.props.users.filter(User => User.permission === '1').map(x =>(
+            case "vrijwilliger": { filteredUsers = this.props.users.filter(User => User.permission === 1).map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
             }
-            case "verantwoordelijke": { filteredUsers = this.props.users.filter(User => User.permission === '2').map(x =>(
+            case "verantwoordelijke": { filteredUsers = this.props.users.filter(User => User.permission === 2).map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
                         break;
@@ -109,37 +109,42 @@ class Users extends Component<Props> {
 
         return(
             <div>
-                <Grid container justify="center" direction='row' >
-                    <form onSubmit={this.handleFilterForm} id="filter" style={styleFilter}>
-                        <Grid item>
-                            <TextField
-                                id="filter"
-                                select
-                                label="filter"
-                                value={this.state.filter}
-                                onChange={this.handleFilterChanged}
-                                helperText="Selecteer een filter"
-                                variant="outlined"
-                                style={styleFormElement}
-                                >
-                                <MenuItem value="Geen filter">Geen filter</MenuItem>
-                                <MenuItem value="voornaam">naam</MenuItem>
-                                <MenuItem value="achternaam">achternaam</MenuItem>
-                                <MenuItem value="gsm nummer">gsm nummer</MenuItem>
-                                <MenuItem value="vrijwilliger">vrijwilliger</MenuItem>
-                                <MenuItem value="verantwoordelijke">verantwoordelijke</MenuItem>
-                                <MenuItem value="vereniging">vereniging</MenuItem>
-                                <MenuItem value="heeft internet">heeft internet</MenuItem>
-                                <MenuItem value="heeft geen internet">heeft geen internet</MenuItem>
-                            </TextField>
-                        </Grid>
-                        <Grid item >
-                            <input type="text" id="filterinput" placeholder={this.state.filter}/>
-                        </Grid>
-                        <Grid item >
-                            <Button type="submit" variant="outlined" onClick={this.handleFilter}>Zoek</Button>
-                        </Grid>
-                    </form>
+                <Grid container justify="center" direction='column' >
+                    <Grid container justify="center">
+                        <h4>Vrijwilligers & Verantwoordelijken</h4>
+                    </Grid>
+                    <Grid container justify="center">
+                        <form onSubmit={this.handleFilterForm} id="filter" style={styleFilter}>
+                            <Grid item>
+                                <TextField
+                                    id="filter"
+                                    select
+                                    label="filter"
+                                    value={this.state.filter}
+                                    onChange={this.handleFilterChanged}
+                                    helperText="Selecteer een filter"
+                                    variant="outlined"
+                                    style={styleFormElement}
+                                    >
+                                    <MenuItem value="Geen filter">Geen filter</MenuItem>
+                                    <MenuItem value="voornaam">naam</MenuItem>
+                                    <MenuItem value="achternaam">achternaam</MenuItem>
+                                    <MenuItem value="gsm nummer">gsm nummer</MenuItem>
+                                    <MenuItem value="vrijwilliger">vrijwilliger</MenuItem>
+                                    <MenuItem value="verantwoordelijke">verantwoordelijke</MenuItem>
+                                    <MenuItem value="vereniging">vereniging</MenuItem>
+                                    <MenuItem value="heeft internet">heeft internet</MenuItem>
+                                    <MenuItem value="heeft geen internet">heeft geen internet</MenuItem>
+                                </TextField>
+                            </Grid>
+                            <Grid item >
+                                <TextField variant="outlined" style={styleFormElement} type="text" id="filterinput" placeholder={this.state.filter}/>
+                            </Grid>
+                            <Grid item >
+                                <Button type="submit" variant="outlined" onClick={this.handleFilter} style={styleFormElement}>Zoek</Button>
+                            </Grid>
+                        </form>
+                    </Grid>
                 </Grid>
                 
                 <div>

@@ -6,7 +6,7 @@ interface UserInterface {
     has_internet: boolean,
     gsmNumber: string,
     email: string,
-    permission: string,
+    permission: Number,
     association?: string
     latitude: Number,
     longitude: Number
