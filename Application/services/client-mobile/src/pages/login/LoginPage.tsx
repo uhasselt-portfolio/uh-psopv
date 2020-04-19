@@ -99,4 +99,3 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
-// export default LoginPage;
