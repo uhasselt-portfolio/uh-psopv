@@ -67,7 +67,7 @@ export const fetchCurrentShift = async (req: Request, res: Response) => {
         }
 
         const plannings = await PlanningModel.findAll({
-            include: [{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
+            include: [{model: UserModel, all: true},{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
         });
         const statusCode = plannings == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';

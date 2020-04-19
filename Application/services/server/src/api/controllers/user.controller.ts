@@ -6,7 +6,6 @@ import AssociationModel from "../models/association.model";
 import PlanningModel from "../models/planning.model";
 import ShiftModel from "../models/shift.model";
 import {Op} from "sequelize";
-import PostModel from "../models/post.model";
 import {GeolibInputCoordinates} from "geolib/es/types";
 
 const eagerLoadingOptions = {
