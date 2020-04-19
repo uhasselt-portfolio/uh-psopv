@@ -1,6 +1,5 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSelect, IonSelectOption, IonInput, IonTextarea } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
-import ExploreContainer from '../../components/ExploreContainer';
 import { RouteComponentProps } from 'react-router';
 import { caretDown } from 'ionicons/icons';
 import { bindActionCreators, Dispatch } from 'redux';

@@ -1,6 +1,5 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonRow, IonGrid, IonCol } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
-import ExploreContainer from '../../components/ExploreContainer';
 import { RouteComponentProps } from 'react-router';
 import { caretDown, call, mail } from 'ionicons/icons';
 import { match } from 'react-router-dom';

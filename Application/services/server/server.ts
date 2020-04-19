@@ -11,17 +11,16 @@ const startServer = async () => {
     const connection: Sequelize = await getConnection();
     await connection.sync();
 
-    const port = 3001; // Specified in nginx folder
+    const port = process.env.PORT; // MUST USE ENVIRONMENT VARIABLE FOR HEROKU DEPLOYMENT
     const server = http.createServer(app); // Init server
 
     server.listen(port); // Start server on port ...
 
+    await seedDatabase();
+
     if(process.env.NODE_ENV == 'production') {
         console.log('Production back-end server started successfully');
     } else {
-
-        await seedDatabase();
-
         console.log('Debug back-end server started successfully');
     }
 }

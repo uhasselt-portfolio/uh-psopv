@@ -16,10 +16,10 @@ import { IonButton,
 import { Link } from 'react-router-dom';
 import './Notification_Item.css';
 import { read } from 'fs';
-import {store} from '../../../redux/store';
+import {store} from '../../../../redux/store';
 import { connect } from "react-redux";
 import { notifications, trendingUpSharp } from 'ionicons/icons';
-import MessageDataInterface from '../../../components/interfaces/MessageDataInterface';
+import MessageDataInterface from '../../../../components/interfaces/MessageDataInterface';
 import {fetchMessages} from '../MessageAction'
 
 

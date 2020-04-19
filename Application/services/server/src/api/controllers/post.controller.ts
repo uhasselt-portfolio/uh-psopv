@@ -4,7 +4,6 @@ import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PostModel from "../models/post.model";
 import GeneralPostModel from "../models/general_post.model";
 
-
 const eagerLoadingOptions = {
     include: [{model: PostModel, all: true}]
 }
@@ -57,7 +56,6 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
-
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -96,7 +94,7 @@ export const add = async (req: Request, res: Response) => {
             message: 'Internal Server Error'
         });
     }
-};
+}
 
 export const modify = async (req: Request, res: Response) => {
     const postID = req.params.id;

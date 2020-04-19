@@ -58,13 +58,39 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+export const fetchUnsolvedProblems = async (req: Request, res: Response) => {
+    try {
+        const problems = await ProblemModel.findAll({where: {solved: false},
+            include: [{model: ProblemModel, all: true,
+                include: [{model: PlanningModel, all: true}]
+            }]
+        });
+        const statusCode = problems == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                problems: problems
+            },
+            message: null
+        });
+    } catch(error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by, eagerLoadingOptions);
+        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by_id, eagerLoadingOptions);
         const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id, eagerLoadingOptions);
         const problemTypeExists : ProblemTypeModel | null = await ProblemTypeModel.findByPk(req.body.problem_type_id, eagerLoadingOptions);
 
@@ -72,7 +98,7 @@ export const add = async (req: Request, res: Response) => {
             const problem = await ProblemModel.create({
                 planning_id: req.body.planning_id,
                 problem_type_id: req.body.problem_type_id,
-                created_by: req.body.created_by
+                created_by_id: req.body.created_by_id
             });
 
             res.status(201).send({
@@ -86,7 +112,7 @@ export const add = async (req: Request, res: Response) => {
                 data: {
                     planning_id: planningExists,
                     problem_type_id: problemTypeExists,
-                    created_by: userExists
+                    created_by_id: userExists
                 },
                 message: 'Make sure that your specified data is correct'
             });

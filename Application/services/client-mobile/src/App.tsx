@@ -10,17 +10,18 @@ import {
   IonTabs
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import ListView from './pages/list/ListPage';
-// import MapView from './pages/map/MapPage';
-import PostView from './pages/post/PostPage'
-import Notifications from './pages/message/MessagePage';
-import SendNotifications from './pages/send_message/SendMessage';
-import Contacts from './pages/contact/ContactPage';
-import NotificationItem from './pages/message/component/Notification_Item'
-import { ellipse, square, triangle } from 'ionicons/icons';
+import ListView from './pages/sector-responsible/list/ListPage';
+import PostView from './pages/sector-responsible/post/PostPage';
+import Notifications from './pages/sector-responsible/message/MessagePage';
+import SendNotifications from './pages/sector-responsible/send_message/SendMessage';
+import Contacts from './pages/sector-responsible/contact/ContactPage';
+import NotificationItem from './pages/sector-responsible/message/component/Notification_Item'
 import LoginPage from './pages/login/LoginPage';
-import PersonPage from './pages/person/PersonPage';
+import PersonPage from './pages/sector-responsible/person/PersonPage';
+import MapPage from './pages/sector-responsible/map/MapPage';
 
+
+import InfoPage from './pages/volunteer/info/InfoPage';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -37,17 +38,12 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
+import { ellipse, square, triangle } from 'ionicons/icons';
+import store from './reducers';
+import {Provider} from 'react-redux';
 
 /* Theme variables */
 import './theme/variables.css';
-import Child from './pages/post/PostPage';
-
-import {Provider} from 'react-redux';
-import store from './reducers';
-import MapPage from './pages/map/MapPage';
-
-
-
 
 
 const App: React.FC = () => (
@@ -64,7 +60,7 @@ const App: React.FC = () => (
           <Route path="/SendNotifications" component={SendNotifications} exact={true} />
           <Route path="/Contacts" component={Contacts} exact={true} />
           <Route path="/Login" component={LoginPage} exact={true} />
-          <Route path="/" render={() => <Redirect to="/ListView" />} exact={true} />
+          <Route path="/" render={() => <Redirect to="/MapPage" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
         <IonTabButton tab="Login" href="/Login">
