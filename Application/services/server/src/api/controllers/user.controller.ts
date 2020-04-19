@@ -64,7 +64,6 @@ export const isUserOnPost = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
     try {
-
         const userExists = await UserModel.findByPk(userID);
 
         if(!userExists) {
@@ -82,7 +81,7 @@ export const isUserOnPost = async (req: Request, res: Response) => {
 
         const planning = await PlanningModel.findOne({where: {user_id: userID}, include: [{
             model: ShiftModel, all:true, where: where
-        }, {model: PostModel, all: true}]});
+        }]});
 
         if(!planning) {
             return res.status(404).send({
@@ -92,10 +91,10 @@ export const isUserOnPost = async (req: Request, res: Response) => {
             })
         }
 
-        const latitude : number = planning.post.latitude
-        const longitude : number = planning.post.longitude
-        const geoLibCoords : GeolibInputCoordinates = {latitude, longitude}
-        const isUserOnPost = planning.post.isUserOnPost(geoLibCoords);
+        const latitude : number = userExists.current_latitude;
+        const longitude : number = userExists.current_longitude;
+        const userCoords : GeolibInputCoordinates = {latitude, longitude};
+        const isUserOnPost = planning.post.isUserOnPost(userCoords);
         const statusCode = !isUserOnPost ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
