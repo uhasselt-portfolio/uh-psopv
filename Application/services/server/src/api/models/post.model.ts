@@ -9,8 +9,9 @@ import {
     Table,
     UpdatedAt
 } from "sequelize-typescript";
-import PermissionTypeModel from "./permission_type.model";
+import * as GeoLib from "geolib"
 import GeneralPostModel from "./general_post.model";
+import {GeolibInputCoordinates} from "geolib/es/types";
 
 @Table({tableName: "posts"})
 class PostModel extends Model<PostModel> {
@@ -59,6 +60,12 @@ class PostModel extends Model<PostModel> {
     @CreatedAt
     @Column
     created_at!: Date;
+
+    isUserOnPost(userCoords : GeolibInputCoordinates) {
+        const postCoords : GeolibInputCoordinates = {latitude: this.latitude, longitude: this.longitude};
+        const distanceInMeters : number = GeoLib.getDistance(userCoords, postCoords);
+        return distanceInMeters < this.radius;
+    }
 }
 
 export default PostModel
