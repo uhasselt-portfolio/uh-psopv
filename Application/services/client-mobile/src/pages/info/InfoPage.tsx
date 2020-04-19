@@ -26,7 +26,7 @@ class InfoPage extends React.Component<any, any> {
         const config = {
             desiredAccuracy: HIGH,
             stationaryRadius: 5,
-            interval: 10.000,
+            interval: 30000,
             distanceFilter: 5,
             notificationTitle: 'Pukkelpop App',
             notificationText: 'Locatie tracking',
