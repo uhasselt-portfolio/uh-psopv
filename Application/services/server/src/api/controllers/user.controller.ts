@@ -3,6 +3,11 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import JWTUtil from "../utils/jwt.util";
 import AssociationModel from "../models/association.model";
+import PlanningModel from "../models/planning.model";
+import ShiftModel from "../models/shift.model";
+import {Op} from "sequelize";
+import PostModel from "../models/post.model";
+import {GeolibInputCoordinates} from "geolib/es/types";
 
 const eagerLoadingOptions = {
     include: [{model: UserModel, all: true}]
@@ -54,6 +59,62 @@ export const fetch = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const isUserOnPost = async (req: Request, res: Response) => {
+    const userID = req.params.id;
+
+    try {
+
+        const userExists = await UserModel.findByPk(userID);
+
+        if(!userExists) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'User doesn\'t exist'
+            })
+        }
+
+        const where = {
+            begin: {[Op.lt]: Date.now()},
+            end: {[Op.gt]: Date.now()}
+        }
+
+        const planning = await PlanningModel.findOne({where: {user_id: userID}, include: [{
+            model: ShiftModel, all:true, where: where
+        }, {model: PostModel, all: true}]});
+
+        if(!planning) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'User isn\'t on the planning'
+            })
+        }
+
+        const latitude : number = planning.post.latitude
+        const longitude : number = planning.post.longitude
+        const geoLibCoords : GeolibInputCoordinates = {latitude, longitude}
+        const isUserOnPost = planning.post.isUserOnPost(geoLibCoords);
+        const statusCode = !isUserOnPost ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                isUserOnPost: isUserOnPost
+            },
+            message: null
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
 
 export const add = async (req: Request, res: Response) => {
 
