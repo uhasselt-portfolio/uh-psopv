@@ -97,7 +97,7 @@ class InfoPage extends React.Component<any, any> {
                     </IonRow>
                 </IonGrid>
 
-                <div className="GoogleMaps">
+                <div className="GoogleMapsInfo">
                     <GoogleMapReact
                     bootstrapURLKeys={{ key: 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDyMg3eezA_aKnVp1Hvsya23xwxCey32JA' }}
                     defaultCenter={{lat:shift_data.post.latitude,lng:shift_data.post.longitude}}
