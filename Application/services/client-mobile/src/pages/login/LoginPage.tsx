@@ -22,6 +22,7 @@ class LoginPage extends React.Component<any, IState> {
     }
 
     render(): React.ReactNode {
+        console.log(this.props)
         return (
             <IonPage>
                 <IonHeader>
