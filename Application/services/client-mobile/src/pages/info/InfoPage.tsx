@@ -7,6 +7,11 @@ import {getUserId} from '../../redux/AppStateAction'
 import { IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonGrid, IonRow, IonCol, IonButton, IonIcon, IonPage, IonContent, IonHeader, IonToolbar, IonTitle } from '@ionic/react';
 import { call } from 'assert';
 import { mail } from 'ionicons/icons';
+import GoogleMapReact from 'google-map-react';
+import NormalMarker from './components/NormalMarker'
+
+import './InfoPage.css'
+
 
 class InfoPage extends React.Component<any, any> {
     constructor(props: any) {
@@ -15,7 +20,7 @@ class InfoPage extends React.Component<any, any> {
     }
 
     componentDidMount() {
-        this.props.fetchPlannings();
+        console.log("jip..")
         let backgroundGeolocation = new BackgroundGeolocation();
         let HIGH = 10;
         const config = {
@@ -33,6 +38,7 @@ class InfoPage extends React.Component<any, any> {
             .then(() => {
 
                 backgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location) => {
+                    console.log("location: ",location)
                     this.setState({
                         latitude: location.latitude,
                         longitude: location.longitude
@@ -42,6 +48,8 @@ class InfoPage extends React.Component<any, any> {
                 });
             });
         backgroundGeolocation.start();
+        this.props.fetchPlannings();
+
     }
 
     componentWillUnmount() {
@@ -89,6 +97,20 @@ class InfoPage extends React.Component<any, any> {
                         <IonCol>{shift_data.post.address}</IonCol>
                     </IonRow>
                 </IonGrid>
+
+                <div className="GoogleMaps">
+                    <GoogleMapReact
+                    bootstrapURLKeys={{ key: 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDyMg3eezA_aKnVp1Hvsya23xwxCey32JA' }}
+                    defaultCenter={{lat:shift_data.post.latitude,lng:shift_data.post.longitude}}
+                    defaultZoom={13}
+                    >
+
+                    <NormalMarker 
+                        lat={shift_data.post.latitude} 
+                        lng={shift_data.post.longitude} />
+                        
+                    </GoogleMapReact>
+                </div>
             </IonCardContent>
         </IonCard>
         )
@@ -100,7 +122,6 @@ class InfoPage extends React.Component<any, any> {
             return <div>Loading...</div>
           } else {
             if(this.props.arePlanningsFetched !== undefined){
-              console.log(this.props.arePlanningsFetched)
               if(this.props.arePlanningsFetched.length <= 0){
                 return <div> No messages found. </div>
               } else{
@@ -114,7 +135,6 @@ class InfoPage extends React.Component<any, any> {
     }
 
     render() {
-        console.log(this.props)
         return (
             <IonPage>
                 <IonHeader>
@@ -123,9 +143,9 @@ class InfoPage extends React.Component<any, any> {
                     </IonToolbar>
                 </IonHeader>
                 <IonContent>
-                    {this.renderShiftList()}
                     <p>Latitude: {this.state.latitude}</p>
                     <p>Longitude: {this.state.longitude}</p>
+                    {this.renderShiftList()}
                 </IonContent>
                 
             </IonPage>
@@ -134,7 +154,6 @@ class InfoPage extends React.Component<any, any> {
 }
 
 function mapStateToProps(state: any) {
-    console.log("sate", state)
     return({
       arePlanningsFetched: state.info.arePlanningsFetched,
       errorMessage: state.info.errorMessage,
