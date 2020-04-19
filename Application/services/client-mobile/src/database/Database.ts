@@ -17,5 +17,11 @@ export default class Database {
             password: password
         })
     }
+
+    async fetchPlannings() {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/all';
+
+        return await axios.get(url)
+    }
 }
 
