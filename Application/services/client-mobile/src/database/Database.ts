@@ -27,6 +27,36 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async fetchMessages() {
+        const url = this.getRestApiEndpoint() + '/api/message/fetch/all';
+
+        return await axios.get(url)
+    }
+
+    async fetchUsers() {
+        const url = this.getRestApiEndpoint() + '/api/user/fetch/all';
+
+        return await axios.get(url)
+    }
+
+    async fetchPosts() {
+        const url = this.getRestApiEndpoint() + '/api/post/fetch/all';
+
+        return await axios.get(url)
+    }
+
+    async fetchPlanningsWithPostId(id: number) {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/post/' + id;
+
+        return await axios.get(url)
+    }
+
+    async fetchUsersFromShift(id: number) {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user-in-shift/' + id;
+
+        return await axios.get(url)
+    }
+
     async updateUserLocation(userLocation : BackgroundGeolocationResponse, userID : number) {
         const url = this.getRestApiEndpoint() + '/api/user/modify/' + userID;
 

@@ -1,5 +1,5 @@
 import Redux from 'redux';
-import Database from '../../database/Database'
+import Database from "../../../database/Database";
 import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocation";
 
 export const USER_UPDATE_GEOLOCATION_START = 'USER_UPDATE_GEOLOCATION_START'
@@ -14,8 +14,6 @@ export const updateGeolocation = (userLocation: BackgroundGeolocationResponse) =
 
         const user = response.data.data.user;
         const coordinates = {latitude: user.current_latitude, longitude: user.current_longitude};
-
-        console.log("UPDATED: ",coordinates)
 
         dispatch({type: USER_UPDATE_GEOLOCATION_SUCCESS, payload: coordinates})
     } catch (error) {

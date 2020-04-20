@@ -1,5 +1,4 @@
 import React from 'react'
-import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/background-geolocation/ngx";
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchPlannings, updateGeolocation} from './InfoAction';
@@ -19,10 +18,8 @@ import {
 } from '@ionic/react';
 import GoogleMapReact from 'google-map-react';
 import NormalMarker from './components/NormalMarker'
-
 import './InfoPage.css'
-import BackgroundService from "../../service/BackgroundService";
-
+import BackgroundService from "../../../service/BackgroundService";
 
 class InfoPage extends React.Component<any, any> {
 
@@ -39,7 +36,6 @@ class InfoPage extends React.Component<any, any> {
 
     private formatDate(data: string) {
         return (data.slice(0, 10))
-
     }
 
     private formatTime(data: string) {
@@ -92,7 +88,6 @@ class InfoPage extends React.Component<any, any> {
                 </IonCardContent>
             </IonCard>
         )
-
     }
 
     private renderShiftList() {

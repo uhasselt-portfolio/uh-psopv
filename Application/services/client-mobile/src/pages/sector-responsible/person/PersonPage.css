@@ -1,0 +1,9 @@
+.contact_btn{
+    float: right;
+}
+
+.center_content{
+    display: flex!important;
+    align-content: center!important;
+    align-items: center!important;
+}
