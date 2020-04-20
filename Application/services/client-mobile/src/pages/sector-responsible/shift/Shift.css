@@ -8,4 +8,9 @@
 .CardContainer{
     text-align: center;
     align-items: center;
+    width: 100%;
+}
+
+.fullWidth{
+    width: 100%;
 }

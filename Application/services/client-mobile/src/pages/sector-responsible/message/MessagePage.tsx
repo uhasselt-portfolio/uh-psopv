@@ -1,7 +1,6 @@
 import React, { Fragment, useState, Component} from 'react';
 import './MessagePage.css';
 import NotificationItem from './component/Notification_Item'
-import {store} from '../../../redux_magVerwijderdWorden/store';
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch, bindActionCreators } from "redux";
@@ -18,9 +17,6 @@ import { IonButton,
   IonItem, 
   IonLabel,
   IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar } from '@ionic/react';
-import PostDataInterface from '../../../components/interfaces/PostDataInterface';
-import { setNotificationStatus } from '../../../redux_magVerwijderdWorden/actions';
-import State from '../../../redux_magVerwijderdWorden/state';
 
 
 

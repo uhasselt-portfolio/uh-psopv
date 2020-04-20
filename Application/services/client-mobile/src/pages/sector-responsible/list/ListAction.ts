@@ -6,7 +6,7 @@ export const PLANNING_FETCH_START = 'PLANNING_FETCH_START'
 export const PLANNING_FETCH_SUCCESS = 'PLANNING_FETCH_SUCCESS'
 export const PLANNING_FETCH_FAIL = 'PLANNING_FETCH_FAIL'
 
-export const fetchPlannings = () => async (dispatch: Redux.Dispatch) => {
+export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: PLANNING_FETCH_START})
 

@@ -42,6 +42,19 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async fetchPlanningsWithPostId(id: number) {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/post/' + id;
+
+        return await axios.get(url)
+    }
+
+    async fetchUsersFromShift(id: number) {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user-in-shift/' + id;
+
+        return await axios.get(url)
+    }
+
+
     
 }
 

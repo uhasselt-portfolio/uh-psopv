@@ -1,12 +1,12 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
 import './PostPage.css';
 import { RouteComponentProps } from 'react-router';
-import Shift from '../list/components/Shift';
+import Shift from '../shift/Shift';
 import { caretDown } from 'ionicons/icons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {fetchPlanning} from './PostAction'
+import {fetchPlanningsWithPostId} from './PostAction'
 
 const checkboxList = [
   { val: 'Fluo Band', isChecked: false },
@@ -16,33 +16,64 @@ const checkboxList = [
 ];
 
 
-class PostView extends Component<any> {
-  // const [checked, setChecked] = useState(false);
-  // const [checkListActive, setcheckListActive] = useState(false);
+// Optional parameters to pass to the swiper instance. See http://idangero.us/swiper/api/ for valid options.
+const slideOpts = {
+  direction: 'horizontal',
+  speed: 400,
+};
 
+class PostView extends Component<any> {
   state = {
-    checkListActive: false
+    checkListActive: false,
   }
   
-  handleToggleCheckList(){
-    this.setState({...this.state, checkListActive: !this.state.checkListActive});
+
+
+  componentDidMount(){
+    this.props.fetchPlanningsWithPostId(this.props.match.params.post);
   }
 
-  showCheckList = () => {
-    if(this.state.checkListActive){
-      return(
-        <IonCardContent>
-        {checkboxList.map(({ val, isChecked }, i) => (
-          <IonItem key={i}>
-            <IonLabel>{val}</IonLabel>
-            <IonCheckbox slot="end" value={val} checked={isChecked} />
-          </IonItem>
-        ))};
-      </IonCardContent>
-      )
-    } else{
-      return <div></div>
+  getUsersFromShift(id: number): any{
+    let shift_info = this.props.arePlanningsFetched.filter((element: any) => (
+      element.shift_id === id
+    ))
+
+    return shift_info
+  }
+
+  getUsersFromShifts(shifts: any){
+
+  }
+
+
+  
+
+  renderPost(){
+    if(this.props.loading == true){
+      return <div>Loading...</div>
+    } else {
+      if(this.props.arePlanningsFetched !== undefined){
+        if(this.props.arePlanningsFetched.length <= 0){
+          return <div> No messages found. </div>
+        } else{
+
+          let list: number[] = []
+          return this.props.arePlanningsFetched.map((data: any, index: number) => {
+            if(!list.includes(data.shift_id)){
+              list.push(data.shift_id)
+              let shift_data = this.getUsersFromShift(data.shift_id)
+                return (
+                  <Shift {... data} />
+                  )
+            }  
+          })
+        }
+      }
     }
+  }
+
+  renderShift(shift_id: number){
+
   }
 
 
@@ -52,7 +83,7 @@ class PostView extends Component<any> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Sector: {this.props.match.params.post} - Post: {this.props.match.params.sector}</IonTitle>
+            <IonTitle>Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -61,37 +92,9 @@ class PostView extends Component<any> {
               <IonTitle size="large">Blank</IonTitle>
             </IonToolbar>
           </IonHeader>
-          {/* shift info  */}
-          {/* {users.map((data: any, index: number) => {
-              return (
-                <div> </div>
-              // <Shift ... data />)
-          )})} */}
-  
-          {/* Checkbox */}
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle onClick={() => this.handleToggleCheckList()}>
-                CheckList
-                <IonIcon class="text_end" icon={caretDown}/>
-              </IonCardTitle>
-            </IonCardHeader>
-          
-          </IonCard>
-  
-          {/* Problemen Log */}
-          <IonCard>
-            <IonCardHeader>
-              <IonCardTitle>
-                Problemen Log
-                <IonIcon/>
-              </IonCardTitle>
-            </IonCardHeader>
-            <IonCardContent>
-              Michiel was 4 uur te laat op post
-            </IonCardContent>
-          
-          </IonCard>
+          <IonSlides pager={true} options={slideOpts}>
+            {this.renderPost()}
+          </IonSlides>
         </IonContent>
       </IonPage>
     );
@@ -101,15 +104,15 @@ class PostView extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    arePlanningsFetched: state.contact.arePlanningsFetched,
-    errorMessage: state.contact.errorMessage,
-    loading: state.contact.loading
+    arePlanningsFetched: state.post.arePlanningsFetched,
+    errorMessage: state.post.errorMessage,
+    loading: state.post.loading
   })
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchPlanning
+    fetchPlanningsWithPostId
   }, dispatch);
 }
 

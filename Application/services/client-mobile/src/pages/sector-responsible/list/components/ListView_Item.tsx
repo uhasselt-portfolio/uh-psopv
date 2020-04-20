@@ -10,10 +10,6 @@ import { IonButton,
     IonItem, 
     IonLabel,
     IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar } from '@ionic/react';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import {fetchPlannings} from '../ListAction'
 
 
   
@@ -23,10 +19,6 @@ class ListViewItem  extends Component<any> {
         super(props);
     }
     
-    // componentDidMount(){
-    //     this.props.fetchPlannings();
-    // }
-
     getPost(props: any): string {
         return '/PostView/'+ props.sector + '/' + props.post;
     }
@@ -34,9 +26,8 @@ class ListViewItem  extends Component<any> {
 
     render() {
 
-        console.log(this.props)
         function getPost(props: any): string {
-            return '/PostView/'+props.post_id+"/"+props.shift_id
+            return '/PostView/'+props.id+"/"+props.sector_id
         }
 
         return (   
@@ -56,20 +47,6 @@ class ListViewItem  extends Component<any> {
     }
 }
  
-// function mapStateToProps(state: any) {
-//     return({
-//       arePlanningsFetched: state.list.arePlanningsFetched,
-//       errorMessage: state.list.errorMessage,
-//       loading: state.list.loading
-//     })
-//   }
-  
-//   function mapDispatchToProps(dispatch: any) {
-//     return bindActionCreators({
-//       fetchPlannings
-//     }, dispatch);
-//   }
-  
   
   export default (ListViewItem);
   
