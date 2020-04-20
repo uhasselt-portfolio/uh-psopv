@@ -126,31 +126,40 @@ export const add = async (req: Request, res: Response) => {
 };
 
 export const toggleItemLost = async (req: Request, res: Response) => {
-    const itemID = req.params.id;
+    try {
+        const itemID = req.params.id;
 
-    const item = await ItemModel.findByPk(itemID);
+        const item = await ItemModel.findByPk(itemID);
 
-    if(!item) {
-        return res.status(404).send({
-            status: 'fail',
+        if(!item) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'The specified ID doesn\'t exist'
+            });
+        }
+
+        const result = await ItemModel.update({item_lost: !item.item_lost}, {
+            returning: true, where: {id: itemID}
+        });
+
+        const updatedItem = result[1][0];
+        const statusCode = updatedItem == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+        const message = statusMessage == 'fail' ? 'Update wasn\'t successful' : null;
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {item: updatedItem},
+            message: message
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
             data: null,
-            message: 'The specified ID doesn\'t exist'
+            message: 'Internal Server Error'
         });
     }
-
-    const updatedItem = await ItemModel.update({item_lost: !item.item_lost}, {
-        returning: true, where: {id: itemID}
-    });
-
-    const statusCode = updatedItem == null ? 404 : 200;
-    const statusMessage = statusCode == 200 ? 'success' : 'fail';
-    const message = statusMessage == 'fail' ? 'Update wasn\'t successful' : null;
-
-    res.status(statusCode).send({
-        status: statusMessage,
-        data: {item: updatedItem},
-        message: message
-    });
 }
 
 export const modify = async (req: Request, res: Response) => {
