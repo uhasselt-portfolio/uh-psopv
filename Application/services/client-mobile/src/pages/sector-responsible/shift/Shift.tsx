@@ -25,13 +25,13 @@ import {fetchUsersFromShift} from './ShiftAction'
 
 
   
-class Shift  extends Component<any> {
+class Shift  extends Component<any, any> {
     constructor(props: any) {
         super(props);
     }
 
     componentDidMount(){
-        // this.props.fetchUsersFromShift(this.props.user.id);
+        this.props.fetchUsersFromShift(this.props.post.id, this.props.shift.id);
     }
     
     
@@ -50,7 +50,6 @@ class Shift  extends Component<any> {
     }
 
     formatDateTime(data: string){
-        console.log(data)
         return (<div>{this.formatTime(data)},  {this.formatDate(data)}</div>)
     }
 
@@ -169,15 +168,14 @@ class Shift  extends Component<any> {
     }
 
     render() {
-        console.log(this.props)
         return (    
             <IonSlide>
-                <div  className="fullWidth">
+                <div>
                     {this.renderShiftInfo()}
                     {this.renderCheckbox()}
                     {this.renderProblemInfo()}
                 </div>
-                               
+                    
             </IonSlide>       
         );
     }
@@ -201,3 +199,4 @@ function mapStateToProps(state: any) {
   
   
 export default connect(mapStateToProps, mapDispatchToProps)(Shift);
+

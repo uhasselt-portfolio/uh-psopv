@@ -12,7 +12,8 @@ class SendNotifications extends Component<any> {
   state = {
     title: "",
     message: "",
-    created_by: 1,
+    created_by: 2,
+    send_to_id: 1,
     priority: 1
   }
 
@@ -26,7 +27,9 @@ class SendNotifications extends Component<any> {
 
 
   handleSendMessage(){
-    this.props.addMessage(this.state.title, this.state.message, this.state.created_by, this.state.priority);
+
+
+    this.props.addMessage(this.state.title, this.state.message, this.state.created_by, this.state.send_to_id, this.state.priority); // TODO USERID
   }
 
   handleTitleChange(new_title: string | null | undefined){
@@ -39,18 +42,16 @@ class SendNotifications extends Component<any> {
 
 
   renderListOfUser(){
-    console.log("this.props.areMessagesfetched", this.props);
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
       if(this.props.areUsersFetched !== undefined){
-        console.log(this.props.areMessageFetched)
         if(this.props.areUsersFetched.length <= 0){
           return <div>No users found</div>
         } else{
           return this.props.areUsersFetched.map((data: any, index: number) =>{
             return (
-              <IonSelectOption value="Verantwoordelijke">{data.first_name} {data.last_name}</IonSelectOption>
+              <IonSelectOption value={data.id}>{data.first_name} {data.last_name} ({data.permission_type.name})</IonSelectOption>
             )
           })
         }

@@ -1,4 +1,4 @@
-import {PLANNING_POST_ID_FETCH_FAIL, PLANNING_POST_ID_FETCH_START, PLANNING_POST_ID_FETCH_SUCCESS} from "./PostAction";
+import {PLANNING_POST_ID_FETCH_FAIL, PLANNING_POST_ID_FETCH_SUCCESS, PLANNING_POST_ID_FETCH_START} from "./PostAction";
 import {AnyAction} from "redux";
 
 export default function (state = {}, action : AnyAction) {

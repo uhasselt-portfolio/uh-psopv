@@ -7,11 +7,11 @@ export const MESSAGE_FETCH_SUCCESS = 'MESSAGE_FETCH_SUCCESS'
 export const MESSAGE_FETCH_FAIL = 'MESSAGE_FETCH_FAIL'
 
 
-export const fetchMessages = (id: number | undefined) => async (dispatch: Redux.Dispatch) => {
+export const fetchMessages = (id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: MESSAGE_FETCH_START})
 
-        const response = await new Database().fetchMessages(); // TODO GETUSERID
+        const response = await new Database().fetchMessagesFrom(id); // TODO GETUSERID
 
         dispatch({type: MESSAGE_FETCH_SUCCESS, payload: response.data.data.messages})
     } catch(error){

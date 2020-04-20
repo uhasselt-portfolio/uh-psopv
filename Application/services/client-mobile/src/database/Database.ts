@@ -30,6 +30,12 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async fetchMessagesFrom(id: number) {
+        const url = this.getRestApiEndpoint() + '/api/message/fetch/send-to/' + id;
+
+        return await axios.get(url)
+    }
+
     async fetchUsers() {
         const url = this.getRestApiEndpoint() + '/api/user/fetch/all';
 
@@ -48,12 +54,26 @@ export default class Database {
         return await axios.get(url)
     }
 
-    async fetchUsersFromShift(id: number) {
-        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user-in-shift/' + id;
+    async fetchUsersFromShift(post_id: number, shift_id: number) {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/users/' + post_id + "/" + shift_id;
 
         return await axios.get(url)
     }
 
+    async addMessage(title: string | undefined, message: string | undefined, created_by_id: number, send_to_id: number, priority: number) {
+        const url = this.getRestApiEndpoint() + '/api/message/add'
+
+        return await axios.post(url, {
+            title: title,
+            message: message,
+            created_by_id: created_by_id,
+            send_to_id: send_to_id,
+            priority: priority,
+        })
+
+    }
+
+    
 
     
 }

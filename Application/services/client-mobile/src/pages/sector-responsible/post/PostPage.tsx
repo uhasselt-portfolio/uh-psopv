@@ -22,15 +22,20 @@ const slideOpts = {
   speed: 400,
 };
 
-class PostView extends Component<any> {
+class PostView extends Component<any, any> {
   state = {
     checkListActive: false,
+  }
+
+  constructor(props: any){
+    super(props)
   }
   
 
 
   componentDidMount(){
-    this.props.fetchPlanningsWithPostId(this.props.match.params.post);
+    // console.log(this.props)
+    this.props.fetchPlanningsWithPostId(this.props.match.params.post); // ERROR
   }
 
   getUsersFromShift(id: number): any{
@@ -41,28 +46,20 @@ class PostView extends Component<any> {
     return shift_info
   }
 
-  getUsersFromShifts(shifts: any){
-
-  }
-
-
-  
-
   renderPost(){
     if(this.props.loading == true){
-      return <div>Loading...</div>
+      return <IonSlide>Loading...</IonSlide>
     } else {
       if(this.props.arePlanningsFetched !== undefined){
         if(this.props.arePlanningsFetched.length <= 0){
-          return <div> No messages found. </div>
+          return<IonSlide> No messages found.</IonSlide>
         } else{
-
           let list: number[] = []
           return this.props.arePlanningsFetched.map((data: any, index: number) => {
             if(!list.includes(data.shift_id)){
               list.push(data.shift_id)
-              let shift_data = this.getUsersFromShift(data.shift_id)
                 return (
+                  // <IonSlide>yo</IonSlide>
                   <Shift {... data} />
                   )
             }  
@@ -71,11 +68,6 @@ class PostView extends Component<any> {
       }
     }
   }
-
-  renderShift(shift_id: number){
-
-  }
-
 
   render(){
     console.log(this.props)
