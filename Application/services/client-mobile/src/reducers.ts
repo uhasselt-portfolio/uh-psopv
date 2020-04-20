@@ -1,6 +1,5 @@
 import {applyMiddleware, combineReducers} from 'redux'
 import LoginReducer from './pages/login/LoginReducer';
-import { userReducer} from './redux_magVerwijderdWorden/AppStateReducer'
 
 import {createStore} from "redux";
 import reduxThunk from "redux-thunk"
@@ -13,6 +12,7 @@ import PersonReducer from './pages/sector-responsible/person/PersonReducer';
 import PostReducer from './pages/sector-responsible/post/PostReducer';
 import ListReducer from './pages/sector-responsible/list/ListReducer';
 import MapReducer from './pages/sector-responsible/map/MapReducer';
+import ShiftReducer from './pages/sector-responsible/shift/ShiftReducer'
 
 // volunteer
 import InfoReducer from './pages/volunteer/info/InfoReducer';
@@ -28,7 +28,7 @@ export default createStore(
         list: ListReducer,
         map: MapReducer,
         info: InfoReducer,
-        user_id: userReducer
+        shift: ShiftReducer
     }),
     applyMiddleware(reduxThunk)
 )

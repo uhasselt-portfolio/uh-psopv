@@ -10,10 +10,6 @@ import { IonButton,
     IonItem, 
     IonLabel,
     IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar } from '@ionic/react';
-import { Link, Redirect } from 'react-router-dom';
-import { connect } from 'react-redux';
-import { bindActionCreators } from 'redux';
-import {fetchPlannings} from '../ListAction'
 
 
   
@@ -23,10 +19,6 @@ class ListViewItem  extends Component<any> {
         super(props);
     }
     
-    // componentDidMount(){
-    //     this.props.fetchPlannings();
-    // }
-
     getPost(props: any): string {
         return '/PostView/'+ props.sector + '/' + props.post;
     }
@@ -35,22 +27,19 @@ class ListViewItem  extends Component<any> {
     render() {
 
         function getPost(props: any): string {
-            console.log(props)
-            return '/PostView/'+props.post_id+"/"+props.shift_id
+            return '/PostView/'+props.id+"/"+props.sector_id
         }
 
-        console.log(this.props)
         return (   
             <a href={getPost(this.props)}> 
             <IonItem  detail button>
                 <IonLabel>
-                    <h2>Post {this.props.post_id}</h2>
-                    <h3>{this.props.user.first_name}</h3>
-                    <p>{this.props.shift.start} - {this.props.shift.end} </p>
-                    <p>{this.props.post.address}</p>
+                    <h2>Post {this.props.id}</h2>
+                    <h3>{this.props.title}</h3>
+                    <p>{this.props.address}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    {/* <h2>Sector {this.props.sector}</h2> */}
+                    <h2>Sector {this.props.sector_id}</h2>
                 </IonLabel>
             </IonItem>
             </a>
@@ -58,20 +47,6 @@ class ListViewItem  extends Component<any> {
     }
 }
  
-// function mapStateToProps(state: any) {
-//     return({
-//       arePlanningsFetched: state.list.arePlanningsFetched,
-//       errorMessage: state.list.errorMessage,
-//       loading: state.list.loading
-//     })
-//   }
-  
-//   function mapDispatchToProps(dispatch: any) {
-//     return bindActionCreators({
-//       fetchPlannings
-//     }, dispatch);
-//   }
-  
   
   export default (ListViewItem);
   

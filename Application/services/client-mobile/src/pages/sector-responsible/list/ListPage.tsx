@@ -17,28 +17,11 @@ import { IonButton,
   IonRow,
   IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol } from '@ionic/react';
 import { bindActionCreators } from 'redux';
-import {fetchPlannings} from './ListAction'
+import {fetchPosts} from './ListAction'
 import { connect } from 'react-redux';
 
 
-  // const users: UserProps[] = [
-  //   {sector: "1", post: "1", person: "Wouter", shift_start:"10:00", shift_end:"23:59", function:"Straat afzetten", street:"Yolostraat 4, 3500 Hasselt"},
-  //   {sector: "1", post: "1", person: "Michiel", shift_start:"10:00", shift_end:"23:59", function:"Straat afzetten", street:"Yolostraat 4, 3500 Hasselt"}
-  // ]
-  
-  
-  // type UserProps = {
-  //   sector: string,
-  //   post: string,
-  //   person: string,
-  //   shift_start: string,
-  //   shift_end: string,
-  //   function: string,
-  //   street: string
-  // };
-
 class ListView extends Component<any> {
-  // const [Sector, setSector] = useState<string>("Sector 1");
   constructor(props: any) {
     super(props);
   }
@@ -49,7 +32,7 @@ class ListView extends Component<any> {
   }
 
   componentDidMount(){
-    this.props.fetchPlannings();
+    this.props.fetchPosts();
   }
 
   handleSectorChange(sector: string){
@@ -65,7 +48,6 @@ class ListView extends Component<any> {
       return <div>Loading...</div>
     } else {
       if(this.props.arePlanningsFetched !== undefined){
-        console.log(this.props.arePlanningsFetched)
         if(this.props.arePlanningsFetched.length <= 0){
           return <div> No messages found. </div>
         } else{
@@ -81,7 +63,6 @@ class ListView extends Component<any> {
 
   render()
   {
-    console.log(this.props)
     let plannings = this.props.arePlanningsFetched
     return (
       <IonPage>
@@ -130,10 +111,6 @@ class ListView extends Component<any> {
       {/*-- List of Post Items --*/}
       <IonList>
         {this.renderListOfItems()}
-        {/* {plannings.map((data: any, index: number) =>{
-            return (
-            <ListViewItem {... data} />)
-        })} */}
       </IonList>
     </IonContent>
           
@@ -154,7 +131,7 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchPlannings
+    fetchPosts
   }, dispatch);
 }
 

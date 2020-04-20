@@ -1,17 +1,18 @@
 import axios from "axios"
 import Redux from 'redux';
+import Database from '../../../database/Database'
 
 export const PLANNING_FETCH_START = 'PLANNING_FETCH_START'
 export const PLANNING_FETCH_SUCCESS = 'PLANNING_FETCH_SUCCESS'
 export const PLANNING_FETCH_FAIL = 'PLANNING_FETCH_FAIL'
 
-export const fetchPlannings = () => async (dispatch: Redux.Dispatch) => {
+export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: PLANNING_FETCH_START})
 
-        const response = await axios.get('http://localhost/api/planning/fetch/all');
+        const response = await new Database().fetchPosts(); // TODO GETUSERID
 
-        dispatch({type: PLANNING_FETCH_SUCCESS, payload: response.data.data.plannings})
+        dispatch({type: PLANNING_FETCH_SUCCESS, payload: response.data.data.posts})
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx
