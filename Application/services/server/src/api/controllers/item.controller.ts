@@ -60,6 +60,32 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+export const fetchItemsViaPlanningID = async (req: Request, res: Response) => {
+    const planningID = req.params.id;
+
+    try {
+        const items = await ItemModel.findAll({where: {planning_id: planningID},
+            include: [{model: ItemModel, all: true,
+                include: [{model: ItemTypeModel, all: true}, {model: PlanningModel, all: true}]
+            }]});
+        const statusCode = items == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                items: items
+            },
+            message: null
+        });
+    } catch(error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+};
 
 export const add = async (req: Request, res: Response) => {
 
@@ -98,6 +124,34 @@ export const add = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const toggleItemLost = async (req: Request, res: Response) => {
+    const itemID = req.params.id;
+
+    const item = await ItemModel.findByPk(itemID);
+
+    if(!item) {
+        return res.status(404).send({
+            status: 'fail',
+            data: null,
+            message: 'The specified ID doesn\'t exist'
+        });
+    }
+
+    const updatedItem = await ItemModel.update({item_lost: !item.item_lost}, {
+        returning: true, where: {id: itemID}
+    });
+
+    const statusCode = updatedItem == null ? 404 : 200;
+    const statusMessage = statusCode == 200 ? 'success' : 'fail';
+    const message = statusMessage == 'fail' ? 'Update wasn\'t successful' : null;
+
+    res.status(statusCode).send({
+        status: statusMessage,
+        data: {item: updatedItem},
+        message: message
+    });
+}
 
 export const modify = async (req: Request, res: Response) => {
     const itemID = req.params.id;
