@@ -8,11 +8,16 @@ import {bindActionCreators} from 'redux';
 import {fetchUsers} from './UserAction';
 
 const styleFilter = {
-    background: 'rgb(248,248,248)',
+    background: 'rgb(242,242,250)',
     padding: '10px',
     borderRadius: '25px',
     width: '25%',
     textAlign: 'center' as 'center'
+}
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
+    margin: '4px'
 }
 const styleFormElement = {
     margin: '4px'
@@ -141,7 +146,7 @@ class Users extends Component<Props> {
                                 <TextField variant="outlined" style={styleFormElement} type="text" id="filterinput" placeholder={this.state.filter}/>
                             </Grid>
                             <Grid item >
-                                <Button type="submit" variant="outlined" onClick={this.handleFilter} style={styleFormElement}>Zoek</Button>
+                                <Button type="submit" variant="outlined" onClick={this.handleFilter} style={ButtonStyle}>Zoek</Button>
                             </Grid>
                         </form>
                     </Grid>

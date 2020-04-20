@@ -6,7 +6,12 @@ import {bindActionCreators} from 'redux';
 import {generatepdf} from './RapporteringAction';
 
 const style= {
-    margin: '10px'
+    margin: '10px',
+    height: '100%',
+}
+const ButtonStyle = {
+    background: 'rgb(21,95,160)',
+    color: 'white',
 }
 
 type Props = LinkStateProps & LinkDispatchToProps;
@@ -20,15 +25,17 @@ class Rapportering extends Component<Props> {
 
     render() {
         return(
-            <Grid container direction="column" justify="center" style={style}>
-                <Grid item style={style}>
-                    <Button onClick={this.generatepdf} variant="outlined">Genereer pdf</Button>
+            <div style={style}>
+                <Grid container direction="column" justify="center">
+                    <Grid item style={style}>
+                        <Button onClick={this.generatepdf} variant="outlined" style={ButtonStyle}>Genereer pdf</Button>
+                    </Grid>
+                    <Grid item>
+                        {this.props.pdfGenerated && <embed src= "test.pdf" width= "100%" height= "750px"></embed>}
+                        {! this.props.pdfGenerated && <h5>Nog geen verslag gegenereerd</h5>}
+                    </Grid>
                 </Grid>
-                <Grid item>
-                    {this.props.pdfGenerated && <embed src= "test.pdf" width= "100%" height= "750px"></embed>}
-                    {! this.props.pdfGenerated && <h5>Nog geen verslag gegenereerd</h5>}
-                </Grid>
-            </Grid>
+            </div>
         );
     }
 }

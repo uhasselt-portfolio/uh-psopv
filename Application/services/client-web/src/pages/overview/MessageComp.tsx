@@ -12,7 +12,11 @@ interface IState {
 const paperStyle = {
     margin: '10px',
     padding: '4px',
-    background: 'rgb(250,250,250)'
+    background: 'rgb(242,242,250)'
+}
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
 }
 
 type Props = LinkDispatchToProps & MessageInterface;
@@ -61,7 +65,7 @@ class Message extends Component<Props> {
                     <Grid item>
                         <Grid container justify="space-between">
                             <Grid item>
-                                <Button variant="outlined" onClick={this.handleButton}>Gelezen</Button>
+                                <Button variant="outlined" onClick={this.handleButton} style={ButtonStyle}>Gelezen</Button>
                             </Grid>
                             <Grid item>
                                 <h6>{this.state.data.sender}</h6>

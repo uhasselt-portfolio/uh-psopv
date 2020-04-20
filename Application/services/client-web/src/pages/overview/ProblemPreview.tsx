@@ -6,7 +6,12 @@ import {Redirect} from 'react-router-dom';
 const PaperStyle = {
     margin: '10px',
     padding: '4px',
-    background: 'rgb(250,250,250)'
+    // background: 'rgb(250,250,250)'
+    background: 'rgb(242,242,250)'
+}
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
 }
 
 interface IState {
@@ -50,7 +55,7 @@ class ProblemPreview extends Component<ProblemDataInterface> {
                             <p>{this.props.discription}</p>
                         </Grid>
                         <Grid item>
-                            <Button variant="outlined" onClick={this.handleLink}>details</Button>
+                            <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>details</Button>
                         </Grid>
                     </Grid>
                 </Grid>

@@ -16,10 +16,19 @@ import NotificationsOutlinedIcon from '@material-ui/icons/NotificationsOutlined'
 import SmsOutlinedIcon from '@material-ui/icons/SmsOutlined';
 import PostPreview from './PostPreview';
 
-const styletextarea = {
-    resize : 'vertical'
-} as React.CSSProperties;
 const styleFormElement = {
+    margin: '4px'
+}
+const newMessageStyle = {
+    background: 'rgb(242,242,250)',
+    padding: '10px',
+    borderRadius: '25px',
+    width: '50%',
+    textAlign: 'center' as 'center'
+}
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
     margin: '4px'
 }
 
@@ -159,7 +168,7 @@ class OverviewComp extends Component<Props> {
             </TabPanel>
             <TabPanel value={this.state.value} index={3}>
                 <Grid container justify="center">
-                    <form id="message" onSubmit={this.handleMessageForm}>
+                    <form id="message" onSubmit={this.handleMessageForm} style={newMessageStyle}>
                         <Grid item>
                             <TextField
                                 id="messageReceiver"
@@ -188,7 +197,7 @@ class OverviewComp extends Component<Props> {
                             <TextField multiline variant="outlined" placeholder="type hier uw bericht"  id="messageContent" style={styleFormElement}/>
                         </Grid>
                         <Grid item>
-                            <Button variant="outlined" onClick={this.handleMessage} style={styleFormElement}>verstuur</Button>
+                            <Button variant="outlined" onClick={this.handleMessage} style={ButtonStyle}>verstuur</Button>
                         </Grid>
                     </form>
                 </Grid>

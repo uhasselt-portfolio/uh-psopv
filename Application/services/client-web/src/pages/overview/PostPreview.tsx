@@ -14,13 +14,17 @@ import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined'
 const PaperStyle = {
     margin: '10px',
     padding: '4px',
-    background: 'rgb(250,250,250)'
+    background: 'rgb(242,242,250)'
 }
 const LeftColumnStyle = {
     width: '70%'
 }
 const RightColumnStyle = {
     width: '30%'
+}
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',    
+    color: 'white',
 }
 
 interface IState {
@@ -155,7 +159,7 @@ class PostPreview extends Component<Props> {
                             {this.props.activeProblem && <ReportProblemOutlinedIcon fontSize="large" />}
                         </Grid>
                         <Grid item>
-                            <Button variant="outlined" onClick={this.handleLink}>Details</Button>
+                            <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>Details</Button>
                         </Grid>
                     </Grid>
                 </Grid>

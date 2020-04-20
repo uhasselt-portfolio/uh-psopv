@@ -21,11 +21,16 @@ const styleFormElement = {
     margin: '4px'
 }
 const styleFilter = {
-    background: 'rgb(248,248,248)',
+    background: 'rgb(242,242,250)',
     padding: '10px',
     borderRadius: '25px',
     width: '75%',
     textAlign: 'center' as 'center'
+}
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
+    margin: '4px'
 }
 
 interface IState {
@@ -146,7 +151,7 @@ class Posts extends Component<Props> {
                                         <TextField variant="outlined" id="filterInput" type="text" placeholder={this.state.filter}></TextField>
                                     </Grid>
                                     <Grid item>
-                                        <Button variant="outlined" onClick={this.handleFilter}>filter</Button>
+                                        <Button variant="outlined" onClick={this.handleFilter} style={ButtonStyle}>filter</Button>
                                     </Grid>
                                 </form>
                             </Grid>

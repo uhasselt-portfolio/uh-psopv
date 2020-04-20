@@ -22,6 +22,8 @@ export const fetchMap = () => async (dispatch : Redux.Dispatch) => {
         const responeUsers = await axios.get('http://localhost/api/user/fetch/all');
         const responsePosts = await axios.get('http://localhost/api/post/fetch/all');
 
+        console.log(responseProblems)
+
         let problems: ProblemDataInterface[] = [];
         for (let i = 0; i < responseProblems.data.data.problems.length; ++i) {
             problems.push({

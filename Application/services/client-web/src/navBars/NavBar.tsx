@@ -1,7 +1,8 @@
 import React, {Component} from 'react';
-import {Paper, Button, Menu, MenuItem, Grid, IconButton} from '@material-ui/core';
+import {Paper, Button, Menu, MenuItem, Grid, IconButton, Avatar} from '@material-ui/core';
 import { Redirect } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
+import logo from './logo.jpg';
 
 const styleSticky = {
     position: "sticky" as 'sticky',
@@ -10,8 +11,8 @@ const styleSticky = {
     zIndex: 2,
     padding: '2px',
     // background: 'rgb(204, 231, 232)'
-    background: 'rgb(248,248,248)',
-    margin: '4px'
+    background: 'rgb(0,91,150)',
+    margin: '0px 4px 4px 4px'
 } 
 const TabStyle = {
     margin: '10px'
@@ -21,7 +22,15 @@ const MenuStyle = {
     width: '10%'
 }
 const TabsStyle = {
-    width: '80%'
+    width: '40%'
+}
+const InActiveTabStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
+}
+const LogoStyle= {
+    width: '150px',
+    height: '50px'
 }
 
 interface IProps {
@@ -109,40 +118,43 @@ class NavBar extends Component<IProps, IState> {
                                 </IconButton>
                             }
                             {this.state.active !== 0 && 
-                                <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick}>
+                                <IconButton aria-controls="simple-menu" aria-haspopup="true" onClick={this.handleClick} style={InActiveTabStyle}>
                                     <MenuIcon/>
                                 </IconButton>
                             }
                         </Grid>
-                    <Grid container justify="center" style={TabsStyle}>
+                    <Grid container justify="flex-start" style={TabsStyle}>
 
                         <Grid item style={TabStyle}>
                             {this.state.active === 1 && <Button variant="outlined" onClick={() => this.handleLink("",1)}>
                                 Overview</Button>}
-                            {this.state.active !== 1 && <Button variant="contained" onClick={() => this.handleLink("",1)}>Overview</Button>}
+                            {this.state.active !== 1 && <Button variant="contained" onClick={() => this.handleLink("",1)} style={InActiveTabStyle}>
+                                Overview</Button>}
                         </Grid>
                         <Grid item style={TabStyle}>
                             {this.state.active === 2 &&  <Button variant="outlined" onClick={() => this.handleLink("Map",2)}>
                                 Map</Button>}
-                            {this.state.active !== 2 &&  <Button variant="contained" onClick={() => this.handleLink("Map",2)}>Map</Button>}
+                            {this.state.active !== 2 &&  <Button variant="contained" onClick={() => this.handleLink("Map",2)} style={InActiveTabStyle}>
+                                Map</Button>}
                         </Grid>
                         <Grid item style={TabStyle}>
                             {this.state.active === 3 && <Button variant="outlined" onClick={() => this.handleLink("Rapportering",3)}>
                                 Rapportering</Button>}
-                            {this.state.active !== 3 && <Button variant="contained" onClick={() => this.handleLink("Rapportering",3)}>Rapportering</Button>}
+                            {this.state.active !== 3 && <Button variant="contained" onClick={() => this.handleLink("Rapportering",3)} style={InActiveTabStyle}>
+                                Rapportering</Button>}
                         </Grid>
                         <Grid item style={TabStyle}>
                             {this.state.active === 4 && <Button variant="outlined" onClick={() => this.handleLink("Data",4)}>
                                 Data</Button>}
-                            {this.state.active !== 4 && <Button variant="contained" onClick={() => this.handleLink("Data",4)}>Data</Button>}
+                            {this.state.active !== 4 && <Button variant="contained" onClick={() => this.handleLink("Data",4)} style={InActiveTabStyle}>
+                                Data</Button>}
                         </Grid>
                     </Grid>
+                    <Grid item>
+                        <Avatar alt="Pukkelpop Logo" src={logo} style={LogoStyle}/>
+                    </Grid>
                 </Grid>
-
-
-
-                    
-                </Paper>
+            </Paper>
         );
     }
 }

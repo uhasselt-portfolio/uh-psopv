@@ -18,11 +18,24 @@ import Overview from './pages/overview/OverviewPage';
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
 
+// const customTheme = {
+//   palette: { 
+//     primary1Color:'#3f51b5',
+//     primary2Color: '#00bcd4',
+//     primary3Color: "#2196f3"
+//   }
+// };
+const appStyle = {
+  // background: 'rgb(240,240,242)',
+  background: 'rgb(179,205,224)',
+}
+
+
 function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <div className="App">
+        <div className="App" style={appStyle}>
           <NavBar />
           <Switch>
             <Route exact path='/' component={Overview} />

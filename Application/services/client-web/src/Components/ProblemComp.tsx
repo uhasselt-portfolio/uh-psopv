@@ -13,13 +13,14 @@ interface IState {
 }
 
 const paperStyle = {
-    background: 'rgb(250,250,250)',
+    background: 'rgb(242,242,250)',
     padding: '10px',
     margin: '20px',
     borderRadius: '50px',
 }
-const labelStyle = {
-    padding: '0 10px 0 0'
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
 }
 
 
@@ -121,13 +122,13 @@ class Problem extends Component<Props> {
                                         <p>Gemeld door: {this.state.Data.sender}</p>
                                     </Grid>
                                     <Grid item>
-                                        <Button variant="outlined" onClick={this.handleRedirectButton}>Ga naar</Button>
+                                        <Button variant="outlined" onClick={this.handleRedirectButton} style={ButtonStyle}>Ga naar</Button>
                                     </Grid>
                                 </Grid>
                             </Grid>
                         </Grid>
                         <Grid container justify="center" direction="row">
-                            <Button variant="outlined" onClick={this.handleSolved}>Probleem opgelost</Button>
+                            <Button variant="outlined" onClick={this.handleSolved} style={ButtonStyle}>Probleem opgelost</Button>
                         </Grid>
                         {this.props.loading && this.props.isProblemSolvedPosted === false &&
                             <Grid container justify="center" direction="row">

@@ -9,12 +9,16 @@ interface State {
 }
 
 const paperStyle = {
-    background: 'rgb(250,250,250)',
+    background: 'rgb(242,242,250)',
     padding: '10px',
     margin: '10px'
 }
 const labelStyle = {
     padding: '0 10px 0 0'
+}
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
 }
 
 class Post extends Component<PostInterface> {
@@ -75,7 +79,7 @@ class Post extends Component<PostInterface> {
                             <p>{this.state.data.general}</p>
                         </Grid>
                         <Grid item>
-                            <Button variant="outlined" onClick={this.handleRedirectButton}>Ga naar</Button>
+                            <Button variant="outlined" onClick={this.handleRedirectButton} style={ButtonStyle}>Ga naar</Button>
                         </Grid>
                     </Grid>
                 </Paper>

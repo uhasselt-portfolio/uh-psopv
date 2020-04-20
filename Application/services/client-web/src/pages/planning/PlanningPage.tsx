@@ -3,20 +3,32 @@ import {Grid, Button, TextField, MenuItem } from '@material-ui/core';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import ShiftInterface from '../../interfaces/ShiftDataInterface';
+import PostInterface from '../../interfaces/PostDataInterface';
 import Shift from './ShiftComp';
 import ItemInterface from '../../interfaces/ItemDataInterface';
 import {bindActionCreators} from 'redux';
 import {fetchPlanning} from './PlanningAction';
+import Post from './PlanningPost';
+import UserInterface from '../../interfaces/UserDataInterface';
 
 const styleFilter = {
-    background: 'rgb(248,248,248)',
+    background: 'rgb(242,242,250)',
     padding: '10px',
     borderRadius: '25px',
     width: '25%',
     textAlign: 'center' as 'center',
     margin: '10px'
 }
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
+    margin: '4px'
+}
 const styleFormElement = {
+    margin: '4px'
+}
+const shiftFilterStyle = {
+    color: 'rgb(3,57,108)',
     margin: '4px'
 }
 
@@ -146,8 +158,101 @@ class Planning extends Component<Props> {
         }
     } //TODO filter nakijken
 
+    filterShift = () : Array<JSX.Element> => {
+
+
+        return (
+            [<Post postName="post2" items={['item1','item2','item3']} users={[]} />]
+        )
+    }
+
     render () {      
         let shiftUi : Array<JSX.Element> = this.filter();
+
+        let posts : Array<JSX.Element> = [
+            <Post postName="post1" items={['item1','item2','item3']} users={[
+                {id:1, name: "naam2", lastname:"lastname2", gsmNumber:"gsmnummer2", email:"email2", has_internet:false, permission: 1, latitude: 50, longitude: 0 },
+                {id:2, name: "John", lastname:"verbrugen", gsmNumber:"0478536954", email:"john.verbrugen@hotmail.com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
+                {id:3, name: "Marie", lastname:"Torfs", gsmNumber:"0475636984", email:"Marie.Torfs@gmail.Com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
+                {id:4, name: "Arno", lastname:"Timmermans", gsmNumber:"0475633215", email:"TimmermansArno@gmail.com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
+            ]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
+        ];
+
+        let ids: Number[];
+        let visited : string[][] = [];
+        function onlyUnique(value : ShiftInterface, index: Number, self: ShiftInterface[]) : boolean { 
+            let ownValue : string[] = [value.beginDate, value.endDate];
+            for (let i = 0; i < visited.length; ++i) {
+                if (value.beginDate === visited[i][0] && value.endDate === visited[i][1])
+                    return false
+            }
+            visited.push(ownValue);
+            return true;
+
+            // if (ids.includes(value.shiftName))
+            //     return false;
+            // ids.push(value.shiftId);
+            // return true;
+        }
+        let uniqueShifts : ShiftInterface[] = this.props.shifts.filter(onlyUnique);
+
+        let shiftChoices : Array<JSX.Element> = uniqueShifts.map( x => {
+            let splitDate : string[] = x.beginDate.split("T");
+            let yearSplit : string[] = splitDate[0].split("-");
+            let year : string = yearSplit[2] + "/" +  yearSplit[1] + "/" + yearSplit[0];
+            let starthour : string = splitDate[1].split(".")[0];
+            let endhour : string = x.endDate.split("T")[1].split(".")[0];
+            let time : string = year + " " + starthour + " - " + endhour 
+            return (
+                <MenuItem value="Shift1"> {x.shiftName + " "} {time}</MenuItem>
+            );
+        });
+
+        let uniqueid: Number[] = uniqueShifts.map(x => x.shiftId);
+
+        let posts2: Array<JSX.Element> = [];
+
+        for (let i = 0; i < uniqueid.length ; ++i) {
+            let shifts: ShiftInterface[] = this.props.shifts.filter(shift => shift.shiftId === uniqueid[i]);
+            let items: string[] = [];
+            for (let j = 0; j < shifts.length; ++j) {
+                let temp : ItemInterface[] = this.props.items.filter(item => item.shiftId === shifts[j].id);
+                for (let k = 0; k < temp.length; ++k)
+                    items.push(temp[k].itemType);
+            }
+        }
+
+        // let filteredPosts : Array<JSX.Element> = uniqueid.map(x => {
+        //     let shifts : ShiftInterface[] =  this.props.shifts.filter(shift => shift.shiftId === x);
+        //     let posts: PostInterface[] = [];
+        //     let items: string[] = [];
+        //     for (let i = 0; i < shifts.length; ++i) {
+        //         posts.push(this.props.posts.filter(post => post.id === shifts[i].post_id)[0]);
+        //         let tempitems : ItemInterface[] = this.props.items.filter(item => item.shiftId === shifts[i].id);
+        //         for (let j = 0; j < tempitems.length; ++j)
+        //             items.push(tempitems[j].itemType);
+        //     }
+        //     let users : UserInterface[] = this.props.
+        //     return (
+        //         <Post postName="post2" items={items} users={[]} />
+        //     );
+        // });
+
         return(
             <div>
                 <Grid container direction="column">
@@ -180,7 +285,7 @@ class Planning extends Component<Props> {
                                 <TextField variant="outlined" id="filterInput" style={styleFormElement} type="text" placeholder={this.state.filter}></TextField>
                             </Grid>
                             <Grid item>
-                                <Button variant="outlined" onClick={this.handleFilter} style={styleFormElement}>filter</Button>
+                                <Button variant="outlined" onClick={this.handleFilter} style={ButtonStyle}>filter</Button>
                             </Grid>
                         </form>
                     </Grid>
@@ -194,21 +299,17 @@ class Planning extends Component<Props> {
                                 onChange={this.handleShiftFilterChanged}
                                 helperText="Selecteer een shift"
                                 variant="outlined"
-                                style={styleFormElement}
+                                style={shiftFilterStyle}
                                 >
                                 <MenuItem value="All shifts">Alle shiften</MenuItem>
-                                <MenuItem value="Shift1">Shift1: 04/12/2020 8:00 - 16:00</MenuItem>
-                                <MenuItem value="Shift2">Shift2: 04/12/2020 8:00 - 16:00</MenuItem>
-                                <MenuItem value="Shift3">Shift3: 04/12/2020 8:00 - 16:00</MenuItem>
-                                <MenuItem value="Shift4">Shift4: 04/12/2020 8:00 - 16:00</MenuItem>
-                                <MenuItem value="Shift5">Shift5: 04/12/2020 8:00 - 16:00</MenuItem>
-                                <MenuItem value="Shift6">Shift6: 04/12/2020 8:00 - 16:00</MenuItem>
+                                {shiftChoices}
                             </TextField>
                         </Grid>
                     </Grid>
-                    <Grid item> {/*List*/ }
-                        {shiftUi.length > 0 && shiftUi}
-                        {shiftUi.length === 0 && <p>Nog geen shiften aanwezig</p>}
+                    <Grid item> 
+                        {posts}
+                        {/* {shiftUi.length > 0 && shiftUi}
+                        {shiftUi.length === 0 && <p>Nog geen shiften aanwezig</p>} */}
                     </Grid>
                 </Grid>
             </div>
@@ -218,12 +319,16 @@ class Planning extends Component<Props> {
 
 interface LinkStateProps {
     shifts: ShiftInterface[],
-    items: ItemInterface[]
+    posts: PostInterface[],
+    items: ItemInterface[],
+    users: UserInterface[]
 }
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
         shifts: state.PlanningReducer.planning,
-        items: state.PlanningReducer.items
+        items: state.PlanningReducer.items,
+        posts: state.PlanningReducer.posts,
+        users: state.PlanningReducer.users
     }
 }
 
