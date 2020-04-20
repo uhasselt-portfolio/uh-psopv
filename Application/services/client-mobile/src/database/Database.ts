@@ -23,5 +23,25 @@ export default class Database {
 
         return await axios.get(url)
     }
+
+    async fetchMessages() {
+        const url = this.getRestApiEndpoint() + '/api/message/fetch/all';
+
+        return await axios.get(url)
+    }
+
+    async fetchUsers() {
+        const url = this.getRestApiEndpoint() + '/api/user/fetch/all';
+
+        return await axios.get(url)
+    }
+
+    async fetchPosts() {
+        const url = this.getRestApiEndpoint() + '/api/post/fetch/all';
+
+        return await axios.get(url)
+    }
+
+    
 }
 

@@ -1,6 +1,5 @@
 import axios from "axios"
 import Redux from 'redux';
-import Database from '../../../database/Database'
 
 export const MESSAGE_FETCH_START = 'MESSAGE_FETCH_START'
 export const MESSAGE_FETCH_SUCCESS = 'MESSAGE_FETCH_SUCCESS'
@@ -11,7 +10,7 @@ export const fetchMessages = (id: number | undefined) => async (dispatch: Redux.
     try{
         dispatch({type: MESSAGE_FETCH_START})
 
-        const response = await new Database().fetchMessages(); // TODO GETUSERID
+        const response = await axios.get('http://localhost/api/message/fetch/all/');
 
         dispatch({type: MESSAGE_FETCH_SUCCESS, payload: response.data.data.messages})
     } catch(error){

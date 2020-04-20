@@ -65,7 +65,6 @@ class ListView extends Component<any> {
       return <div>Loading...</div>
     } else {
       if(this.props.arePlanningsFetched !== undefined){
-        console.log(this.props.arePlanningsFetched)
         if(this.props.arePlanningsFetched.length <= 0){
           return <div> No messages found. </div>
         } else{
@@ -81,7 +80,6 @@ class ListView extends Component<any> {
 
   render()
   {
-    console.log(this.props)
     let plannings = this.props.arePlanningsFetched
     return (
       <IonPage>

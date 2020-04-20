@@ -34,23 +34,21 @@ class ListViewItem  extends Component<any> {
 
     render() {
 
+        console.log(this.props)
         function getPost(props: any): string {
-            console.log(props)
             return '/PostView/'+props.post_id+"/"+props.shift_id
         }
 
-        console.log(this.props)
         return (   
             <a href={getPost(this.props)}> 
             <IonItem  detail button>
                 <IonLabel>
-                    <h2>Post {this.props.post_id}</h2>
-                    <h3>{this.props.user.first_name}</h3>
-                    <p>{this.props.shift.start} - {this.props.shift.end} </p>
-                    <p>{this.props.post.address}</p>
+                    <h2>Post {this.props.id}</h2>
+                    <h3>{this.props.title}</h3>
+                    <p>{this.props.address}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    {/* <h2>Sector {this.props.sector}</h2> */}
+                    <h2>Sector {this.props.sector_id}</h2>
                 </IonLabel>
             </IonItem>
             </a>
