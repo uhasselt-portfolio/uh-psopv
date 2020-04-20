@@ -3,6 +3,10 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import JWTUtil from "../utils/jwt.util";
 import AssociationModel from "../models/association.model";
+import PlanningModel from "../models/planning.model";
+import ShiftModel from "../models/shift.model";
+import {Op} from "sequelize";
+import {GeolibInputCoordinates} from "geolib/es/types";
 
 const eagerLoadingOptions = {
     include: [{model: UserModel, all: true}]
@@ -55,6 +59,61 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+export const isUserOnPost = async (req: Request, res: Response) => {
+    const userID = req.params.id;
+
+    try {
+        const userExists = await UserModel.findByPk(userID);
+
+        if(!userExists) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'User doesn\'t exist'
+            })
+        }
+
+        const where = {
+            begin: {[Op.lt]: Date.now()},
+            end: {[Op.gt]: Date.now()}
+        }
+
+        const planning = await PlanningModel.findOne({where: {user_id: userID}, include: [{
+            model: ShiftModel, all:true, where: where
+        }]});
+
+        if(!planning) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'User isn\'t on the planning'
+            })
+        }
+
+        const latitude : number = userExists.current_latitude;
+        const longitude : number = userExists.current_longitude;
+        const userCoords : GeolibInputCoordinates = {latitude, longitude};
+        const isUserOnPost = planning.post.isUserOnPost(userCoords);
+        const statusCode = !isUserOnPost ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                isUserOnPost: isUserOnPost
+            },
+            message: null
+        });
+
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -78,7 +137,7 @@ export const add = async (req: Request, res: Response) => {
                 password: req.body.password,
                 phone_number: req.body.phone_number,
                 email: req.body.email,
-                permission_type_id: req.body.permission_type_id,
+                // permission_type_id: req.body.permission_type_id,
                 association_id: req.body.association_id
             });
 

@@ -1,0 +1,15 @@
+.GoogleMaps{
+    height: 100vh;
+    width: 100%;
+    z-index: -1;
+}
+
+.Container{
+    display: flex;
+    flex-direction: column;
+}
+
+.Filter{
+    height: 50px;
+    margin: 10px;
+}
