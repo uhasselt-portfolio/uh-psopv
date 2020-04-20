@@ -52,6 +52,7 @@ export const validateBodyParameters = (method: string): any => {
                 body("title", "You must specify a title for the message").exists(),
                 body("message", "You must specify a message").exists(),
                 body("created_by_id", "You must specify the user that sent the message").exists().isNumeric(),
+                body("send_to_id", "You must specify the receiver of the message").exists().isNumeric(),
                 body("priority", "You must specify the priority of the message").exists().isNumeric(),
             ]
         }

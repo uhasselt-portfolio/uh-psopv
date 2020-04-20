@@ -1,5 +1,5 @@
 import * as express from 'express';
-import {fetchAll, add, authenticate, modify, remove, fetch, isUserOnPost} from '../controllers/user.controller';
+import {fetchAll, add, authenticate, modify, remove, fetch, isUserOnPost, toggleUserConnection} from '../controllers/user.controller';
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 import {verify} from "../middleware/jwt.middleware";
 
@@ -16,6 +16,8 @@ router.post('/add', validateBodyParameters('user/add'), add);
 router.post('/authenticate', validateBodyParameters('user/authenticate'), authenticate);
 
 router.patch('/modify/:id', modify);
+
+router.patch('/toggle-connection/:id', toggleUserConnection);
 
 router.delete('/delete/:id', verify, remove);
 
