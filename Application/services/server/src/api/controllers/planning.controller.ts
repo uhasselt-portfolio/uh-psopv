@@ -114,12 +114,13 @@ export const fetchUser = async (req: Request, res: Response) => {
     }
 };
 
-export const fetchUsersInShift = async (req: Request, res: Response) => {
-    const shiftID = req.params.id;
+export const fetchUsersInSameShiftAndPost = async (req: Request, res: Response) => {
+    const shiftID = req.params.shift_id;
+    const postID = req.params.post_id;
 
     try {
         const plannings = await PlanningModel.findAll({where:
-                {shift_id: shiftID}, include: [{model: UserModel, all: true}]
+                {shift_id: shiftID, post_id: postID}, include: [{model: UserModel}]
         });
 
         const statusCode = plannings == null ? 404 : 200;

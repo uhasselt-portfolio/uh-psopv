@@ -1,5 +1,5 @@
 import * as express from "express";
-import {add, fetch, fetchCurrentShift, fetchAll, modify, remove, fetchUser, fetchUsersInShift, fetchPosts} from "../controllers/planning.controller";
+import {add, fetch, fetchCurrentShift, fetchAll, modify, remove, fetchUser, fetchUsersInSameShiftAndPost, fetchPosts} from "../controllers/planning.controller";
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 import {verify} from "../middleware/jwt.middleware";
 
@@ -19,7 +19,7 @@ router.get('/fetch/post/:id', fetchPosts);
 router.get('/fetch/shift/active', fetchCurrentShift);
 
 // Find all the users that are currently working in shift ...
-router.get('/fetch/user-in-shift/:id', fetchUsersInShift);
+router.get('/fetch/users/:post_id/:shift_id', fetchUsersInSameShiftAndPost);
 
 router.post('/add', validateBodyParameters('planning/add'), add);
 

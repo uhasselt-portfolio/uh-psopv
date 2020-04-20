@@ -214,7 +214,7 @@ export const toggleUserConnection = async (req: Request, res: Response) => {
             });
         }
 
-        const result = await UserModel.update({solved: !user.is_connected}, {
+        const result = await UserModel.update({is_connected: !user.is_connected}, {
             returning: true, where: {id: userID}
         });
 

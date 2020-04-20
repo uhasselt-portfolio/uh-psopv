@@ -96,9 +96,10 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists: UserModel | null = await UserModel.findByPk(req.body.created_by_id);
+        const createdByUserExists: UserModel | null = await UserModel.findByPk(req.body.created_by_id);
+        const sendToUserExists: UserModel | null = await UserModel.findByPk(req.body.send_to_id);
 
-        if (userExists) {
+        if (createdByUserExists && sendToUserExists) {
             const message = await MessageModel.create({
                 title: req.body.title,
                 message: req.body.message,
@@ -116,9 +117,10 @@ export const add = async (req: Request, res: Response) => {
             res.status(404).send({
                 status: 'fail',
                 data: {
-                    user_id: userExists,
+                    created_by: createdByUserExists,
+                    send_to: sendToUserExists,
                 },
-                message: 'Make sure that your specified data is correct'
+                message: 'A user doesn\'t exist with that ID'
             });
         }
     } catch (error) {
