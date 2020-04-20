@@ -193,9 +193,9 @@ export const modify = async (req: Request, res: Response) => {
 };
 
 export const toggleProblemSolve = async (req: Request, res: Response) => {
-    try {
-        const problemID = req.params.id;
+    const problemID = req.params.id;
 
+    try {
         const problem = await ProblemModel.findByPk(problemID);
 
         if(!problem) {
@@ -217,7 +217,7 @@ export const toggleProblemSolve = async (req: Request, res: Response) => {
 
         res.status(statusCode).send({
             status: statusMessage,
-            data: {item: updatedProblem},
+            data: {problem: updatedProblem},
             message: message
         });
     } catch (error) {

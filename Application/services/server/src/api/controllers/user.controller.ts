@@ -7,6 +7,7 @@ import PlanningModel from "../models/planning.model";
 import ShiftModel from "../models/shift.model";
 import {Op} from "sequelize";
 import {GeolibInputCoordinates} from "geolib/es/types";
+import ProblemModel from "../models/problem.model";
 
 const eagerLoadingOptions = {
     include: [{model: UserModel, all: true}]
@@ -175,7 +176,6 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-
         const result = await UserModel.update(user, {
             returning: true, where: {id: userID}
         });
@@ -199,6 +199,43 @@ export const modify = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const toggleUserConnection = async (req: Request, res: Response) => {
+    const userID = req.params.id;
+
+    try {
+        const user = await UserModel.findByPk(userID);
+
+        if (!user) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'The specified ID doesn\'t exist'
+            });
+        }
+
+        const result = await UserModel.update({solved: !user.is_connected}, {
+            returning: true, where: {id: userID}
+        });
+
+        const updatedUser = result[1][0];
+        const statusCode = updatedUser == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+        const message = statusMessage == 'fail' ? 'Update wasn\'t successful' : null;
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {user: updatedUser},
+            message: message
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
 
 export const remove = async (req: Request, res: Response) => {
     const userID = req.params.id;
