@@ -45,7 +45,6 @@ export const fetchUsers = () => async (dispatch: Redux.Dispatch) => {
 
         const response = await new Database().fetchUsers();
 
-        console.log("fetchUSERSSSSS", response.data)
         dispatch({type: USER_FETCH_SUCCESS, payload: response.data.data.users})
     } catch(error){
         if (error.response) {

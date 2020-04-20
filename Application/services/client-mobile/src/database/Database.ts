@@ -42,6 +42,15 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async fetchUserById(user_id: number) {
+        const url = this.getRestApiEndpoint() + '/api/user/fetch/' + user_id;
+
+        return await axios.get(url)
+    }
+
+
+    
+
     async fetchPosts() {
         const url = this.getRestApiEndpoint() + '/api/post/fetch/all';
 
@@ -50,6 +59,12 @@ export default class Database {
 
     async fetchPlanningsWithPostId(id: number) {
         const url = this.getRestApiEndpoint() + '/api/planning/fetch/post/' + id;
+
+        return await axios.get(url)
+    }
+
+    async fetchPlanningsWithUserId(id: number) {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user/' + id;
 
         return await axios.get(url)
     }

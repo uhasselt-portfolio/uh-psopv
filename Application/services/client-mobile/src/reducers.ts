@@ -28,7 +28,7 @@ export default createStore(
         list: ListReducer,
         map: MapReducer,
         info: InfoReducer,
-        shift: ShiftReducer
+        shift: ShiftReducer,
     }),
     applyMiddleware(reduxThunk)
 )
