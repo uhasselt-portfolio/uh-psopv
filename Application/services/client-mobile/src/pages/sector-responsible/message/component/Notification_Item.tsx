@@ -19,7 +19,7 @@ import { read } from 'fs';
 import { connect } from "react-redux";
 import { notifications, trendingUpSharp } from 'ionicons/icons';
 import MessageDataInterface from '../../../../components/interfaces/MessageDataInterface';
-import {fetchMessages} from '../MessageAction'
+import {fetchMessages,MessagesMessageToggle} from '../MessageAction'
 
 
 class NotificationItem extends Component<any> {
@@ -29,13 +29,14 @@ class NotificationItem extends Component<any> {
     
 
     handleOnMenuItemClicked = (data: any) => {
-        this.props.messageRead(data);
+        console.log(data.id)
+        this.props.MessagesMessageToggle(data.id);
     }
 
-    render(){
+    render(){        
         let data = this.props.areMessagesFetched.find(((message: { id: any; }) => message.id === this.props.id)); // makes "this.props.." shorter, because it was a bit too long
-
-       if (true){ // nog aan te passen
+        console.log("data", data.seen)
+        if (data.seen){ // nog aan te passen
         return (  
             <IonItem className="ReadItem">
                 <IonLabel>
@@ -51,7 +52,7 @@ class NotificationItem extends Component<any> {
         return(
             <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
                 <IonLabel>
-                    <h2> <b>{data.created_by}:</b> {data.title}</h2>
+                    <h2> <b>{data.created_by.first_name}:</b> {data.title}</h2>
                     <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
@@ -73,7 +74,8 @@ function mapStateToProps(state: any) {
   
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-      fetchMessages
+      fetchMessages,
+      MessagesMessageToggle
     }, dispatch);
   }
   

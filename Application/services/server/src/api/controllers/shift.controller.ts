@@ -48,7 +48,6 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
-
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;

@@ -20,13 +20,13 @@ import { IonButton,
 
 
 
-class Notifications extends Component<any> {
+class VrijwilligerMessages extends Component<any> {
   constructor(props: any) {
     super(props);
   }
 
   componentDidMount(){
-    this.props.fetchMessages(1);
+    this.props.fetchMessages(1); // TODO USERID
   }
 
   renderList(){
@@ -97,4 +97,4 @@ function mapDispatchToProps(dispatch: any) {
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
+export default connect(mapStateToProps, mapDispatchToProps)(VrijwilligerMessages);

@@ -5,8 +5,9 @@ import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import MessageModel from "../models/message.model";
 
 const eagerLoadingOptions = {
-    include: [{model: MessageModel, all: true,
-        include: [{model: UserModel, all: true}]
+    include: [{
+        model: MessageModel, all: true,
+        include: [{model: UserModel, all: true, as: 'created_by'}, {model: UserModel, all: true, as: 'send_to'}]
     }]
 }
 
@@ -33,6 +34,38 @@ export const fetchAll = async (req: Request, res: Response) => {
 };
 
 
+export const fetchMessagesSendTo = async (req: Request, res: Response) => {
+    const userSendTo = req.params.id;
+
+    try {
+        const messages = await MessageModel.findAll({
+            where: {send_to_id: userSendTo}, include: [{
+                model: MessageModel, all: true,
+                include: [{
+                    model: MessageModel, all: true,
+                    include: [{model: UserModel, all: true, as: 'created_by'}, {model: UserModel, all: true, as: 'send_to'}]
+                }]
+            }]
+        });
+        const statusCode = messages == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                messages: messages
+            },
+            message: null
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 export const fetch = async (req: Request, res: Response) => {
     const messageID = req.params.id;
 
@@ -48,7 +81,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -63,13 +96,15 @@ export const add = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.created_by_id);
+        const createdByUserExists: UserModel | null = await UserModel.findByPk(req.body.created_by_id);
+        const sendToUserExists: UserModel | null = await UserModel.findByPk(req.body.send_to_id);
 
-        if(userExists) {
+        if (createdByUserExists && sendToUserExists) {
             const message = await MessageModel.create({
                 title: req.body.title,
                 message: req.body.message,
                 created_by_id: req.body.created_by_id,
+                send_to_id: req.body.send_to_id,
                 priority: req.body.priority
             });
 
@@ -82,9 +117,10 @@ export const add = async (req: Request, res: Response) => {
             res.status(404).send({
                 status: 'fail',
                 data: {
-                    user_id: userExists,
+                    created_by: createdByUserExists,
+                    send_to: sendToUserExists,
                 },
-                message: 'Make sure that your specified data is correct'
+                message: 'A user doesn\'t exist with that ID'
             });
         }
     } catch (error) {
@@ -102,7 +138,7 @@ export const toggleSeen = async (req: Request, res: Response) => {
 
     const message = await MessageModel.findByPk(messageID);
 
-    if(!message) {
+    if (!message) {
         return res.status(404).send({
             status: 'fail',
             data: null,

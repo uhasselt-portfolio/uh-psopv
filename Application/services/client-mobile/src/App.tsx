@@ -22,6 +22,8 @@ import MapPage from './pages/sector-responsible/map/MapPage';
 
 
 import InfoPage from './pages/volunteer/info/InfoPage';
+import VrijwilligerSendMessages from './pages/volunteer/send_message/SendMessage';
+import VrijwilligerMessages from './pages/volunteer/message/MessagePage'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -99,8 +101,10 @@ class App extends React.Component {
       return(
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/InfoPage" component={InfoPage} exact={true} />
+          <Route path="/Vrijwilliger/InfoPage" component={InfoPage} exact={true} />
           <Route path="/Login" component={LoginPage} exact={true} />
+          <Route path="/Vrijwilliger/Messages" component={VrijwilligerMessages} exact={true} />
+          <Route path="/Vrijwilliger/SendMessages" component={VrijwilligerSendMessages} exact={true} />
           <Route path="/" render={() => <Redirect to="/InfoPage" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
@@ -111,6 +115,14 @@ class App extends React.Component {
           <IonTabButton tab="InfoPage" href="/InfoPage">
             <IonIcon icon={ellipse} />
             <IonLabel>Map</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="/Vrijwilliger/Messages" href="/Vrijwilliger/Messages">
+            <IonIcon icon={ellipse} />
+            <IonLabel>Msg</IonLabel>
+          </IonTabButton>
+          <IonTabButton tab="/Vrijwilliger/SendMessages" href="/Vrijwilliger/SendMessages">
+            <IonIcon icon={ellipse} />
+            <IonLabel>Send</IonLabel>
           </IonTabButton>
         </IonTabBar>
       </IonTabs>

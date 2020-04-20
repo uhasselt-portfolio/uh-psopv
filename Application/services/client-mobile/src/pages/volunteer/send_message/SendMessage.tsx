@@ -8,12 +8,12 @@ import {messageAddMessage, messageFetchUsers} from './SendMessageAction'
 
 
 
-class SendNotifications extends Component<any> {
+class VrijwilligerSendMessages extends Component<any> {
   state = {
     title: "",
     message: "",
-    created_by: 2,
-    send_to_id: 2,
+    created_by: 1,
+    send_to_id: 1,
     priority: 1
   }
 
@@ -42,6 +42,7 @@ class SendNotifications extends Component<any> {
     this.setState({...this.state, send_to_id: new_send_to});
     console.log(this.state)
   }
+
 
   renderListOfUser(){
     if(this.props.loading == true){
@@ -118,4 +119,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(SendNotifications);
+export default connect(mapStateToProps, mapDispatchToProps)(VrijwilligerSendMessages);

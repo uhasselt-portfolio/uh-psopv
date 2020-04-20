@@ -1,10 +1,11 @@
 import axios from 'axios'
+import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocation";
 
 export default class Database {
 
-    getRestApiEndpoint() : string | undefined {
+    getRestApiEndpoint(): string | undefined {
         // @ts-ignore
-        if(process.env.NODE_ENV == 'debug')
+        if (process.env.NODE_ENV == 'debug')
             return "http://localhost";
         return "https://psopv.herokuapp.com";
     }
@@ -18,8 +19,10 @@ export default class Database {
         })
     }
 
-    async fetchPlannings() {
-        const url = this.getRestApiEndpoint() + '/api/planning/fetch/all';
+    async fetchPlannings(userID : number) {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user/' + userID;
+
+        console.log("URL ", url);
 
         return await axios.get(url)
     }
@@ -85,11 +88,27 @@ export default class Database {
             send_to_id: send_to_id,
             priority: priority,
         })
+    }
 
+    async MessageToggle(msg_id: number) {
+        const url = this.getRestApiEndpoint() + '/api/message/toggle-seen/' + msg_id;
+
+        return await axios.patch(url)
     }
 
     
-
     
+    async updateUserLocation(userLocation : BackgroundGeolocationResponse, userID : number) {
+        const url = this.getRestApiEndpoint() + '/api/user/modify/' + userID;
+
+        console.log("URL ", url);
+
+        return await axios.patch(url, {
+            user: {
+                current_latitude: userLocation.latitude,
+                current_longitude: userLocation.longitude
+            }
+        })
+    }
 }
 

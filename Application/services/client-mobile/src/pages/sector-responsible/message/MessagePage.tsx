@@ -26,7 +26,7 @@ class Notifications extends Component<any> {
   }
 
   componentDidMount(){
-    this.props.fetchMessages(1); // TODO USERID
+    this.props.fetchMessages(2); // TODO USERID
   }
 
   renderList(){
@@ -46,11 +46,6 @@ class Notifications extends Component<any> {
         }
       }
     }
-  }
-
-
-  handleRead = (index: number) => {
-    // this.props.messageRead(this.props.notificationReducer.Messages[index]);
   }
 
 

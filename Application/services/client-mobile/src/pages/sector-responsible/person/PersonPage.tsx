@@ -74,7 +74,7 @@ class PersonPage extends Component<any>{
                   </IonRow>
                   <IonRow>
                       <IonCol size="3">Shift:</IonCol>
-                      <IonCol>todo...</IonCol>
+                      <IonCol>{}</IonCol>
                   </IonRow>
                   <IonRow>
                       <IonCol size="3">Sector:</IonCol>

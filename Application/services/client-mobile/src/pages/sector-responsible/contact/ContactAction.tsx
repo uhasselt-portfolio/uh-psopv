@@ -20,7 +20,7 @@ export const fetchUsers = () => async (dispatch: Redux.Dispatch) => {
             console.log(error.response.status);
             console.log(error.response.headers);
 
-            dispatch({type: USERS_FETCH_FAIL, payload: error.response.data.user})
+            dispatch({type: USERS_FETCH_FAIL, payload: error.response.data.users})
         } else if (error.request) {
             // No response was received from the server
             console.log(error.request);
