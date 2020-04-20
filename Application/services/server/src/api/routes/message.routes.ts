@@ -10,6 +10,7 @@ router.get('/fetch/all', fetchAll);
 
 router.get('/fetch/:id', fetch);
 
+// Fetch all the messages where send_to id is ...
 router.get('/fetch/send-to/:id', fetchMessagesSendTo);
 
 router.post('/add', validateBodyParameters('message/add'), add);

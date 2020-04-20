@@ -7,7 +7,7 @@ import MessageModel from "../models/message.model";
 const eagerLoadingOptions = {
     include: [{
         model: MessageModel, all: true,
-        include: [{model: UserModel, all: true}]
+        include: [{model: UserModel, all: true, as: 'created_by'}, {model: UserModel, all: true, as: 'send_to'}]
     }]
 }
 
@@ -41,7 +41,10 @@ export const fetchMessagesSendTo = async (req: Request, res: Response) => {
         const messages = await MessageModel.findAll({
             where: {send_to_id: userSendTo}, include: [{
                 model: MessageModel, all: true,
-                include: [{model: UserModel, all: true}]
+                include: [{
+                    model: MessageModel, all: true,
+                    include: [{model: UserModel, all: true, as: 'created_by'}, {model: UserModel, all: true, as: 'send_to'}]
+                }]
             }]
         });
         const statusCode = messages == null ? 404 : 200;
