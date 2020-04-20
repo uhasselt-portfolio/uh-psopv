@@ -26,6 +26,7 @@ export const fetchProblem = () => async (dispatch : Redux.Dispatch) => {
                 timeStamp: respone.data.data.problems[i].created_at,
                 shiftName: respone.data.data.problems[i].planning.shift.name,
                 post: respone.data.data.problems[i].planning.post.title,
+                postId: respone.data.data.problems[i].planning.post_id,
                 user: respone.data.data.problems[i].planning.user.first_name + " " + respone.data.data.problems[i].planning.user.last_name,
                 sender: respone.data.data.problems[i].created_by.first_name + " " + respone.data.data.problems[i].created_by.last_name,
                 latitude: respone.data.data.problems[i].planning.post.latitude,

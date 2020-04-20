@@ -139,7 +139,7 @@ class OverviewComp extends Component<Props> {
 
         let Problems : Array<JSX.Element> = this.props.problems.filter(problem => ! problem.solved).map(x => (
             <ProblemPreview key={Math.random()} id={x.id} problemType={x.problemType} priority={x.priority} discription={x.discription} shiftName={x.shiftName} 
-            timeStamp={x.timeStamp} post={x.post} user={x.user} sender={x.sender} latitude={x.latitude} longitude={x.longitude} solved={x.solved}/>
+            timeStamp={x.timeStamp} post={x.post} postId={x.postId} user={x.user} sender={x.sender} latitude={x.latitude} longitude={x.longitude} solved={x.solved}/>
         ));
         let Posts: Array<JSX.Element> = this.props.posts.map(x => (
             <PostPreview key={Math.random()} id={x.id} title={x.title} addres={x.addres} general={x.general} sector={x.sector} 

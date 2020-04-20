@@ -22,8 +22,6 @@ export const fetchMap = () => async (dispatch : Redux.Dispatch) => {
         const responeUsers = await axios.get('http://localhost/api/user/fetch/all');
         const responsePosts = await axios.get('http://localhost/api/post/fetch/all');
 
-        console.log(responseProblems)
-
         let problems: ProblemDataInterface[] = [];
         for (let i = 0; i < responseProblems.data.data.problems.length; ++i) {
             problems.push({
@@ -34,6 +32,7 @@ export const fetchMap = () => async (dispatch : Redux.Dispatch) => {
                 timeStamp: responseProblems.data.data.problems[i].created_at,
                 shiftName: responseProblems.data.data.problems[i].planning.shift.name,
                 post: responseProblems.data.data.problems[i].planning.post.title,
+                postId: responseProblems.data.data.problems[i].planning.post_id ,
                 user: responseProblems.data.data.problems[i].planning.user.first_name + " " + responseProblems.data.data.problems[i].planning.user.last_name,
                 sender: responseProblems.data.data.problems[i].created_by.first_name + " " + responseProblems.data.data.problems[i].created_by.last_name,
                 latitude: responseProblems.data.data.problems[i].planning.post.latitude,

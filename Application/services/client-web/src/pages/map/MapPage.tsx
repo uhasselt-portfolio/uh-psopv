@@ -74,7 +74,19 @@ class PukkelpopMap extends Component<Props> {
             onClick={() => this.problemClicked(x)}
             />
         ));
-        let PostMarkers: Array<JSX.Element> = this.props.posts.map(x => (
+
+        let postsWithouProblems : PostDataInterface[] = [];
+        for (let i = 0; i < this.props.posts.length; ++i) {
+            let noProblem = true;
+            for (let j = 0; j < this.props.problems.length; ++j) {
+                if (this.props.posts[i].id === this.props.problems[j].postId)
+                    noProblem = false;
+            }
+            if (noProblem)
+                postsWithouProblems.push(this.props.posts[i]);
+        }
+
+        let PostMarkers: Array<JSX.Element> = postsWithouProblems.map(x => (
             <Marker 
             position={{lat: x.latitude, lng: x.longitude}} 
             label={x.title} 

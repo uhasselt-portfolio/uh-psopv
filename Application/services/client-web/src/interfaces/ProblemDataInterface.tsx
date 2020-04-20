@@ -6,6 +6,7 @@ interface ProblemInterface {
     timeStamp: string,
     shiftName: string,
     post: string,
+    postId: Number,
     user: string,
     sender: string,
     latitude: Number,

@@ -23,6 +23,7 @@ class Problems extends Component<Props> {
                     shiftName={x.shiftName}
                     timeStamp={x.timeStamp}
                     post={x.post}
+                    postId={x.postId}
                     user={x.user}
                     sender={x.sender}
                     latitude={x.latitude} 

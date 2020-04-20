@@ -36,6 +36,7 @@ class Problem extends Component<Props> {
             shiftName: "",
             post: "",
             user: "",
+            postId: -1,
             sender: "",
             latitude: 0,
             longitude: 0,
