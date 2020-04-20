@@ -21,7 +21,7 @@ import { arrowBack, arrowForward, caretDown } from 'ionicons/icons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchUsersFromShift} from './ShiftAction'
-  
+import {formatDate, formatTime, formatDateTime} from '../../common_functions/date_formatter'  
 
 
   
@@ -40,18 +40,7 @@ class Shift  extends Component<any, any> {
         checkListActive: false
     }
 
-    formatDate(data: string){
-        return (data.slice(0, 10))
 
-    }
-
-    formatTime(data:string){
-        return (data.slice(11, 16))
-    }
-
-    formatDateTime(data: string){
-        return (<div>{this.formatTime(data)},  {this.formatDate(data)}</div>)
-    }
 
 
     showCheckList() {
@@ -134,7 +123,7 @@ class Shift  extends Component<any, any> {
                                 Start
                             </IonCol>
                             <IonCol>
-                                {this.formatDateTime(this.props.shift.begin)}
+                                {formatDateTime(this.props.shift.begin)}
                             </IonCol>
                         </IonRow>
                         <IonRow>
@@ -142,7 +131,7 @@ class Shift  extends Component<any, any> {
                                 Einde
                             </IonCol>
                             <IonCol>
-                                {this.formatDateTime(this.props.shift.end)}
+                                {formatDateTime(this.props.shift.end)}
                             </IonCol>
                         </IonRow>
                     </IonGrid>

@@ -36,7 +36,6 @@ export const MESSAGE_TOGGLE_SEEN_START = 'MESSAGE_TOGGLE_SEEN_START'
 export const MESSAGE_TOGGLE_SEEN_SUCCESS = 'MESSAGE_TOGGLE_SEEN_SUCCESS'
 export const MESSAGE_TOGGLE_SEEN_FAIL = 'MESSAGE_TOGGLE_SEEN_FAIL'
 
-
 export const MessagesMessageToggle = (message_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: MESSAGE_TOGGLE_SEEN_START})

@@ -20,6 +20,7 @@ import { connect } from "react-redux";
 import { notifications, trendingUpSharp } from 'ionicons/icons';
 import MessageDataInterface from '../../../../components/interfaces/MessageDataInterface';
 import {fetchMessages,MessagesMessageToggle} from '../MessageAction'
+import {formatDateTime} from '../../../common_functions/date_formatter'
 
 
 class NotificationItem extends Component<any> {
@@ -44,7 +45,7 @@ class NotificationItem extends Component<any> {
                     <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <h2>{data.created_at}</h2>
+                    <h2>{formatDateTime(data.created_at)}</h2>
                 </IonLabel>
             </IonItem>
         );
@@ -56,7 +57,7 @@ class NotificationItem extends Component<any> {
                     <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <h2>{data.created_at}</h2>
+                    <h2>{formatDateTime(data.created_at)}</h2>
                 </IonLabel>
             </IonItem>
         )

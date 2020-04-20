@@ -4,7 +4,7 @@ import { RouteComponentProps } from 'react-router';
 import { caretDown } from 'ionicons/icons';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import {messageAddMessage, messageFetchUsers} from './SendMessageAction'
+import {messageAddMessage, messageFetchUsers} from './VR_SendMessageAction'
 
 
 

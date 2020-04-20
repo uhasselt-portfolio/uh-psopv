@@ -22,8 +22,8 @@ import MapPage from './pages/sector-responsible/map/MapPage';
 
 
 import InfoPage from './pages/volunteer/info/InfoPage';
-import VrijwilligerSendMessages from './pages/volunteer/send_message/SendMessage';
-import VrijwilligerMessages from './pages/volunteer/message/MessagePage'
+import VrijwilligerSendMessages from './pages/volunteer/send_message/VR_SendMessage';
+import VrijwilligerMessages from './pages/volunteer/message/VR_MessagePage'
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -51,7 +51,7 @@ import './theme/variables.css';
 
 class App extends React.Component {
   state = {
-    id: 2 // TODO USERID
+    id: 1 // TODO USERID
   }
 
   renderTabs(){

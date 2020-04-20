@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Component } from 'react';
-// import 'bootstrap/dist/css/bootstrap.css';
 import {bindActionCreators, Dispatch} from "redux";
 
 import { IonButton, 
@@ -13,13 +12,10 @@ import { IonButton,
     IonItem, 
     IonLabel,
     IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar } from '@ionic/react';
-import { Link } from 'react-router-dom';
 import './Notification_Item.css';
-import { read } from 'fs';
 import { connect } from "react-redux";
-import { notifications, trendingUpSharp } from 'ionicons/icons';
-import MessageDataInterface from '../../../../components/interfaces/MessageDataInterface';
-import {fetchMessages} from '../MessageAction'
+import {fetchMessages, MessagesMessageToggle} from '../VR_MessageAction'
+import {formatDateTime} from '../../../common_functions/date_formatter'
 
 
 class NotificationItem extends Component<any> {
@@ -27,15 +23,15 @@ class NotificationItem extends Component<any> {
         super(props)
     }
     
-
     handleOnMenuItemClicked = (data: any) => {
-        this.props.messageRead(data);
+        this.props.MessagesMessageToggle(data.id);
+        console.log(this)
+
     }
 
-    render(){
+    render(){        
         let data = this.props.areMessagesFetched.find(((message: { id: any; }) => message.id === this.props.id)); // makes "this.props.." shorter, because it was a bit too long
-
-       if (true){ // nog aan te passen
+        if (data.seen){ // nog aan te passen
         return (  
             <IonItem className="ReadItem">
                 <IonLabel>
@@ -43,7 +39,7 @@ class NotificationItem extends Component<any> {
                     <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <h2>{data.created_at}</h2>
+                    <h2>{formatDateTime(data.created_at)}</h2>
                 </IonLabel>
             </IonItem>
         );
@@ -51,11 +47,11 @@ class NotificationItem extends Component<any> {
         return(
             <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
                 <IonLabel>
-                    <h2> <b>{data.created_by}:</b> {data.title}</h2>
+                    <h2> <b>{data.created_by.first_name}:</b> {data.title}</h2>
                     <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <h2>{data.created_at}</h2>
+                    <h2>{formatDateTime(data.created_at)}</h2>
                 </IonLabel>
             </IonItem>
         )
@@ -73,7 +69,8 @@ function mapStateToProps(state: any) {
   
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-      fetchMessages
+      fetchMessages,
+      MessagesMessageToggle
     }, dispatch);
   }
   

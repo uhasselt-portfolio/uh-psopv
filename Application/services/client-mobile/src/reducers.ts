@@ -16,6 +16,8 @@ import ShiftReducer from './pages/sector-responsible/shift/ShiftReducer'
 
 // volunteer
 import InfoReducer from './pages/volunteer/info/InfoReducer';
+import VR_MessageReducer from './pages/volunteer/message/VR_MessageReducer';
+import VR_SendMessageReducer from './pages/volunteer/send_message/VR_SendMessageReducer';
 
 export default createStore(
     combineReducers({
@@ -29,6 +31,8 @@ export default createStore(
         map: MapReducer,
         info: InfoReducer,
         shift: ShiftReducer,
+
+        vr_message: VR_MessageReducer,
     }),
     applyMiddleware(reduxThunk)
 )
