@@ -1,5 +1,5 @@
 import * as express from "express";
-import {add, fetch, fetchAll, modify, remove, toggleSeen} from "../controllers/message.controller";
+import {add, fetch, fetchAll, modify, remove, toggleSeen, fetchMessagesSendTo} from "../controllers/message.controller";
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 import {verify} from "../middleware/jwt.middleware";
 
@@ -9,6 +9,8 @@ const router = express.Router();
 router.get('/fetch/all', fetchAll);
 
 router.get('/fetch/:id', fetch);
+
+router.get('/fetch/send-to/:id', fetchMessagesSendTo);
 
 router.post('/add', validateBodyParameters('message/add'), add);
 

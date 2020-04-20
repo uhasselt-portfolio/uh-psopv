@@ -35,6 +35,14 @@ class MessageModel extends Model<MessageModel> {
     @BelongsTo(() => UserModel)
     created_by!: UserModel
 
+    @ForeignKey(() => UserModel)
+    @AllowNull(false)
+    @Column
+    send_to_id!: number;
+
+    @BelongsTo(() => UserModel)
+    send_to!: UserModel
+
     @AllowNull(false)
     @Column
     priority!: number;
