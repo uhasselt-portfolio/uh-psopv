@@ -21,7 +21,7 @@ export const fetchMap = () => async (dispatch : Redux.Dispatch) => {
 
         let problems: ProblemDataInterface[] = await new Database().fetchProblems();
         let users: UserDataInterface[] = await new Database().fetchusers();
-        let posts: PostDataInterface[] = await new Database().fetchPosts();
+        let posts = await new Database().fetchPosts();
 
         dispatch({
             type: MapActions.MAP_FETCH_SUCCES,

@@ -157,7 +157,7 @@ class OverviewComp extends Component<Props> {
 
         return(
             <div>
-                <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example"> 
+                <Tabs value={this.state.value} onChange={this.handleChange} aria-label="simple tabs example" indicatorColor={'primary'}> 
                     <Tab icon={<ReportProblemOutlinedIcon />} label="problemen"/>
                     <Tab icon={<ListOutlinedIcon />} label="posten" />
                     <Tab icon={<NotificationsOutlinedIcon />} label="Berichten"/>

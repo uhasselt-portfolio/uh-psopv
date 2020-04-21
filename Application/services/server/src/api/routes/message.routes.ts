@@ -1,5 +1,5 @@
 import * as express from "express";
-import {add, fetch, fetchAll, modify, remove, toggleSeen} from "../controllers/message.controller";
+import {add, fetch, fetchAll, modify, remove, toggleSeen, fetchMessagesSendTo} from "../controllers/message.controller";
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 import {verify} from "../middleware/jwt.middleware";
 
@@ -10,8 +10,10 @@ router.get('/fetch/all', fetchAll);
 
 router.get('/fetch/:id', fetch);
 
-//router.post('/add', validateBodyParameters('message/add'), add);
-router.post('/add', add);
+// Fetch all the messages where send_to id is ...
+router.get('/fetch/send-to/:id', fetchMessagesSendTo);
+
+router.post('/add', validateBodyParameters('message/add'), add);
 
 router.patch('/modify/:id', modify);
 

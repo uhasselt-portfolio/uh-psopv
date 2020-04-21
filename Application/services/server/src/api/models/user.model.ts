@@ -7,7 +7,7 @@ import {
     AutoIncrement,
     IsEmail,
     Default,
-    ForeignKey, AllowNull, CreatedAt, Unique, BeforeSave, UpdatedAt, BelongsTo
+    ForeignKey, AllowNull, CreatedAt, Unique, BeforeSave, UpdatedAt, BelongsTo, DataType
 } from "sequelize-typescript";
 import bcrypt from 'bcrypt';
 import PermissionTypeModel from "./permission_type.model";
@@ -55,11 +55,11 @@ class UserModel extends Model<UserModel> {
     permission_type!: PermissionTypeModel;
 
     @Default(0)
-    @Column
+    @Column(DataType.DOUBLE)
     current_latitude!: number;
 
     @Default(0)
-    @Column
+    @Column(DataType.DOUBLE)
     current_longitude!: number;
 
     @AllowNull(false)

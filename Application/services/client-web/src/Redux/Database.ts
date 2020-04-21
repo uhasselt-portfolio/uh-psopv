@@ -17,15 +17,12 @@ export default class Database {
 
     async test() {
         const response = await axios.get('https://psopv.herokuapp.com/api/planning/fetch/all');
-        console.log("database",response);
 
         const response2 = await axios.post('https://psopv.herokuapp.com/api/planning/add', {
             user_id : 1,
             shift_id : 6,
             post_id: 1
         })
-
-        console.log(response2);
 
     }
 
@@ -60,12 +57,44 @@ export default class Database {
 
         let posts: PostDataInterface[] = [];
         for (let i = 0; i < responsePosts.data.data.posts.length; ++i) {
+            const shiftsOfPost = await axios.get('https://psopv.herokuapp.com/api/planning/fetch/post/' + responsePosts.data.data.posts[i].id);
             let shifts: Number[] = [];
             let workingUsers: Number[][] = [];
-            for (let j = 0; j < 4; ++j) {
-                shifts.push(j + 1);
-                workingUsers.push([1,2]);
-            } //TODO
+
+
+            for (let j = 0; j < shiftsOfPost.data.data.plannings.length; ++j) {
+                if  ( ! shifts.includes(shiftsOfPost.data.data.plannings[j].shift_id))
+                    shifts.push(shiftsOfPost.data.data.plannings[j].shift_id)
+            }
+
+            for (let j = 0; j < shifts.length; ++j) {
+                const tempusers = await axios.get('https://psopv.herokuapp.com/api/planning/fetch/users/' + responsePosts.data.data.posts[i].id
+                 + '/' + shifts[j]);
+                 let tempusersid: Number[] = []
+                for (let k = 0; k < tempusers.data.data.plannings.length; ++k) {
+                    tempusersid.push( tempusers.data.data.plannings[k].user_id)
+                }
+                workingUsers.push(tempusersid);
+            }
+
+  //          let temp = shiftsOfPost.data.data.plannings;
+
+            // for (let j = 0; j < temp.length; ++j) {
+            //     if (shifts.includes(temp[j].shift_id))
+            //         continue;
+            //     shifts.push(temp[0].shift_id);
+            //     let tempusers : Number[] = [];
+            //     for (let k = 0; k < temp.length; ++k)
+            //         if (temp[j].shift_id === temp[k].shift_id)
+            //             tempusers.push(temp[k].user_id);
+            //     workingUsers.push(tempusers);
+            // }
+
+            // for (let j = 0; j < 4; ++j) {
+            //     shifts.push(j + 1);
+            //     workingUsers.push([1,2]);
+            // } //TODO
+            console.log("databvase",responsePosts.data.data.posts)
             posts.push({
                 id: responsePosts.data.data.posts[i].id,
                 title: responsePosts.data.data.posts[i].title,
@@ -80,7 +109,7 @@ export default class Database {
             })
         }
         
-        return posts;
+        return posts
     }
 
     async fetchmessages() {
@@ -119,14 +148,11 @@ export default class Database {
             })
         }
 
-        console.log("data",responeUsers);
-
         return users;
     }
 
     async fetchPlanning() {
         const responePlanning = await axios.get('https://psopv.herokuapp.com/api/planning/fetch/all');
-        console.log("planning",responePlanning);
 
         let shifts: ShiftDataInterface[] = [];
         for (let i = 0; i < responePlanning.data.data.plannings.length; ++i) {
@@ -167,7 +193,7 @@ export default class Database {
         let users : UserDataInterface[] = await this.fetchusers();
         let planning : ShiftDataInterface[] = await this.fetchPlanning();
         let items : ItemDataInterface[] = await this.fetchItems();
-        let posts : PostDataInterface[] = await this.fetchPosts();
+        let posts = await this.fetchPosts();
         let problems: ProblemDataInterface[] = await this.fetchProblems();
 
         return {
@@ -186,7 +212,7 @@ export default class Database {
         return response;
     }
 
-    async patchUserConnection(userId: Number) {//TODO correct addres
+    async patchUserConnection(userId: Number) {
         const response = await axios.patch('https://psopv.herokuapp.com/api/user/toggle-connection/' + userId);
 
         return response; 

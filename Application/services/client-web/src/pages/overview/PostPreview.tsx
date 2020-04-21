@@ -3,7 +3,6 @@ import {Paper, Grid, Button, IconButton, Menu} from '@material-ui/core';
 import PostDataInterface from '../../interfaces/PostDataInterface';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
-import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import {Redirect} from 'react-router-dom';
 import {AppState} from '../../Redux/store';
 import {connect} from 'react-redux';
@@ -13,8 +12,13 @@ import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined'
 
 const PaperStyle = {
     margin: '10px',
-    padding: '4px',
+    padding: '10px',
     background: 'rgb(242,242,250)'
+}
+const UserPaperStyle = {
+    margin: '10px',
+    padding: '10px',
+    background: 'rgb(225, 225, 232)'
 }
 const LeftColumnStyle = {
     width: '70%'
@@ -50,8 +54,6 @@ class PostPreview extends Component<Props> {
     }
 
     handleNextShift = () => {
-        console.log(this.state.currentShift);
-        console.log(this.props.planning.length);
         if (this.state.currentShift < this.props.planning.length - 1)
             this.setState({
                 ...this.state,
@@ -102,70 +104,72 @@ class PostPreview extends Component<Props> {
             );
         }
 
+        let parsedDate : string = 'geen shiften op deze post';
+        let CurrentUsers : Array<JSX.Element> = [];
 
+        if (this.props.planning.length > 0) {
+            // let splitDate : string[] = this.props.planning[this.state.currentShift].beginDate.split("T")[0].split("-");
+            // let date : string = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
+            // let beginHour : string = this.props.planning[this.state.currentShift].beginDate.split("T")[1].split(".")[0];
+            // let endHour : string = this.props.planning[this.state.currentShift].endDate.split("T")[1].split(".")[0];
+            let date: Date = new Date(this.props.planning[this.state.currentShift].beginDate);
+            let parsedBeginDate: string = date.toLocaleString();
+            let enddate: Date = new Date(this.props.planning[this.state.currentShift].endDate);
+            let parseEndDate : string = enddate.toLocaleString().split(" ")[1];
+            // parsedDate = date + " " + beginHour + " tot " + endHour;
+            parsedDate = parsedBeginDate + " tot " + parseEndDate;
+            CurrentUsers = this.props.workingUsers[this.state.currentShift].map(x => (
+                <Grid item>
+                <Paper style={UserPaperStyle}>
+                    <h5 onClick={() => this.handleUserLink()}>{x.name + " " + x.lastname}</h5>
+                </Paper>
+                </Grid>
+            ));
+        }
 
-        let splitDate : string[] = this.props.planning[this.state.currentShift].beginDate.split("T")[0].split("-");
-        let date : string = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
-        let beginHour : string = this.props.planning[this.state.currentShift].beginDate.split("T")[1].split(".")[0];
-        let endHour : string = this.props.planning[this.state.currentShift].endDate.split("T")[1].split(".")[0];
-        let parsedDate: string = date + " " + beginHour + " tot " + endHour;
-        let CurrentUsers : Array<JSX.Element> = this.props.workingUsers[this.state.currentShift].map(x => (
-            <Paper style={PaperStyle}>
-                <h5 onClick={() => this.handleUserLink()}>{x.name + " " + x.lastname}</h5>
-            </Paper>
-        ));
-
+        console.log(this.props);
 
         return(
-            <Paper style={PaperStyle}>
-                <Grid container direction="row">
-                    <Grid container direction="column" style={LeftColumnStyle}>
-                        <Grid item>
-                            <h5>{this.props.title} </h5>
-                        </Grid>
-                        <Grid item>
-                            <p>{this.props.addres}</p>
-                        </Grid>
-                        <Grid container>
+            <Paper style={PaperStyle} elevation={5}>
+                <Grid container direction="column">
+                    <Grid container direction="row">
+                        <Grid container direction="column" style={LeftColumnStyle}>
                             <Grid item>
-                                <IconButton onClick={this.handleShiftprev}>
-                                    <ArrowLeftIcon />
-                                </IconButton>
+                                <h3>{this.props.title} </h3> 
                             </Grid>
                             <Grid item>
-                                <p>{parsedDate}</p>
+                                <p>{this.props.addres}</p>
                             </Grid>
                             <Grid item>
-                                <IconButton onClick={this.handleNextShift}>
-                                    <ArrowRightIcon />
-                                </IconButton>
+                                <p>Sector: {this.props.sector}</p>
+                            </Grid>
+                            <Grid container>
+                                <Grid item>
+                                    <IconButton onClick={this.handleShiftprev}>
+                                        <ArrowLeftIcon />
+                                    </IconButton>
+                                </Grid>
+                                <Grid item>
+                                    <p>{parsedDate}</p>
+                                </Grid>
+                                <Grid item>
+                                    <IconButton onClick={this.handleNextShift}>
+                                        <ArrowRightIcon />
+                                    </IconButton>
+                                </Grid>
                             </Grid>
                         </Grid>
-                        <Grid item>
-                            <Button endIcon={<ArrowDropDownIcon />} aria-controls="current-users" aria-haspopup="true" 
-                            onClick={this.handleShowUsers}>Vrijwilligers</Button>
-                            <Menu
-                                id="current-users"
-                                anchorEl={this.state.anchorEl}
-                                keepMounted
-                                open={Boolean(this.state.anchorEl)}
-                                onClose={this.handleClose}
-                            >
-                                {CurrentUsers}
-
-                            </Menu>
+                        <Grid container direction="column" justify="space-around" style={RightColumnStyle}>
+                            <Grid container direction="row" justify="center">
+                                {this.props.hasProblem && <ReportProblemOutlinedIcon fontSize="large" />}
+                            </Grid>
+                            <Grid container direction="row" justify="center">
+                                <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>Details</Button>
+                            </Grid> 
                         </Grid>
                     </Grid>
-                    <Grid container direction="column" style={RightColumnStyle} justify="space-evenly">
-                        <Grid item>
-                            <p>Sector: {this.props.sector}</p>
-                        </Grid>
-                        <Grid item>
-                            {this.props.activeProblem && <ReportProblemOutlinedIcon fontSize="large" />}
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>Details</Button>
-                        </Grid>
+                    <Grid container direction="row">
+                        {CurrentUsers}
                     </Grid>
                 </Grid>
             </Paper>
@@ -175,13 +179,13 @@ class PostPreview extends Component<Props> {
 
 interface LinkStateToProps {
     workingUsers: userDataInterface[][],
-    planning: ShiftDataInterface[]
+    planning: ShiftDataInterface[],
+    hasProblem: boolean
 };
 const MapStateToProps = (state : AppState, ownProps: PostDataInterface): LinkStateToProps => {
-
     let shifts: ShiftDataInterface[] = [];
     for (let i = 0 ; i < ownProps.shifts.length; ++i) {
-        let shift : ShiftDataInterface[] = state.OverviewReducer.planning.filter(shift => shift.id === ownProps.shifts[i]);
+        let shift : ShiftDataInterface[] = state.OverviewReducer.planning.filter(shift => shift.shiftId === ownProps.shifts[i]);
         shifts.push(shift[0]);
     }
 
@@ -194,9 +198,19 @@ const MapStateToProps = (state : AppState, ownProps: PostDataInterface): LinkSta
         }
         users.push(subUsers);
     }
+
+    let hasproblem: boolean = false;
+    for (let i = 0; i < state.OverviewReducer.problems.length; ++i) {
+        if (state.OverviewReducer.problems[i].postId === ownProps.id) {
+            hasproblem = true;
+            break;
+        }
+    }
+
     return {
         workingUsers: users,
-        planning: shifts
+        planning: shifts,
+        hasProblem: hasproblem
     }
 }
 

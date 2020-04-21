@@ -32,8 +32,22 @@ class MessageModel extends Model<MessageModel> {
     @Column
     created_by_id!: number;
 
-    @BelongsTo(() => UserModel)
+    @BelongsTo(() => UserModel, {
+        as: 'created_by',
+        foreignKey: 'created_by_id'
+    })
     created_by!: UserModel
+
+    @ForeignKey(() => UserModel)
+    @AllowNull(false)
+    @Column
+    send_to_id!: number;
+
+    @BelongsTo(() => UserModel, {
+        as: 'send_to',
+        foreignKey: 'send_to_id'
+    })
+    send_to!: UserModel
 
     @AllowNull(false)
     @Column

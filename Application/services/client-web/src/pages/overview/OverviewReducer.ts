@@ -44,7 +44,6 @@ export default function (state: State = initialState, action : AnyAction): State
                 errorMessage: ""
             }
         case OverviewActions.OVERVIEW_POST_MESSAGE_READ_SUCCES : {
-            console.log("ee")
             let otherMessages : MessageInterface[] = state.messages.filter(message => message.id !== action.payload);
             let oldmessage : MessageInterface[] = state.messages.filter(message => message.id === action.payload);
             let newMessage : MessageInterface = {

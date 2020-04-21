@@ -4,6 +4,7 @@ import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PlanningModel from "../models/planning.model";
 import ProblemTypeModel from "../models/problem_type.model";
+import ItemModel from "../models/item.model";
 
 const eagerLoadingOptions = {
     include: [{model: ProblemModel, all: true,
@@ -57,6 +58,35 @@ export const fetch = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const fetchProblemsViaPlanningID = async (req: Request, res: Response) => {
+    const planningID = req.params.id;
+
+    try {
+        const problems = await ProblemModel.findAll({where: {planning_id: planningID},
+            include: [{model: ProblemModel, all: true,
+                include: [{model: PlanningModel, all: true}]
+            }]
+        })
+        const statusCode = problems == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                problems: problems
+            },
+            message: null
+        });
+    } catch(error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
 
 export const fetchUnsolvedProblems = async (req: Request, res: Response) => {
     try {
@@ -161,6 +191,43 @@ export const modify = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const toggleProblemSolve = async (req: Request, res: Response) => {
+    const problemID = req.params.id;
+
+    try {
+        const problem = await ProblemModel.findByPk(problemID);
+
+        if(!problem) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'The specified ID doesn\'t exist'
+            });
+        }
+
+        const result = await ProblemModel.update({solved: !problem.solved}, {
+            returning: true, where: {id: problemID}
+        });
+
+        const updatedProblem = result[1][0];
+        const statusCode = updatedProblem == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+        const message = statusMessage == 'fail' ? 'Update wasn\'t successful' : null;
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {problem: updatedProblem},
+            message: message
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
 
 export const remove = async (req: Request, res: Response) => {
     const problemID = req.params.id;

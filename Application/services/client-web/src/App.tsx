@@ -26,8 +26,9 @@ import {store} from './Redux/store';
 //   }
 // };
 const appStyle = {
-  // background: 'rgb(240,240,242)',
-  background: 'rgb(179,205,224)',
+  background: 'rgb(232, 232, 232)',
+  minheight: '100vh',
+  height: '100%'
 }
 
 

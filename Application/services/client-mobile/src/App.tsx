@@ -53,7 +53,7 @@ class App extends React.Component {
   }
 
   renderTabs(){
-    if(this.state.id == 1){ // TODO USERID
+    if(this.state.id == 2){ // TODO USERID
       return(
         <IonTabs>
         <IonRouterOutlet>
@@ -95,7 +95,7 @@ class App extends React.Component {
         </IonTabBar>
         </IonTabs>
       )
-    } else if (this.state.id == 2){ // TODO USERID
+    } else if (this.state.id == 1){ // TODO USERID
       return(
       <IonTabs>
         <IonRouterOutlet>
