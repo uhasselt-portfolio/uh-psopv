@@ -1,12 +1,12 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
 import './PostPage.css';
-import { RouteComponentProps } from 'react-router';
 import Shift from '../shift/Shift';
-import { caretDown } from 'ionicons/icons';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {fetchPlanningsWithPostId} from './PostAction'
+import {fetchPlanningsFromPost} from './PostAction'
+import { caretDown, arrowBack, arrowForward } from 'ionicons/icons';
+import { formatDateTime } from '../../common_functions/date_formatter';
 
 const checkboxList = [
   { val: 'Fluo Band', isChecked: false },
@@ -16,7 +16,6 @@ const checkboxList = [
 ];
 
 
-// Optional parameters to pass to the swiper instance. See http://idangero.us/swiper/api/ for valid options.
 const slideOpts = {
   direction: 'horizontal',
   speed: 400,
@@ -25,52 +24,59 @@ const slideOpts = {
 class PostView extends Component<any, any> {
   state = {
     checkListActive: false,
+    show_shift: 1
   }
 
   constructor(props: any){
     super(props)
   }
-  
 
+  handleShiftSwitch(shift: number){
+    this.setState({...this.state, show_shift: shift});
+  }
+
+  setCurrentlyActiveShift(){
+
+  }
 
   componentDidMount(){
-    // console.log(this.props)
-    this.props.fetchPlanningsWithPostId(this.props.match.params.post); // ERROR
+    console.log(this.props)
+    this.props.fetchPlanningsFromPost(this.props.match.params.post);
   }
 
-  getUsersFromShift(id: number): any{
-    let shift_info = this.props.arePlanningsFetched.filter((element: any) => (
-      element.shift_id === id
-    ))
-
-    return shift_info
-  }
-
-  renderPost(){
-    if(this.props.loading == true){
-      return <IonSlide>Loading...</IonSlide>
-    } else {
-      if(this.props.arePlanningsFetched !== undefined){
-        if(this.props.arePlanningsFetched.length <= 0){
-          return<IonSlide> No messages found.</IonSlide>
-        } else{
-          let list: number[] = []
-          return this.props.arePlanningsFetched.map((data: any, index: number) => {
-            if(!list.includes(data.shift_id)){
-              list.push(data.shift_id)
-                return (
-                  // <IonSlide>yo</IonSlide>
-                  <Shift {... data} />
-                  )
-            }  
-          })
-        }
-      }
+  renderCorrectShift(data: any){
+    if(data.shift_id === this.state.show_shift){
+      return <Shift {... data}/>
     }
   }
 
+  renderPost(): any{
+    console.log(this.props.arePlanningsFormPostFetched)
+    if(this.props.loading == true){
+        return <div>Loading...</div>
+      } else {
+        if(this.props.arePlanningsFormPostFetched !== undefined){
+          if(this.props.arePlanningsFormPostFetched.length <= 0){
+            return <div> No info found.</div>
+          } else{
+            return this.props.arePlanningsFormPostFetched.map((data: any) => {
+              return this.renderCorrectShift(data)
+            })
+          }
+        } else{
+          return <div> loading ...</div>
+        }
+      }
+}
+
+  getNextShift(){
+    this.handleShiftSwitch(2)
+    console.log(this.state.show_shift)
+  }
+
+
   render(){
-    console.log(this.props)
+    console.log("render",this.props)
     return (
       <IonPage>
         <IonHeader>
@@ -84,9 +90,15 @@ class PostView extends Component<any, any> {
               <IonTitle size="large">Blank</IonTitle>
             </IonToolbar>
           </IonHeader>
-          <IonSlides pager={true} options={slideOpts}>
-            {this.renderPost()}
-          </IonSlides>
+          <div className="flexrow">
+            <IonButton><IonIcon icon={arrowBack}/></IonButton>
+                          <IonCardTitle>
+                              Huidige shift
+                          </IonCardTitle>
+            <IonButton onClick={() => this.getNextShift()}><IonIcon icon={arrowForward}/></IonButton>
+          </div>
+        
+          {this.renderPost()}
         </IonContent>
       </IonPage>
     );
@@ -94,17 +106,18 @@ class PostView extends Component<any, any> {
 }
   
 
+
 function mapStateToProps(state: any) {
   return({
-    arePlanningsFetched: state.post.arePlanningsFetched,
+    arePlanningsFormPostFetched: state.post.arePlanningsFormPostFetched,
     errorMessage: state.post.errorMessage,
-    loading: state.post.loading
+    loading: state.post.loading,
   })
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchPlanningsWithPostId
+    fetchPlanningsFromPost
   }, dispatch);
 }
 

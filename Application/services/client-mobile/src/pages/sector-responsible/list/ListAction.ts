@@ -10,7 +10,7 @@ export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: PLANNING_FETCH_START})
 
-        const response = await new Database().fetchPosts(); // TODO GETUSERID
+        const response = await new Database().fetchPosts();
 
         dispatch({type: PLANNING_FETCH_SUCCESS, payload: response.data.data.posts})
     } catch(error){

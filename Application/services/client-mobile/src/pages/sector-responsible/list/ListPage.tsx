@@ -47,11 +47,11 @@ class ListView extends Component<any> {
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
-      if(this.props.arePlanningsFetched !== undefined){
-        if(this.props.arePlanningsFetched.length <= 0){
+      if(this.props.arePostsFetched !== undefined){
+        if(this.props.arePostsFetched.length <= 0){
           return <div> No messages found. </div>
         } else{
-          return this.props.arePlanningsFetched.map((data: any, index: number) =>{
+          return this.props.arePostsFetched.map((data: any, index: number) =>{
             return (
               <ListViewItem {... data}/>
             )
@@ -123,7 +123,7 @@ class ListView extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    arePlanningsFetched: state.list.arePlanningsFetched,
+    arePostsFetched: state.list.arePostsFetched,
     errorMessage: state.list.errorMessage,
     loading: state.list.loading
   })

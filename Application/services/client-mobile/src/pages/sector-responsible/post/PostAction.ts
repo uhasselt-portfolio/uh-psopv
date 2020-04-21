@@ -2,19 +2,39 @@ import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
 
-export const PLANNING_POST_ID_FETCH_START = 'PLANNING_POST_ID_FETCH_START'
-export const PLANNING_POST_ID_FETCH_SUCCESS = 'PLANNING_POST_ID_FETCH_SUCCESS'
-export const PLANNING_POST_ID_FETCH_FAIL = 'PLANNING_POST_ID_FETCH_FAIL'
+export const POST_FETCH_PLANNING_START = 'POST_FETCH_PLANNING_START'
+export const POST_FETCH_PLANNING_SUCCESS = 'POST_FETCH_PLANNING_SUCCESS'
+export const POST_FETCH_PLANNING_FAIL = 'POST_FETCH_PLANNING_FAIL'
 
-export const fetchPlanningsWithPostId = (id: number) => async (dispatch: Redux.Dispatch) => {
+export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: PLANNING_POST_ID_FETCH_START})
+        dispatch({type: POST_FETCH_PLANNING_START})
 
-        const response = await new Database().fetchPlanningsWithPostId(id);
+        const responsePlannings = await new Database().fetchPlanningsWithPostId(post_id);
+        const shifts: any[] = []; // array with shift_id's
+        responsePlannings.data.data.plannings.forEach((element: any) => {
+            if(!shifts.includes(element.shift_id)){
+                shifts.push(element.shift_id)
+            }
+        });
 
-        console.log(response.data.data.plannings)
-        dispatch({type: PLANNING_POST_ID_FETCH_SUCCESS, payload: response.data.data.plannings})
-        
+        const userShifts: any[] = []; 
+        shifts.forEach((shift_id: number) => {
+            let sameShift = responsePlannings.data.data.plannings.filter((element: any) => {
+                return element.shift_id === shift_id
+            });
+
+            const userNames: any[] = [];
+            sameShift.forEach((element: any) => {
+                const name = element.user.first_name + " " + element.user.last_name
+                userNames.push(name)
+            })
+
+            userShifts.push({shift_id: shift_id, shift_data: sameShift, shift_users: userNames});
+        })
+
+        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: userShifts})
+
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx
@@ -22,7 +42,7 @@ export const fetchPlanningsWithPostId = (id: number) => async (dispatch: Redux.D
             console.log(error.response.status);
             console.log(error.response.headers);
 
-            dispatch({type: PLANNING_POST_ID_FETCH_FAIL, payload: error.response.data.plannings})
+            dispatch({type: POST_FETCH_PLANNING_FAIL, payload: error.response.data.users})
         } else if (error.request) {
             // No response was received from the server
             console.log(error.request);

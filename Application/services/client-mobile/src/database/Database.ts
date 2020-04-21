@@ -72,7 +72,7 @@ export default class Database {
         return await axios.get(url)
     }
 
-    async fetchUsersFromShift(post_id: number, shift_id: number) {
+    async fetchUsersFromShiftPost(post_id: number, shift_id: number) {
         const url = this.getRestApiEndpoint() + '/api/planning/fetch/users/' + post_id + "/" + shift_id;
 
         return await axios.get(url)

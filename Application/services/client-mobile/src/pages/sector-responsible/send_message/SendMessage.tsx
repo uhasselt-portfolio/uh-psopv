@@ -40,18 +40,19 @@ class SendNotifications extends Component<any> {
 
   handleSendToChange(new_send_to: number){
     this.setState({...this.state, send_to_id: new_send_to});
-    console.log(this.state)
   }
 
   renderListOfUser(){
+    console.log(this.props.messageFetchUsers)
+
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
-      if(this.props.areUsersFetched !== undefined){
-        if(this.props.areUsersFetched.length <= 0){
+      if(this.props.messageFetchUsers !== undefined){
+        if(this.props.messageFetchUsers.length <= 0){
           return <div>No users found</div>
         } else{
-          return this.props.areUsersFetched.map((data: any, index: number) =>{
+          return this.props.messageFetchUsers.map((data: any, index: number) =>{
             return (
               <IonSelectOption value={data.id}>{data.first_name} {data.last_name} ({data.permission_type.name})</IonSelectOption>
             )
@@ -104,7 +105,7 @@ class SendNotifications extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    areUsersFetched: state.sendMessage.areUsersFetched,
+    messageFetchUsers: state.sendMessage.messageFetchUsers,
     errorMessage: state.sendMessage.errorMessage,
     loading: state.sendMessage.loading
   })

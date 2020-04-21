@@ -1,39 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Component } from 'react';
 
 import { IonButton, 
-    IonListHeader, 
     IonCardHeader,
     IonCardContent,
     IonCardTitle,
-    IonHeader, 
-    IonPage, 
-    IonTitle, 
-    IonToolbar, 
-    IonList, 
-    IonItem, 
-    IonLabel,
-    IonItemDivider,
-    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonCard, IonIcon, IonSlide, IonRow, IonCol, IonGrid } from '@ionic/react';
-import { Link } from 'react-router-dom';
+    IonCard, IonIcon, IonSlide, IonRow, IonCol, IonGrid } from '@ionic/react';
 import './Shift.css';
 import { arrowBack, arrowForward, caretDown } from 'ionicons/icons';
-import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
-import {fetchUsersFromShift} from './ShiftAction'
-import {formatDate, formatTime, formatDateTime} from '../../common_functions/date_formatter'  
+import {formatDateTime} from '../../common_functions/date_formatter'  
 
 
   
-class Shift  extends Component<any, any> {
+class Shift  extends Component<any> {
     constructor(props: any) {
         super(props);
     }
-
-    componentDidMount(){
-        this.props.fetchUsersFromShift(this.props.post.id, this.props.shift.id);
-    }
-    
     
 
     state = {
@@ -82,56 +64,67 @@ class Shift  extends Component<any, any> {
           
     }
 
-    renderShiftInfo(){
+    getUsersFromShift(){
+        console.log(this.props)
+        let names_array = this.props.shift_users
+        var names = ""
+        for(var i = 0; i < names_array.length - 1; ++i){
+            var names = names.concat(names_array[0] + " en ")
+        }
+        var names = names.concat(names_array[names_array.length - 1])
+
+        return names
+    }
+
+    renderShiftInfo(data: any){
+        console.log(data)
         return(
         <IonCard>
                 <IonCardHeader className="flexrow">
-                    <IonButton><IonIcon icon={arrowBack}/></IonButton>
                         <IonCardTitle>
-                            Shift {this.props.shift.id}
+                            Shift Info
                         </IonCardTitle>
-                    <IonButton><IonIcon icon={arrowForward}/></IonButton>
                 </IonCardHeader>
                 <IonCardContent>
                     <IonGrid>
                         <IonRow>
-                            <IonCol size="2">
+                            <IonCol size="3">
                                 Wie
                             </IonCol>
                             <IonCol>
-                                {this.props.user.first_name}{/* TODO */}
+                                {this.getUsersFromShift()}
                             </IonCol>
                         </IonRow>
                         <IonRow>
-                            <IonCol size="2">
+                            <IonCol size="3">
                                 Wat
                             </IonCol>
                             <IonCol>
-                                {this.props.post.title}
+                                {data.post.title}
                             </IonCol>
                         </IonRow>
                         <IonRow>
-                            <IonCol size="2">
+                            <IonCol size="3">
                                 Waar
                             </IonCol>
                             <IonCol>
-                                {this.props.post.address}
+                                {data.post.address}
                             </IonCol>
                         </IonRow>
                         <IonRow>
-                            <IonCol size="2">
+                            <IonCol size="3">
                                 Start
                             </IonCol>
                             <IonCol>
-                                {formatDateTime(this.props.shift.begin)}
+                                {formatDateTime(data.shift.begin)}
                             </IonCol>
                         </IonRow>
                         <IonRow>
-                            <IonCol size="2">
+                            <IonCol size="3">
                                 Einde
                             </IonCol>
                             <IonCol>
-                                {formatDateTime(this.props.shift.end)}
+                                {formatDateTime(data.shift.end)}
                             </IonCol>
                         </IonRow>
                     </IonGrid>
@@ -157,35 +150,25 @@ class Shift  extends Component<any, any> {
     }
 
     render() {
-        return (    
-            <IonSlide>
+        if(this.props.shift_data[0] !== undefined){
+            let data = this.props.shift_data[0]
+            return (
                 <div>
-                    {this.renderShiftInfo()}
+                    {this.renderShiftInfo(data)}
                     {this.renderCheckbox()}
                     {this.renderProblemInfo()}
-                </div>
-                    
-            </IonSlide>       
-        );
-    }
+                </div>    
+                ) 
+        }   else {
+            return <div></div>
+        }     
+    }  
+    
 }
 
 
-          
-function mapStateToProps(state: any) {
-    return({
-      arePlanningsFetched: state.shift.arePlanningsFetched,
-      errorMessage: state.shift.errorMessage,
-      loading: state.shift.loading,
-    })
-  }
-  
-  function mapDispatchToProps(dispatch: any) {
-    return bindActionCreators({
-        fetchUsersFromShift,
-    }, dispatch);
-  }
   
   
-export default connect(mapStateToProps, mapDispatchToProps)(Shift);
+  
+export default Shift;
 
