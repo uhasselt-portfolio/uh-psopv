@@ -44,7 +44,7 @@ class ProblemPreview extends Component<ProblemDataInterface> {
                 <Grid container direction="column">
                     <Grid container direction="row" justify="space-between">
                         <Grid item>
-                            <h5>{this.props.post}</h5>
+                            <h5>{this.props.problemType}</h5>
                         </Grid>
                         <Grid item>
                             <p>{this.props.timeStamp}</p>

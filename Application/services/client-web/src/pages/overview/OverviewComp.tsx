@@ -4,7 +4,7 @@ import Message from './MessageComp';
 import ProblemPreview from './ProblemPreview';
 import ProblemInterface from '../../interfaces/ProblemDataInterface';
 import MessageInterface from '../../interfaces/MessageDataInterface';
-import UserInterface from '../../interfaces/UserDataInterface';
+import UserDataInterface from '../../interfaces/UserDataInterface';
 import PostDataInterface from '../../interfaces/PostDataInterface';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
@@ -97,19 +97,27 @@ class OverviewComp extends Component<Props> {
             receiver = ((document.getElementById("receiver")) as HTMLInputElement).value
         }
 
+        let receiverId : UserDataInterface = this.props.users.filter(user => (user.name === receiver.split(" ")[0] && 
+            user.lastname === receiver.split(" ")[1]))[0];
+
         switch (messageReceiver) {
             case "Verantwoordelijke": {
-                this.props.postNewMessage("SECTORMANAGER", receiver, messageTitle,messageContent, this.props.admin.id);
+                this.props.postNewMessage(receiverId.id, messageTitle,messageContent, this.props.admin.id);
                 break;
             }
             case "Vrijwilliger" : {
-                this.props.postNewMessage("VOLUNTEER", receiver, messageTitle,messageContent, this.props.admin.id);
+                this.props.postNewMessage(receiverId.id, messageTitle,messageContent, this.props.admin.id);
                 break;
             }
-            case "iedereen" : {
-                this.props.postNewMessage("EVERYBODY", receiver, messageTitle,messageContent, this.props.admin.id);
+            case 'specifiek' : {
+                this.props.postNewMessage(receiverId.id,messageTitle,messageContent,this.props.admin.id);
                 break;
             }
+            //TODO iedereen een bericht sturen
+            // case "iedereen" : {
+            //     this.props.postNewMessage("EVERYBODY", receiver, messageTitle,messageContent, this.props.admin.id);
+            //     break;
+            // }
         }
     }
     handleMessageForm = (e: React.FormEvent<HTMLFormElement>) => {
@@ -145,6 +153,7 @@ class OverviewComp extends Component<Props> {
             <PostPreview key={Math.random()} id={x.id} title={x.title} addres={x.addres} general={x.general} sector={x.sector} 
                 latitude={x.latitude} longitude={x.longitude} shifts={x.shifts} users={x.users} activeProblem={x.activeProblem}/>
         ));
+
 
         return(
             <div>
@@ -210,21 +219,23 @@ class OverviewComp extends Component<Props> {
 interface LinkStateProps {
     messages: MessageInterface[],
     problems: ProblemInterface[],
-    admin: UserInterface,
-    posts: PostDataInterface[]
+    admin: UserDataInterface,
+    posts: PostDataInterface[],
+    users: UserDataInterface[]
 }
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
         messages: state.OverviewReducer.messages,
         problems: state.OverviewReducer.problems,
         admin: state.OverviewReducer.loggedIn,
-        posts: state.OverviewReducer.posts
+        posts: state.OverviewReducer.posts,
+        users: state.OverviewReducer.users
     }
 }
 
 interface LinkDispatchToProps {
     fetchMessages: () => any,
-    postNewMessage: (receiver: string, User: string, title: string, content: string, adminId: Number) => any,
+    postNewMessage: (receiverId: Number, title: string, content: string, adminId: Number) => any,
     fetchProblems: () => any,
     fetchPosts: () => any
 }

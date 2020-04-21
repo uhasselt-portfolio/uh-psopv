@@ -1,11 +1,12 @@
 import React, {Component} from 'react';
-import DataNavBar from '../../navBars/DataNavBarComp';
 import {Grid, Button} from '@material-ui/core';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import ProblemInterface from '../../interfaces/ProblemDataInterface';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
+import {problemSolved} from './DetailActions';
 
 const styleBorder = {
-    border: 'solid 1px black',
     width: '40%',
     height: '100%',
     padding: '5px',
@@ -13,6 +14,11 @@ const styleBorder = {
 const styleMap = {
     height: '600px',
     width: '60%'
+}
+const ButtonStyle = {
+    background: 'rgb(3,57,108)',
+    color: 'white',
+    margin: '4px'
 }
 
 interface IPropsMyMapComponent {
@@ -25,10 +31,12 @@ interface IProps {
     }
 }
 
-class ProblemDetails extends Component<IProps> {
+type props = LinkDispatchToProps & IProps;
+
+class ProblemDetails extends Component<props> {
 
     handleSolvedButton = () => {
-        //TODO
+        this.props.problemSolved(this.props.location.state.id);
     }
 
     render() {
@@ -47,34 +55,47 @@ class ProblemDetails extends Component<IProps> {
 
         return(
             <div>
-                <DataNavBar tab={-1 }/>
                 <Grid container>
-                    <Grid item style={styleBorder}>
+                    <Grid container justify="center" direction="column" style={styleBorder}>
                         <Grid container justify="center">
                             <Grid item>
-                                <h4>{this.props.location.state.problemType}</h4>
+                                    <h4>{this.props.location.state.problemType}</h4>
+                            </Grid>  
+                        </Grid>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <p>{this.props.location.state.discription}</p>
                             </Grid>
                         </Grid>
-                        <Grid item>
-                            <p>{this.props.location.state.discription}</p>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <p>Shift: {this.props.location.state.shiftName}</p>
+                            </Grid> 
                         </Grid>
-                        <Grid item>
-                            <p>Shift: {this.props.location.state.shiftName}</p>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <p>tijdstip: {this.props.location.state.timeStamp}</p>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <p>tijdstip: {this.props.location.state.timeStamp}</p>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <p>post: {this.props.location.state.post}</p>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <p>post: {this.props.location.state.post}</p>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <p>gaat over: {this.props.location.state.user}</p>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <p>gaat over: {this.props.location.state.user}</p>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <p>melder: {this.props.location.state.sender}</p>
+                            </Grid>
                         </Grid>
-                        <Grid item>
-                            <p>melder: {this.props.location.state.sender}</p>
-                        </Grid>
-                        <Grid item>
-                            <Button variant="outlined" onClick={this.handleSolvedButton}>Solved</Button>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <Button variant="outlined" onClick={this.handleSolvedButton} style={ButtonStyle}>Solved</Button>
+                            </Grid>
                         </Grid>
                     </Grid>
                     <Grid item style={styleMap}>
@@ -92,5 +113,16 @@ class ProblemDetails extends Component<IProps> {
     }
 }
 
+interface LinkDispatchToProps {
+    problemSolved: (ProblemId: Number) => any
+}
+const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
+    return bindActionCreators({
+        problemSolved
+    },dispatch);
+}
 
-export default ProblemDetails
+
+export default connect(
+    MapDispatchToProp
+)(ProblemDetails);

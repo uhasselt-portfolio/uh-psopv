@@ -4,6 +4,7 @@ import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import MessageDataInterface from '../../interfaces/MessageDataInterface';
 import UserDataInterface from '../../interfaces/UserDataInterface';
 import PostDataInterface from '../../interfaces/PostDataInterface';
+import Database from '../../Redux/Database';
 
 export enum OverviewActions {
     OVERVIEW_FETCH_START = 'OVERVIEW_FETCH_STRART',
@@ -25,28 +26,7 @@ export const fetchProblems = () => async (dispatch : Redux.Dispatch) => {
             type: OverviewActions.OVERVIEW_FETCH_START
         });
 
-        const response = await axios.get('http://localhost/api/problem/fetch/all');
-        
-        let problems: ProblemDataInterface[] = [];
-        console.log(response.data.data.problems[0].problem_type);
-
-        for (let i = 0; i < response.data.data.problems.length; ++i) {
-            problems.push({
-                id: response.data.data.problems[i].id,
-                problemType: response.data.data.problems[i].problem_type.title,
-                priority: response.data.data.problems[i].problem_type.priority,
-                discription: response.data.data.problems[i].problem_type.description,
-                timeStamp: response.data.data.problems[i].created_at,
-                shiftName: response.data.data.problems[i].planning.shift.name,
-                post: response.data.data.problems[i].planning.post.title,
-                postId: response.data.data.problems[i].planning.post_id,
-                user: response.data.data.problems[i].planning.user.first_name + " " + response.data.data.problems[i].planning.user.last_name,
-                sender: response.data.data.problems[i].created_by.first_name + " " + response.data.data.problems[i].created_by.last_name,
-                latitude: response.data.data.problems[i].planning.post.latitude,
-                longitude: response.data.data.problems[i].planning.post.longitude,   //TODO
-                solved: response.data.data.problems[i].solved
-            })
-        }
+        const problems : ProblemDataInterface[] = await new Database().fetchProblems();
 
         dispatch({
             type: OverviewActions.OVERVIEW_PROBLEM_FETCH_SUCCES,
@@ -78,18 +58,7 @@ export const fetchMessages = () => async (dispatch : Redux.Dispatch) => {
             type: OverviewActions.OVERVIEW_FETCH_START
         });
 
-        const response = await axios.get('http://localhost/api/message/fetch/all');
-
-        let messages : MessageDataInterface[] = [];
-        for (let i = 0; i < response.data.data.messages.length; ++i) {
-            messages.push({
-              id: response.data.data.messages[i].id,
-              title: response.data.data.messages[i].title,
-              sender: response.data.data.messages[i].created_by.first_name + " " + response.data.data.messages[i].created_by.last_name,
-              content: response.data.data.messages[i].message,
-              read: response.data.data.messages[i].seen
-            })
-        }
+        const messages : MessageDataInterface[] = await new Database().fetchmessages();
 
 
         dispatch({
@@ -122,73 +91,20 @@ export const fetch = () => async (dispatch: Redux.Dispatch) => {
             type: OverviewActions.OVERVIEW_FETCH_START
         });
 
-        const responseProblems = await axios.get('http://localhost/api/problem/fetch/all');
-        const responeUsers = await axios.get('http://localhost/api/user/fetch/all');
-        const responsePosts = await axios.get('http://localhost/api/post/fetch/all');
-
-        let problems: ProblemDataInterface[] = [];
-        for (let i = 0; i < responseProblems.data.data.problems.length; ++i) {
-            problems.push({
-                id: responseProblems.data.data.problems[i].id,
-                problemType: responseProblems.data.data.problems[i].problem_type.title,
-                priority: responseProblems.data.data.problems[i].problem_type.priority,
-                discription: responseProblems.data.data.problems[i].problem_type.description,
-                timeStamp: responseProblems.data.data.problems[i].created_at,
-                shiftName: responseProblems.data.data.problems[i].planning.shift.name,
-                post: responseProblems.data.data.problems[i].planning.post.title,
-                postId: responseProblems.data.data.problems[i].planning.post_id,
-                user: responseProblems.data.data.problems[i].planning.user.first_name + " " + responseProblems.data.data.problems[i].planning.user.last_name,
-                sender: responseProblems.data.data.problems[i].created_by.first_name + " " + responseProblems.data.data.problems[i].created_by.last_name,
-                latitude: responseProblems.data.data.problems[i].planning.post.latitude,
-                longitude: responseProblems.data.data.problems[i].planning.post.longitude,   //TODO
-                solved: responseProblems.data.data.problems[i].solved
-            })
-        }
-
-        let users: UserDataInterface[] = [];
-        for (let i = 0; i < responeUsers.data.data.users.length; ++i) {
-            users.push({
-                id: responeUsers.data.data.users[i].id,
-                name: responeUsers.data.data.users[i].first_name,
-                lastname: responeUsers.data.data.users[i].last_name,
-                has_internet: responeUsers.data.data.users[i].is_connected,
-                gsmNumber: responeUsers.data.data.users[i].phone_number,
-                email: responeUsers.data.data.users[i].email,
-                permission: responeUsers.data.data.users[i].permission_type_id,
-                association: responeUsers.data.data.users[i].association.name,
-                latitude: responeUsers.data.data.users[i].current_latitude,
-                longitude: responeUsers.data.data.users[i].current_longitude
-            })
-        }
-
-        let posts: PostDataInterface[] = [];
-        for (let i = 0; i < responsePosts.data.data.posts.length; ++i) {
-            let shifts: Number[] = [];
-            let workingUsers: Number[][] = [];
-            for (let j = 0; j < 4; ++j) {
-                shifts.push(j);
-                workingUsers.push([1,2]);
-            }
-            posts.push({
-                id: responsePosts.data.data.posts[i].id,
-                title: responsePosts.data.data.posts[i].title,
-                addres: responsePosts.data.data.posts[i].address,
-                sector: responsePosts.data.data.posts[i].sector_id,
-                general: responsePosts.data.data.posts[i].general_post.name,
-                latitude: responsePosts.data.data.posts[i].latitude,
-                longitude: responsePosts.data.data.posts[i].longitude,
-                shifts: shifts, 
-                users: workingUsers,
-                activeProblem: responsePosts.data.data.posts[i].activeProblem
-            })
-        }
+        // const problems : ProblemDataInterface[] = await new Database().fetchProblems();
+        // const users : UserDataInterface[] = await new Database().fetchusers();
+        // const posts : PostDataInterface[] = await new Database().fetchPosts();
+        const state = await new Database().fetchAll();
 
         dispatch({
             type: OverviewActions.OVERVIEW_FETCH_SUCCES,
             payload: {
-                problems: problems,
-                users: users,
-                posts: posts
+                messages: state.messages,
+                users: state.users,
+                planning: state.planning,
+                items: state.items,
+                posts: state.posts,
+                problems: state.problems
             }
         })
 
@@ -210,22 +126,24 @@ export const fetch = () => async (dispatch: Redux.Dispatch) => {
     }
 }
 
-export const postNewMessage = (receiver: string, User: string, title: string, content: string, adminId: Number) => async (dispatch: Redux.Dispatch) => {
+export const postNewMessage = (receiver: Number,title: string, content: string, adminId: Number) => async (dispatch: Redux.Dispatch) => {
     console.log("post new message");
     try {
         dispatch({
             type: OverviewActions.OVERVIEW_FETCH_START
         });
 
-        const respone = await axios.post('http://localhost/api/message/add', {  //TODO vershil tussen bericht naar groep en bericht naar invidu
-                                                                                //TODO hoe krijg ik id van een invidu met enkel de naam
-            title: title,
-            message: content,
-            created_by_id: adminId,
-            priority: 0,
-        });
+        const response = await new Database().postNewMessage(receiver,title,content,adminId);
 
-        console.log(respone);
+        // const respone = await axios.post('http://localhost/api/message/add', {  //TODO vershil tussen bericht naar groep en bericht naar invidu
+        //                                                                         //TODO hoe krijg ik id van een invidu met enkel de naam
+        //     title: title,
+        //     message: content,
+        //     created_by_id: adminId,
+        //     priority: 0,
+        // });
+
+        console.log(response);
 
 
         dispatch({
@@ -292,29 +210,7 @@ export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
             type: OverviewActions.OVERVIEW_FETCH_POSTS_START
         });
 
-        const response = await axios.get('http://localhost/api/post/fetch/all');
-
-        let posts: PostDataInterface[] = [];
-        for (let i = 0; i < response.data.data.posts.length; ++i) {
-            let shifts: Number[] = [];
-            let workingUsers: Number[][] = [];
-            for (let j = 0; j < 4; ++j) {
-                shifts.push(j);
-                workingUsers.push([1,2]);
-            }
-            posts.push({
-                id: response.data.data.posts[i].id,
-                title: response.data.data.posts[i].title,
-                addres: response.data.data.posts[i].address,
-                sector: response.data.data.posts[i].sector_id,
-                general: response.data.data.posts[i].general_post.name,
-                latitude: response.data.data.posts[i].latitude,
-                longitude: response.data.data.posts[i].longitude,
-                shifts: shifts, 
-                users: workingUsers,
-                activeProblem: true
-            })
-        }
+        let posts: PostDataInterface[] = await new Database().fetchPosts();
 
         dispatch({
             type: OverviewActions.OVERVIEW_FETCH_POSTS_SUCCES,

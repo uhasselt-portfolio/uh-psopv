@@ -1,6 +1,7 @@
 import axios from "axios";
 import Redux from 'redux';
 import UserDataInterface from '../../interfaces/UserDataInterface';
+import Database from '../../Redux/Database';
 
 export enum UsersActions {
     USERS_FETCH_START = 'USERS_FETCH_STRART',
@@ -14,23 +15,7 @@ export const fetchUsers = () => async (dispatch : Redux.Dispatch) => {
     try {
         dispatch({type: UsersActions.USERS_FETCH_START});
 
-        const respone = await axios.get('http://localhost/api/user/fetch/all');
-
-        let users: UserDataInterface[] = [];
-        for (let i = 0; i < respone.data.data.users.length; ++i) {
-            users.push({
-                id: respone.data.data.users[i].id,
-                name: respone.data.data.users[i].first_name,
-                lastname: respone.data.data.users[i].last_name,
-                has_internet: respone.data.data.users[i].is_connected,
-                gsmNumber: respone.data.data.users[i].phone_number,
-                email: respone.data.data.users[i].email,
-                permission: respone.data.data.users[i].permission_type_id,
-                association: respone.data.data.users[i].association.name,
-                latitude: respone.data.data.users[i].current_latitude,
-                longitude: respone.data.data.users[i].current_longitude
-            })
-        }
+        let users: UserDataInterface[] = await new Database().fetchusers();
 
         dispatch({
             type: UsersActions.USERS_FETCH_SUCCES,

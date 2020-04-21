@@ -12,7 +12,6 @@ import {fetchPlanning} from './DetailActions';
 import {bindActionCreators} from 'redux';
 
 const styleBorder = {
-    border: 'solid 1px black',
     width: '50%',
     height: '100%',
     padding: '5px',
@@ -117,39 +116,32 @@ class PostDetails extends Component<Props> {
         </GoogleMap>
         ));
 
-        let shiftUi = this.filterPlanning();
-
         return(
             <div>
-                <DataNavBar tab={-1}/>
                 <Grid container direction="row">
-                    <Grid item style={styleBorder}>
-                        <Grid container direction="column">
+                    <Grid container direction="column" style={styleBorder}>
+                        <Grid container justify="center">
                             <Grid item>
-                                <Grid container>
-                                    <Grid item >
-                                        <Grid container justify="center">
-                                            <Grid item>
-                                                <h4>{this.props.location.state.title}</h4>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid item>
-                                            <p>Adres: {this.props.location.state.addres}</p>
-                                        </Grid>
-                                        <Grid item>
-                                            <p>Sector: {this.props.location.state.sector}</p>
-                                        </Grid>
-                                        <Grid item>
-                                            <p>{this.props.location.state.general}</p>
-                                        </Grid>
-                                    </Grid>
-                                </Grid>
+                                <h4>{this.props.location.state.title}</h4>
                             </Grid>
-                            <Grid item> {/*List*/ }
-                                {shiftUi}
+                        </Grid>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <p>Adres: {this.props.location.state.addres}</p>
+                            </Grid>
+                        </Grid>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <p>Sector: {this.props.location.state.sector}</p>
+                            </Grid>
+                        </Grid>
+                        <Grid container justify="center">
+                            <Grid item>
+                                <p>{this.props.location.state.general}</p>
                             </Grid>
                         </Grid>
                     </Grid>
+
                     <Grid item style={styleMap}>
                         <MyMapComponent
                             isMarkerShown

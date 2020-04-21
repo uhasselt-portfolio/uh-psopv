@@ -31,7 +31,7 @@ export default interface State {
 
 export const initialState : State = {
     loggedIn: {
-        id:0, name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permission: 0, association:"vereneging", latitude: 50.965100, longitude: 5.364983
+        id:1, name:"naam", lastname:"lastname", gsmNumber:"gsmnummer", email:"email", has_internet: true, permission: 0, association:"vereneging", latitude: 50.965100, longitude: 5.364983
     },
     posts: [
         { id: 0, title: "post", addres: "addres", sector: 1, general: "generalpost", latitude: 50.962595, longitude: 5.358503, shifts: [] , users: [], activeProblem: false},

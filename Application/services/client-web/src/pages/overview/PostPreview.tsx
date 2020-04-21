@@ -102,14 +102,19 @@ class PostPreview extends Component<Props> {
             );
         }
 
-        let parsedDate : string = this.props.planning[this.state.currentShift].beginDate;
-        parsedDate += " tot ";
-        parsedDate += this.props.planning[this.state.currentShift].endDate.split(" ")[1];
+
+
+        let splitDate : string[] = this.props.planning[this.state.currentShift].beginDate.split("T")[0].split("-");
+        let date : string = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
+        let beginHour : string = this.props.planning[this.state.currentShift].beginDate.split("T")[1].split(".")[0];
+        let endHour : string = this.props.planning[this.state.currentShift].endDate.split("T")[1].split(".")[0];
+        let parsedDate: string = date + " " + beginHour + " tot " + endHour;
         let CurrentUsers : Array<JSX.Element> = this.props.workingUsers[this.state.currentShift].map(x => (
             <Paper style={PaperStyle}>
                 <h5 onClick={() => this.handleUserLink()}>{x.name + " " + x.lastname}</h5>
             </Paper>
         ));
+
 
         return(
             <Paper style={PaperStyle}>
@@ -179,6 +184,7 @@ const MapStateToProps = (state : AppState, ownProps: PostDataInterface): LinkSta
         let shift : ShiftDataInterface[] = state.OverviewReducer.planning.filter(shift => shift.id === ownProps.shifts[i]);
         shifts.push(shift[0]);
     }
+
     let users: userDataInterface[][] = [];
     for (let i = 0; i < ownProps.users.length; ++i) {
         let subUsers: userDataInterface[] = [];

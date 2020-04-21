@@ -2,6 +2,7 @@ import {ComponentActions} from './ComponentActions';
 import {AnyAction} from "redux";
 import State, {initialState} from '../Redux/State';
 import ProblemInterface from '../interfaces/ProblemDataInterface';
+import UserDataInterface from '../interfaces/UserDataInterface';
 
 export default function (state : State = initialState, action : AnyAction) : State {
     switch(action.type) {
@@ -30,11 +31,17 @@ export default function (state : State = initialState, action : AnyAction) : Sta
         case ComponentActions.USER_POST_CONNECTION_CHANGED_START:
             return {...state, loading: true, isUserConnectionChanged: false, errorMessage: ""}
         case ComponentActions.USER_POST_CONNECTION_CHANGED_SUCCES: {
+            let otherUsers : UserDataInterface[] = state.users.filter(user => user.id !== action.payload);
+            let oldUser : UserDataInterface[] = state.users.filter(user => user.id === action.payload);
+            let newuser : UserDataInterface = {
+                ...oldUser[0],
+                has_internet: ! oldUser[0].has_internet
+            }
             return {
                 ...state,
                 loading:false,
                 isUserConnectionChanged: true,
-                users: action.payload,
+                users: [...otherUsers, newuser],
                 errorMessage: ""
             }
         }

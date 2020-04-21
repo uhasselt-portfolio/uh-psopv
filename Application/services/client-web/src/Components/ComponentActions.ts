@@ -1,6 +1,6 @@
-import axios from 'axios';
 import Redux from 'redux';
 import UserDataInterface from '../interfaces/UserDataInterface';
+import DataBase from '../Redux/Database';
 
 
 export enum ComponentActions {
@@ -22,7 +22,7 @@ export const problemSolved = (Problemid: Number) => async (dispatch : Redux.Disp
             type: ComponentActions.PROBLEM_SOLVED_POST_START
         });
 
-        const response = await axios.patch('http://localhost/api/problem//modify/:id'); //TODO correct addres
+        const response = await new DataBase().patchProblemSolved(Problemid);
 
         console.log(response);
 
@@ -55,23 +55,7 @@ export const fetchuser = () => async (dispatch: Redux.Dispatch) => {
             type: ComponentActions.USER_FETCH_START
         });
 
-        const response = await axios.get('http://localhost/api/user/fetch/all'); //TODO correct addres
-
-        let users: UserDataInterface[] = [];
-        for (let i = 0; i < response.data.data.users.length; ++i) {
-            users.push({
-                id: response.data.data.users[i].id,
-                name: response.data.data.users[i].first_name,
-                lastname: response.data.data.users[i].last_name,
-                has_internet: response.data.data.users[i].is_connected,
-                gsmNumber: response.data.data.users[i].phone_number,
-                email: response.data.data.users[i].email,
-                permission: response.data.data.users[i].permission_type_id,
-                association: response.data.data.users[i].association.name,
-                latitude: response.data.data.users[i].current_latitude,
-                longitude: response.data.data.users[i].current_longitude
-            })
-        }
+        let users: UserDataInterface[] = await new DataBase().fetchusers();
 
         dispatch({
             type: ComponentActions.USER_FETCH_SUCCES,
@@ -102,13 +86,11 @@ export const changeConnection = (userid: Number, connection: boolean) => async (
             type: ComponentActions.USER_POST_CONNECTION_CHANGED_START
         });
 
-        const response = await axios.patch('http://localhost/api/' + userid); //TODO correct addres
-
-        console.log(response);
+        const response = await new DataBase().patchUserConnection(userid);
 
         dispatch({
             type: ComponentActions.USER_POST_CONNECTION_CHANGED_SUCCES,
-            payload: response.data.data.user
+            payload: userid
         });
     } catch(error) {
         if (error.response) {

@@ -28,9 +28,12 @@ export default function (state: State = initialState, action : AnyAction): State
                 ...state, 
                 loading: false, 
                 isOverviewFetched: true,
+                messages: action.payload.messages,
                 users: action.payload.users,
+                planning: action.payload.planning,
+                items: action.payload.items,
+                posts: action.payload.posts,
                 problems: action.payload.problems,
-                posts: action.payload.posts, 
                 errorMessage: ""
             }
         case OverviewActions.OVERVIEW_POST_NEW_MESSAGE_SUCCES : 
