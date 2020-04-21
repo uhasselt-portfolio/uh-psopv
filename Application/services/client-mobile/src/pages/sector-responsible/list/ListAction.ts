@@ -12,6 +12,7 @@ export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
 
         const response = await new Database().fetchPosts();
 
+        console.log(response)
         dispatch({type: PLANNING_FETCH_SUCCESS, payload: response.data.data.posts})
     } catch(error){
         if (error.response) {

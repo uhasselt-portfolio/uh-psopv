@@ -28,6 +28,7 @@ class Shift  extends Component<any> {
 
     handleToggleCheckListItem(item_id: number){
         this.props.itemToggle(item_id)
+        console.log("hehehe")
     }
 
 
@@ -39,7 +40,10 @@ class Shift  extends Component<any> {
             {checklist_data.map((item: any, i: number) => (
             <IonItem key={i}>
                 <IonLabel>{item.planning.user.first_name}: {item.item_type.name}</IonLabel>
-                <IonCheckbox slot="end" value={item.item_type.name} checked={!item.item_lost} onIonChange={e => this.handleToggleCheckListItem(item.id)}/>
+                    <IonCheckbox slot="end" value={item.item_type.name} checked={!item.item_lost}
+                        onIonChange={e => this.handleToggleCheckListItem(item.id)}
+                    />
+
             </IonItem>
             ))}
             </IonCardContent>

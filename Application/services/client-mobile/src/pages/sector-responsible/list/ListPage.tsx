@@ -20,6 +20,7 @@ import { bindActionCreators } from 'redux';
 import {fetchPosts} from './ListAction'
 import { connect } from 'react-redux';
 
+const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand"}
 
 class ListView extends Component<any> {
   constructor(props: any) {
@@ -28,7 +29,9 @@ class ListView extends Component<any> {
 
   state={
     selected_sector: "1",
-    shifts_added: []
+    selected_sort: sort_types.alfabetisch,
+    shifts_added: [],
+    data: null
   }
 
   componentDidMount(){
@@ -39,8 +42,50 @@ class ListView extends Component<any> {
     this.setState({...this.state, selected_sector: sector});
   }
 
-  renderComponent(shift_id: number){
+  handleSortChange(sort: string){
+    if (sort === sort_types.alfabetisch){
+      this.sortDataAlphabetical();
+    }
 
+
+    console.log(this.state)
+  }
+
+  funcSortDataAlphabetical(a: any, b: any){
+    if(a.sector_id < b.sector_id){
+      if(a.id < b.id){
+        return -1
+      } else if(a.id > b.id){
+        return 1
+      } else{
+        return 0
+      }
+    
+    } else if(a.sector_id > b.sector_id){
+      if(a.id < b.id){
+        return -1
+      } else if(a.id > b.id){
+        return 1
+      } else{
+        return 0
+      }
+    } else{
+      if(a.id < b.id){
+        return -1
+      } else if(a.id > b.id){
+        return 1
+      } else{
+        return 0
+      }
+    }
+  }
+
+  sortDataAlphabetical(){
+    let new_data = this.state.data
+    new_data.sort(this.funcSortDataAlphabetical)  
+  
+
+    this.setState({...this.state, selected_sort: sort_types.alfabetisch, data: this.props.arePostsFetched});
   }
 
   renderListOfItems(){
@@ -51,11 +96,22 @@ class ListView extends Component<any> {
         if(this.props.arePostsFetched.length <= 0){
           return <div> No messages found. </div>
         } else{
-          return this.props.arePostsFetched.map((data: any, index: number) =>{
-            return (
-              <ListViewItem {... data}/>
-            )
-          })
+          if(this.state.data === null){
+            this.setState({...this.state, data: this.props.arePostsFetched});
+            return this.props.arePostsFetched.map((data: any, index: number) =>{
+              return (
+                <ListViewItem {... data}/>
+              )
+            })
+          } else {
+            return this.state.data.map((data: any, index: number) =>{
+              return (
+                <ListViewItem {... data}/>
+              )
+            })
+          }
+
+          
         }
       }
     }
@@ -85,12 +141,12 @@ class ListView extends Component<any> {
         <IonRow>
           <IonCol>
             <IonButton>
-              Filter
-            </IonButton>
-          </IonCol>
-          <IonCol>
-            <IonButton>
-              Sort
+              <IonSelect
+                interface="popover"  
+                value={this.state.selected_sort} placeholder={this.state.selected_sort} onIonChange={e => this.handleSortChange(e.detail.value)}>
+                  <IonSelectOption value={sort_types.alfabetisch}> {sort_types.alfabetisch}</IonSelectOption>
+                  <IonSelectOption value={sort_types.afstand}> {sort_types.afstand}</IonSelectOption>
+              </IonSelect>
             </IonButton>
           </IonCol>
           <IonCol>
