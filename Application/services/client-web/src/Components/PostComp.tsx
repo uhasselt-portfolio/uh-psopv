@@ -11,7 +11,8 @@ interface State {
 const paperStyle = {
     background: 'rgb(242,242,250)',
     padding: '10px',
-    margin: '10px'
+    margin: '10px',
+    borderRadius: '25px',
 }
 const labelStyle = {
     padding: '0 10px 0 0'

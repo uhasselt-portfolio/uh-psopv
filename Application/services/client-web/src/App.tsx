@@ -3,7 +3,6 @@ import NavBar from './navBars/NavBar';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import ProblemDetails from './pages/detailpages/ProblemDetails';
 import PostDetails from './pages/detailpages/PostDetails';
-import UserDetails from './pages/detailpages/UserDetails';
 import Problems from './pages/problem/ProblemPage';
 
 import Planning from './pages/planning/PlanningPage';
@@ -48,7 +47,6 @@ function App() {
             <Route path="/Map" component={PukkelpopMap} />
             <Route path="/Data/Problem" component={ProblemDetails} />
             <Route path="/Data/Post" component={PostDetails} />
-            <Route path="/Data/User" component={UserDetails} />
             <Route path="/Data/Shifts" component={Planning} />
             <Route path="/Settings" component={Settings} />
           </Switch>

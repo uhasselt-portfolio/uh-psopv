@@ -12,6 +12,8 @@ export default function (state : State = initialState, action : AnyAction) : Sta
                     isPlanningFetched: true,
                     items: action.payload.items, 
                     planning: action.payload.shifts,
+                    users: action.payload.users,
+                    posts: action.payload.posts,
                     errorMessage: ""}
         case PlanningActions.PLANNING_FETCH_FAIL:
             return {...state, loading: false, isPlanningFetched: false, errorMessage: action.payload}

@@ -86,7 +86,7 @@ export const changeConnection = (userid: Number, connection: boolean) => async (
             type: ComponentActions.USER_POST_CONNECTION_CHANGED_START
         });
 
-        const response = await new DataBase().patchUserConnection(userid);
+        await new DataBase().patchUserConnection(userid);
 
         dispatch({
             type: ComponentActions.USER_POST_CONNECTION_CHANGED_SUCCES,

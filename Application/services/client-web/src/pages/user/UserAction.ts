@@ -1,4 +1,3 @@
-import axios from "axios";
 import Redux from 'redux';
 import UserDataInterface from '../../interfaces/UserDataInterface';
 import Database from '../../Redux/Database';

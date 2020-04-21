@@ -22,7 +22,6 @@ const styleFormElement = {
 const newMessageStyle = {
     background: 'rgb(242,242,250)',
     padding: '10px',
-    borderRadius: '25px',
     width: '50%',
     textAlign: 'center' as 'center'
 }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Paper, Grid, Button, IconButton, Menu} from '@material-ui/core';
+import {Paper, Grid, Button, IconButton} from '@material-ui/core';
 import PostDataInterface from '../../interfaces/PostDataInterface';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
@@ -108,15 +108,10 @@ class PostPreview extends Component<Props> {
         let CurrentUsers : Array<JSX.Element> = [];
 
         if (this.props.planning.length > 0) {
-            // let splitDate : string[] = this.props.planning[this.state.currentShift].beginDate.split("T")[0].split("-");
-            // let date : string = splitDate[2] + "/" + splitDate[1] + "/" + splitDate[0];
-            // let beginHour : string = this.props.planning[this.state.currentShift].beginDate.split("T")[1].split(".")[0];
-            // let endHour : string = this.props.planning[this.state.currentShift].endDate.split("T")[1].split(".")[0];
             let date: Date = new Date(this.props.planning[this.state.currentShift].beginDate);
             let parsedBeginDate: string = date.toLocaleString();
             let enddate: Date = new Date(this.props.planning[this.state.currentShift].endDate);
             let parseEndDate : string = enddate.toLocaleString().split(" ")[1];
-            // parsedDate = date + " " + beginHour + " tot " + endHour;
             parsedDate = parsedBeginDate + " tot " + parseEndDate;
             CurrentUsers = this.props.workingUsers[this.state.currentShift].map(x => (
                 <Grid item>
@@ -126,8 +121,6 @@ class PostPreview extends Component<Props> {
                 </Grid>
             ));
         }
-
-        console.log(this.props);
 
         return(
             <Paper style={PaperStyle} elevation={5}>
@@ -161,7 +154,7 @@ class PostPreview extends Component<Props> {
                         </Grid>
                         <Grid container direction="column" justify="space-around" style={RightColumnStyle}>
                             <Grid container direction="row" justify="center">
-                                {this.props.hasProblem && <ReportProblemOutlinedIcon fontSize="large" />}
+                                {this.props.hasProblem && <ReportProblemOutlinedIcon fontSize="large" style={{color: 'red'}}/>}
                             </Grid>
                             <Grid container direction="row" justify="center">
                                 <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>Details</Button>

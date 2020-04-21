@@ -2,6 +2,8 @@ import axios from 'axios';
 import Redux from 'redux';
 import ShiftDatainterface from '../../interfaces/ShiftDataInterface';
 import ItemDataInterface from '../../interfaces/ItemDataInterface';
+import UserDataInterface from '../../interfaces/UserDataInterface';
+import PostDataInterface from '../../interfaces/PostDataInterface';
 import Database from '../../Redux/Database';
 
 
@@ -23,12 +25,16 @@ export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
 
         let shifts: ShiftDatainterface[] = await new Database().fetchPlanning();
         let items: ItemDataInterface[] = await new Database().fetchItems();
+        let users: UserDataInterface[] = await new Database().fetchusers();
+        let posts: PostDataInterface[] = await new Database().fetchPosts();
 
         dispatch({
             type: PlanningActions.PLANNING_FETCH_SUCCES,
             payload: {
                 shifts: shifts,
-                items: items
+                items: items,
+                users: users,
+                posts: posts
             }
         });
     } catch(error) {

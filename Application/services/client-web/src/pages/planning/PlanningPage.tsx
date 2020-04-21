@@ -59,7 +59,7 @@ class Planning extends Component<Props> {
     state: IState = {
             filter: "",
             filterValue: "",
-            shiftFilter: 'All shifts'
+            shiftFilter: ''
     }
 
     componentWillMount = () => {
@@ -94,7 +94,7 @@ class Planning extends Component<Props> {
     }
 
     organizePlanningFilter = () :ShiftProps[] => {
-        let allShifts : ShiftInterface[] = this.props.shifts;
+        let allShifts : ShiftInterface[] = this.props.planning;
         let shifts : ShiftProps[] = [];
         console.log(allShifts);
 
@@ -167,91 +167,93 @@ class Planning extends Component<Props> {
     }
 
     render () {      
-        let shiftUi : Array<JSX.Element> = this.filter();
+        let filteredPosts : PostInterface[] = this.props.posts;
 
-        let posts : Array<JSX.Element> = [
-            <Post postName="post1" items={['item1','item2','item3']} users={[
-                {id:1, name: "naam2", lastname:"lastname2", gsmNumber:"gsmnummer2", email:"email2", has_internet:false, permission: 1, latitude: 50, longitude: 0 },
-                {id:2, name: "John", lastname:"verbrugen", gsmNumber:"0478536954", email:"john.verbrugen@hotmail.com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
-                {id:3, name: "Marie", lastname:"Torfs", gsmNumber:"0475636984", email:"Marie.Torfs@gmail.Com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
-                {id:4, name: "Arno", lastname:"Timmermans", gsmNumber:"0475633215", email:"TimmermansArno@gmail.com", has_internet: true, permission:  0, association:"scouts Kiewit", latitude: 50, longitude: 0},
-            ]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-            <Post postName="post2" items={['item1','item2','item3']} users={[]} />,
-        ];
-
-        let ids: Number[];
-        let visited : string[][] = [];
-        function onlyUnique(value : ShiftInterface, index: Number, self: ShiftInterface[]) : boolean { 
-            let ownValue : string[] = [value.beginDate, value.endDate];
-            for (let i = 0; i < visited.length; ++i) {
-                if (value.beginDate === visited[i][0] && value.endDate === visited[i][1])
-                    return false
+        switch(this.state.filter) {
+            case 'post': {
+                filteredPosts = this.props.posts.filter(post => post.title === this.state.filterValue);
+                break;
             }
-            visited.push(ownValue);
-            return true;
-
-            // if (ids.includes(value.shiftName))
-            //     return false;
-            // ids.push(value.shiftId);
-            // return true;
+            case 'sector': {
+                filteredPosts = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue);
+                break;
+            }
         }
-        let uniqueShifts : ShiftInterface[] = this.props.shifts.filter(onlyUnique);
+
+        let uniqueShifts : ShiftInterface[] = [];
+        for (let i = 0; i < this.props.planning.length; ++i) {
+            let alreadyIn : boolean = false;
+            for (let j = 0; j < uniqueShifts.length; ++j) {
+                if (uniqueShifts[j].shiftId === this.props.planning[i].shiftId)
+                    alreadyIn = true;
+            }
+            if (! alreadyIn)
+                uniqueShifts.push(this.props.planning[i]);
+        }
 
         let shiftChoices : Array<JSX.Element> = uniqueShifts.map( x => {
-            let splitDate : string[] = x.beginDate.split("T");
-            let yearSplit : string[] = splitDate[0].split("-");
-            let year : string = yearSplit[2] + "/" +  yearSplit[1] + "/" + yearSplit[0];
-            let starthour : string = splitDate[1].split(".")[0];
-            let endhour : string = x.endDate.split("T")[1].split(".")[0];
-            let time : string = year + " " + starthour + " - " + endhour 
+            let date: Date = new Date(x.beginDate);
+            let parsedBeginDate: string = date.toLocaleString();
+            let enddate: Date = new Date(x.endDate);
+            let parseEndDate : string = enddate.toLocaleString().split(" ")[1];
             return (
-                <MenuItem value="Shift1"> {x.shiftName + " "} {time}</MenuItem>
+                <MenuItem value={x.shiftName + parsedBeginDate}> {x.shiftName + " "} {parsedBeginDate + " tot " + parseEndDate}</MenuItem>
             );
         });
 
-        let uniqueid: Number[] = uniqueShifts.map(x => x.shiftId);
-
-        let posts2: Array<JSX.Element> = [];
-
-        for (let i = 0; i < uniqueid.length ; ++i) {
-            let shifts: ShiftInterface[] = this.props.shifts.filter(shift => shift.shiftId === uniqueid[i]);
-            let items: string[] = [];
-            for (let j = 0; j < shifts.length; ++j) {
-                let temp : ItemInterface[] = this.props.items.filter(item => item.shiftId === shifts[j].id);
-                for (let k = 0; k < temp.length; ++k)
-                    items.push(temp[k].itemType);
+        let selectedShiftId : Number = -1;
+        for (let i = 0; i <  uniqueShifts.length; ++i) {
+            let date: Date = new Date(uniqueShifts[i].beginDate);
+            let parsedBeginDate: string = date.toLocaleString();
+            if (uniqueShifts[i].shiftName + parsedBeginDate === this.state.shiftFilter) {
+                selectedShiftId = uniqueShifts[i].shiftId;
+                break;
             }
         }
 
-        // let filteredPosts : Array<JSX.Element> = uniqueid.map(x => {
-        //     let shifts : ShiftInterface[] =  this.props.shifts.filter(shift => shift.shiftId === x);
-        //     let posts: PostInterface[] = [];
-        //     let items: string[] = [];
-        //     for (let i = 0; i < shifts.length; ++i) {
-        //         posts.push(this.props.posts.filter(post => post.id === shifts[i].post_id)[0]);
-        //         let tempitems : ItemInterface[] = this.props.items.filter(item => item.shiftId === shifts[i].id);
-        //         for (let j = 0; j < tempitems.length; ++j)
-        //             items.push(tempitems[j].itemType);
-        //     }
-        //     let users : UserInterface[] = this.props.
-        //     return (
-        //         <Post postName="post2" items={items} users={[]} />
-        //     );
-        // });
+        let posts3: PostInterface[] = [];
+        for (let i = 0; i < filteredPosts.length; ++i) {
+            for (let j = 0; j < this.props.planning.length; ++j)
+                if (this.props.planning[j].post_id === filteredPosts[i].id && this.props.planning[j].shiftId === selectedShiftId) {
+                    posts3.push(filteredPosts[i]);
+                    break;
+                }
+        }
+
+        let users: UserInterface[][] = [];
+        for (let i = 0; i < posts3.length; ++i) {
+            let usersid: Number[] = [];
+            for (let j = 0; j < this.props.planning.length; ++j) {
+                if (this.props.planning[j].shiftId === selectedShiftId && this.props.planning[i].post_id === posts3[i].id) {
+                    usersid.push(this.props.planning[j].User_id);
+                }
+            }
+            let tempUsers : UserInterface[] = [];
+            for (let j = 0; j < this.props.users.length; ++j)
+                if (usersid.includes(this.props.users[j].id))
+                    tempUsers.push(this.props.users[j]);
+            users.push(tempUsers);
+        }
+
+        let items: string[][] = [];
+        for (let i = 0; i < posts3.length; ++i) {
+            let tempItems : string[] = [];
+            for (let j = 0; j < this.props.items.length; ++j) {
+                for (let k = 0; k < this.props.planning.length; ++k) {
+                    if (this.props.items[j].shiftId === this.props.planning[k].id && this.props.planning[k].shiftId === selectedShiftId
+                            && this.props.planning[k].post_id === posts3[i].id)
+                        tempItems.push(this.props.items[j].itemType);
+                }
+            }
+            items.push(tempItems);
+        }
+
+        let postsUi : Array<JSX.Element> = [];
+        for (let i = 0; i < posts3.length; ++i) {
+            postsUi.push(
+                <Post postName={posts3[i].title} items={items[i]} users={users[i]} />
+            );
+        }
 
         return(
             <div>
@@ -275,10 +277,6 @@ class Planning extends Component<Props> {
                                     <MenuItem value="No filter">Geen filter</MenuItem>
                                     <MenuItem value="post">Post</MenuItem>
                                     <MenuItem value="sector">Sector</MenuItem>
-                                    <MenuItem value="user">Vrijwilliger</MenuItem>
-                                    <MenuItem value="shift">Shift</MenuItem>
-                                    <MenuItem value="startDate">Start tijdstip</MenuItem>
-                                    <MenuItem value="endDate">Eind tijdstip</MenuItem>
                                 </TextField>
                             </Grid>
                             <Grid item>
@@ -301,15 +299,12 @@ class Planning extends Component<Props> {
                                 variant="outlined"
                                 style={shiftFilterStyle}
                                 >
-                                <MenuItem value="All shifts">Alle shiften</MenuItem>
                                 {shiftChoices}
                             </TextField>
                         </Grid>
                     </Grid>
                     <Grid item> 
-                        {posts}
-                        {/* {shiftUi.length > 0 && shiftUi}
-                        {shiftUi.length === 0 && <p>Nog geen shiften aanwezig</p>} */}
+                        {postsUi}
                     </Grid>
                 </Grid>
             </div>
@@ -318,14 +313,14 @@ class Planning extends Component<Props> {
 }
 
 interface LinkStateProps {
-    shifts: ShiftInterface[],
+    planning: ShiftInterface[],
     posts: PostInterface[],
     items: ItemInterface[],
     users: UserInterface[]
 }
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        shifts: state.PlanningReducer.planning,
+        planning: state.PlanningReducer.planning,
         items: state.PlanningReducer.items,
         posts: state.PlanningReducer.posts,
         users: state.PlanningReducer.users

@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import DataNavBar from '../../navBars/DataNavBarComp';
 import {Grid} from '@material-ui/core';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import PostInterface from '../../interfaces/PostDataInterface';

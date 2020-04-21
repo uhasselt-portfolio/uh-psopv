@@ -1,8 +1,6 @@
-import axios from 'axios';
 import Redux from 'redux';
 import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import UserDataInterface from '../../interfaces/UserDataInterface';
-import PostDataInterface from '../../interfaces/PostDataInterface';
 import Database from '../../Redux/Database';
 
 

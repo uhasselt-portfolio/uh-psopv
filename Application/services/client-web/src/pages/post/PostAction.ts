@@ -15,7 +15,8 @@ export const fetchPosts = () => async (dispatch : Redux.Dispatch) => {
             type: PostActions.POST_FETCH_START
         });
 
-        let posts = await new Database().fetchPosts();
+        let posts: PostDataInterface[] = await new Database().fetchPosts();
+        
         dispatch({
             type: PostActions.POST_FETCH_SUCCES,
             payload: posts

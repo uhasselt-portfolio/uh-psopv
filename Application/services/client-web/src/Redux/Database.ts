@@ -15,17 +15,6 @@ export default class Database {
         return "https://psopv.herokuapp.com";
     }
 
-    async test() {
-        const response = await axios.get('https://psopv.herokuapp.com/api/planning/fetch/all');
-
-        const response2 = await axios.post('https://psopv.herokuapp.com/api/planning/add', {
-            user_id : 1,
-            shift_id : 6,
-            post_id: 1
-        })
-
-    }
-
     async fetchProblems() {
         const response = await axios.get('https://psopv.herokuapp.com/api/problem/fetch/all/unsolved');
         
@@ -77,24 +66,6 @@ export default class Database {
                 workingUsers.push(tempusersid);
             }
 
-  //          let temp = shiftsOfPost.data.data.plannings;
-
-            // for (let j = 0; j < temp.length; ++j) {
-            //     if (shifts.includes(temp[j].shift_id))
-            //         continue;
-            //     shifts.push(temp[0].shift_id);
-            //     let tempusers : Number[] = [];
-            //     for (let k = 0; k < temp.length; ++k)
-            //         if (temp[j].shift_id === temp[k].shift_id)
-            //             tempusers.push(temp[k].user_id);
-            //     workingUsers.push(tempusers);
-            // }
-
-            // for (let j = 0; j < 4; ++j) {
-            //     shifts.push(j + 1);
-            //     workingUsers.push([1,2]);
-            // } //TODO
-            console.log("databvase",responsePosts.data.data.posts)
             posts.push({
                 id: responsePosts.data.data.posts[i].id,
                 title: responsePosts.data.data.posts[i].title,
