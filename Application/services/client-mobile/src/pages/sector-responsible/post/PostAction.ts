@@ -6,11 +6,27 @@ export const POST_FETCH_PLANNING_START = 'POST_FETCH_PLANNING_START'
 export const POST_FETCH_PLANNING_SUCCESS = 'POST_FETCH_PLANNING_SUCCESS'
 export const POST_FETCH_PLANNING_FAIL = 'POST_FETCH_PLANNING_FAIL'
 
+function sortUserShifts(a: any, b: any){
+    var shift_begin_a = new Date(a.shift_data[0].shift.begin)
+    var shift_begin_b = new Date(b.shift_data[0].shift.begin)
+
+    if(shift_begin_a < shift_begin_b){
+        return -1
+    }
+    else if(shift_begin_a > shift_begin_b){
+        return 1
+    } else{
+        return 0
+    }
+}
+
 export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: POST_FETCH_PLANNING_START})
 
         const responsePlannings = await new Database().fetchPlanningsWithPostId(post_id);
+
+        /* Add all Same shift together */
         const shifts: any[] = []; // array with shift_id's
         responsePlannings.data.data.plannings.forEach((element: any) => {
             if(!shifts.includes(element.shift_id)){
@@ -24,7 +40,8 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
                 return element.shift_id === shift_id
             });
 
-            const userNames: any[] = [];
+            /* Add User Names */
+            const userNames: any[] = []; 
             sameShift.forEach((element: any) => {
                 const name = element.user.first_name + " " + element.user.last_name
                 userNames.push(name)
@@ -32,6 +49,9 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
 
             userShifts.push({shift_id: shift_id, shift_data: sameShift, shift_users: userNames});
         })
+
+        /* Sort the array by time*/
+        userShifts.sort(sortUserShifts)
 
         dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: userShifts})
 

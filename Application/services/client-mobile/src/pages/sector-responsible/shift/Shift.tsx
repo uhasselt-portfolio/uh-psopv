@@ -65,7 +65,6 @@ class Shift  extends Component<any> {
     }
 
     getUsersFromShift(){
-        console.log(this.props)
         let names_array = this.props.shift_users
         var names = ""
         for(var i = 0; i < names_array.length - 1; ++i){
@@ -77,7 +76,6 @@ class Shift  extends Component<any> {
     }
 
     renderShiftInfo(data: any){
-        console.log(data)
         return(
         <IonCard>
                 <IonCardHeader className="flexrow">

@@ -24,7 +24,8 @@ const slideOpts = {
 class PostView extends Component<any, any> {
   state = {
     checkListActive: false,
-    show_shift: 1
+    show_shift: -1,
+    current_shift: -1
   }
 
   constructor(props: any){
@@ -35,23 +36,57 @@ class PostView extends Component<any, any> {
     this.setState({...this.state, show_shift: shift});
   }
 
-  setCurrentlyActiveShift(){
-
-  }
-
-  componentDidMount(){
-    console.log(this.props)
-    this.props.fetchPlanningsFromPost(this.props.match.params.post);
-  }
-
-  renderCorrectShift(data: any){
-    if(data.shift_id === this.state.show_shift){
-      return <Shift {... data}/>
+  getNextShift(){
+    if (this.state.show_shift < this.props.arePlanningsFormPostFetched.length - 1){
+      let new_shift = this.state.show_shift + 1
+      this.handleShiftSwitch(new_shift);
     }
   }
 
+  getPreviousShift(){
+    if (this.state.show_shift > 0) {
+      let new_shift = this.state.show_shift - 1
+      this.handleShiftSwitch(new_shift);
+    }
+  }
+
+  getCurrentShiftText(){
+    let show_shift = this.state.show_shift
+    let current_shift = this.state.current_shift
+    let distance = show_shift - current_shift
+
+    if (distance === 0){
+      return "Huidige Shift"
+    } else if (distance > 0 && distance === 1) {
+      return distance + "ste volgende shift"
+    } else if (distance > 1 ){
+      return distance + "de volgende shift"
+    }else if (distance < 0 && distance === -1){
+      return Math.abs(distance) + "ste vorige shift"
+    } else if (distance < 1 ){
+      return Math.abs(distance) + "de vorige shift"
+    }
+  }
+
+  setCurrentlyActiveShift(){
+    var current_time = new Date();
+
+    this.props.arePlanningsFormPostFetched.map((element: any, index: number) => {
+      var shift_begin = new Date(element.shift_data[0].shift.begin)
+      var shift_end = new Date(element.shift_data[0].shift.end)
+
+      if((current_time > shift_begin) && (current_time < shift_end)){
+        this.setState({...this.state, show_shift: index, current_shift: index});
+      }
+    })
+  }
+
+  componentDidMount(){
+    this.props.fetchPlanningsFromPost(this.props.match.params.post);
+  }
+
+
   renderPost(): any{
-    console.log(this.props.arePlanningsFormPostFetched)
     if(this.props.loading == true){
         return <div>Loading...</div>
       } else {
@@ -59,9 +94,14 @@ class PostView extends Component<any, any> {
           if(this.props.arePlanningsFormPostFetched.length <= 0){
             return <div> No info found.</div>
           } else{
-            return this.props.arePlanningsFormPostFetched.map((data: any) => {
-              return this.renderCorrectShift(data)
-            })
+            if(this.state.show_shift === -1){
+              this.setCurrentlyActiveShift();
+              return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
+            } else{
+              let data = this.props.arePlanningsFormPostFetched[this.state.show_shift];
+              return <Shift {... data}/>
+            }
+            
           }
         } else{
           return <div> loading ...</div>
@@ -69,14 +109,8 @@ class PostView extends Component<any, any> {
       }
 }
 
-  getNextShift(){
-    this.handleShiftSwitch(2)
-    console.log(this.state.show_shift)
-  }
-
 
   render(){
-    console.log("render",this.props)
     return (
       <IonPage>
         <IonHeader>
@@ -91,9 +125,9 @@ class PostView extends Component<any, any> {
             </IonToolbar>
           </IonHeader>
           <div className="flexrow">
-            <IonButton><IonIcon icon={arrowBack}/></IonButton>
+            <IonButton onClick={() => this.getPreviousShift()}><IonIcon icon={arrowBack}/></IonButton>
                           <IonCardTitle>
-                              Huidige shift
+                              {this.getCurrentShiftText()}
                           </IonCardTitle>
             <IonButton onClick={() => this.getNextShift()}><IonIcon icon={arrowForward}/></IonButton>
           </div>
