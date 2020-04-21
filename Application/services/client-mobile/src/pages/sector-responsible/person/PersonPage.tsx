@@ -164,7 +164,7 @@ class PersonPage extends Component<any>{
   
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-      fetchUser
+      fetchUser,
     }, dispatch);
   }
   

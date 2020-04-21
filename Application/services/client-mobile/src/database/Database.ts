@@ -96,6 +96,25 @@ export default class Database {
         return await axios.patch(url)
     }
 
+    async fetchItemsFromPlanning(planning_id: number) {
+        const url = this.getRestApiEndpoint() + '/api/item/fetch/planning/' + planning_id;
+
+        return await axios.get(url)
+    }
+
+    async fetchProblemsFromPlanning(planning_id: number) {
+        const url = this.getRestApiEndpoint() + '/api/problem/fetch/planning/' + planning_id;
+
+        return await axios.get(url)
+    }
+
+    async ItemToggle(item_id: number) {
+        const url = this.getRestApiEndpoint() + '/api/item/toggle-lost/' + item_id;
+
+        return await axios.patch(url)
+    }
+    
+
     
     
     async updateUserLocation(userLocation : BackgroundGeolocationResponse, userID : number) {
@@ -110,5 +129,7 @@ export default class Database {
             }
         })
     }
+
+
 }
 

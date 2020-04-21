@@ -5,10 +5,13 @@ import { IonButton,
     IonCardHeader,
     IonCardContent,
     IonCardTitle,
-    IonCard, IonIcon, IonSlide, IonRow, IonCol, IonGrid } from '@ionic/react';
+    IonCard, IonIcon, IonSlide, IonRow, IonCol, IonGrid, IonItem, IonLabel, IonCheckbox } from '@ionic/react';
 import './Shift.css';
 import { arrowBack, arrowForward, caretDown } from 'ionicons/icons';
-import {formatDateTime} from '../../common_functions/date_formatter'  
+import {formatDateTime} from '../../../common_functions/date_formatter';
+import {itemToggle} from '../PostAction' 
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
 
 
   
@@ -23,19 +26,22 @@ class Shift  extends Component<any> {
     }
 
 
+    handleToggleCheckListItem(item_id: number){
+        this.props.itemToggle(item_id)
+    }
 
 
-    showCheckList() {
+    showCheckList(checklist_data: any) {
+        console.log(checklist_data)
         if(this.state.checkListActive){
         return(
             <IonCardContent>
-                hey
-            {/* {checkboxList.map(({ val, isChecked }, i) => (
+            {checklist_data.map((item: any, i: number) => (
             <IonItem key={i}>
-                <IonLabel>{val}</IonLabel>
-                <IonCheckbox slot="end" value={val} checked={isChecked} />
+                <IonLabel>{item.planning.user.first_name}: {item.item_type.name}</IonLabel>
+                <IonCheckbox slot="end" value={item.item_type.name} checked={!item.item_lost} onIonChange={e => this.handleToggleCheckListItem(item.id)}/>
             </IonItem>
-            ))}; */}
+            ))}
             </IonCardContent>
         )
         } else{
@@ -47,7 +53,7 @@ class Shift  extends Component<any> {
         this.setState({...this.state, checkListActive: !this.state.checkListActive});
     }
 
-    renderCheckbox(){
+    renderCheckbox(data: any){
         return(
             <IonCard>
                 <IonCardHeader>
@@ -57,7 +63,7 @@ class Shift  extends Component<any> {
                 </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                    {this.showCheckList()}
+                    {this.showCheckList(data)}
                 </IonCardContent>
             </IonCard>
         )
@@ -131,7 +137,8 @@ class Shift  extends Component<any> {
         )
     }
 
-    renderProblemInfo(){
+    renderProblemInfo(problem_data: any){
+        console.log(problem_data)
         return(
           <IonCard>
             <IonCardHeader>
@@ -141,7 +148,22 @@ class Shift  extends Component<any> {
               </IonCardTitle>
             </IonCardHeader>
             <IonCardContent>
-              Michiel was 4 uur te laat op post
+                <IonGrid>
+                {
+                    problem_data.map((problem: any) => {
+                        return (
+                            <IonRow>
+                                <IonCol>
+                                    {problem.planning.user.first_name}
+                                </IonCol>
+                                <IonCol>
+                                    {problem.problem_type.title}
+                                </IonCol>
+                            </IonRow>
+                        )
+                    })
+                }
+                </IonGrid>
             </IonCardContent>
           </IonCard>
         )
@@ -149,12 +171,14 @@ class Shift  extends Component<any> {
 
     render() {
         if(this.props.shift_data[0] !== undefined){
-            let data = this.props.shift_data[0]
+            let shift_data = this.props.shift_data[0]
+            let items_data = this.props.shift_items
+            let shift_problems = this.props.shift_problems;
             return (
                 <div>
-                    {this.renderShiftInfo(data)}
-                    {this.renderCheckbox()}
-                    {this.renderProblemInfo()}
+                    {this.renderShiftInfo(shift_data)}
+                    {this.renderCheckbox(items_data)}
+                    {this.renderProblemInfo(shift_problems)}
                 </div>    
                 ) 
         }   else {
@@ -168,5 +192,20 @@ class Shift  extends Component<any> {
   
   
   
-export default Shift;
+function mapStateToProps(state: any) {
+    return({
+      arePlanningsFormPostFetched: state.post.arePlanningsFormPostFetched,
+      errorMessage: state.post.errorMessage,
+      loading: state.post.loading,
+    })
+  }
+  
+  function mapDispatchToProps(dispatch: any) {
+    return bindActionCreators({
+      itemToggle
+    }, dispatch);
+  }
+  
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(Shift);
 

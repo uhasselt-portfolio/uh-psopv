@@ -1,10 +1,10 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
 import './PostPage.css';
-import Shift from '../shift/Shift';
+import Shift from './shift/Shift';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {fetchPlanningsFromPost} from './PostAction'
+import {fetchPlanningsFromPost, itemToggle} from './PostAction'
 import { caretDown, arrowBack, arrowForward } from 'ionicons/icons';
 import { formatDateTime } from '../../common_functions/date_formatter';
 
@@ -98,6 +98,7 @@ class PostView extends Component<any, any> {
               this.setCurrentlyActiveShift();
               return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
             } else{
+              console.log(this.props)
               let data = this.props.arePlanningsFormPostFetched[this.state.show_shift];
               return <Shift {... data}/>
             }
@@ -151,7 +152,8 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchPlanningsFromPost
+    fetchPlanningsFromPost,
+    itemToggle
   }, dispatch);
 }
 
