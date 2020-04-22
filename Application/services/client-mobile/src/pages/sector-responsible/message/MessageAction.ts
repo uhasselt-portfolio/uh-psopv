@@ -13,6 +13,7 @@ export const fetchMessages = (id: number) => async (dispatch: Redux.Dispatch) =>
 
         const response = await new Database().fetchMessagesFrom(id); // TODO GETUSERID
 
+        console.log()
         dispatch({type: MESSAGE_FETCH_SUCCESS, payload: response.data.data.messages})
     } catch(error){
         if (error.response) {

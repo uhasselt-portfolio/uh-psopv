@@ -21,9 +21,19 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
 
+const testMarker = (props: any) => {
+  const { color, name, id } = props;
+  return (
+    <div className="normal_marker"
+      style={{ backgroundColor: color, cursor: 'pointer'}}
+      title={name}
+    ></div>
+  );
+};
 
 class MapPage extends Component<any> {
 
+  
   constructor(props:any) {
     super(props);
   }
@@ -84,14 +94,14 @@ class MapPage extends Component<any> {
           return (
             <NormalMarker 
             lat={data.latitude} 
-            lng={data.longitude} />
+            lng={data.longitude}/>
           )
         } else{
           return (
             <ProblemMarker 
             lat={data.latitude} 
-            lng={data.longitude} />
-          )
+            lng={data.longitude}
+            />          )
         }
         
       })
@@ -102,18 +112,28 @@ class MapPage extends Component<any> {
           return (
             <NormalMarker 
             lat={data.latitude} 
-            lng={data.longitude} />
+            lng={data.longitude}
+            post_id={data.id}
+            sector_id={data.sector_id}
+            />
           )
         } else{
           return (
             <ProblemMarker 
             lat={data.latitude} 
-            lng={data.longitude} />
+            lng={data.longitude}
+            post_id={data.id}
+            sector_id={data.sector_id}
+            />
           )
         }
         
       })
     }  
+  }
+
+  showInfo(){
+    console.log("OOKEEEEE 112313")
   }
 
   renderContent(){
@@ -146,6 +166,9 @@ class MapPage extends Component<any> {
   }
 
   render(){
+
+
+    
     console.log(this.props)
     return (
       <IonPage>
