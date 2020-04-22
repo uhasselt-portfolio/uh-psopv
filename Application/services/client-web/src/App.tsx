@@ -27,7 +27,8 @@ import {store} from './Redux/store';
 const appStyle = {
   background: 'rgb(232, 232, 232)',
   minheight: '100vh',
-  height: '100%'
+  height: '100%',
+  paddingBottom: '5px'
 }
 
 
