@@ -13,3 +13,9 @@
     height: 50px;
     margin: 10px;
 }
+
+.mapButton{
+    position: absolute;
+    z-index: 1;
+    margin: 10px;
+}
