@@ -10,7 +10,6 @@ import SendMessageReducer from './pages/sector-responsible/send_message/SendMess
 import ContactReducer from './pages/sector-responsible/contact/ContactReducer'
 import PersonReducer from './pages/sector-responsible/person/PersonReducer';
 import ListReducer from './pages/sector-responsible/list/ListReducer';
-import MapReducer from './pages/sector-responsible/map/MapReducer';
 import PostReducer from './pages/sector-responsible/post/PostReducer'
 
 // volunteer
@@ -25,12 +24,11 @@ export default createStore(
         sendMessage: SendMessageReducer,
         contact: ContactReducer,
         person: PersonReducer,
+        
         list: ListReducer,
+        map: ListReducer,
 
         post: PostReducer,
-
-
-        map: MapReducer,
         info: InfoReducer,
 
         vr_message: VR_MessageReducer,

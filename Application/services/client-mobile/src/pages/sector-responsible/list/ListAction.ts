@@ -10,10 +10,38 @@ export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: PLANNING_FETCH_START})
 
-        const response = await new Database().fetchPosts();
+        const responsePosts = await new Database().fetchPosts();
+        let posts_data = responsePosts.data.data.posts
 
-        console.log(response)
-        dispatch({type: PLANNING_FETCH_SUCCESS, payload: response.data.data.posts})
+        // get all posts with problems
+        let postsWithProblems: any[] = []
+        const responseUnsolvedProblems = await new Database().fetchUnsolvedProblems();
+        console.log(responseUnsolvedProblems)
+        responseUnsolvedProblems.data.data.problems.map((problem: any) => {
+            if(!postsWithProblems.includes(problem.planning.post_id)){
+                postsWithProblems.push(problem.planning.post_id)
+            }
+        })
+
+        // make list of sectors
+        let sectors: any[] = []
+        posts_data.map((post: any) => {
+            if(!sectors.includes(post.sector_id)){
+                sectors.push(post.sector_id)
+            }
+
+            // add param "problem"
+            if(postsWithProblems.includes(post.id)){
+                post["problem"] = true;
+              } else{
+                post["problem"] = false;
+              }
+        })
+
+        let all_data = {posts_data: posts_data, posts_sectors: sectors}
+
+        console.log(all_data)
+        dispatch({type: PLANNING_FETCH_SUCCESS, payload: all_data})
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx

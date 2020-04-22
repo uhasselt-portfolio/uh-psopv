@@ -19,7 +19,7 @@ import NormalMarker  from './components/NormalMarker';
 import ProblemMarker from './components/ProblemMarker';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {fetchProblemsAndPosts} from './MapAction'
+import {fetchPosts} from '../list/ListAction'
 
 
 class MapPage extends Component<any> {
@@ -37,49 +37,35 @@ class MapPage extends Component<any> {
   };
 
   componentDidMount(){
-    this.props.fetchProblemsAndPosts();
+    this.props.fetchPosts();
   }
 
-  renderProblemPosts(){
+  renderPosts(){
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
-      if(this.props.areProblemsAndPostsFetched !== undefined){
-        if(this.props.areProblemsAndPostsFetched.length <= 0){
+      if(this.props.arePostsFetched !== undefined){
+        if(this.props.arePostsFetched.length <= 0){
           return <div> No messages found. </div>
         } else{
-          console.log("PROBLEEEMMMM", this.props.areProblemsAndPostsFetched)
+          console.log("PROBLEEEMMMM", this.props.arePostsFetched)
 
-          return this.props.areProblemsAndPostsFetched.problem_posts.map((data: any, index: number) =>{
+          return this.props.arePostsFetched.posts_data.map((data: any, index: number) =>{
             console.log(data);
-            return (
-              <ProblemMarker 
-              lat={data.latitude} 
-              lng={data.longitude} />
-            )
-          })
-        }
-      }
-    }
-  }
-
-  renderGoodPosts(){
-    if(this.props.loading == true){
-      return <div>Loading...</div>
-    } else {
-      if(this.props.areProblemsAndPostsFetched !== undefined){
-        if(this.props.areProblemsAndPostsFetched.length <= 0){
-          return <div> No messages found. </div>
-        } else{
-          console.log("PROBLEEEMMMM", this.props.areProblemsAndPostsFetched)
-
-          return this.props.areProblemsAndPostsFetched.good_posts.map((data: any, index: number) =>{
-            console.log(data);
-            return (
-              <NormalMarker 
-              lat={data.latitude} 
-              lng={data.longitude} />
-            )
+            if(data.problem === false){
+              return (
+                <NormalMarker 
+                lat={data.latitude} 
+                lng={data.longitude} />
+              )
+            } else{
+              return (
+                <ProblemMarker 
+                lat={data.latitude} 
+                lng={data.longitude} />
+              )
+            }
+            
           })
         }
       }
@@ -103,11 +89,7 @@ class MapPage extends Component<any> {
           defaultZoom={this.props.zoom}
         >
 
-        {this.renderProblemPosts()}
-        {this.renderGoodPosts()}
-
-
-        
+        {this.renderPosts()}
 
         </GoogleMapReact>
         </div>
@@ -119,19 +101,18 @@ class MapPage extends Component<any> {
 };
 
 function mapStateToProps(state: any) {
-  console.log(state)
-
   return({
-    areProblemsAndPostsFetched: state.map.areProblemsAndPostsFetched,
+    arePostsFetched: state.map.arePostsFetched,
     errorMessage: state.map.errorMessage,
-    loading: state.map.loading,
+    loading: state.map.loading
   })
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchProblemsAndPosts,
+    fetchPosts
   }, dispatch);
 }
+
 
 export default connect(mapStateToProps, mapDispatchToProps)(MapPage);

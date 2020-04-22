@@ -108,6 +108,14 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async fetchUnsolvedProblems() {
+        const url = this.getRestApiEndpoint() + '/api/problem/fetch/all/unsolved';
+
+        return await axios.get(url)
+    }
+
+
+
     async ItemToggle(item_id: number) {
         const url = this.getRestApiEndpoint() + '/api/item/toggle-lost/' + item_id;
 
