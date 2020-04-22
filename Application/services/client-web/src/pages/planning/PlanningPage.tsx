@@ -191,6 +191,9 @@ class Planning extends Component<Props> {
                 uniqueShifts.push(this.props.planning[i]);
         }
 
+        console.log(this.props.planning);
+        console.log(uniqueShifts);
+
         let shiftChoices : Array<JSX.Element> = uniqueShifts.map( x => {
             let date: Date = new Date(x.beginDate);
             let parsedBeginDate: string = date.toLocaleString();

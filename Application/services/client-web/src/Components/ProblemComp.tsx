@@ -9,7 +9,8 @@ import {Redirect} from 'react-router-dom';
 
 interface IState {
     Data: ProblemInterface,
-    Redirecting: boolean
+    Redirecting: boolean,
+    Solved: boolean
 }
 
 const paperStyle = {
@@ -43,11 +44,13 @@ class Problem extends Component<Props> {
             solved: false,
             id: -1
         },
-        Redirecting: false
+        Redirecting: false,
+        Solved: false
     }
 
     componentDidMount() {
         this.setState({
+            ...this.state,
             Data: {
                 problemType: this.props.problemType,
                 priority: this.props.priority,
@@ -67,6 +70,10 @@ class Problem extends Component<Props> {
 
     handleSolved = () => {
         this.props.problemSolved(this.state.Data.id);
+        this.setState({
+            ...this.state,
+            Solved: true
+        });
     }
 
     handleRedirectButton = () => {
@@ -140,7 +147,7 @@ class Problem extends Component<Props> {
                                 <p>Er liep iets fout, probeer opnieuw</p>
                             </Grid>
                         }
-                        { ! this.props.loading && this.props.errorMessage === "" && this.props.isProblemSolvedPosted === true &&
+                        { ! this.props.loading && this.props.errorMessage === "" && this.props.isProblemSolvedPosted === true && this.state.Solved &&
                             <Grid container justify="center" direction="row">
                                 <p>Aanpassing doorgevoerd</p>
                             </Grid>

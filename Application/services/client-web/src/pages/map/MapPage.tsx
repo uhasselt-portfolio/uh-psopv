@@ -70,7 +70,8 @@ class PukkelpopMap extends Component<Props> {
             <Marker  
             position={{lat: x.latitude, lng: x.longitude}} 
             label={x.problemType} 
-            options={{icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}}
+            labelAnchor={{x: 110, y: 100}}
+            options={{icon: 'http://maps.google.com/mapfiles/kml/pal3/icon33.png'}}
             onClick={() => this.problemClicked(x)}
             />
         ));
