@@ -5,8 +5,8 @@ export default async () => {
 
     await new ShiftModel({
         name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: Date.UTC(2020,3, 17, 9),
-        end: Date.UTC(2020,3, 17, 18)
+        begin: Date.UTC(2020,3, 22, 9),
+        end: Date.UTC(2020,3, 22, 18)
     }).save();
 
     await new ShiftModel({
