@@ -101,10 +101,10 @@ class App extends React.Component {
       return(
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/Vrijwilliger/InfoPage" component={InfoPage} exact={true} />
+          <Route path="/InfoPage" component={InfoPage} exact={true} />
           <Route path="/Login" component={LoginPage} exact={true} />
-          <Route path="/Vrijwilliger/Messages" component={VrijwilligerMessages} exact={true} />
-          <Route path="/Vrijwilliger/SendMessages" component={VrijwilligerSendMessages} exact={true} />
+          <Route path="/Messages" component={VrijwilligerMessages} exact={true} />
+          <Route path="/SendMessages" component={VrijwilligerSendMessages} exact={true} />
           <Route path="/" render={() => <Redirect to="/InfoPage" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
@@ -116,11 +116,11 @@ class App extends React.Component {
             <IonIcon icon={ellipse} />
             <IonLabel>Map</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="/Vrijwilliger/Messages" href="/Vrijwilliger/Messages">
+          <IonTabButton tab="/Messages" href="/Messages">
             <IonIcon icon={ellipse} />
             <IonLabel>Msg</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="/Vrijwilliger/SendMessages" href="/Vrijwilliger/SendMessages">
+          <IonTabButton tab="/SendMessages" href="/SendMessages">
             <IonIcon icon={ellipse} />
             <IonLabel>Send</IonLabel>
           </IonTabButton>
