@@ -4,8 +4,9 @@ import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocatio
 export default class Database {
 
     getRestApiEndpoint(): string | undefined {
+        console.log("PROCESSS:", process.env.NODE_ENV)
         // @ts-ignore
-        if (process.env.NODE_ENV == 'debug')
+        if (process.env.NODE_ENV == 'debug' || process.env.NODE_ENV == 'development')
             return "http://localhost";
         return "https://psopv.herokuapp.com";
     }
@@ -57,10 +58,20 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async fetchActivePlanning(userID: number) {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user/active/' + userID;
+
+        return await axios.get(url);
+    }
+
+    async updateUserCheckInStatus(userID: number) {
+        const url = this.getRestApiEndpoint() + '/api/planning/toggle-checkin/' + userID;
+
+        return await axios.patch(url);
+    }
+
     async updateUserLocation(userLocation : BackgroundGeolocationResponse, userID : number) {
         const url = this.getRestApiEndpoint() + '/api/user/modify/' + userID;
-
-        console.log("URL ", url);
 
         return await axios.patch(url, {
             user: {
@@ -68,6 +79,12 @@ export default class Database {
                 current_longitude: userLocation.longitude
             }
         })
+    }
+
+    async reportUser(userID: number) {
+        const url = this.getRestApiEndpoint() + '/api/problem/add/report-user/' + userID;
+
+        return await axios.post(url);
     }
 }
 

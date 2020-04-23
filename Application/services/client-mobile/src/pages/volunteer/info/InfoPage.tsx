@@ -19,19 +19,36 @@ import {
 import GoogleMapReact from 'google-map-react';
 import NormalMarker from './components/NormalMarker'
 import './InfoPage.css'
-import BackgroundService from "../../../service/BackgroundService";
+import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/background-geolocation";
 
 class InfoPage extends React.Component<any, any> {
 
     componentDidMount() {
-        this.trackAndUpdateUserLocation();
-        this.props.fetchPlannings();
-    }
+        console.log("jip..")
+        let HIGH = 10;
+        const config = {
+            desiredAccuracy: HIGH,
+            stationaryRadius: 5,
+            interval: 30000,
+            distanceFilter: 5,
+            notificationTitle: 'Pukkelpop App',
+            notificationText: 'Locatie tracking',
+            debug: true, //  enable this hear sounds for background-geolocation life-cycle.
+            stopOnTerminate: false, // enable this to clear background location settings when the app terminates
+        };
 
-    private trackAndUpdateUserLocation() {
-        const backgroundService: BackgroundService = new BackgroundService(this.props.updateGeolocation);
-        console.log("Starting service...")
-        backgroundService.start();
+        BackgroundGeolocation.configure(config)
+            .then(() => {
+                BackgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location) => {
+                    console.log("location: ",location)
+
+                    this.props.updateGeolocation(location);
+
+                    BackgroundGeolocation.finish(); // FOR IOS ONLY
+                });
+            });
+        BackgroundGeolocation.start();
+        this.props.fetchPlannings();
     }
 
     private formatDate(data: string) {
@@ -108,6 +125,7 @@ class InfoPage extends React.Component<any, any> {
 
     private renderCoordinates() {
         const coordinates = this.props.isLocationUpdated;
+        console.log(this.props.isLocationUpdated);
         if (coordinates !== undefined) {
             return (
                 <div>
@@ -153,7 +171,6 @@ function mapDispatchToProps(dispatch: any) {
         updateGeolocation
     }, dispatch);
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(InfoPage);
 

@@ -16,6 +16,7 @@ import ShiftReducer from './pages/sector-responsible/shift/ShiftReducer'
 
 // volunteer
 import InfoReducer from './pages/volunteer/info/InfoReducer';
+import StartReducer from "./pages/volunteer/start/StartReducer";
 
 export default createStore(
     combineReducers({
@@ -28,7 +29,8 @@ export default createStore(
         list: ListReducer,
         map: MapReducer,
         info: InfoReducer,
-        shift: ShiftReducer
+        shift: ShiftReducer,
+        start: StartReducer
     }),
     applyMiddleware(reduxThunk)
 )
