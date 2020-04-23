@@ -1,24 +1,25 @@
 import ShiftModel from "../models/shift.model";
+import {DateTime} from "luxon";
 
 export default async () => {
     console.log("Started seeding the shift table...")
 
     await new ShiftModel({
         name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: Date.UTC(2020,3, 23, 8),
-        end: Date.UTC(2020,3, 23, 23)
+        begin: DateTime.local(2020, 4, 23, 8),
+        end: DateTime.local(2020,4, 23, 23)
     }).save();
 
     await new ShiftModel({
         name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: Date.UTC(2020,8, 11, 9),
-        end: Date.UTC(2020,8, 11, 18)
+        begin: DateTime.local(2020,4, 24, 9),
+        end: DateTime.local(2020,4, 24, 18)
     }).save();
 
     await new ShiftModel({
         name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: Date.UTC(2020,8, 12, 10),
-        end: Date.UTC(2020,8, 12, 22)
+        begin: DateTime.local(2020,4, 25, 10),
+        end: DateTime.local(2020,4, 25, 22)
     }).save();
 
     console.log("Successfully seeded the shift table!")
