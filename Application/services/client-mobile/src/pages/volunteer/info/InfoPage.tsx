@@ -19,19 +19,11 @@ import {
 import GoogleMapReact from 'google-map-react';
 import NormalMarker from './components/NormalMarker'
 import './InfoPage.css'
-import BackgroundService from "../../../service/BackgroundService";
 
 class InfoPage extends React.Component<any, any> {
 
     componentDidMount() {
-        this.trackAndUpdateUserLocation();
         this.props.fetchPlannings();
-    }
-
-    private trackAndUpdateUserLocation() {
-        const backgroundService: BackgroundService = new BackgroundService(this.props.updateGeolocation);
-        console.log("Starting service...")
-        backgroundService.start();
     }
 
     private formatDate(data: string) {
@@ -108,6 +100,7 @@ class InfoPage extends React.Component<any, any> {
 
     private renderCoordinates() {
         const coordinates = this.props.isLocationUpdated;
+        console.log(this.props.isLocationUpdated);
         if (coordinates !== undefined) {
             return (
                 <div>

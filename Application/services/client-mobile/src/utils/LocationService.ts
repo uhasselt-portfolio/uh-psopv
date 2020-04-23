@@ -17,21 +17,37 @@ const config : BackgroundGeolocationConfig = {
 };
 
 
-class BackgroundService {
+class LocationService {
 
-    private action : (userLocation: BackgroundGeolocationResponse) => {};
+    private action : (userLocation: BackgroundGeolocationResponse) => void;
+    private endTracking : Date;
 
-    constructor(action: () => {}) {
+    constructor(action: () => void, trackingEnd: Date) {
         this.action = action;
+        this.endTracking = trackingEnd;
     }
 
     async start() {
-        console.log("STARTED!");
+        // Set end for tracking time
+        localStorage.setItem('time', new Date(this.endTracking).toUTCString());
 
+        // Set configuration
         await BackgroundGeolocation.configure(config);
 
+        // Listener, every time a player moves
         BackgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((userLocation: BackgroundGeolocationResponse) => {
-            this.action(userLocation);
+            const trackingEnd : string | null = localStorage.getItem('time');
+
+            if(trackingEnd != null) {
+                if(Number.parseInt(trackingEnd) > Date.now()) {
+                    console.log("BACKGROUND SERVICE UPDATE GEOLCOATION...")
+                    this.action(userLocation);
+                } else {
+                    console.log("STOPPING BG SERVICE...")
+                    BackgroundGeolocation.stop();
+                }
+            }
+
             BackgroundGeolocation.finish();
         });
 
@@ -39,4 +55,4 @@ class BackgroundService {
     }
 }
 
-export default BackgroundService;
+export default LocationService;

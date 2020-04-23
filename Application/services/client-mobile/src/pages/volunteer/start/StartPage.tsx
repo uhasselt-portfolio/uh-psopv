@@ -12,25 +12,53 @@ import {
     IonButton
 } from '@ionic/react';
 import {Redirect} from "react-router";
+import LocationService from "../../../utils/LocationService";
+import {updateGeolocation} from "../info/InfoAction";
+import {checkIfUserInPost, reportUserNotInPost} from "./StartAction";
 
 class StartPage extends Component<any> {
 
     componentDidMount() {
+        console.log("FETCHING ACTIVE PLANNING..")
         this.props.fetchActivePlanningOfUser(1);
+        console.log("FETCHED ACTIVE PLANNING")
     }
 
-    handleUpdateUserCheckInStatus(event: any) : void {
+    private startTracking() {
+        console.log("START TRACKING")
+        const planning = this.props.isActivePlanningFetched;
+        if (planning != undefined) {
+            const trackingEnd: Date = planning.shift.end;
+            new LocationService(this.onLocationUpdate.bind(this), trackingEnd).start();
+        }
+    }
+
+    private onLocationUpdate() {
+        console.log("ON LOCATION UPDATE")
+        this.props.updateGeolocation();
+        const isUserOnPost: boolean = this.props.isUserOnPost(1);
+        console.log("IS USER ON POST?", isUserOnPost)
+        if(!isUserOnPost) {
+            console.log("USER NOT ON POST")
+            this.props.reportUserNotInPost(1);
+        }
+    }
+
+    private handleUpdateUserCheckInStatus(event: any): void {
+        console.log("HANDLE UPDATE CKECKIN STATUS");
         event.preventDefault();
         this.props.updateUserCheckInStatus(1);
+        console.log("UPDATE CHECKIN STATUS")
     }
 
-    showContent() {
+    private showContent() {
         if (this.props.loading == true) {
             return <div>Loading...</div>
         } else {
             const planning = this.props.isActivePlanningFetched;
             if (planning !== undefined) {
-                if(!planning.checked_in) {
+                console.log("IS USER CHECKECKIN: ", planning.checked_in)
+                if (!planning.checked_in) {
                     return (
                         <div>
                             <IonLabel>
@@ -41,16 +69,17 @@ class StartPage extends Component<any> {
                             </IonButton>
                         </div>
                     )
-                } else{
-                    return(
+                } else {
+                    this.startTracking();
+                    return (
                         <div>
                             Inloggen...
-                            <Redirect to={'/InfoPage'} />
+                            <Redirect to={'/InfoPage'}/>
                         </div>
                     )
                 }
             } else {
-                return(
+                return (
                     <div>
                         Er is geen actieve shift gevonden, je volgende shift is....
                     </div>
@@ -85,6 +114,8 @@ class StartPage extends Component<any> {
 function mapStateToProps(state: any) {
     return ({
         isActivePlanningFetched: state.start.isActivePlanningFetched,
+        isUserReported: state.start.isUserReported,
+        isUserOnPost: state.start.isUserOnPost,
         errorMessage: state.start.errorMessage,
         loading: state.start.loading
     })
@@ -93,7 +124,10 @@ function mapStateToProps(state: any) {
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
         fetchActivePlanningOfUser,
-        updateUserCheckInStatus
+        updateUserCheckInStatus,
+        updateGeolocation,
+        checkIfUserInPost,
+        reportUserNotInPost
     }, dispatch);
 }
 
