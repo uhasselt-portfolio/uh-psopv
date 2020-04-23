@@ -12,7 +12,6 @@ import {
     IonButton
 } from '@ionic/react';
 import {Redirect} from "react-router";
-import LocationService from "../../../utils/LocationService";
 import {updateGeolocation} from "../info/InfoAction";
 import {checkIfUserInPost, reportUserNotInPost} from "./StartAction";
 
@@ -24,26 +23,6 @@ class StartPage extends Component<any> {
         console.log("FETCHED ACTIVE PLANNING")
     }
 
-    private startTracking() {
-        console.log("START TRACKING")
-        const planning = this.props.isActivePlanningFetched;
-        if (planning != undefined) {
-            const trackingEnd: Date = planning.shift.end;
-            new LocationService(this.onLocationUpdate.bind(this), trackingEnd).start();
-        }
-    }
-
-    private onLocationUpdate() {
-        console.log("ON LOCATION UPDATE")
-        this.props.updateGeolocation();
-        const isUserOnPost: boolean = this.props.isUserOnPost(1);
-        console.log("IS USER ON POST?", isUserOnPost)
-        if(!isUserOnPost) {
-            console.log("USER NOT ON POST")
-            this.props.reportUserNotInPost(1);
-        }
-    }
-
     private handleUpdateUserCheckInStatus(event: any): void {
         console.log("HANDLE UPDATE CKECKIN STATUS");
         event.preventDefault();
@@ -52,39 +31,34 @@ class StartPage extends Component<any> {
     }
 
     private showContent() {
-        if (this.props.loading == true) {
-            return <div>Loading...</div>
-        } else {
-            const planning = this.props.isActivePlanningFetched;
-            if (planning !== undefined) {
-                console.log("IS USER CHECKECKIN: ", planning.checked_in)
-                if (!planning.checked_in) {
-                    return (
-                        <div>
-                            <IonLabel>
-                                Start je shift door op de knop te drukken!
-                            </IonLabel>
-                            <IonButton onClick={this.handleUpdateUserCheckInStatus.bind(this)}>
-                                Start shift
-                            </IonButton>
-                        </div>
-                    )
-                } else {
-                    this.startTracking();
-                    return (
-                        <div>
-                            Inloggen...
-                            <Redirect to={'/InfoPage'}/>
-                        </div>
-                    )
-                }
-            } else {
+        console.log("---- ACTIVE PLANNING HIT", this.props.isActivePlanningFetched)
+        const planning = this.props.isActivePlanningFetched;
+        if (planning != undefined) {
+            if (!planning.checked_in) {
                 return (
                     <div>
-                        Er is geen actieve shift gevonden, je volgende shift is....
+                        <IonLabel>
+                            Start je shift door op de knop te drukken!
+                        </IonLabel>
+                        <IonButton onClick={this.handleUpdateUserCheckInStatus.bind(this)}>
+                            Start shift
+                        </IonButton>
+                    </div>
+                )
+            } else {
+                return(
+                    <div>
+                        Redirecting...
+                        <Redirect to={'/InfoPage'}/>
                     </div>
                 )
             }
+        } else {
+            return (
+                <div>
+                    Loading...
+                </div>
+            )
         }
     }
 
@@ -114,8 +88,6 @@ class StartPage extends Component<any> {
 function mapStateToProps(state: any) {
     return ({
         isActivePlanningFetched: state.start.isActivePlanningFetched,
-        isUserReported: state.start.isUserReported,
-        isUserOnPost: state.start.isUserOnPost,
         errorMessage: state.start.errorMessage,
         loading: state.start.loading
     })
@@ -125,9 +97,6 @@ function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
         fetchActivePlanningOfUser,
         updateUserCheckInStatus,
-        updateGeolocation,
-        checkIfUserInPost,
-        reportUserNotInPost
     }, dispatch);
 }
 

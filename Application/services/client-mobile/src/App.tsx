@@ -23,6 +23,8 @@ import MapPage from './pages/sector-responsible/map/MapPage';
 
 import InfoPage from './pages/volunteer/info/InfoPage';
 import StartPage from './pages/volunteer/start/StartPage';
+import BackgroundLocation from "./pages/volunteer/start/BackgroundLocation";
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -53,7 +55,7 @@ class App extends React.Component {
     id: 1 // TODO USERID
   }
 
-  renderTabs() {
+  renderTabs(){
     if(this.state.id == 2){ // TODO USERID
       return(
         <IonTabs>
@@ -102,6 +104,7 @@ class App extends React.Component {
         <IonRouterOutlet>
           <Route path="/InfoPage" component={InfoPage} exact={true} />
           <Route path="/StartPage" component={StartPage} exact={true} />
+          <Route path="/BackgroundLocationService" component={BackgroundLocation} exact={true} />
           <Route path="/Login" component={LoginPage} exact={true} />
           <Route path="/" render={() => <Redirect to="/StartPage" />} exact={true} />
         </IonRouterOutlet>

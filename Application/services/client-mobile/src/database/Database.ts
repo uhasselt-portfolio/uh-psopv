@@ -82,7 +82,7 @@ export default class Database {
     }
 
     async reportUser(userID: number) {
-        const url = this.getRestApiEndpoint() + '/api/problem/report-user/' + userID;
+        const url = this.getRestApiEndpoint() + '/api/problem/add/report-user/' + userID;
 
         return await axios.post(url);
     }
