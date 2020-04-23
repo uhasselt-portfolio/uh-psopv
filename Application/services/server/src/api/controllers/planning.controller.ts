@@ -97,7 +97,7 @@ export const fetchActivePlaningViaUserID = async (req: Request, res: Response) =
         const activePlanning = await PlanningModel.findOne({
             where: {user_id: userID},include: [{model: UserModel, all: true},{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
         });
-        console.log("ACTIVE PLANNING", activePlanning);
+
         const statusCode = activePlanning == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
