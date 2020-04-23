@@ -22,35 +22,50 @@ class PersonPage extends Component<any>{
       return(
         <IonCard>
           <IonCardHeader>
-              <IonCardTitle>
-                  Contact
-              </IonCardTitle>
+            <IonGrid>
+              <IonRow>
+                <IonCol>
+                <IonCardTitle>
+                    Contact
+                </IonCardTitle>
+                </IonCol>
+              
+                
+              </IonRow>
+              </IonGrid>
+           
           </IonCardHeader>
           <IonCardContent>
             <IonGrid>
             
             <IonRow className="center_content">
-                  <IonCol size="3">Naam:</IonCol>
+                  <IonCol size="2.5">Naam:</IonCol>
                   <IonCol>{user.userInfo.first_name} {user.userInfo.last_name}</IonCol>
               </IonRow>
               <IonRow className="center_content">
-                  <IonCol size="3">Tel:</IonCol>
+                  <IonCol size="2.5">Tel:</IonCol>
                   <IonCol>{user.userInfo.phone_number}</IonCol>
-                  <IonCol>
-                    <IonButton className="contact_btn"  href={"tel:" + user.userInfo.phone_number}>
-                      <IonIcon class="text_end" icon={call}/>
-                    </IonButton >
-                  </IonCol>
+                  
               </IonRow>
               <IonRow className="center_content">
-                  <IonCol size="3">E-Mail:</IonCol>
-                  <IonCol>{user.userInfo.email}</IonCol>
-                  <IonCol >
-                    <IonButton className="contact_btn" href={"mailto:" + user.userInfo.email}>
-                      <IonIcon class="text_end" icon={mail}/>
-                    </IonButton >
-                  </IonCol>
+                  <IonCol size="2.5">E-Mail:</IonCol>
+                  <IonCol size="7">{user.userInfo.email}</IonCol>
+                  <IonCol size="2">
+                  <IonButton className="contact_btn" href={"mailto:" + user.userInfo.email}>
+                    <IonIcon class="text_end" icon={mail}/>
+                  </IonButton >
+                </IonCol>
               </IonRow>
+              <IonRow>
+                      <IonCol size="2.5">Rol:</IonCol>
+                      <IonCol size= "7">{user.userInfo.permission_type.name}</IonCol>
+                      <IonCol size="2">
+                        <IonButton className="contact_btn"  href={"tel:" + user.userInfo.phone_number}>
+                        <IonIcon class="text_end" icon={call}/>
+                        </IonButton >
+                      </IonCol>
+                      
+                  </IonRow>
             </IonGrid>
           </IonCardContent>
         </IonCard>
@@ -126,8 +141,8 @@ class PersonPage extends Component<any>{
                 </IonHeader>
 
             {this.renderContactInfo(user)}
-            {this.renderPukkelpopInfo(user)}
-            {this.renderProblemenInfo(user)}
+            {/* {this.renderPukkelpopInfo(user)}
+            {this.renderProblemenInfo(user)} */}
             </IonContent>
         </IonPage>
         )

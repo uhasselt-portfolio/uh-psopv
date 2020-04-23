@@ -4,7 +4,7 @@ import './PostPage.css';
 import Shift from './shift/Shift';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import {fetchPlanningsFromPost, itemToggle} from './PostAction'
+import {fetchPlanningsFromPost} from './PostAction'
 import { caretDown, arrowBack, arrowForward } from 'ionicons/icons';
 import { formatDateTime } from '../../common_functions/date_formatter';
 
@@ -24,8 +24,8 @@ const slideOpts = {
 class PostView extends Component<any, any> {
   state = {
     checkListActive: false,
-    show_shift: -1,
-    current_shift: -1
+    show_shift: -1, // niets
+    current_shift: -1 
   }
 
   constructor(props: any){
@@ -98,9 +98,9 @@ class PostView extends Component<any, any> {
               this.setCurrentlyActiveShift();
               return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
             } else{
-              console.log(this.props)
               let data = this.props.arePlanningsFormPostFetched[this.state.show_shift];
-              return <Shift {... data}/>
+              console.log("show_shift", this.state.show_shift, data)
+              return <Shift key={data.id} {...data}/>
             }
             
           }
@@ -153,7 +153,6 @@ function mapStateToProps(state: any) {
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
     fetchPlanningsFromPost,
-    itemToggle
   }, dispatch);
 }
 

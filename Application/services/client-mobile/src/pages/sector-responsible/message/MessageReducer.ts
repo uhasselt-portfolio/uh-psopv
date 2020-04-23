@@ -4,12 +4,13 @@ import {AnyAction} from "redux";
 export default function (state = {}, action : AnyAction) {
     switch(action.type) {
         case MESSAGE_FETCH_START:
-            return {...state, loading: true, areMessagesFetched: false, errorMessage: ""}
+            return {...state, loading: true, areMessagesOfIdFetched: false, errorMessage: ""}
         case MESSAGE_FETCH_SUCCESS:
             console.log("action.payload", action.payload)
-            return {...state, loading: false, areMessagesFetched: action.payload, errorMessage: ""}
+            return {...state, loading: false, areMessagesOfIdFetched: action.payload, errorMessage: ""}
         case MESSAGE_FETCH_FAIL:
-            return {...state, loading: false, areMessagesFetched: false, errorMessage: action.payload}
+            return {...state, loading: false, areMessagesOfIdFetched: false, errorMessage: action.payload}
+            
         case MESSAGE_TOGGLE_SEEN_START:
             return {...state, loading: true, toggleMessage: false, errorMessage: ""}
         case MESSAGE_TOGGLE_SEEN_SUCCESS:

@@ -1,5 +1,5 @@
 export function formatDate(data: string){
-    return (data.slice(0, 10))
+    return (data.slice(5, 10))
 
 }
 

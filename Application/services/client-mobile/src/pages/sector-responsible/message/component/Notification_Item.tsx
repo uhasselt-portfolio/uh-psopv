@@ -19,7 +19,7 @@ import { read } from 'fs';
 import { connect } from "react-redux";
 import { notifications, trendingUpSharp } from 'ionicons/icons';
 import MessageDataInterface from '../../../../components/interfaces/MessageDataInterface';
-import {fetchMessages,MessagesMessageToggle} from '../MessageAction'
+import {MessageToggle} from '../MessageAction'
 import {formatDateTime} from '../../../common_functions/date_formatter'
 
 
@@ -27,19 +27,31 @@ class NotificationItem extends Component<any> {
     constructor(props: any){
         super(props)
     }
+
+    state = {
+        seen: false
+    }
     
 
     handleOnMenuItemClicked = (data: any) => {
-        console.log(data.id)
-        this.props.MessagesMessageToggle(data.id);
+        this.setState({...this.state, seen: !this.state.seen});
+        this.props.MessageToggle(data.id);
+        console.log(this.state.seen)
+    }
+
+    setStateClicked(clicked: boolean){
+        if(clicked === true && this.state.seen === false){
+            this.setState({...this.state, seen: clicked});
+        }
     }
 
     render(){        
-        let data = this.props.areMessagesFetched.find(((message: { id: any; }) => message.id === this.props.id)); // makes "this.props.." shorter, because it was a bit too long
-        console.log("data", data.seen)
-        if (data.seen){ // nog aan te passen
+        let data = this.props
+        console.log("data", this.props)
+        this.setStateClicked(data.seen)
+        if (this.state.seen){
         return (  
-            <IonItem className="ReadItem">
+            <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
                 <IonLabel>
                     <h2> <b>{data.created_by.first_name}:</b> {data.title}</h2>
                     <p>{data.message}</p>
@@ -67,16 +79,15 @@ class NotificationItem extends Component<any> {
 
 function mapStateToProps(state: any) {
     return({
-      areMessagesFetched: state.message.areMessagesFetched,
-      errorMessage: state.message.errorMessage,
-      loading: state.message.loading
+        toggleMessage: state.message.toggleMessage,
+        errorMessage: state.message.errorMessage,
+        loading: state.message.loading
     })
   }
   
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-      fetchMessages,
-      MessagesMessageToggle
+      MessageToggle
     }, dispatch);
   }
   

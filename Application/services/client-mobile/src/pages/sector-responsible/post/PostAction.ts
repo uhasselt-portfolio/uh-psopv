@@ -42,14 +42,14 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
             });
 
             /* Add User Names */
-            const userNames: any[] = []; 
+            let userNames: any[] = []; 
             sameShift.forEach((element: any) => {
                 const name = element.user.first_name + " " + element.user.last_name
                 userNames.push(name)
             })
 
             /* Add items */
-            const items: any[] = []; 
+            let items: any[] = []; 
             sameShift.forEach(async (planning: any) => {
                 const responseItems = await new Database().fetchItemsFromPlanning(planning.id);
                 responseItems.data.data.items.forEach((element: any) => {
@@ -58,10 +58,10 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
             })
 
             /* Add problems */
-            const problems: any[] = []; 
+            let problems: any[] = []; 
             sameShift.forEach(async (planning: any) => {
                 const responseProblems = await new Database().fetchProblemsFromPlanning(planning.id);
-                responseProblems.data.data.problems.forEach((element: any) => {
+                responseProblems.data.data.problems.forEach((element: any, index: number) => {
                     problems.push(element)
                 });
             })
@@ -121,3 +121,61 @@ export const itemToggle = (item_id: number) => async (dispatch: Redux.Dispatch) 
         }
     }
 }
+
+export const PROBLEM_TOGGLE_START = 'PROBLEM_TOGGLE_START'
+export const PROBLEM_TOGGLE_SUCCESS = 'PROBLEM_TOGGLE_SUCCESS'
+export const PROBLEM_TOGGLE_FAIL = 'PROBLEM_TOGGLE_FAIL'
+
+export const problemToggle = (probem_id: number) => async (dispatch: Redux.Dispatch) => {
+    try{
+        dispatch({type: PROBLEM_TOGGLE_START})
+
+        const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
+
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS})
+    } catch(error){
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }
+    }
+}
+
+// export const FETCH_PROBLEM_TYPES_START = 'FETCH_PROBLEM_TYPES_START'
+// export const FETCH_PROBLEM_TYPES_SUCCESS = 'FETCH_PROBLEM_TYPES_SUCCESS'
+// export const FETCH_PROBLEM_TYPES_FAIL = 'FETCH_PROBLEM_TYPES_FAIL'
+
+// export const problemToggle = (probem_id: number) => async (dispatch: Redux.Dispatch) => {
+//     try{
+//         dispatch({type: PROBLEM_TOGGLE_START})
+
+//         const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
+
+//         dispatch({type: PROBLEM_TOGGLE_SUCCESS})
+//     } catch(error){
+//         if (error.response) {
+//             // Server responded with a code high than 2xx
+//             console.log(error.response.data);
+//             console.log(error.response.status);
+//             console.log(error.response.headers);
+
+//             dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
+//         } else if (error.request) {
+//             // No response was received from the server
+//             console.log(error.request);
+//         } else {
+//             // Request couldn't get send
+//             console.log('Error', error.message);
+//         }
+//     }
+// }

@@ -121,6 +121,14 @@ export default class Database {
 
         return await axios.patch(url)
     }
+
+    async ProblemToggle(problem_id: number) {
+        const url = this.getRestApiEndpoint() + '/api/problem/toggle-solve/' + problem_id;
+
+        return await axios.patch(url)
+    }
+
+    
     
 
     

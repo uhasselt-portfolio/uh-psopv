@@ -4,7 +4,7 @@ import NotificationItem from './component/Notification_Item'
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch, bindActionCreators } from "redux";
-import {fetchMessages} from './MessageAction'
+import {fetchMessagesOf} from './MessageAction'
 
 
 import { IonButton, 
@@ -26,19 +26,18 @@ class Notifications extends Component<any> {
   }
 
   componentDidMount(){
-    this.props.fetchMessages(2); // TODO USERID
+    this.props.fetchMessagesOf(2); // TODO USERID
   }
 
   renderList(){
-    console.log(this.props)
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
-      if(this.props.areMessagesFetched !== undefined){
-        if(this.props.areMessagesFetched.length <= 0){
+      if(this.props.areMessagesOfIdFetched !== undefined){
+        if(this.props.areMessagesOfIdFetched.length <= 0){
           return <div> No messages found. </div>
         } else{
-          return this.props.areMessagesFetched.map((data: any, index: number) =>{
+          return this.props.areMessagesOfIdFetched.map((data: any, index: number) =>{
             return (
             <NotificationItem {... data}/>
             )
@@ -80,7 +79,7 @@ class Notifications extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    areMessagesFetched: state.message.areMessagesFetched,
+    areMessagesOfIdFetched: state.message.areMessagesOfIdFetched,
     errorMessage: state.message.errorMessage,
     loading: state.message.loading
   })
@@ -88,7 +87,7 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchMessages
+    fetchMessagesOf
   }, dispatch);
 }
 

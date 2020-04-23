@@ -20,14 +20,13 @@ import VR_SendMessageReducer from './pages/volunteer/send_message/VR_SendMessage
 export default createStore(
     combineReducers({
         login: LoginReducer,
-        message: MessageReducer,
-        sendMessage: SendMessageReducer,
-        contact: ContactReducer,
-        person: PersonReducer,
-        
         list: ListReducer,
         map: ListReducer,
+        message: MessageReducer,
+        contact: ContactReducer,
 
+        sendMessage: SendMessageReducer,
+        person: PersonReducer,
         post: PostReducer,
         info: InfoReducer,
 

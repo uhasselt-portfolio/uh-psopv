@@ -4,7 +4,9 @@ import { RouteComponentProps } from 'react-router';
 import { caretDown } from 'ionicons/icons';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import {messageAddMessage, messageFetchUsers} from './SendMessageAction'
+import {messageAddMessage} from './SendMessageAction'
+import {fetchUsers} from '../contact/ContactAction'
+
 
 
 
@@ -22,7 +24,7 @@ class SendNotifications extends Component<any> {
   }
 
   componentDidMount(){
-    this.props.messageFetchUsers();
+    this.props.fetchUsers();
   }
 
 
@@ -43,16 +45,16 @@ class SendNotifications extends Component<any> {
   }
 
   renderListOfUser(){
-    console.log(this.props.messageFetchUsers)
+    console.log(this.props.areUsersFetched)
 
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
-      if(this.props.messageFetchUsers !== undefined){
-        if(this.props.messageFetchUsers.length <= 0){
+      if(this.props.areUsersFetched !== undefined){
+        if(this.props.areUsersFetched.length <= 0){
           return <div>No users found</div>
         } else{
-          return this.props.messageFetchUsers.map((data: any, index: number) =>{
+          return this.props.areUsersFetched.map((data: any, index: number) =>{
             return (
               <IonSelectOption value={data.id}>{data.first_name} {data.last_name} ({data.permission_type.name})</IonSelectOption>
             )
@@ -65,6 +67,7 @@ class SendNotifications extends Component<any> {
 
 
   render(){
+    console.log(this.props.areUsersFetched)
       return (
       <IonPage>
         <IonHeader>
@@ -105,16 +108,16 @@ class SendNotifications extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    messageFetchUsers: state.sendMessage.messageFetchUsers,
-    errorMessage: state.sendMessage.errorMessage,
-    loading: state.sendMessage.loading
+    areUsersFetched: state.contact.areUsersFetched,
+    errorMessage: state.contact.errorMessage,
+    loading: state.contact.loading
   })
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
     messageAddMessage,
-    messageFetchUsers
+    fetchUsers
   }, dispatch);
 }
 
