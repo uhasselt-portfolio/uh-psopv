@@ -116,11 +116,11 @@ class App extends React.Component {
             <IonIcon icon={ellipse} />
             <IonLabel>Map</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="/Messages" href="/Messages">
+          <IonTabButton tab="Messages" href="/Messages">
             <IonIcon icon={ellipse} />
             <IonLabel>Msg</IonLabel>
           </IonTabButton>
-          <IonTabButton tab="/SendMessages" href="/SendMessages">
+          <IonTabButton tab="SendMessages" href="/SendMessages">
             <IonIcon icon={ellipse} />
             <IonLabel>Send</IonLabel>
           </IonTabButton>
