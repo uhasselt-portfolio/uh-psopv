@@ -1,3 +1,10 @@
 .text_end{
     float: right;
 }
+
+.flexrow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}

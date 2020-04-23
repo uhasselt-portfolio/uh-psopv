@@ -4,11 +4,11 @@ import {AnyAction} from "redux";
 export default function (state = {}, action : AnyAction) {
     switch(action.type) {
         case PLANNING_FETCH_START:
-            return {...state, loading: true, arePlanningsFetched: false, errorMessage: ""}
+            return {...state, loading: true, arePostsFetched: false, errorMessage: ""}
         case PLANNING_FETCH_SUCCESS:
-            return {...state, loading: false, arePlanningsFetched: action.payload, errorMessage: ""}
+            return {...state, loading: false, arePostsFetched: action.payload, errorMessage: ""}
         case PLANNING_FETCH_FAIL:
-            return {...state, loading: false, arePlanningsFetched: false, errorMessage: action.payload}
+            return {...state, loading: false, arePostsFetched: false, errorMessage: action.payload}
         default:
             return state
     }

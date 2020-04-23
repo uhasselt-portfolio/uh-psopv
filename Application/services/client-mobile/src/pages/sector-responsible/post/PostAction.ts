@@ -2,50 +2,78 @@ import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
 
-export const PLANNING_POST_ID_FETCH_START = 'PLANNING_POST_ID_FETCH_START'
-export const PLANNING_POST_ID_FETCH_SUCCESS = 'PLANNING_POST_ID_FETCH_SUCCESS'
-export const PLANNING_POST_ID_FETCH_FAIL = 'PLANNING_POST_ID_FETCH_FAIL'
+export const POST_FETCH_PLANNING_START = 'POST_FETCH_PLANNING_START'
+export const POST_FETCH_PLANNING_SUCCESS = 'POST_FETCH_PLANNING_SUCCESS'
+export const POST_FETCH_PLANNING_FAIL = 'POST_FETCH_PLANNING_FAIL'
 
-function getTiming(data: any): number {
-    let sum = 0;
-    sum += data.slice(0,4) * 10000
+function sortUserShifts(a: any, b: any){
+    var shift_begin_a = new Date(a.shift_data[0].shift.begin)
+    var shift_begin_b = new Date(b.shift_data[0].shift.begin)
 
-    sum += (data.slice(5,7) * 1000)
-
-    sum += (data.slice(8,10) * 100)
-
-    sum += (data.slice(11,13) * 10)
-    return sum
+    if(shift_begin_a < shift_begin_b){
+        return -1
+    }
+    else if(shift_begin_a > shift_begin_b){
+        return 1
+    } else{
+        return 0
+    }
 }
 
-function compare(a: any, b: any) {
-    if (getTiming(a.shift.begin) < getTiming(b.shift.begin)) {
-      return -1;
-    }
-    if (getTiming(a.shift.begin) > getTiming(b.shift.begin)) {
-      return 1;
-    }
-    // a must be equal to b
-    return 0;
-  }
-
-function printDate(data: any){
-    data.forEach((element: any, index: number) => {
-        console.log(index, element.shift.begin)
-    });
-}
-
-export const fetchPlanningsWithPostId = (id: number) => async (dispatch: Redux.Dispatch) => {
+export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: PLANNING_POST_ID_FETCH_START})
+        dispatch({type: POST_FETCH_PLANNING_START})
 
-        const response = await new Database().fetchPlanningsWithPostId(id);
+        const responsePlannings = await new Database().fetchPlanningsWithPostId(post_id);
 
-        // new list with all same_shifts placed together
-        const plannings = response.data.data.plannings
-        plannings.sort(compare)
+        /* Add all Same shift together */
+        const shifts: any[] = []; // array with shift_id's
+        responsePlannings.data.data.plannings.forEach((element: any) => {
+            if(!shifts.includes(element.shift_id)){
+                shifts.push(element.shift_id)
+            }
+        });
 
-        dispatch({type: PLANNING_POST_ID_FETCH_SUCCESS, payload: plannings})
+
+        const userShifts: any[] = []; 
+        shifts.forEach((shift_id: number) => {
+            let sameShift = responsePlannings.data.data.plannings.filter((element: any) => {
+                return element.shift_id === shift_id
+            });
+
+            /* Add User Names */
+            let userNames: any[] = []; 
+            sameShift.forEach((element: any) => {
+                const name = element.user.first_name + " " + element.user.last_name
+                userNames.push(name)
+            })
+
+            /* Add items */
+            let items: any[] = []; 
+            sameShift.forEach(async (planning: any) => {
+                const responseItems = await new Database().fetchItemsFromPlanning(planning.id);
+                responseItems.data.data.items.forEach((element: any) => {
+                    items.push(element)
+                });
+            })
+
+            /* Add problems */
+            let problems: any[] = []; 
+            sameShift.forEach(async (planning: any) => {
+                const responseProblems = await new Database().fetchProblemsFromPlanning(planning.id);
+                responseProblems.data.data.problems.forEach((element: any, index: number) => {
+                    problems.push(element)
+                });
+            })
+
+            userShifts.push({shift_id: shift_id, shift_data: sameShift, shift_users: userNames,shift_items: items, shift_problems: problems});
+        })
+
+        /* Sort the array by time*/
+        userShifts.sort(sortUserShifts)
+
+        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: userShifts})
+
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx
@@ -53,7 +81,7 @@ export const fetchPlanningsWithPostId = (id: number) => async (dispatch: Redux.D
             console.log(error.response.status);
             console.log(error.response.headers);
 
-            dispatch({type: PLANNING_POST_ID_FETCH_FAIL, payload: error.response.data.plannings})
+            dispatch({type: POST_FETCH_PLANNING_FAIL, payload: error.response.data.users})
         } else if (error.request) {
             // No response was received from the server
             console.log(error.request);
@@ -63,3 +91,91 @@ export const fetchPlanningsWithPostId = (id: number) => async (dispatch: Redux.D
         }
     }
 }
+
+
+export const ITEM_TOGGLE_START = 'ITEM_TOGGLE_START'
+export const ITEM_TOGGLE_SUCCESS = 'ITEM_TOGGLE_SUCCESS'
+export const ITEM_TOGGLE_FAIL = 'ITEM_TOGGLE_FAIL'
+
+export const itemToggle = (item_id: number) => async (dispatch: Redux.Dispatch) => {
+    try{
+        dispatch({type: ITEM_TOGGLE_START})
+
+        const response = await new Database().ItemToggle(item_id); // TODO GETUSERID
+
+        dispatch({type: ITEM_TOGGLE_SUCCESS})
+    } catch(error){
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: ITEM_TOGGLE_FAIL, payload: error.response.data.items})
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }
+    }
+}
+
+export const PROBLEM_TOGGLE_START = 'PROBLEM_TOGGLE_START'
+export const PROBLEM_TOGGLE_SUCCESS = 'PROBLEM_TOGGLE_SUCCESS'
+export const PROBLEM_TOGGLE_FAIL = 'PROBLEM_TOGGLE_FAIL'
+
+export const problemToggle = (probem_id: number) => async (dispatch: Redux.Dispatch) => {
+    try{
+        dispatch({type: PROBLEM_TOGGLE_START})
+
+        const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
+
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS})
+    } catch(error){
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }
+    }
+}
+
+// export const FETCH_PROBLEM_TYPES_START = 'FETCH_PROBLEM_TYPES_START'
+// export const FETCH_PROBLEM_TYPES_SUCCESS = 'FETCH_PROBLEM_TYPES_SUCCESS'
+// export const FETCH_PROBLEM_TYPES_FAIL = 'FETCH_PROBLEM_TYPES_FAIL'
+
+// export const problemToggle = (probem_id: number) => async (dispatch: Redux.Dispatch) => {
+//     try{
+//         dispatch({type: PROBLEM_TOGGLE_START})
+
+//         const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
+
+//         dispatch({type: PROBLEM_TOGGLE_SUCCESS})
+//     } catch(error){
+//         if (error.response) {
+//             // Server responded with a code high than 2xx
+//             console.log(error.response.data);
+//             console.log(error.response.status);
+//             console.log(error.response.headers);
+
+//             dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
+//         } else if (error.request) {
+//             // No response was received from the server
+//             console.log(error.request);
+//         } else {
+//             // Request couldn't get send
+//             console.log('Error', error.message);
+//         }
+//     }
+// }

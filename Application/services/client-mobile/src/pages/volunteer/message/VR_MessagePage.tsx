@@ -1,10 +1,10 @@
 import React, { Fragment, useState, Component} from 'react';
-import './MessagePage.css';
+import './VR_MessagePage.css';
 import NotificationItem from './component/Notification_Item'
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch, bindActionCreators } from "redux";
-import {fetchMessages} from './MessageAction'
+import {fetchMessages} from './VR_MessageAction'
 
 
 import { IonButton, 
@@ -20,13 +20,12 @@ import { IonButton,
 
 
 
-class Notifications extends Component<any> {
+class VrijwilligerMessages extends Component<any> {
   constructor(props: any) {
     super(props);
   }
-
   componentDidMount(){
-    this.props.fetchMessages(1);
+    this.props.fetchMessages(1); // TODO USERID
   }
 
   renderList(){
@@ -46,11 +45,6 @@ class Notifications extends Component<any> {
         }
       }
     }
-  }
-
-
-  handleRead = (index: number) => {
-    // this.props.messageRead(this.props.notificationReducer.Messages[index]);
   }
 
 
@@ -97,4 +91,4 @@ function mapDispatchToProps(dispatch: any) {
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
+export default connect(mapStateToProps, mapDispatchToProps)(VrijwilligerMessages);
