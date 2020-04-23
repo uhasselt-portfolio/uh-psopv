@@ -1,17 +1,21 @@
 import axios from "axios"
 import Redux from 'redux';
+import Database from '../../../database/Database'
 
 export const USER_FETCH_START = 'USER_FETCH_START'
 export const USER_FETCH_SUCCESS = 'USER_FETCH_SUCCESS'
 export const USER_FETCH_FAIL = 'USER_FETCH_FAIL'
 
-export const fetchUsers = () => async (dispatch: Redux.Dispatch) => {
+export const fetchUser = (user_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: USER_FETCH_START})
 
-        const response = await axios.get('http://localhost/api/user/fetch/all');
+        const responsePlannings = await new Database().fetchPlanningsWithUserId(user_id);
+        const responseUserInfo = await new Database().fetchUserById(user_id);
 
-        dispatch({type: USER_FETCH_SUCCESS, payload: response.data.data.users})
+        let response = {plannings: responsePlannings.data.data.plannings, userInfo: responseUserInfo.data.data.user}
+
+        dispatch({type: USER_FETCH_SUCCESS, payload: response})
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx

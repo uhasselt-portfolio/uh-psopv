@@ -9,8 +9,10 @@ import { IonButton,
     IonList, 
     IonItem, 
     IonLabel,
-    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar } from '@ionic/react';
+    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonIcon } from '@ionic/react';
+import { call } from 'ionicons/icons';
 
+import WarningSign from "../../../images/warning_sign"
 
   
 
@@ -22,10 +24,16 @@ class ListViewItem  extends Component<any> {
     getPost(props: any): string {
         return '/PostView/'+ props.sector + '/' + props.post;
     }
+
+    renderProblemIcon(){
+        {if(this.props.problem === true){
+            return  <WarningSign />
+        }}
+    }
         
 
     render() {
-
+        console.log(this.props)
         function getPost(props: any): string {
             return '/PostView/'+props.id+"/"+props.sector_id
         }
@@ -40,6 +48,7 @@ class ListViewItem  extends Component<any> {
                 </IonLabel>
                 <IonLabel class="right_text">
                     <h2>Sector {this.props.sector_id}</h2>
+                    {this.renderProblemIcon()}
                 </IonLabel>
             </IonItem>
             </a>

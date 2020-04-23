@@ -40,7 +40,7 @@ class InfoPage extends React.Component<any, any> {
         BackgroundGeolocation.configure(config)
             .then(() => {
                 BackgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location) => {
-                    console.log("location: ",location)
+                    console.log("location: ", location)
 
                     this.props.updateGeolocation(location);
 

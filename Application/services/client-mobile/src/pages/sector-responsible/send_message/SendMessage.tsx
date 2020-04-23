@@ -4,7 +4,9 @@ import { RouteComponentProps } from 'react-router';
 import { caretDown } from 'ionicons/icons';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import {addMessage, fetchUsers} from './SendMessageAction'
+import {messageAddMessage} from './SendMessageAction'
+import {fetchUsers} from '../contact/ContactAction'
+
 
 
 
@@ -12,7 +14,8 @@ class SendNotifications extends Component<any> {
   state = {
     title: "",
     message: "",
-    created_by: 1,
+    created_by: 2,
+    send_to_id: 2,
     priority: 1
   }
 
@@ -26,7 +29,7 @@ class SendNotifications extends Component<any> {
 
 
   handleSendMessage(){
-    this.props.addMessage(this.state.title, this.state.message, this.state.created_by, this.state.priority);
+    this.props.messageAddMessage(this.state.title, this.state.message, this.state.created_by, this.state.send_to_id, this.state.priority); // TODO USERID
   }
 
   handleTitleChange(new_title: string | null | undefined){
@@ -37,20 +40,23 @@ class SendNotifications extends Component<any> {
     this.setState({...this.state, message: new_message});
   }
 
+  handleSendToChange(new_send_to: number){
+    this.setState({...this.state, send_to_id: new_send_to});
+  }
 
   renderListOfUser(){
-    console.log("this.props.areMessagesfetched", this.props);
+    console.log(this.props.areUsersFetched)
+
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
       if(this.props.areUsersFetched !== undefined){
-        console.log(this.props.areMessageFetched)
         if(this.props.areUsersFetched.length <= 0){
           return <div>No users found</div>
         } else{
           return this.props.areUsersFetched.map((data: any, index: number) =>{
             return (
-              <IonSelectOption value="Verantwoordelijke">{data.first_name} {data.last_name}</IonSelectOption>
+              <IonSelectOption value={data.id}>{data.first_name} {data.last_name} ({data.permission_type.name})</IonSelectOption>
             )
           })
         }
@@ -61,6 +67,7 @@ class SendNotifications extends Component<any> {
 
 
   render(){
+    console.log(this.props.areUsersFetched)
       return (
       <IonPage>
         <IonHeader>
@@ -79,7 +86,7 @@ class SendNotifications extends Component<any> {
 
           <IonItem>
             <IonLabel>Ontvanger</IonLabel>
-            <IonSelect interface="popover" value="test" placeholder="Selecteer">
+            <IonSelect interface="popover" value={this.state.send_to_id} placeholder="Selecteer" onIonChange={e => this.handleSendToChange(e.detail.value)}>
               {this.renderListOfUser()}
             </IonSelect>
           </IonItem>
@@ -101,15 +108,15 @@ class SendNotifications extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    areUsersFetched: state.sendMessage.areUsersFetched,
-    errorMessage: state.sendMessage.errorMessage,
-    loading: state.sendMessage.loading
+    areUsersFetched: state.contact.areUsersFetched,
+    errorMessage: state.contact.errorMessage,
+    loading: state.contact.loading
   })
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    addMessage,
+    messageAddMessage,
     fetchUsers
   }, dispatch);
 }

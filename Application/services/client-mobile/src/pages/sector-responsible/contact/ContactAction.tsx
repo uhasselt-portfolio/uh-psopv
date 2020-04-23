@@ -1,17 +1,18 @@
 import axios from "axios"
 import Redux from 'redux';
+import Database from '../../../database/Database'
 
-export const USER_FETCH_START = 'USER_FETCH_START'
-export const USER_FETCH_SUCCESS = 'USER_FETCH_SUCCESS'
-export const USER_FETCH_FAIL = 'USER_FETCH_FAIL'
+export const USERS_FETCH_START = 'USERS_FETCH_START'
+export const USERS_FETCH_SUCCESS = 'USERS_FETCH_SUCCESS'
+export const USERS_FETCH_FAIL = 'USERS_FETCH_FAIL'
 
 export const fetchUsers = () => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: USER_FETCH_START})
+        dispatch({type: USERS_FETCH_START})
 
-        const response = await axios.get('http://localhost/api/user/fetch/all');
+        const response = await new Database().fetchUsers();
 
-        dispatch({type: USER_FETCH_SUCCESS, payload: response.data.data.users})
+        dispatch({type: USERS_FETCH_SUCCESS, payload: response.data.data.users})
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx
@@ -19,7 +20,7 @@ export const fetchUsers = () => async (dispatch: Redux.Dispatch) => {
             console.log(error.response.status);
             console.log(error.response.headers);
 
-            dispatch({type: USER_FETCH_FAIL, payload: error.response.data.user})
+            dispatch({type: USERS_FETCH_FAIL, payload: error.response.data.users})
         } else if (error.request) {
             // No response was received from the server
             console.log(error.request);

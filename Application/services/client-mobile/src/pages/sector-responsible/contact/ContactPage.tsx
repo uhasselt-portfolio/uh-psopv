@@ -34,10 +34,10 @@ class Contacts extends Component<any> {
       return <div>Loading...</div>
     } else {
       if(this.props.areUsersFetched !== undefined){
-        console.log(this.props.areMessageFetched)
         if(this.props.areUsersFetched.length <= 0){
-          return <div> No messages found. </div>
+          return <div> No contacts found. </div>
         } else{
+          {console.log(this.props)}
           return this.props.areUsersFetched.map((data: any, index: number) =>{
             return (
             <ContactItem {... data}/>
