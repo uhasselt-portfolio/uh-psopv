@@ -40,8 +40,22 @@ export default function (state: State = initialState, action : AnyAction): State
             return {
                 ...state,
                 loading: false,
-                isOverviewFetched: true,
+                isPostNewMessage: true,
                 errorMessage: ""
+            }
+            case OverviewActions.OVERVIEW_POST_NEW_MESSAGE_FAIL : 
+            return {
+                ...state,
+                loading: false,
+                isPostNewMessage: false,
+                errorMessage: ""
+            }
+            case OverviewActions.OVERVIEW_POST_NEW_MESSAGE_START : 
+            return {
+                ...state,
+                loading: true,
+                isPostNewMessage: false,
+                errorMessage: action.payload
             }
         case OverviewActions.OVERVIEW_POST_MESSAGE_READ_SUCCES : {
             let otherMessages : MessageInterface[] = state.messages.filter(message => message.id !== action.payload);

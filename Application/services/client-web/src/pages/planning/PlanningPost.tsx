@@ -75,7 +75,7 @@ class Post extends Component<IProps> {
                     <Grid item>
                         <h5>{this.props.postName}</h5>
                     </Grid>
-                    <Grid item>
+                    {/* <Grid item>
                         { ! this.state.dropdownUsers && <Button variant="contained" startIcon={<ArrowDropDownIcon />} 
                             onClick={this.handleDropdownUsers} style={ButtonStyle}>Vrijwilligers</Button>}
                         {this.state.dropdownUsers && <Button variant="contained" startIcon={<ArrowDropUpIcon />} 
@@ -86,10 +86,8 @@ class Post extends Component<IProps> {
                             onClick={this.handleDropdownItems} style={ButtonStyle}>Items</Button>}
                         {this.state.dropdownItems && <Button variant="contained" startIcon={<ArrowDropUpIcon />} 
                             onClick={this.handleDropdownItems} style={ButtonStyle}>Items</Button>}
-                    </Grid>
-                    {/* <Grid item>
-                        dropdown changebutton?
                     </Grid> */}
+
                     <Grid container direction="row" justify="center">
                         <Grid item>
                             <Grid container direction="column">

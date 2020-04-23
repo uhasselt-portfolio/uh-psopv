@@ -26,7 +26,8 @@ export default interface State {
     isUsersFetched: boolean,
     isProblemSolvedPosted: boolean,
     isUserConnectionChanged: boolean,
-    loggedIn: UserDataInterface
+    loggedIn: UserDataInterface,
+    isPostNewMessage: boolean
 }
 
 export const initialState : State = {
@@ -51,5 +52,6 @@ export const initialState : State = {
     isSettingsFetched: false,
     isUsersFetched: false,
     isProblemSolvedPosted: false,
-    isUserConnectionChanged: false
+    isUserConnectionChanged: false,
+    isPostNewMessage: false
 }

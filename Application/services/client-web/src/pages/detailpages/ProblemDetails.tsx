@@ -68,13 +68,10 @@ class ProblemDetails extends Component<props> {
                             </Grid>
                         </Grid>
                         <Grid container justify="center">
-                            <Grid item>
-                                <p>Shift: {this.props.location.state.shiftName}</p>
-                            </Grid> 
                         </Grid>
                         <Grid container justify="center">
                             <Grid item>
-                                <p>tijdstip: {this.props.location.state.timeStamp}</p>
+                                <p>tijdstip: { new Date(this.props.location.state.timeStamp).toLocaleString()}</p>
                             </Grid>
                         </Grid>
                         <Grid container justify="center">
@@ -116,7 +113,7 @@ class ProblemDetails extends Component<props> {
 interface LinkDispatchToProps {
     problemSolved: (ProblemId: Number) => any
 }
-const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
+const MapDispatchToProps = (dispatch: any) : LinkDispatchToProps => {
     return bindActionCreators({
         problemSolved
     },dispatch);
@@ -124,5 +121,6 @@ const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
 
 
 export default connect(
-    MapDispatchToProp
+    null,
+    MapDispatchToProps
 )(ProblemDetails);

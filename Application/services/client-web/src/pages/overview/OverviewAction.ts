@@ -11,6 +11,8 @@ export enum OverviewActions {
     OVERVIEW_MESSAGE_FETCH_SUCCES = 'OVERVIEW_MESSAGE_FETCH_SUCCES',
     OVERVIEW_FETCH_SUCCES = 'OVERVIEW_FETCH_SUCCES',
     OVERVIEW_POST_NEW_MESSAGE_SUCCES = 'OVERVIEW_POST_NEW_MESSAGE',
+    OVERVIEW_POST_NEW_MESSAGE_FAIL = 'OVERVIEW_POST_NEW_MESSAFGE_FAIL',
+    OVERVIEW_POST_NEW_MESSAGE_START = 'OVERVIEW_POST_NEW_MESSAGE_START',
     OVERVIEW_POST_MESSAGE_READ_SUCCES = 'OVERVIEW_MESSAGE_READ_SUCCES',
     OVERVIEW_FETCH_POSTS_START = 'OVERVIEW_GET_POSTS_START',
     OVERVIEW_FETCH_POSTS_SUCCES = 'OVERVIEW_GET_POSTS_SUCCES',
@@ -128,18 +130,10 @@ export const postNewMessage = (receiver: Number,title: string, content: string, 
     console.log("post new message");
     try {
         dispatch({
-            type: OverviewActions.OVERVIEW_FETCH_START
+            type: OverviewActions.OVERVIEW_POST_NEW_MESSAGE_START
         });
 
         const response = await new Database().postNewMessage(receiver,title,content,adminId);
-
-        // const respone = await axios.post('http://localhost/api/message/add', {  //TODO vershil tussen bericht naar groep en bericht naar invidu
-        //                                                                         //TODO hoe krijg ik id van een invidu met enkel de naam
-        //     title: title,
-        //     message: content,
-        //     created_by_id: adminId,
-        //     priority: 0,
-        // });
 
         console.log(response);
 
@@ -155,7 +149,7 @@ export const postNewMessage = (receiver: Number,title: string, content: string, 
             console.log(error.response.status);
             console.log(error.response.headers);
 
-            dispatch({type: OverviewActions.OVERVIEW_FETCH_FAIL, payload: error.response.data.message});
+            dispatch({type: OverviewActions.OVERVIEW_POST_NEW_MESSAGE_FAIL, payload: error.response.data.message});
         } else if (error.request) {
             // No response was received from the server
             console.log(error.request);
@@ -173,10 +167,7 @@ export const postMessageRead = (messageId: Number) => async (dispatch: Redux.Dis
             type: OverviewActions.OVERVIEW_FETCH_START
         });
 
-        const respone = await axios.patch('http://localhost/api/message/toggle-seen/' + messageId) //TODO correct address + par
-
-        console.log(respone);
-
+        const respone = await new Database().patchMessageRead(messageId);
 
         dispatch({
             type: OverviewActions.OVERVIEW_POST_MESSAGE_READ_SUCCES,

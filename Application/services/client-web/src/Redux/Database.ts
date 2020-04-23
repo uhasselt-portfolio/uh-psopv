@@ -200,5 +200,10 @@ export default class Database {
             });
         return response;
     }
+
+    async patchMessageRead(messageId: Number) {
+        const respone = await axios.patch('https://psopv.herokuapp.com/api/message/toggle-seen/' + messageId);
+        return respone;
+    }
 }
 

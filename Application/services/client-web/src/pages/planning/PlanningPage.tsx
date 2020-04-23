@@ -96,7 +96,6 @@ class Planning extends Component<Props> {
     organizePlanningFilter = () :ShiftProps[] => {
         let allShifts : ShiftInterface[] = this.props.planning;
         let shifts : ShiftProps[] = [];
-        console.log(allShifts);
 
         while (allShifts.length > 0) {
             let temp : ShiftInterface[] = allShifts.filter(shift => shift.shiftId === allShifts[0].shiftId);
@@ -191,16 +190,13 @@ class Planning extends Component<Props> {
                 uniqueShifts.push(this.props.planning[i]);
         }
 
-        console.log(this.props.planning);
-        console.log(uniqueShifts);
-
         let shiftChoices : Array<JSX.Element> = uniqueShifts.map( x => {
             let date: Date = new Date(x.beginDate);
             let parsedBeginDate: string = date.toLocaleString();
             let enddate: Date = new Date(x.endDate);
             let parseEndDate : string = enddate.toLocaleString().split(" ")[1];
             return (
-                <MenuItem value={x.shiftName + parsedBeginDate}> {x.shiftName + " "} {parsedBeginDate + " tot " + parseEndDate}</MenuItem>
+                <MenuItem value={x.shiftName + parsedBeginDate}>{parsedBeginDate + " tot " + parseEndDate}</MenuItem>
             );
         });
 
@@ -231,6 +227,7 @@ class Planning extends Component<Props> {
                     usersid.push(this.props.planning[j].User_id);
                 }
             }
+            console.log(this.props.planning);
             let tempUsers : UserInterface[] = [];
             for (let j = 0; j < this.props.users.length; ++j)
                 if (usersid.includes(this.props.users[j].id))
@@ -257,6 +254,8 @@ class Planning extends Component<Props> {
                 <Post postName={posts3[i].title} items={items[i]} users={users[i]} />
             );
         }
+
+        console.log(users);
 
         return(
             <div>

@@ -102,7 +102,6 @@ class Overview extends Component<Props> {
                 onClick={() => this.problemClicked(x)}
             />
         ));
-        console.log('users',this.props.users);
         let UserMarkers: Array<JSX.Element> = this.props.users.map(x => (
             <Marker 
             position={{lat: x.latitude, lng: x.longitude}}
