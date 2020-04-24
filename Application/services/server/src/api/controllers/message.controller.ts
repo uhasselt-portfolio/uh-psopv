@@ -124,7 +124,6 @@ export const add = async (req: Request, res: Response) => {
             });
         }
     } catch (error) {
-        console.log(error);
         res.status(500).send({
             status: 'error',
             data: null,

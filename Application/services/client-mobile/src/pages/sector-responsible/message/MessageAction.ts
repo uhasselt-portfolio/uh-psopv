@@ -28,9 +28,7 @@ export const fetchMessagesOf = (id: number) => async (dispatch: Redux.Dispatch) 
         const response = await new Database().fetchMessagesFrom(id);
         let messages = response.data.data.messages;
         
-        console.log(messages)
         messages.sort(sortMessagesByDate)
-        console.log(messages)
 
         dispatch({type: MESSAGE_FETCH_SUCCESS, payload: response.data.data.messages})
     } catch(error){
