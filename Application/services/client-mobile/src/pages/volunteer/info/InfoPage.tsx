@@ -48,6 +48,7 @@ class InfoPage extends React.Component<any, any> {
                 });
             });
         BackgroundGeolocation.start();
+        BackgroundGeolocation.stop();
         this.props.fetchPlanningsFromId(1);
     }
 
