@@ -2,21 +2,22 @@ import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
 
-export const MESSAGE_ADD_START = 'MESSAGE_ADD_START'
-export const MESSAGE_ADD_SUCCESS = 'MESSAGE_ADD_SUCCESS'
-export const MESSAGE_ADD_FAIL = 'MESSAGE_ADD_FAIL'
+export const VR_MESSAGE_ADD_START = 'VR_MESSAGE_ADD_START'
+export const VR_MESSAGE_ADD_SUCCESS = 'VR_MESSAGE_ADD_SUCCESS'
+export const VR_MESSAGE_ADD_FAIL = 'VR_MESSAGE_ADD_FAIL'
 
-export const messageAddMessage = (title: string | undefined,
+export const VRSendMessage = (title: string | undefined,
      message: string | undefined,
      created_by_id: number,
      send_to_id: number,
      priority: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: MESSAGE_ADD_START})
+        dispatch({type: VR_MESSAGE_ADD_START})
 
         const response = await new Database().addMessage(title, message, created_by_id, send_to_id, priority);
 
-        dispatch({type: MESSAGE_ADD_SUCCESS})
+
+        dispatch({type: VR_MESSAGE_ADD_SUCCESS})
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx
@@ -24,7 +25,7 @@ export const messageAddMessage = (title: string | undefined,
             console.log(error.response.status);
             console.log(error.response.headers);
 
-            dispatch({type: MESSAGE_ADD_FAIL, payload: error.response.data.message})
+            dispatch({type: VR_MESSAGE_ADD_FAIL, payload: error.response.data.message})
         } else if (error.request) {
             // No response was received from the server
             console.log(error.request);
@@ -35,17 +36,18 @@ export const messageAddMessage = (title: string | undefined,
     }
 }
 
-export const MESSAGE_USER_FETCH_START = 'USER_FETCH_START'
-export const MESSAGE_USER_FETCH_SUCCESS = 'USER_FETCH_SUCCESS'
-export const MESSAGE_USER_FETCH_FAIL = 'USER_FETCH_FAIL'
+export const FETCH_USER_FROM_SECTOR_START = 'FETCH_USER_FROM_SECTOR_START'
+export const FETCH_USER_FROM_SECTOR_SUCCESS = 'FETCH_USER_FROM_SECTOR_SUCCESS'
+export const FETCH_USER_FROM_SECTOR_FAIL = 'FETCH_USER_FROM_SECTOR_FAIL'
 
-export const messageFetchUsers = () => async (dispatch: Redux.Dispatch) => {
+export const fetchUserFromSector = (user_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: MESSAGE_USER_FETCH_START})
+        dispatch({type: FETCH_USER_FROM_SECTOR_START})
 
-        const response = await new Database().fetchUsers();
+        const response = await new Database().fetchUserById(user_id); // TODO USERID sector-verantwoordelijke
+        console.log(response)
 
-        dispatch({type: MESSAGE_USER_FETCH_SUCCESS, payload: response.data.data.users})
+        dispatch({type: FETCH_USER_FROM_SECTOR_SUCCESS, payload: response.data.data.user})
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx
@@ -53,7 +55,7 @@ export const messageFetchUsers = () => async (dispatch: Redux.Dispatch) => {
             console.log(error.response.status);
             console.log(error.response.headers);
 
-            dispatch({type: MESSAGE_USER_FETCH_FAIL, payload: error.response.data.users})
+            dispatch({type: FETCH_USER_FROM_SECTOR_FAIL, payload: error.response.data.user})
         } else if (error.request) {
             // No response was received from the server
             console.log(error.request);
