@@ -1,0 +1,34 @@
+.flexrow{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.CardContainer{
+    text-align: center;
+    align-items: center;
+    width: 100%;
+}
+
+.verticalSlide{
+    width: 100%;
+}
+
+.rightContent{
+    text-align: right;
+    align-content: flex-end;
+}
+
+.grid{
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: lightgrey;
+}
+
+.gridSolved{
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    border-color: lightgrey;
+    background-color: lightgrey;
+}

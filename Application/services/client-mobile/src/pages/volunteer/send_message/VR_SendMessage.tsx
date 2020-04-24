@@ -4,18 +4,16 @@ import { RouteComponentProps } from 'react-router';
 import { caretDown } from 'ionicons/icons';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import {messageAddMessage} from './SendMessageAction'
-import {fetchUsers} from '../contact/ContactAction'
+import {messageAddMessage, messageFetchUsers} from './VR_SendMessageAction'
 
 
 
-
-class SendNotifications extends Component<any> {
+class VrijwilligerSendMessages extends Component<any> {
   state = {
     title: "",
     message: "",
-    created_by: 2,
-    send_to_id: 2,
+    created_by: 1,
+    send_to_id: 1,
     priority: 1
   }
 
@@ -24,7 +22,7 @@ class SendNotifications extends Component<any> {
   }
 
   componentDidMount(){
-    this.props.fetchUsers();
+    this.props.messageFetchUsers();
   }
 
 
@@ -42,11 +40,11 @@ class SendNotifications extends Component<any> {
 
   handleSendToChange(new_send_to: number){
     this.setState({...this.state, send_to_id: new_send_to});
+    console.log(this.state)
   }
 
-  renderListOfUser(){
-    console.log(this.props.areUsersFetched)
 
+  renderListOfUser(){
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
@@ -67,7 +65,6 @@ class SendNotifications extends Component<any> {
 
 
   render(){
-    console.log(this.props.areUsersFetched)
       return (
       <IonPage>
         <IonHeader>
@@ -108,18 +105,18 @@ class SendNotifications extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    areUsersFetched: state.contact.areUsersFetched,
-    errorMessage: state.contact.errorMessage,
-    loading: state.contact.loading
+    areUsersFetched: state.sendMessage.areUsersFetched,
+    errorMessage: state.sendMessage.errorMessage,
+    loading: state.sendMessage.loading
   })
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
     messageAddMessage,
-    fetchUsers
+    messageFetchUsers
   }, dispatch);
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(SendNotifications);
+export default connect(mapStateToProps, mapDispatchToProps)(VrijwilligerSendMessages);

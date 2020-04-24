@@ -14,6 +14,7 @@ export default function (state = {}, action : AnyAction) {
         case USER_UPDATE_GEOLOCATION_START:
             return {...state, loading: true, isLocationUpdated: false, errorMessage: ""};
         case USER_UPDATE_GEOLOCATION_SUCCESS:
+            console.log('Geolocation update success')
             return {...state, loading: false, isLocationUpdated: action.payload, errorMessage: ""};
         case USER_UPDATE_GEOLOCATION_FAIL:
             return {...state, loading: false, isLocationUpdated: false, errorMessage: action.payload};

@@ -2,7 +2,7 @@ import {
     AllowNull,
     AutoIncrement, BelongsTo,
     Column,
-    CreatedAt,
+    CreatedAt, Default,
     ForeignKey,
     Model,
     PrimaryKey,
@@ -44,6 +44,11 @@ class PlanningModel extends Model<PlanningModel> {
 
     @BelongsTo(() => PostModel)
     post!: PostModel
+
+    @AllowNull(false)
+    @Default(false)
+    @Column
+    checked_in!: boolean;
 
     @UpdatedAt
     @Column

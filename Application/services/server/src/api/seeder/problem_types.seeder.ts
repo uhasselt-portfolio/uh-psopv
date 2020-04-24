@@ -21,6 +21,18 @@ export default async () => {
         description: 'Je gaat vroeger naar huis wegens ziekte'
     }).save();
 
+    await new ProblemTypeModel({
+        title: 'Post verlaten',
+        priority: 5,
+        description: 'Je hebt je post verlaten voor een onbekende reden'
+    }).save();
+
+    await new ProblemTypeModel({
+        title: 'Post verlaten',
+        priority: 10,
+        description: 'Je hebt je post verlaten voor een tweede keer verlaten.'
+    }).save();
+
 
     console.log("Successfully seeded the problem type table!")
 }

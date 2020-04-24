@@ -17,6 +17,7 @@ router.post('/add', validateBodyParameters('message/add'), add);
 
 router.patch('/modify/:id', modify);
 
+// Toggle seen
 router.patch('/toggle-seen/:id', toggleSeen);
 
 router.delete('/delete/:id', verify, remove);

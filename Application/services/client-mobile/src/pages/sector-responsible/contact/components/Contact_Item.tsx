@@ -17,13 +17,12 @@ import PersonPage from '../../person/PersonPage'
   
 
 class ContactItem  extends Component<any> {
-
     constructor(props: any){
         super(props)
     }
 
-
     render() {
+        
         function getPost(props: any): string {
             return '/PersonPage/'+props.id
         }

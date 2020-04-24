@@ -10,7 +10,9 @@ export const updateGeolocation = (userLocation: BackgroundGeolocationResponse) =
     try {
         dispatch({type: USER_UPDATE_GEOLOCATION_START});
 
+        console.log("REQUESTING UPDATE GEOLCOATION USER")
         const response = await new Database().updateUserLocation(userLocation, 1);
+        console.log("UPDATED GEOLOCATION")
 
         const user = response.data.data.user;
         const coordinates = {latitude: user.current_latitude, longitude: user.current_longitude};
