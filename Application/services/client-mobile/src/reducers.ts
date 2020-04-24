@@ -16,7 +16,7 @@ import PostReducer from './pages/sector-responsible/post/PostReducer'
 // volunteer
 import InfoReducer from './pages/volunteer/info/InfoReducer';
 import StartReducer from "./pages/volunteer/start/StartReducer";
-import VR_MessageReducer from './pages/volunteer/message/VR_MessageReducer';
+import VR_SendMessageReducer from './pages/volunteer/send_message/VR_SendMessageReducer'
 
 export default createStore(
     combineReducers({
@@ -28,10 +28,10 @@ export default createStore(
         sendMessage: SendMessageReducer,
         person: PersonReducer,
         post: PostReducer,
-        info: InfoReducer,
-        // shift: ShiftReducer,
+        
         start: StartReducer,
-        vr_message: VR_MessageReducer,
+        VRinfo: InfoReducer,
+        vrSendMessage: VR_SendMessageReducer,
     }),
     applyMiddleware(reduxThunk)
 )

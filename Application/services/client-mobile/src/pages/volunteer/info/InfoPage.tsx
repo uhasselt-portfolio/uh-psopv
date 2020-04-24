@@ -1,7 +1,7 @@
 import React from 'react'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {fetchPlannings, updateGeolocation} from './InfoAction';
+import {fetchPlanningsFromId, updateGeolocation} from './InfoAction';
 import {
     IonCard,
     IonCardHeader,
@@ -48,7 +48,8 @@ class InfoPage extends React.Component<any, any> {
                 });
             });
         BackgroundGeolocation.start();
-        this.props.fetchPlannings();
+        BackgroundGeolocation.stop();
+        this.props.fetchPlanningsFromId(1);
     }
 
     private formatDate(data: string) {
@@ -71,7 +72,7 @@ class InfoPage extends React.Component<any, any> {
                     <IonGrid>
                         <IonRow>
                             <IonCol size="2">Wie</IonCol>
-                            <IonCol>{shift_data.user.first_name} {shift_data.user.last_name}</IonCol>
+                            <IonCol>{shift_data.user.first_name + " " +shift_data.user.last_name}</IonCol>
                         </IonRow>
                         <IonRow>
                             <IonCol size="2">Wat</IonCol>
@@ -92,7 +93,7 @@ class InfoPage extends React.Component<any, any> {
                         </IonRow>
                     </IonGrid>
 
-                    <div className="GoogleMaps">
+                    <div className="GoogleMapsInfo">
                         <GoogleMapReact
                             bootstrapURLKeys={{key: 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDyMg3eezA_aKnVp1Hvsya23xwxCey32JA'}}
                             defaultCenter={{lat: shift_data.post.latitude, lng: shift_data.post.longitude}}
@@ -108,7 +109,7 @@ class InfoPage extends React.Component<any, any> {
     }
 
     private renderShiftList() {
-        const plannings = this.props.arePlanningsFetched;
+        const plannings = this.props.arePlanningsFromIdFetched;
 
         if (plannings !== undefined) {
             if (plannings.length <= 0) {
@@ -158,17 +159,17 @@ class InfoPage extends React.Component<any, any> {
 
 function mapStateToProps(state: any) {
     return ({
-        arePlanningsFetched: state.info.arePlanningsFetched,
-        isLocationUpdated: state.info.isLocationUpdated,
-        errorMessage: state.info.errorMessage,
-        loading: state.info.loading,
+        arePlanningsFromIdFetched: state.VRinfo.arePlanningsFromIdFetched,
+        isLocationUpdated: state.VRinfo.isLocationUpdated,
+        errorMessage: state.VRinfo.errorMessage,
+        loading: state.VRinfo.loading,
     })
 }
 
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-        fetchPlannings,
-        updateGeolocation
+        updateGeolocation,
+        fetchPlanningsFromId
     }, dispatch);
 }
 

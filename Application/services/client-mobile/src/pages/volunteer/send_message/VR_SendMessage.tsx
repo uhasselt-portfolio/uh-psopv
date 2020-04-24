@@ -4,16 +4,17 @@ import { RouteComponentProps } from 'react-router';
 import { caretDown } from 'ionicons/icons';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
-import {messageAddMessage, messageFetchUsers} from './VR_SendMessageAction'
+import {fetchUserFromSector,VRSendMessage} from './VR_SendMessageAction'
 
 
 
-class VrijwilligerSendMessages extends Component<any> {
+
+class VRSendMessagePage extends Component<any> {
   state = {
     title: "",
     message: "",
-    created_by: 1,
-    send_to_id: 1,
+    created_by: 1, //TODO USERID
+    send_to_id: 2, //TODO USERID
     priority: 1
   }
 
@@ -22,12 +23,12 @@ class VrijwilligerSendMessages extends Component<any> {
   }
 
   componentDidMount(){
-    this.props.messageFetchUsers();
+    this.props.fetchUserFromSector(2);
   }
 
 
   handleSendMessage(){
-    this.props.messageAddMessage(this.state.title, this.state.message, this.state.created_by, this.state.send_to_id, this.state.priority); // TODO USERID
+    this.props.VRSendMessage(this.state.title, this.state.message, this.state.created_by, this.state.send_to_id, this.state.priority); // TODO USERID
   }
 
   handleTitleChange(new_title: string | null | undefined){
@@ -40,23 +41,23 @@ class VrijwilligerSendMessages extends Component<any> {
 
   handleSendToChange(new_send_to: number){
     this.setState({...this.state, send_to_id: new_send_to});
-    console.log(this.state)
   }
 
-
   renderListOfUser(){
+    console.log(this.props.isUserFromSectorFetched)
+
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
-      if(this.props.areUsersFetched !== undefined){
-        if(this.props.areUsersFetched.length <= 0){
+      if(this.props.isUserFromSectorFetched !== undefined){
+        if(this.props.isUserFromSectorFetched.length <= 0){
           return <div>No users found</div>
         } else{
-          return this.props.areUsersFetched.map((data: any, index: number) =>{
+            let data = this.props.isUserFromSectorFetched
+            console.log(data)
             return (
               <IonSelectOption value={data.id}>{data.first_name} {data.last_name} ({data.permission_type.name})</IonSelectOption>
             )
-          })
         }
       }
     }
@@ -65,6 +66,7 @@ class VrijwilligerSendMessages extends Component<any> {
 
 
   render(){
+    console.log(this.props.isUserFromSectorFetched)
       return (
       <IonPage>
         <IonHeader>
@@ -104,19 +106,20 @@ class VrijwilligerSendMessages extends Component<any> {
 };
 
 function mapStateToProps(state: any) {
+  console.log(state)
   return({
-    areUsersFetched: state.sendMessage.areUsersFetched,
-    errorMessage: state.sendMessage.errorMessage,
-    loading: state.sendMessage.loading
+    isUserFromSectorFetched: state.vrSendMessage.isUserFromSectorFetched,
+    errorMessage: state.vrSendMessage.errorMessage,
+    loading: state.vrSendMessage.loading
   })
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    messageAddMessage,
-    messageFetchUsers
+    VRSendMessage,
+    fetchUserFromSector
   }, dispatch);
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(VrijwilligerSendMessages);
+export default connect(mapStateToProps, mapDispatchToProps)(VRSendMessagePage);
