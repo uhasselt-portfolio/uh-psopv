@@ -18,20 +18,38 @@ import InfoReducer from './pages/volunteer/info/InfoReducer';
 // import StartReducer from "./pages/volunteer/start/StartReducer";
 import VR_SendMessageReducer from './pages/volunteer/send_message/VR_SendMessageReducer'
 
-export default createStore(
-    combineReducers({
-        login: LoginReducer,
-        list: ListReducer,
-        map: ListReducer,
-        message: MessageReducer,
-        contact: ContactReducer,
-        sendMessage: SendMessageReducer,
-        person: PersonReducer,
-        post: PostReducer,
-        
-        // start: StartReducer,
-        VRinfo: InfoReducer,
-        vrSendMessage: VR_SendMessageReducer,
-    }),
+
+import {persistStore} from 'redux-persist';
+import {persistReducer} from 'redux-persist';
+import storage from 'redux-persist/lib/storage';
+
+
+const persistConfig = {
+    key: 'root',
+    storage, 
+    whitelist: ['ContactReducer']
+}
+
+const rootReducer = combineReducers({
+    login: LoginReducer,
+    list: ListReducer,
+    map: ListReducer,
+    message: MessageReducer,
+    contact: ContactReducer,
+    sendMessage: SendMessageReducer,
+    person: PersonReducer,
+    post: PostReducer,
+    
+    // start: StartReducer,
+    VRinfo: InfoReducer,
+    vrSendMessage: VR_SendMessageReducer,
+})
+
+export const store = createStore(
+    persistReducer(persistConfig, rootReducer),
     applyMiddleware(reduxThunk)
 )
+
+export const persistor = persistStore(store);
+
+export default {store, persistor};

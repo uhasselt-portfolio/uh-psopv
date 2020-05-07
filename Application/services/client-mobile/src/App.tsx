@@ -41,11 +41,14 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import { ellipse, square, triangle } from 'ionicons/icons';
-import store from './reducers';
+import {store} from './reducers';
 import {Provider} from 'react-redux';
+
+import {persistStore, persistReducer } from 'redux-persist'
 
 /* Theme variables */
 import './theme/variables.css';
+import { PersistGate } from 'redux-persist/integration/react';
 
 
 
@@ -136,8 +139,8 @@ class App extends React.Component {
       <Provider store={store}>
       <IonApp>
           <IonReactRouter>
-            {this.renderTabs()}
-          </IonReactRouter>
+              {this.renderTabs()}
+            </IonReactRouter>          
       </IonApp>
   </Provider>
     )
