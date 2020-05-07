@@ -16,12 +16,12 @@ services:
 
   client-mobile-debug:
     build:
-      context: ./services/client-mobile
-      dockerfile: Dockerfile.debug
-    stdin_open: true
+      context: ./services/client-mobile # Location of the Dockerfile
+      dockerfile: Dockerfile.debug # Which Dockerfile
+    stdin_open: true # Enables react-script start to run (interactive mode)
     environment:
       - PORT=3002
-    volumes:
+    volumes: # Which locations on the local machine must be synced with the container
       - './services/client-mobile:/usr/src/app'
       - '/usr/src/app/node_modules'
     depends_on:
@@ -40,10 +40,9 @@ services:
       - database-debug
 
   database-debug:
-    image: postgres:12.2 # Download postgres image from Docker Hub
-    environment:
-      POSTGRES_URI: 'postgres://postgres:12345@database-debug:5432/postgres' # Connection string
-      POSTGRES_PASSWORD: 12345 # Must be specified! You know this by looking through the environment section of the docs
+    build:
+      context: ./services/database
+      dockerfile: Dockerfile.debug
     ports:
       - '5432:5432' # Local port : Remote port
 

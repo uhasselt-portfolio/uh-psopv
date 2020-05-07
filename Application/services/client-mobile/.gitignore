@@ -3,13 +3,22 @@ bundle.js
 npm-debug.log
 .DS_Store
 nodemon.json
-
+ 
 # testing
 /coverage
-
+ 
 # production
 /build
-
+/android
+ 
 # IntelliJ
 *.iml
 /.idea
+ 
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.code-workspace

@@ -13,7 +13,7 @@ router.post('/add', validateBodyParameters('user/add'), add);
 
 router.post('/authenticate', validateBodyParameters('user/authenticate'), authenticate);
 
-router.patch('/modify/:id', verify, modify);
+router.patch('/modify/:id', modify);
 
 router.delete('/delete/:id', verify, remove);
 
