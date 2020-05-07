@@ -58,6 +58,90 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+export const fetchPosts = async (req: Request, res: Response) => {
+    const postID = req.params.id;
+
+    try {
+        const plannings = await PlanningModel.findAll({where:
+                {post_id: postID}, include: [{model: PlanningModel, all: true }]
+        });
+
+        const statusCode = plannings == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                plannings: plannings
+            },
+            message: null
+        });
+    } catch(error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
+
+export const fetchUser = async (req: Request, res: Response) => {
+    const userID = req.params.id;
+
+    try {
+        const plannings = await PlanningModel.findAll({where:
+                {user_id: userID},
+            include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}]
+        });
+
+        const statusCode = plannings == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                plannings: plannings
+            },
+            message: null
+        });
+    } catch(error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
+export const fetchUsersInSameShiftAndPost = async (req: Request, res: Response) => {
+    const shiftID = req.params.shift_id;
+    const postID = req.params.post_id;
+
+    try {
+        const plannings = await PlanningModel.findAll({where:
+                {shift_id: shiftID, post_id: postID}, include: [{model: UserModel}]
+        });
+
+        const statusCode = plannings == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                plannings: plannings
+            },
+            message: null
+        });
+    } catch(error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
 export const fetchCurrentShift = async (req: Request, res: Response) => {
      try {
 
@@ -67,7 +151,7 @@ export const fetchCurrentShift = async (req: Request, res: Response) => {
         }
 
         const plannings = await PlanningModel.findAll({
-            include: [{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
+            include: [{model: UserModel, all: true},{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
         });
         const statusCode = plannings == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';

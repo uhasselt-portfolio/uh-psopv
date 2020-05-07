@@ -1,9 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {Provider} from 'react-redux'
+
+import {config} from "dotenv";
+import {resolve} from 'path';
+
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import store from './reducers'
+
+config({path: resolve(__dirname, '../.env')});
 
 ReactDOM.render(
     <Provider store={store}>

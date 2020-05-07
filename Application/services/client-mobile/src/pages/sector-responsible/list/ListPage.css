@@ -1,0 +1,9 @@
+.right_text {
+    text-align: end;
+    color: red;
+    vertical-align: text-top;
+}
+
+.flex_container {
+    display: flex;
+}

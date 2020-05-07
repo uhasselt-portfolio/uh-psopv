@@ -1,27 +1,42 @@
 import React from 'react';
-import NavBar from './Components/NavBars/NavBarComp';
+import NavBar from './navBars/NavBar';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import Overview from './Components/Tabs/OverviewTab';
-import Data from './Components/Tabs/DataTab';
-import Rapportering from './Components/Tabs/RapporteringTab'
-import Users from './Components/Tabs/UsersTab';
-import Posts from './Components/Tabs/PostsTab';
-import Problems from './Components/Tabs/ProblemsTab';
-import PukkelpopMap from './Components/Tabs/MapTab';
-import ProblemDetails from './Components/Tabs/ProblemDetails';
-import PostDetails from './Components/Tabs/PostDetails';
-import UserDetails from './Components/Tabs/UserDetails';
-import Planning from './Components/Tabs/PlanningTab';
-import Settings from './Components/Tabs/Settings';
+import ProblemDetails from './pages/detailpages/ProblemDetails';
+import PostDetails from './pages/detailpages/PostDetails';
+import Problems from './pages/problem/ProblemPage';
+
+import Planning from './pages/planning/PlanningPage';
+import Settings from './pages/settings/SettingsPage';
+import PukkelpopMap from './pages/map/MapPage';
+import Posts from './pages/post/PostPage';
+import Users from './pages/user/UserPage';
+import Rapportering from './pages/rapportering/Rappoteringpage';
+import Data from './pages/data/DataPage';
+import Overview from './pages/overview/OverviewPage';
 
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
+
+// const customTheme = {
+//   palette: { 
+//     primary1Color:'#3f51b5',
+//     primary2Color: '#00bcd4',
+//     primary3Color: "#2196f3"
+//   }
+// };
+const appStyle = {
+  background: 'rgb(232, 232, 232)',
+  minheight: '100vh',
+  height: '100%',
+  paddingBottom: '5px'
+}
+
 
 function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <div className="App">
+        <div className="App" style={appStyle}>
           <NavBar />
           <Switch>
             <Route exact path='/' component={Overview} />
@@ -33,7 +48,6 @@ function App() {
             <Route path="/Map" component={PukkelpopMap} />
             <Route path="/Data/Problem" component={ProblemDetails} />
             <Route path="/Data/Post" component={PostDetails} />
-            <Route path="/Data/User" component={UserDetails} />
             <Route path="/Data/Shifts" component={Planning} />
             <Route path="/Settings" component={Settings} />
           </Switch>
