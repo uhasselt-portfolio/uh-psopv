@@ -35,7 +35,8 @@ class PukkelpopMap extends Component<Props> {
     }
 
     componentWillMount = () => {
-        this.props.fetchMap();
+        this.props.fetchMap();          
+        setInterval(this.props.fetchMap,300000);
     }
 
     problemClicked = (problem: ProblemDataInterface) => {
