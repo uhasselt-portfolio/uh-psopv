@@ -14,6 +14,7 @@ export default interface State {
     items: ItemDataInterface[],
     pdfGenerated: boolean,
     positionDelay: Number,
+    allProblems: ProblemDataInterface[]
 
     loading: boolean,
     errorMessage: string,
@@ -40,6 +41,7 @@ export const initialState : State = {
     messages: [],
     planning: [],
     items: [],
+    allProblems: [],
     pdfGenerated: false,
     positionDelay: 15,
     isProblemFetched : false,

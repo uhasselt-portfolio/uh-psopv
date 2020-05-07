@@ -4,6 +4,8 @@ import {connect} from 'react-redux';
 import { AppState } from '../../Redux/store';
 import {bindActionCreators} from 'redux';
 import {generatepdf} from './RapporteringAction';
+import jsPDF from 'jspdf';
+import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 
 const style= {
     margin: '10px',
@@ -24,6 +26,40 @@ class Rapportering extends Component<Props> {
     }
 
     render() {
+
+        if (this.props.pdfGenerated) {
+            var doc = new jsPDF();
+            let title: String = 'problemen ' + (new Date()).getFullYear();
+            doc.text(title, 80,10);
+            doc.setFontSize(11);
+            let height: number = 20;
+            for (let i = 0; i < this.props.problems.length; ++i) {
+                let problem: ProblemDataInterface = this.props.problems[i];
+                doc.text(problem.problemType,10,height);
+                doc.text(problem.discription,10,height + 5);
+                doc.text("shift: " + problem.shiftName,10,height + 10);
+                doc.text(problem.timeStamp,50,height + 10);
+                doc.text("post: " + problem.post,10,height + 15);
+                doc.text("vrijwilliger: " + problem.user,10,height + 20);
+                if (problem.solved) {
+                    doc.setTextColor(0,128,0);
+                    doc.text("het probleem is opgelost",15,height + 25);
+                } else {
+                    doc.setTextColor(255,0,0);
+                    doc.text("het probleem is niet opgelost",15,height + 25);
+                }
+                doc.setTextColor(0,0,0);
+                doc.text("________________________________________________________________",10,height + 30);
+                height += 35;
+                if ((i % 7) == 0 && i > 0) {
+                    doc.addPage();
+                    height = 20;
+                }
+                    
+            }
+            doc.save('test.pdf');
+        }
+
         return(
             <div style={style}>
                 <Grid container direction="column" justify="center">
@@ -41,11 +77,13 @@ class Rapportering extends Component<Props> {
 }
 
 interface LinkStateProps {
-    pdfGenerated: boolean
+    pdfGenerated: boolean,
+    problems: ProblemDataInterface[]
 }
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        pdfGenerated: state.RapporeringReducer.pdfGenerated
+        pdfGenerated: state.RapporeringReducer.pdfGenerated,
+        problems: state.RapporeringReducer.allProblems
     };
 }
 

@@ -1,5 +1,7 @@
 import axios from "axios";
 import Redux from 'redux';
+import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
+import Database from '../../Redux/Database';
 
 export enum RapporteringActions {
     RAPPORTERINGPDF_FETCH_START = 'RAPPORTERINGPDF_FETCH_STRART',
@@ -13,10 +15,11 @@ export const generatepdf = () => async (dispatch : Redux.Dispatch) => {
     try {
         dispatch({type: RapporteringActions.RAPPORTERINGPDF_FETCH_START});
 
-        const respone = await axios.get('http://localhost/api/problem/fetch/all'); //TODO generate and get pdf
+        let problems: ProblemDataInterface[] = await new Database().fetchAllProblems();
 
         dispatch({
             type: RapporteringActions.RAPPORTERINGPDF_FETCH_SUCCES,
+            payload: problems
         });
 
     } catch(error) {
