@@ -33,7 +33,6 @@ class ListViewItem  extends Component<any> {
         
 
     render() {
-        console.log(this.props)
         function getPost(props: any): string {
             return '/PostView/'+props.id+"/"+props.sector_id
         }

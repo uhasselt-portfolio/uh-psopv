@@ -99,7 +99,6 @@ class PostView extends Component<any, any> {
               return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
             } else{
               let data = this.props.arePlanningsFormPostFetched[this.state.show_shift];
-              console.log("show_shift", this.state.show_shift, data)
               return <Shift key={data.id} {...data}/>
             }
             

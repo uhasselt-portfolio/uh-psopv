@@ -22,12 +22,13 @@ import VR_SendMessageReducer from './pages/volunteer/send_message/VR_SendMessage
 import {persistStore} from 'redux-persist';
 import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
+import CounterReducer from './test/testReducer';
 
 
 const persistConfig = {
     key: 'root',
     storage, 
-    whitelist: ['ContactReducer']
+    whitelist: ['list']
 }
 
 const rootReducer = combineReducers({
@@ -43,6 +44,7 @@ const rootReducer = combineReducers({
     // start: StartReducer,
     VRinfo: InfoReducer,
     vrSendMessage: VR_SendMessageReducer,
+    counter: CounterReducer
 })
 
 export const store = createStore(

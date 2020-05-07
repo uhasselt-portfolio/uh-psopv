@@ -58,7 +58,6 @@ class Shift  extends Component<any> {
 
 
     showCheckList(checklist_data: any) {
-        console.log(checklist_data)
         if(this.state.checkListActive){
         return(
             <IonCardContent>
@@ -229,7 +228,6 @@ class Shift  extends Component<any> {
 
     renderProblemInfo(data: any){
         let problem_data = this.props.shift_problems;
-        console.log("problem_data",problem_data)
         return(
           <IonCard>
             <IonCardHeader>
@@ -248,7 +246,6 @@ class Shift  extends Component<any> {
     }
 
     render() {
-        console.log("shift props", this.props)
         if(this.props.shift_data[0] !== undefined){
             let shift_data = this.props.shift_data[0]
             let items_data = this.props.shift_items

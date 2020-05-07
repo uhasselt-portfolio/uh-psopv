@@ -93,8 +93,8 @@ class ListView extends Component<any> {
 
   renderListOfItems(){
     if(this.state.data_posts.length <= 0){
-      this.setState({...this.state, data_posts: this.props.arePostsFetched.posts_data});
-      return this.props.arePostsFetched.posts_data.map((data: any, index: number) =>{
+      this.setState({...this.state, data_posts: this.props.localState.posts_data});
+      return this.props.localState.posts_data.map((data: any, index: number) =>{
         return (
           <ListViewItem {... data}/>
         )
@@ -127,7 +127,7 @@ class ListView extends Component<any> {
             <IonSelect
               interface="popover"  
               value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
-                {this.props.arePostsFetched.posts_sectors.map((sector: number) => {
+                {this.props.localState.posts_sectors.map((sector: number) => {
                     return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
                 })}
                 <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
@@ -138,55 +138,61 @@ class ListView extends Component<any> {
       </IonRow>
       </IonGrid>
     )
-    
+  }
+
+  renderBasis(){
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Lijst van posten</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonHeader collapse="condense">
+            <IonToolbar>
+              <IonTitle size="large">Blank</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            {this.renderButtons()}
+          <IonList>
+            {this.renderListOfItems()}
+          </IonList>
+        </IonContent>
+        </IonContent>
+      </IonPage>
+    );   
   }
 
   render()
   {
-    console.log(this.props.arePostsFetched)
-
-    if(this.props.loading == true){
-      return <div>Loading...</div>
-    } else {
-      if(this.props.arePostsFetched !== undefined){
-        if(this.props.arePostsFetched.posts_data.length <= 0){
-          return <div> No messages found. </div>
+    console.log(this.props)
+    if(this.props.localState.posts_sectors.length > 0){
+      return this.renderBasis();
+    } else{
+      if(this.props.loading == true){
+        return <div>Loading...</div>
+      } else {
+        if(this.props.arePostsFetched !== undefined){
+          if(this.props.arePostsFetched.posts_data.length <= 0){
+            return <div> No messages found. </div>
+          } else{
+            return this.renderBasis();
+          }
         } else{
-          return (
-            <IonPage>
-              <IonHeader>
-                <IonToolbar>
-                  <IonTitle>Lijst van posten</IonTitle>
-                </IonToolbar>
-              </IonHeader>
-              <IonContent>
-                <IonHeader collapse="condense">
-                  <IonToolbar>
-                    <IonTitle size="large">Blank</IonTitle>
-                  </IonToolbar>
-                </IonHeader>
-                <IonContent>
-                  {this.renderButtons()}
-                <IonList>
-                  {this.renderListOfItems()}
-                </IonList>
-              </IonContent>
-              </IonContent>
-            </IonPage>
-          );   
+          return <div></div>
         }
-      } else{
-        return <div></div>
       }
     }
-    
-   
   }
   
 };
 
 function mapStateToProps(state: any) {
+  console.log(state)
   return({
+    localState: state.list.localState,
     arePostsFetched: state.list.arePostsFetched,
     errorMessage: state.list.errorMessage,
     loading: state.list.loading
