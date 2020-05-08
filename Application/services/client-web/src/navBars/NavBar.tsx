@@ -3,6 +3,7 @@ import {Paper, Button, Menu, MenuItem, Grid, IconButton, Avatar} from '@material
 import { Redirect } from 'react-router-dom';
 import MenuIcon from '@material-ui/icons/Menu';
 import logo from './logo.jpg';
+import GeneratePdfButton from './PDFGeneration/GeneratePDFButton';
 
 const styleSticky = {
     position: "sticky" as 'sticky',
@@ -10,7 +11,6 @@ const styleSticky = {
     top: 0,
     zIndex: 2,
     padding: '2px',
-    // background: 'rgb(204, 231, 232)'
     background: 'rgb(0,91,150)',
     margin: '0px 4px 4px 4px'
 } 
@@ -142,10 +142,11 @@ class NavBar extends Component<IProps, IState> {
                                 Map</Button>}
                         </Grid>
                         <Grid item style={TabStyle}>
-                            {this.state.active === 3 && <Button variant="outlined" onClick={() => this.handleLink("Rapportering",3)} style={ActiveTabStyle}>
+                            <GeneratePdfButton/>
+                            {/* {this.state.active === 3 && <Button variant="outlined" onClick={() => this.handleLink("Rapportering",3)} style={ActiveTabStyle}>
                                 Rapportering</Button>}
                             {this.state.active !== 3 && <Button variant="contained" onClick={() => this.handleLink("Rapportering",3)} style={InActiveTabStyle}>
-                                Rapportering</Button>}
+                                Rapportering</Button>} */}
                         </Grid>
                         <Grid item style={TabStyle}>
                             {this.state.active === 4 && <Button variant="outlined" onClick={() => this.handleLink("Data",4)} style={ActiveTabStyle}>

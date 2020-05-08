@@ -57,7 +57,7 @@ class Rapportering extends Component<Props> {
                 }
                     
             }
-            doc.save('test.pdf');
+            window.open(doc.output('bloburl'), '_blank');
         }
 
         return(
@@ -82,7 +82,7 @@ interface LinkStateProps {
 }
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        pdfGenerated: state.RapporeringReducer.pdfGenerated,
+        pdfGenerated: true,
         problems: state.RapporeringReducer.allProblems
     };
 }

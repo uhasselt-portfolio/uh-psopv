@@ -9,10 +9,11 @@ import RapporeringReducer from '../pages/rapportering/RapporteringReducer';
 import SettingsReducer from '../pages/settings/SettingsReducer';
 import UsersReducer from '../pages/user/UserReducer';
 import ComponentReducer from '../Components/ComponentReducers';
+import PdfReducer from '../navBars/PDFGeneration/PDFReducer';
 
 const rootReducer = combineReducers( {
     MapReducer, OverviewReducer, PlanningReducer, PostReducer, 
-    ProblemReducer, RapporeringReducer, SettingsReducer, UsersReducer, ComponentReducer
+    ProblemReducer, RapporeringReducer, SettingsReducer, UsersReducer, ComponentReducer, PdfReducer
 });
 export type AppState = ReturnType<typeof rootReducer>;
 

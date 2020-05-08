@@ -45,6 +45,9 @@ class PukkelpopMap extends Component<Props> {
             problemClicked: true
         })
     }
+    mulitProblemClicked = (problems: ProblemDataInterface[]) => {
+
+    }
 
     postClicked =(post: PostDataInterface) => {
         this.setState({
@@ -60,6 +63,55 @@ class PukkelpopMap extends Component<Props> {
         })
     }
 
+    /**
+     * creates the problemmarkers to show on the map
+     * stacks problems on the same post together
+     */
+    makeMarkers = (problems : ProblemDataInterface[]) : Array<JSX.Element> => {
+        let sortedProblems : ProblemDataInterface[][] = [];
+        for (let i = 0; i < this.props.problems.length; ++i) {
+            let cur : ProblemDataInterface = this.props.problems[i];
+            let inside: boolean = false;
+            for (let j = 0; j < sortedProblems.length; ++j) {
+                if (sortedProblems[j][0].postId === cur.postId) {
+                    sortedProblems[j].push(cur);
+                    inside = true;
+                    break;
+                }
+            }
+            if (! inside) {
+                sortedProblems.push([cur]);
+            }
+        }
+
+        let Markers : Array<JSX.Element> = [];
+        for (let i = 0; i < sortedProblems.length; ++i) {
+            if (sortedProblems[i].length === 1) {
+                Markers.push(
+                    <Marker  
+                    position={{lat: sortedProblems[i][0].latitude, lng: sortedProblems[i][0].longitude}} 
+                    label={sortedProblems[i][0].problemType} 
+                    labelAnchor={{x: 110, y: 100}}
+                    options={{icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}}
+                    onClick={() => this.problemClicked(sortedProblems[i][0])}
+                    />
+                )
+            } else {
+                Markers.push(
+                    <Marker  
+                    position={{lat: sortedProblems[i][0].latitude, lng: sortedProblems[i][0].longitude}} 
+                    label={sortedProblems[i][0].problemType} 
+                    labelAnchor={{x: 110, y: 100}}
+                    options={{icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'}}
+                    onClick={() => this.mulitProblemClicked(sortedProblems[i])}
+                    /> 
+                )
+            }
+        }
+
+        return Markers;
+    }
+
     render() {
 
         let ProblemMarkers: Array<JSX.Element> = this.props.problems.map(x => (
@@ -71,6 +123,8 @@ class PukkelpopMap extends Component<Props> {
             onClick={() => this.problemClicked(x)}
             />
         ));
+        // let ProblemMarkers : Array<JSX.Element> = this.makeMarkers(this.props.problems); //TODO functie voorkomst meerdere markers op elkaar
+                                    //maar moet nog onclick al de onderliggende problemen tonen
 
         let postsWithouProblems : PostDataInterface[] = [];
         for (let i = 0; i < this.props.posts.length; ++i) {
