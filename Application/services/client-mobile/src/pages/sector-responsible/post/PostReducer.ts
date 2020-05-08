@@ -82,16 +82,16 @@ export default function (state = {localState: initialState}, action : AnyAction)
         case POST_FETCH_PLANNING_FAIL:
             console.log("POST_FETCH_PLANNING_FAIL")
             return {...state, loading: false, arePlanningsFormPostFetched: false, errorMessage: action.payload}
-
-            
         case ITEM_TOGGLE_START:
             return {...state, loading: true, isItemToggled: false, errorMessage: ""}
         case ITEM_TOGGLE_SUCCESS:
+            console.log("ITEM_TOGGLE_SUCCESS")
             let new_localstate: any = updateItemFromState(action.payload.item_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
             return {...state, localState: new_localstate, loading: false, isItemToggled: action.payload, errorMessage: ""}
         case ITEM_TOGGLE_FAIL:
-            return {...state, loading: false, isItemToggled: false, errorMessage: action.payload}
-
+            console.log("ITEM_TOGGLE_FAIL")
+            let localstate: any = updateItemFromState(action.payload.item_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
+            return {...state, localState: localstate, loading: false, isItemToggled: action.payload, errorMessage: ""}
 
         case PROBLEM_TOGGLE_START:
             return {...state, loading: true, isProblemToggled: false, errorMessage: ""}

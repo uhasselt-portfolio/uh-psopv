@@ -1,4 +1,3 @@
-
 import ShiftData from './ShiftData'
 
 interface State {
