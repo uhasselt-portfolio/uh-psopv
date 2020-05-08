@@ -79,9 +79,7 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
 
         /* Sort the array by time*/
         userShifts.sort(sortUserShifts)
-
         dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: userShifts})
-
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx
@@ -89,12 +87,14 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
             console.log(error.response.status);
             console.log(error.response.headers);
 
-            dispatch({type: POST_FETCH_PLANNING_FAIL, payload: error.response.data.users})
+            dispatch({type: POST_FETCH_PLANNING_FAIL})
         } else if (error.request) {
             // No response was received from the server
+            dispatch({type: POST_FETCH_PLANNING_FAIL})
             console.log(error.request);
         } else {
             // Request couldn't get send
+            dispatch({type: POST_FETCH_PLANNING_FAIL})
             console.log('Error', error.message);
         }
     }
@@ -105,28 +105,32 @@ export const ITEM_TOGGLE_START = 'ITEM_TOGGLE_START'
 export const ITEM_TOGGLE_SUCCESS = 'ITEM_TOGGLE_SUCCESS'
 export const ITEM_TOGGLE_FAIL = 'ITEM_TOGGLE_FAIL'
 
-export const itemToggle = (item_id: number, shift_id: Number) => async (dispatch: Redux.Dispatch) => {
+export const itemToggle = (item_id: number, shift_id: Number, toggleValue: boolean) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: ITEM_TOGGLE_START})
 
         const response = await new Database().ItemToggle(item_id); // TODO GETUSERID
 
-        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id}})
+        console.log("toggleValue_ACTION", toggleValue)
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
     } catch(error){
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+    
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
 
-            dispatch({type: ITEM_TOGGLE_FAIL, payload: error.response.data.items})
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }
+        // if (error.response) {
+        //     // Server responded with a code high than 2xx
+        //     console.log(error.response.data);
+        //     console.log(error.response.status);
+        //     console.log(error.response.headers);
+
+        //     dispatch({type: ITEM_TOGGLE_FAIL, payload: error.response.data.items})
+        // } else if (error.request) {
+        //     // No response was received from the server
+        //     console.log(error.request);
+        // } else {
+        //     // Request couldn't get send
+        //     console.log('Error', error.message);
+        // }
     }
 }
 

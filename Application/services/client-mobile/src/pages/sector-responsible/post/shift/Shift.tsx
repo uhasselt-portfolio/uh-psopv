@@ -46,8 +46,8 @@ class Shift  extends Component<any> {
     componentDidMount(){
     }
 
-    handleToggleCheckListItem(item_id: number){
-        this.props.itemToggle(item_id, this.props.shift_id)
+    handleToggleCheckListItem(item_id: Number, item_value: boolean){
+        this.props.itemToggle(item_id, this.props.shift_id, item_value)
         console.log("toggled")
     }
 
@@ -65,9 +65,8 @@ class Shift  extends Component<any> {
             <IonItem key={i}>
                 <IonLabel>{item.user}: {item.name}</IonLabel>
                     <IonCheckbox slot="end" value={item.name} checked={!item.item_lost}
-                        onIonChange={e => this.handleToggleCheckListItem(item.id)}
+                        onIonChange={e => this.handleToggleCheckListItem(item.id, !item.item_lost)}
                     />
-
             </IonItem>
             ))}
             </IonCardContent>

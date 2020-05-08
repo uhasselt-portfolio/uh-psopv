@@ -103,6 +103,7 @@ class PostView extends Component<any, any> {
 
 
   render(){
+    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>

@@ -28,7 +28,7 @@ import CounterReducer from './test/testReducer';
 const persistConfig = {
     key: 'root',
     storage, 
-    whitelist: ['list']
+    whitelist: ['list', 'post']
 }
 
 const rootReducer = combineReducers({
