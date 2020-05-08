@@ -25,6 +25,9 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
         dispatch({type: POST_FETCH_PLANNING_START})
 
         const responsePlannings = await new Database().fetchPlanningsWithPostId(post_id);
+        const responseItems = await new Database().fetchAllItems();
+        const responseProblems = await new Database().fetchAllProblems();
+
 
         /* Add all Same shift together */
         const shifts: any[] = []; // array with shift_id's
@@ -34,12 +37,12 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
             }
         });
 
-
         const userShifts: any[] = []; 
         shifts.forEach((shift_id: number) => {
             let sameShift = responsePlannings.data.data.plannings.filter((element: any) => {
                 return element.shift_id === shift_id
             });
+
 
             /* Add User Names */
             let userNames: any[] = []; 
@@ -50,18 +53,23 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
 
             /* Add items */
             let items: any[] = []; 
-            sameShift.forEach(async (planning: any) => {
-                const responseItems = await new Database().fetchItemsFromPlanning(planning.id);
-                responseItems.data.data.items.forEach((element: any) => {
+            sameShift.forEach((planning: any) => {
+                let new_items = responseItems.data.data.items.filter((item: any) => {
+                    return item.planning_id === planning.id
+                });
+                
+                new_items.forEach((element: any, index: number) => {
                     items.push(element)
                 });
             })
 
             /* Add problems */
             let problems: any[] = []; 
-            sameShift.forEach(async (planning: any) => {
-                const responseProblems = await new Database().fetchProblemsFromPlanning(planning.id);
-                responseProblems.data.data.problems.forEach((element: any, index: number) => {
+            sameShift.forEach((planning: any) => {
+                let new_problems = responseProblems.data.data.problems.filter((problem: any) => {
+                    return problem.planning_id === planning.id
+                });
+                new_problems.forEach((element: any, index: number) => {
                     problems.push(element)
                 });
             })
@@ -97,13 +105,13 @@ export const ITEM_TOGGLE_START = 'ITEM_TOGGLE_START'
 export const ITEM_TOGGLE_SUCCESS = 'ITEM_TOGGLE_SUCCESS'
 export const ITEM_TOGGLE_FAIL = 'ITEM_TOGGLE_FAIL'
 
-export const itemToggle = (item_id: number) => async (dispatch: Redux.Dispatch) => {
+export const itemToggle = (item_id: number, shift_id: Number) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: ITEM_TOGGLE_START})
 
         const response = await new Database().ItemToggle(item_id); // TODO GETUSERID
 
-        dispatch({type: ITEM_TOGGLE_SUCCESS})
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id}})
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx

@@ -168,23 +168,29 @@ class ListView extends Component<any> {
   render()
   {
     console.log(this.props)
-    if(this.props.localState.posts_sectors.length > 0){
-      return this.renderBasis();
-    } else{
-      if(this.props.loading == true){
-        return <div>Loading...</div>
-      } else {
-        if(this.props.arePostsFetched !== undefined){
-          if(this.props.arePostsFetched.posts_data.length <= 0){
-            return <div> No messages found. </div>
-          } else{
-            return this.renderBasis();
-          }
-        } else{
-          return <div></div>
-        }
+    // if(this.props.localState.posts_sectors.length > 0){
+      if(this.props.localState.posts_sectors.length <= 0){
+        return <div>No interconnection found</div>
       }
-    }
+      if(this.props.localState.posts_sectors.length > 0){
+        return this.renderBasis();
+      }
+
+    // } else{
+    //   if(this.props.loading == true){
+    //     return <div>Loading...</div>
+    //   } else {
+    //     if(this.props.arePostsFetched !== undefined){
+    //       if(this.props.localState.posts_data.length <= 0){
+    //         return <div> No messages found. </div>
+    //       } else{
+    //         return this.renderBasis();
+    //       }
+    //     } else{
+    //       return <div></div>
+    //     }
+    //   }
+    // }
   }
   
 };

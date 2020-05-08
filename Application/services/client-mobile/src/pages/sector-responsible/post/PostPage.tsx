@@ -37,7 +37,7 @@ class PostView extends Component<any, any> {
   }
 
   getNextShift(){
-    if (this.state.show_shift < this.props.arePlanningsFormPostFetched.length - 1){
+    if (this.state.show_shift < this.props.localState.shifts_data.length - 1){
       let new_shift = this.state.show_shift + 1
       this.handleShiftSwitch(new_shift);
     }
@@ -71,9 +71,9 @@ class PostView extends Component<any, any> {
   setCurrentlyActiveShift(){
     var current_time = new Date();
 
-    this.props.arePlanningsFormPostFetched.map((element: any, index: number) => {
-      var shift_begin = new Date(element.shift_data[0].shift.begin)
-      var shift_end = new Date(element.shift_data[0].shift.end)
+    this.props.localState.shifts_data.map((element: any, index: number) => {
+      var shift_begin = new Date(element.shift_begin)
+      var shift_end = new Date(element.shift_end)
 
       if((current_time > shift_begin) && (current_time < shift_end)){
         this.setState({...this.state, show_shift: index, current_shift: index});
@@ -87,27 +87,19 @@ class PostView extends Component<any, any> {
 
 
   renderPost(): any{
-    if(this.props.loading == true){
-        return <div>Loading...</div>
-      } else {
-        if(this.props.arePlanningsFormPostFetched !== undefined){
-          if(this.props.arePlanningsFormPostFetched.length <= 0){
-            return <div> No info found.</div>
-          } else{
-            if(this.state.show_shift === -1){
-              this.setCurrentlyActiveShift();
-              return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
-            } else{
-              let data = this.props.arePlanningsFormPostFetched[this.state.show_shift];
-              return <Shift key={data.id} {...data}/>
-            }
-            
-          }
+      if(this.props.localState.shifts_data.length <= 0){
+        return <div>No interconnection found</div>
+      }
+      if(this.props.localState.shifts_data.length > 0){
+        if(this.state.show_shift === -1){
+          this.setCurrentlyActiveShift();
+          return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
         } else{
-          return <div> loading ...</div>
+          let data = this.props.localState.shifts_data[this.state.show_shift];
+          return <Shift key={data.id} {...data}/>
         }
       }
-}
+  }
 
 
   render(){
@@ -143,6 +135,7 @@ class PostView extends Component<any, any> {
 
 function mapStateToProps(state: any) {
   return({
+    localState: state.post.localState,
     arePlanningsFormPostFetched: state.post.arePlanningsFormPostFetched,
     errorMessage: state.post.errorMessage,
     loading: state.post.loading,

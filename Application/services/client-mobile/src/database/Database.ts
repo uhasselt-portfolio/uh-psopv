@@ -96,6 +96,19 @@ export default class Database {
         return await axios.patch(url)
     }
 
+    async fetchAllItems() {
+        const url = this.getRestApiEndpoint() + '/api/item/fetch/all';
+        return await axios.get(url)
+    }
+
+    async fetchAllProblems() {
+        const url = this.getRestApiEndpoint() + '/api/problem/fetch/all';
+        return await axios.get(url)
+    }
+
+    
+
+
     async fetchItemsFromPlanning(planning_id: number) {
         const url = this.getRestApiEndpoint() + '/api/item/fetch/planning/' + planning_id;
 

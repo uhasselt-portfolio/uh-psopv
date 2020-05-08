@@ -1,13 +1,14 @@
 import {PLANNING_FETCH_FAIL, PLANNING_FETCH_START, PLANNING_FETCH_SUCCESS } from "./ListAction";
 import {AnyAction} from "redux";
 
-import State from "./States/state";
+import {initialState} from './States/localStorage'
 
-// Initial State
-const initialState: State = {
-    posts_data: [],
-    posts_sectors: []
-};
+// // Initial State
+// const initialState: State = {
+//     posts_data: [],
+//     posts_sectors: []
+// };
+
 export default function (state = {localState: initialState}, action : AnyAction) {
     switch(action.type) {
         case PLANNING_FETCH_START:
@@ -33,6 +34,7 @@ export default function (state = {localState: initialState}, action : AnyAction)
             let localState = {posts_sectors: sectors, posts_data: posts}
 
             console.log("test state", state);
+
             return {...state,
                 localState: localState,
                 loading: false,
