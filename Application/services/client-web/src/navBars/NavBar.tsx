@@ -143,10 +143,6 @@ class NavBar extends Component<IProps, IState> {
                         </Grid>
                         <Grid item style={TabStyle}>
                             <GeneratePdfButton/>
-                            {/* {this.state.active === 3 && <Button variant="outlined" onClick={() => this.handleLink("Rapportering",3)} style={ActiveTabStyle}>
-                                Rapportering</Button>}
-                            {this.state.active !== 3 && <Button variant="contained" onClick={() => this.handleLink("Rapportering",3)} style={InActiveTabStyle}>
-                                Rapportering</Button>} */}
                         </Grid>
                         <Grid item style={TabStyle}>
                             {this.state.active === 4 && <Button variant="outlined" onClick={() => this.handleLink("Data",4)} style={ActiveTabStyle}>
