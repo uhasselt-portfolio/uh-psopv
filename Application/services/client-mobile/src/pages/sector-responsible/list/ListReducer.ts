@@ -34,8 +34,6 @@ export default function (state = {localState: initialState.Posts}, action : AnyA
             let sectors = [action.payload.posts_sectors]
             let localState = {posts_sectors: sectors, posts_data: posts}
 
-            console.log("test state", state);
-
             return {...state,
                 localState: localState,
                 loading: false,

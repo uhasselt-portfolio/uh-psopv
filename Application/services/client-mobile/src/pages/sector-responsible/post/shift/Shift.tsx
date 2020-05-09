@@ -12,6 +12,8 @@ import {formatDateTime} from '../../../common_functions/date_formatter';
 import {itemToggle, problemToggle} from '../PostAction' 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
+import {OfflineItemToggle} from '../../save_actions/saveAction'
+
 
 
   
@@ -47,7 +49,11 @@ class Shift  extends Component<any> {
     }
 
     handleToggleCheckListItem(item_id: Number, item_value: boolean){
-        this.props.itemToggle(item_id, this.props.shift_id, item_value)
+        if(navigator.onLine){
+            console.log("this.props.OfflineItemToggle(item_id)")
+            this.props.OfflineItemToggle(item_id)
+        }
+        // this.props.itemToggle(item_id, this.props.shift_id, item_value)
         console.log("toggled")
     }
 
@@ -262,6 +268,7 @@ class Shift  extends Component<any> {
   
   
 function mapStateToProps(state: any) {
+    console.log(state)
     return({
     })
   }
@@ -269,7 +276,8 @@ function mapStateToProps(state: any) {
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
       itemToggle,
-      problemToggle
+      problemToggle,
+      OfflineItemToggle
     }, dispatch);
   }
   

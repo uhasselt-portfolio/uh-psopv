@@ -1,20 +1,23 @@
-// import {SAVE_TOGGLE_ACTION} from './saveAction'
+import {SAVE_TOGGLE_ACTION, UNROLL_ACTIONS} from './saveAction'
 
-// // Initial State
-export const savedState: any[] = ["test"];
+// Initial State
+export const savedState: any[] = [];
 
-// export default function (state = savedState, action : any) {
-//     switch(action.type) {
-//         case SAVE_TOGGLE_ACTION:
-//             console.log("SAVE_TOGGLE_ACTION")
-//             return
-//         default:
-//             console.log("NOPE ACTION", state)
-//             console.log("NOPE ACTION2", action)
-
-//             return state;
-//     }
-// }
+export default function (state = savedState, action : any) {
+    switch(action.type) {
+        case SAVE_TOGGLE_ACTION:
+            console.log("SAVE_TOGGLE_ACTION", state)
+            state.push(action.url)
+            return state
+        case UNROLL_ACTIONS:
+            console.log("UNROLLED_ACTIONS", state)
+            // state = []
+            return state
+        default:
+            console.log("default savereducer", state)
+            return state;
+    }
+}
 
 // export default (state = savedState, action: any) => {
 //     switch (action.type) {

@@ -89,7 +89,6 @@ class MapPage extends Component<any> {
     if(this.state.data_posts.length <= 0){
       this.setState({...this.state, data_posts: this.props.arePostsFetched.posts_data});
       return this.props.arePostsFetched.posts_data.map((data: any, index: number) =>{
-        console.log(data);
         if(data.problem === false){
           return (
             <NormalMarker 
@@ -107,7 +106,6 @@ class MapPage extends Component<any> {
       })
     } else {
       return this.state.data_posts.map((data: any, index: number) =>{
-        console.log(data);
         if(data.problem === false){
           return (
             <NormalMarker 
@@ -133,7 +131,6 @@ class MapPage extends Component<any> {
   }
 
   showInfo(){
-    console.log("OOKEEEEE 112313")
   }
 
   renderContent(){
@@ -166,10 +163,6 @@ class MapPage extends Component<any> {
   }
 
   render(){
-
-
-    
-    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>

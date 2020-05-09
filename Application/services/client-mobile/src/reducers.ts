@@ -23,7 +23,7 @@ import {persistStore} from 'redux-persist';
 import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import CounterReducer from './test/testReducer';
-// import saveReducer from './pages/sector-responsible/save_actions/saveReducer'
+import saveReducer from './pages/sector-responsible/save_actions/saveReducer'
 
 
 
@@ -31,7 +31,7 @@ import CounterReducer from './test/testReducer';
 const persistConfig = {
     key: 'root',
     storage, 
-    whitelist: ['list', 'post']
+    whitelist: ['list', 'post', 'save']
 }
 
 const rootReducer = combineReducers({
@@ -50,7 +50,7 @@ const rootReducer = combineReducers({
     counter: CounterReducer,
 
     // save
-    // save: saveReducer
+    save: saveReducer
 })
 
 export const store = createStore(
