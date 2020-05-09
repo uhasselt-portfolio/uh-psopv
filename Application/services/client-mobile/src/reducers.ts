@@ -23,6 +23,9 @@ import {persistStore} from 'redux-persist';
 import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import CounterReducer from './test/testReducer';
+// import saveReducer from './pages/sector-responsible/save_actions/saveReducer'
+
+
 
 
 const persistConfig = {
@@ -44,13 +47,17 @@ const rootReducer = combineReducers({
     // start: StartReducer,
     VRinfo: InfoReducer,
     vrSendMessage: VR_SendMessageReducer,
-    counter: CounterReducer
+    counter: CounterReducer,
+
+    // save
+    // save: saveReducer
 })
 
 export const store = createStore(
     persistReducer(persistConfig, rootReducer),
-    applyMiddleware(reduxThunk)
+    applyMiddleware(reduxThunk),
 )
+
 
 export const persistor = persistStore(store);
 

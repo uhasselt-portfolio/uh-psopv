@@ -20,6 +20,35 @@ function sortUserShifts(a: any, b: any){
     }
 }
 
+
+
+// export const SAVE_ACTION = 'SAVE_ACTION' 
+
+// export function test2(id: any) {
+//     console.log()
+//     return {
+//       type: 'SAVE_ACTION',
+//       id,
+//     };
+//   };
+
+
+// export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch) => {
+//     try{
+//         console.log("TODO", todoCommands)
+//         todoCommands.forEach(async (element: any) => {
+//             console.log("toggled item", element)
+//             const result = await axios.patch(element);
+//         });
+
+//         // const response = await new Database().ItemToggle(item_id); // TODO GETUSERID
+
+//     } catch(error){
+//     }
+// }
+
+
+
 export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: POST_FETCH_PLANNING_START})
@@ -117,6 +146,8 @@ export const itemToggle = (item_id: number, shift_id: Number, toggleValue: boole
         dispatch({type: ITEM_TOGGLE_FAIL, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
     }
 }
+
+
 
 export const PROBLEM_TOGGLE_START = 'PROBLEM_TOGGLE_START'
 export const PROBLEM_TOGGLE_SUCCESS = 'PROBLEM_TOGGLE_SUCCESS'

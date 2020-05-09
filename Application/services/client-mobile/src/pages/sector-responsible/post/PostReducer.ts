@@ -11,6 +11,13 @@ import { toggle } from "ionicons/icons";
 
 export default function (state = {localState: initialState}, action : AnyAction) {
     switch(action.type) {
+        // case SAVE_ACTION:
+        //     let new_save_actions: any[] = state.localState.save_actions
+        //     new_save_actions.push(action.id)
+        //     let new_localState = {...state.localState, shifts_data: state.localState.shifts_data, save_actions: new_save_actions}
+
+        //     return {...state,
+        //         localState: new_localState}
         case POST_FETCH_PLANNING_START:
             console.log("item_POST_FETCH_PLANNING_STARTtoggle_start")
             return {...state, loading: true, arePlanningsFormPostFetched: false, errorMessage: ""}
@@ -72,7 +79,7 @@ export default function (state = {localState: initialState}, action : AnyAction)
                 shifts_data.push(shift_data)
             });
 
-            let localState = {shifts_data: shifts_data}
+            let localState = {...state.localState, shifts_data: shifts_data, save_actions: state.localState.save_actions}
 
             return {...state,
                 localState: localState,
@@ -92,7 +99,6 @@ export default function (state = {localState: initialState}, action : AnyAction)
             console.log("ITEM_TOGGLE_FAIL")
             let localstate: any = updateItemFromState(action.payload.item_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
             return {...state, localState: localstate, loading: false, isItemToggled: action.payload, errorMessage: ""}
-
         case PROBLEM_TOGGLE_START:
             return {...state, loading: true, isProblemToggled: false, errorMessage: ""}
         case PROBLEM_TOGGLE_SUCCESS:
@@ -127,7 +133,6 @@ function updateItemFromState(item: Number, shift: Number, localState: any, toggl
                     let editItem = editShift.items[+index_item] //copy the array
                     let beforeItems: any[] = [];
                     if(index_item != 0){
-                        console.log(beforeItems)
                         beforeItems = editShift.items.slice(0, +index_item)
                     } 
                     const afterItems= editShift.items.slice(+index_item + 1, localState.shifts_data.length)

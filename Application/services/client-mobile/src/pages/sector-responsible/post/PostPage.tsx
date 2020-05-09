@@ -7,6 +7,7 @@ import { connect } from 'react-redux';
 import {fetchPlanningsFromPost} from './PostAction'
 import { caretDown, arrowBack, arrowForward } from 'ionicons/icons';
 import { formatDateTime } from '../../common_functions/date_formatter';
+import Save from '../save_actions/Save'
 
 const checkboxList = [
   { val: 'Fluo Band', isChecked: false },
@@ -83,8 +84,8 @@ class PostView extends Component<any, any> {
 
   componentDidMount(){
     this.props.fetchPlanningsFromPost(this.props.match.params.post);
+    console.log(this.props)
   }
-
 
   renderPost(): any{
       if(this.props.localState.shifts_data.length <= 0){
@@ -103,7 +104,6 @@ class PostView extends Component<any, any> {
 
 
   render(){
-    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>
@@ -115,6 +115,7 @@ class PostView extends Component<any, any> {
           <IonHeader collapse="condense">
             <IonToolbar>
               <IonTitle size="large">Blank</IonTitle>
+              <Save />
             </IonToolbar>
           </IonHeader>
           <div className="flexrow">

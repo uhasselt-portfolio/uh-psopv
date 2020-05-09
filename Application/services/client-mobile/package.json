@@ -31,6 +31,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
     "redux": "^4.0.5",
+    "redux-offline": "^2.0.0",
+    "redux-offline-queue": "^1.0.8",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
     "typescript": "3.7.4"
