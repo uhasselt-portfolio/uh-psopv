@@ -141,11 +141,6 @@ export default class Database {
         return await axios.patch(url)
     }
 
-    
-    
-
-    
-    
     async updateUserLocation(userLocation : BackgroundGeolocationResponse, userID : number) {
         const url = this.getRestApiEndpoint() + '/api/user/modify/' + userID;
 

@@ -49,89 +49,98 @@ import {persistStore, persistReducer } from 'redux-persist'
 /* Theme variables */
 import './theme/variables.css';
 import { PersistGate } from 'redux-persist/integration/react';
-import Save from './pages/sector-responsible/save_actions/savePage'
+import Save from './pages/save_actions/savePage'
 
 
 
 class App extends React.Component {
   state = {
-    id: 2 // TODO USERID
+    loggedin: false // TODO USERID
   }
 
   renderTabs(){
-    if(this.state.id == 2){ // TODO USERID
-      return(
-        <IonTabs>
-        <IonRouterOutlet>
-          <Route path="/ListView" component={ListView} exact={true} />
-          <Route path="/MapPage" component={MapPage} exact={true} />
-          <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
-          <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
-          <Route path="/Notifications" component={Notifications} exact={true} />
-          <Route path="/SendNotifications" component={SendNotifications} exact={true} />
-          <Route path="/Contacts" component={Contacts} exact={true} />
-          <Route path="/Login" component={LoginPage} exact={true} />
-          <Route path="/" render={() => <Redirect to="/MapPage" />} exact={true} />
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-        <IonTabButton tab="Login" href="/Login">
-            <IonIcon icon={square} />
-            <IonLabel>Login</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="MapPage" href="/MapPage">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Map</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="ListView" href="/ListView">
-            <IonIcon icon={square} />
-            <IonLabel>List</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="Notifications" href="/Notifications">
-            <IonIcon icon={square} />
-            <IonLabel>Nots</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="SendNotifications" href="/SendNotifications">
-            <IonIcon icon={square} />
-            <IonLabel>Send</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="Contacts" href="/Contacts">
-            <IonIcon icon={square} />
-            <IonLabel>Contacts</IonLabel>
-          </IonTabButton>
-        </IonTabBar>
-        </IonTabs>
-      )
-    } else if (this.state.id == 1){ // TODO USERID
+    if(this.state.loggedin){ // TODO USERID
+      if(true){
+        return(
+          <IonTabs>
+          <IonRouterOutlet>
+            <Route path="/ListView" component={ListView} exact={true} />
+            <Route path="/MapPage" component={MapPage} exact={true} />
+            <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
+            <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
+            <Route path="/Notifications" component={Notifications} exact={true} />
+            <Route path="/SendNotifications" component={SendNotifications} exact={true} />
+            <Route path="/Contacts" component={Contacts} exact={true} />
+            <Route path="/Login" component={LoginPage} exact={true} />
+            <Route path="/" render={() => <Redirect to="/MapPage" />} exact={true} />
+          </IonRouterOutlet>
+          <IonTabBar slot="bottom">
+            <IonTabButton tab="MapPage" href="/MapPage">
+              <IonIcon icon={ellipse} />
+              <IonLabel>Map</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="ListView" href="/ListView">
+              <IonIcon icon={square} />
+              <IonLabel>List</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="Notifications" href="/Notifications">
+              <IonIcon icon={square} />
+              <IonLabel>Nots</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="SendNotifications" href="/SendNotifications">
+              <IonIcon icon={square} />
+              <IonLabel>Send</IonLabel>
+            </IonTabButton>
+            <IonTabButton tab="Contacts" href="/Contacts">
+              <IonIcon icon={square} />
+              <IonLabel>Contacts</IonLabel>
+            </IonTabButton>
+          </IonTabBar>
+          </IonTabs>
+        )
+      } else{
+        return(
+          <IonTabs>
+            <IonRouterOutlet>
+              <Route path="/InfoPage" component={InfoPage} exact={true} />
+              <Route path="/Login" component={LoginPage} exact={true} />
+              <Route path="/VRMessage" component={VRMessage} exact={true} />
+              <Route path="/VRSendMessagePage" component={VRSendMessagePage} exact={true} />
+              <Route path="/" render={() => <Redirect to="/InfoPage" />} exact={true} />
+            </IonRouterOutlet>
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="InfoPage" href="/InfoPage">
+                <IonIcon icon={ellipse} />
+                <IonLabel>Map</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="VRMessage" href="/VRMessage">
+                <IonIcon icon={ellipse} />
+                <IonLabel>Msg</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="VRSendMessagePage" href="/VRSendMessagePage">
+                <IonIcon icon={ellipse} />
+                <IonLabel>Send</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+          )
+      }
+      
+    } else {
       return(
       <IonTabs>
         <IonRouterOutlet>
-          <Route path="/InfoPage" component={InfoPage} exact={true} />
           <Route path="/Login" component={LoginPage} exact={true} />
-          <Route path="/VRMessage" component={VRMessage} exact={true} />
-          <Route path="/VRSendMessagePage" component={VRSendMessagePage} exact={true} />
-          <Route path="/" render={() => <Redirect to="/InfoPage" />} exact={true} />
+          <Route path="/" render={() => <Redirect to="/Login" />} exact={true} />
         </IonRouterOutlet>
         <IonTabBar slot="bottom">
         <IonTabButton tab="Login" href="/Login">
-            <IonIcon icon={square} />
-            <IonLabel>Login</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="InfoPage" href="/InfoPage">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Map</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="VRMessage" href="/VRMessage">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Msg</IonLabel>
-          </IonTabButton>
-          <IonTabButton tab="VRSendMessagePage" href="/VRSendMessagePage">
-            <IonIcon icon={ellipse} />
-            <IonLabel>Send</IonLabel>
-          </IonTabButton>
+          <IonIcon icon={square} />
+          <IonLabel>Login</IonLabel>
+        </IonTabButton>
         </IonTabBar>
       </IonTabs>
       )
-      
     }
   }
 
