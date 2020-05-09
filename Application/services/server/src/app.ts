@@ -13,6 +13,7 @@ import generalPostRoutes from "./api/routes/general_post.routes";
 import problemTypeRoutes from "./api/routes/problem_type.routes";
 import itemTypeRoutes from "./api/routes/item_type.routes";
 import planningRoutes from "./api/routes/planning.routes"
+import sectorRoutes from "./api/routes/sector.routes"
 
 class App {
 
@@ -50,6 +51,7 @@ class App {
         this.express.use("/api/item_type", itemTypeRoutes);
         this.express.use("/api/problem_type", problemTypeRoutes);
         this.express.use("/api/planning", planningRoutes);
+        this.express.use("/api/sector", sectorRoutes);
     }
 }
 
