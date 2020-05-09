@@ -7,7 +7,6 @@ import { connect } from 'react-redux';
 import {fetchPlanningsFromPost} from './PostAction'
 import { caretDown, arrowBack, arrowForward } from 'ionicons/icons';
 import { formatDateTime } from '../../common_functions/date_formatter';
-import Save from '../save_actions/savePage'
 
 const checkboxList = [
   { val: 'Fluo Band', isChecked: false },
@@ -96,19 +95,19 @@ class PostView extends Component<any, any> {
           return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
         } else{
           let data = this.props.localState.shifts_data[this.state.show_shift];
-          return <Shift key={data.id} {...data}/>
+          return <Shift {...data}/>
         }
       }
   }
 
 
   render(){
+    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
             <IonTitle>Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</IonTitle>
-            <Save />
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -135,8 +134,6 @@ class PostView extends Component<any, any> {
 
 
 function mapStateToProps(state: any) {
-  // console.log(state)
-
   return({
     localState: state.post.localState,
     arePlanningsFormPostFetched: state.post.arePlanningsFormPostFetched,

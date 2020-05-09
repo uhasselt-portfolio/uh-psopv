@@ -4,18 +4,13 @@ import {AnyAction} from "redux";
 import {initialState} from '../States/localStorage'
 
 console.log(initialState)
-// // Initial State
-// const initialState: State = {
-//     posts_data: [],
-//     posts_sectors: []
-// };
 
 export default function (state = {localState: initialState.Posts}, action : AnyAction) {
     switch(action.type) {
         case PLANNING_FETCH_START:
             return {...state, loading: true, arePostsFetched: false, errorMessage: ""}
         case PLANNING_FETCH_SUCCESS:
-            console.log(state.localState)
+            console.log("state.localstate",action.payload)
 
             let posts: any[] = []
             action.payload.posts_data.forEach((data: any) => {
@@ -31,7 +26,7 @@ export default function (state = {localState: initialState.Posts}, action : AnyA
                 posts.push(post)                
             });
             
-            let sectors = [action.payload.posts_sectors]
+            let sectors = action.payload.posts_sectors
             let localState = {posts_sectors: sectors, posts_data: posts}
 
             return {...state,

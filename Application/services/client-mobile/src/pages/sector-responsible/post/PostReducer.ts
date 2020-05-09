@@ -11,13 +11,6 @@ import { toggle } from "ionicons/icons";
 
 export default function (state = {localState: initialState}, action : AnyAction) {
     switch(action.type) {
-        // case SAVE_ACTION:
-        //     let new_save_actions: any[] = state.localState.save_actions
-        //     new_save_actions.push(action.id)
-        //     let new_localState = {...state.localState, shifts_data: state.localState.shifts_data, save_actions: new_save_actions}
-
-        //     return {...state,
-        //         localState: new_localState}
         case POST_FETCH_PLANNING_START:
             console.log("item_POST_FETCH_PLANNING_STARTtoggle_start")
             return {...state, loading: true, arePlanningsFormPostFetched: false, errorMessage: ""}
@@ -79,7 +72,7 @@ export default function (state = {localState: initialState}, action : AnyAction)
                 shifts_data.push(shift_data)
             });
 
-            let localState = {...state.localState, shifts_data: shifts_data, save_actions: state.localState.save_actions}
+            let localState = {...state.localState, shifts_data: shifts_data}
 
             return {...state,
                 localState: localState,
@@ -89,26 +82,83 @@ export default function (state = {localState: initialState}, action : AnyAction)
         case POST_FETCH_PLANNING_FAIL:
             console.log("POST_FETCH_PLANNING_FAIL")
             return {...state, loading: false, arePlanningsFormPostFetched: false, errorMessage: action.payload}
-        case ITEM_TOGGLE_START:
-            return {...state, loading: true, isItemToggled: false, errorMessage: ""}
+
+
         case ITEM_TOGGLE_SUCCESS:
             console.log("ITEM_TOGGLE_SUCCESS")
             let new_localstate: any = updateItemFromState(action.payload.item_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
             return {...state, localState: new_localstate, loading: false, isItemToggled: action.payload, errorMessage: ""}
-        case ITEM_TOGGLE_FAIL:
-            console.log("ITEM_TOGGLE_FAIL")
-            let localstate: any = updateItemFromState(action.payload.item_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
-            return {...state, localState: localstate, loading: false, isItemToggled: action.payload, errorMessage: ""}
-        case PROBLEM_TOGGLE_START:
-            return {...state, loading: true, isProblemToggled: false, errorMessage: ""}
+
         case PROBLEM_TOGGLE_SUCCESS:
-            return {...state, loading: false, isProblemToggled: action.payload, errorMessage: ""}
-        case PROBLEM_TOGGLE_FAIL:
-            return {...state, loading: false, isProblemToggled: false, errorMessage: action.payload}
+            console.log(action.payload)
+            let localstate: any = updateProblemFromState(action.payload.problem_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
+            return {...state, localState: localstate, loading: false, isProblemToggled: action.payload, errorMessage: ""}
         default:
             return state
     }
 }
+
+function updateProblemFromState(problem_id: Number, shift: Number, localState: any, toggleValue: boolean): any{
+    for(let index_shift = 0; index_shift < localState.shifts_data.length; index_shift++){
+        let element = localState.shifts_data[index_shift];
+
+        if (element.shift_id === shift){
+            for(let index_problem = 0; index_problem < element.problems.length; index_problem++){
+                let data = element.problems[index_problem];
+
+            // element.items.forEach((data: any, index_item: Number) =>{
+                if (data.id === problem_id){
+                    // shifts
+                    let shifts_data = localState.shifts_data;
+                    let editShift = shifts_data[+index_shift] //copy the array
+                    let beforeShifts: any[] = [];
+                    if(index_shift != 0){
+                        console.log("index_shift", index_shift)
+                        beforeShifts = localState.shifts_data.slice(0, index_shift)
+                    } 
+                    const afterShifts = localState.shifts_data.slice(+index_shift + 1, localState.shifts_data.length)
+                    
+
+                    // items
+                    let shift_items = editShift.problems;
+                    let editItem = editShift.problems[+index_problem] //copy the array
+                    let beforeItems: any[] = [];
+                    console.log("index_item", index_problem)
+
+                    if(index_problem != 0){
+                        console.log("index_item", index_problem)
+                        beforeItems = editShift.problems.slice(0, index_problem)
+                    } 
+                    const afterItems= editShift.problems.slice(+index_problem + 1, localState.shifts_data.length)
+
+                    // edit item
+                    editItem = {...editItem, solved: toggleValue}
+                    const new_problems = beforeItems.concat(editItem).concat(afterItems)
+
+                    // edit shift
+                    editShift = {...editShift, problems: new_problems}
+
+                    console.log("beforeShifts", beforeShifts)
+                    console.log("editShift", editShift)
+                    console.log("afterShifts", afterShifts)
+
+                    const new_shifts = beforeShifts.concat(editShift).concat(afterShifts)
+
+                    console.log("new_shifts", new_shifts)
+
+                    let new_localState = {...localState, shifts_data: new_shifts}
+
+                    return (new_localState)
+                }
+            }
+        }
+    }
+
+    let shift_data  = localState.shifts_data.filter((element: any) =>{
+        return element.shift_id === shift
+    })
+}
+
 
 function updateItemFromState(item: Number, shift: Number, localState: any, toggleValue: boolean): any{
     // localState.shifts_data.map((element: any, index_shift: Number) => {
@@ -122,9 +172,9 @@ function updateItemFromState(item: Number, shift: Number, localState: any, toggl
                     // shifts
                     let shifts_data = localState.shifts_data;
                     let editShift = shifts_data[+index_shift] //copy the array
-                    const beforeShifts: any[] = [];
+                    let beforeShifts: any[] = [];
                     if(+index_shift != 0){
-                        const beforeShifts = localState.shifts_data.slice(0, +index_shift)
+                        beforeShifts = localState.shifts_data.slice(0, +index_shift)
                     } 
                     const afterShifts = localState.shifts_data.slice(+index_shift + 1, localState.shifts_data.length)
 
@@ -146,6 +196,7 @@ function updateItemFromState(item: Number, shift: Number, localState: any, toggl
                     const new_shifts = beforeShifts.concat(editShift).concat(afterShifts)
                     let new_localState = {...localState, shifts_data: new_shifts}
 
+                    console.log(new_localState)
                     return (new_localState)
                 }
             }
@@ -155,5 +206,4 @@ function updateItemFromState(item: Number, shift: Number, localState: any, toggl
     let shift_data  = localState.shifts_data.filter((element: any) =>{
         return element.shift_id === shift
     })
-
 }

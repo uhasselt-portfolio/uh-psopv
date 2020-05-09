@@ -49,6 +49,7 @@ import {persistStore, persistReducer } from 'redux-persist'
 /* Theme variables */
 import './theme/variables.css';
 import { PersistGate } from 'redux-persist/integration/react';
+import Save from './pages/sector-responsible/save_actions/savePage'
 
 
 
@@ -138,6 +139,7 @@ class App extends React.Component {
     return (
       <Provider store={store}>
       <IonApp>
+          <Save />
           <IonReactRouter>
               {this.renderTabs()}
             </IonReactRouter>          

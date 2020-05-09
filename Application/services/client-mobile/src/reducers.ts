@@ -31,7 +31,7 @@ import saveReducer from './pages/sector-responsible/save_actions/saveReducer'
 const persistConfig = {
     key: 'root',
     storage, 
-    whitelist: ['list', 'post', 'save']
+    whitelist: ['list', 'post']
 }
 
 const rootReducer = combineReducers({

@@ -21,34 +21,6 @@ function sortUserShifts(a: any, b: any){
 }
 
 
-
-// export const SAVE_ACTION = 'SAVE_ACTION' 
-
-// export function test2(id: any) {
-//     console.log()
-//     return {
-//       type: 'SAVE_ACTION',
-//       id,
-//     };
-//   };
-
-
-// export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch) => {
-//     try{
-//         console.log("TODO", todoCommands)
-//         todoCommands.forEach(async (element: any) => {
-//             console.log("toggled item", element)
-//             const result = await axios.patch(element);
-//         });
-
-//         // const response = await new Database().ItemToggle(item_id); // TODO GETUSERID
-
-//     } catch(error){
-//     }
-// }
-
-
-
 export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: POST_FETCH_PLANNING_START})
@@ -143,7 +115,7 @@ export const itemToggle = (item_id: number, shift_id: Number, toggleValue: boole
         console.log("toggleValue_ACTION", toggleValue)
         dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
     } catch(error){
-        dispatch({type: ITEM_TOGGLE_FAIL, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
     }
 }
 
@@ -153,28 +125,30 @@ export const PROBLEM_TOGGLE_START = 'PROBLEM_TOGGLE_START'
 export const PROBLEM_TOGGLE_SUCCESS = 'PROBLEM_TOGGLE_SUCCESS'
 export const PROBLEM_TOGGLE_FAIL = 'PROBLEM_TOGGLE_FAIL'
 
-export const problemToggle = (probem_id: number) => async (dispatch: Redux.Dispatch) => {
+export const problemToggle = (probem_id: number, shift_id: Number, toggleValue: boolean) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: PROBLEM_TOGGLE_START})
 
         const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
 
-        dispatch({type: PROBLEM_TOGGLE_SUCCESS})
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: {"problem_id": probem_id, "shift_id": shift_id, "toggleValue": toggleValue}})
     } catch(error){
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: {"problem_id": probem_id, "shift_id": shift_id, "toggleValue": toggleValue}})
 
-            dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }
+        // if (error.response) {
+        //     // Server responded with a code high than 2xx
+        //     console.log(error.response.data);
+        //     console.log(error.response.status);
+        //     console.log(error.response.headers);
+
+        //     dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
+        // } else if (error.request) {
+        //     // No response was received from the server
+        //     console.log(error.request);
+        // } else {
+        //     // Request couldn't get send
+        //     console.log('Error', error.message);
+        // }
     }
 }
 

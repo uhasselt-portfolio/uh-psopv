@@ -12,8 +12,7 @@ import {formatDateTime} from '../../../common_functions/date_formatter';
 import {itemToggle, problemToggle} from '../PostAction' 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {OfflineItemToggle} from '../../save_actions/saveAction'
-
+import {resetActionList, getActionList, addObjectToActionList} from '../../save_actions/saveFunction'
 
 
   
@@ -49,17 +48,20 @@ class Shift  extends Component<any> {
     }
 
     handleToggleCheckListItem(item_id: Number, item_value: boolean){
-        if(navigator.onLine){
-            console.log("this.props.OfflineItemToggle(item_id)")
-            this.props.OfflineItemToggle(item_id)
+        if(!navigator.onLine){
+            addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id)
         }
-        // this.props.itemToggle(item_id, this.props.shift_id, item_value)
-        console.log("toggled")
+        this.props.itemToggle(item_id, this.props.shift_id, item_value)
+        console.log("toggled item")
     }
 
-    toggleProblemSolved(problem_id: number){
-        console.log("toggled problem")
-        this.props.problemToggle(problem_id)
+    toggleProblemSolved(problem_id: number, item_value: boolean){
+        if(!navigator.onLine){
+            console.log("toggled problem OFFLINE", item_value)
+            addObjectToActionList('https://psopv.herokuapp.com/api/problem/toggle-solve/' + problem_id)
+        }
+        console.log("toggled problem", item_value)
+        this.props.problemToggle(problem_id, this.props.shift_id, item_value)
     }
 
 
@@ -196,7 +198,7 @@ class Shift  extends Component<any> {
                         {problem.title}, {problem.description}
                     </IonCol>
                     <IonCol className="rightContent" size="4">
-                        <IonButton onClick={() => this.toggleProblemSolved(problem.id)}>Ok</IonButton>
+                        <IonButton onClick={() => this.toggleProblemSolved(problem.id, !problem.solved)}>Ok</IonButton>
                     </IonCol>
                     </IonRow>
                     <IonRow>
@@ -268,7 +270,6 @@ class Shift  extends Component<any> {
   
   
 function mapStateToProps(state: any) {
-    console.log(state)
     return({
     })
   }
@@ -276,8 +277,7 @@ function mapStateToProps(state: any) {
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
       itemToggle,
-      problemToggle,
-      OfflineItemToggle
+      problemToggle
     }, dispatch);
   }
   
