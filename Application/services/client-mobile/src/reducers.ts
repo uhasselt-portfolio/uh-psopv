@@ -32,7 +32,7 @@ import saveReducer from './pages/save/saveReducer'
 const persistConfig = {
     key: 'root',
     storage, 
-    whitelist: ['list', 'post']
+    whitelist: ['post']
 }
 
 const rootReducer = combineReducers({

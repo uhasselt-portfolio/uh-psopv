@@ -70,7 +70,7 @@ class App extends React.Component {
           <IonRouterOutlet>
             <Route path="/ListView" component={ListView} exact={true} />
             <Route path="/MapPage" component={MapPage} exact={true} />
-            <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
+            <Route path="/PostView/:sector/:post" component={PostView} exact={true} />
             <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
             <Route path="/Notifications" component={Notifications} exact={true} />
             <Route path="/SendNotifications" component={SendNotifications} exact={true} />
