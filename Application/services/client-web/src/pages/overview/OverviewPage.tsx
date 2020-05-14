@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid} from '@material-ui/core';
+import {Grid, Paper} from '@material-ui/core';
 import OverviewCom from './OverviewComp';
 import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import {connect} from 'react-redux';
@@ -12,14 +12,11 @@ import {bindActionCreators} from 'redux';
 import {fetch} from './OverviewAction';
 
 
-const styleBorder = {
-    width: '45%',
-    height: '100%'
+const stylePaper = {
+    margin: '1vw',
+    padding: '1vw',
+    height: '80vh',
 } 
-const styleMap = {
-    height: '100%',
-    width: '55%'
-}
 
 interface IPropsMyMapComponent {
     isMarkerShown: boolean
@@ -150,22 +147,30 @@ class Overview extends Component<Props> {
         }
 
         return(
-            <div>
-                <Grid container>
-                    <Grid item style={styleBorder}>
+            <Grid 
+                container
+                direction="row"
+                justify="center"
+                alignItems="flex-start"
+                >
+                <Grid item xs={5}>
+                    <Paper style={stylePaper}>
                         <OverviewCom />
-                    </Grid>
-                    <Grid item style={styleMap}>
-                        <MyMapComponent
-                            isMarkerShown
-                            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT9J4RP-_5EPa6k4L9mY5SLld6rrJa-YM&v=3.exp&libraries=geometry,drawing,places"
-                            loadingElement={<div style={{ height: `100%` }} />}
-                            containerElement={<div style={{ height: `700px` }} />}
-                            mapElement={<div style={{ height: `100%` }} />}
-                        />
-                    </Grid>
+                    </Paper>
                 </Grid>
-            </div>
+                <Grid item xs={7}  >
+                <Paper style={stylePaper}>
+                    <MyMapComponent
+                        isMarkerShown
+                        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT9J4RP-_5EPa6k4L9mY5SLld6rrJa-YM&v=3.exp&libraries=geometry,drawing,places"
+                        loadingElement={<div style={{ height: `100%` }} />}
+                        containerElement={<div style={{ height: `100%` }} />}
+                        mapElement={<div style={{ height: `100%` }} />}
+                    />
+                </Paper>
+                </Grid>
+
+            </Grid>
         );
     }
 }

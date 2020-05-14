@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Tabs, Tab, Typography, Box, Grid, Button, TextField, MenuItem} from '@material-ui/core';
+import {Tabs, Tab, Typography, Box, Grid, Button, TextField, MenuItem, List} from '@material-ui/core';
 import Message from './MessageComp';
 import ProblemPreview from './ProblemPreview';
 import ProblemInterface from '../../interfaces/ProblemDataInterface';
@@ -18,6 +18,10 @@ import PostPreview from './PostPreview';
 
 const styleFormElement = {
     margin: '4px'
+}
+
+const styleMarginTop = {
+    margin: '2vh 0 0 0'
 }
 const newMessageStyle = {
     background: 'rgb(242,242,250)',
@@ -49,7 +53,7 @@ function TabPanel(props: TabPanelProps) {
         aria-labelledby={`simple-tab-${index}`}
         {...other}
       >
-        {value === index && <Box p={3}>{children}</Box>}
+        {value === index && <div>{children}</div>}
       </Typography>
     );
 }
@@ -139,15 +143,20 @@ class OverviewComp extends Component<Props> {
             })
     }
 
+    renderProblems(){
+        return this.props.problems.filter(problem => ! problem.solved).map(x => (
+            <ProblemPreview key={Math.random()} id={x.id} problemType={x.problemType} priority={x.priority} discription={x.discription} shiftName={x.shiftName} 
+            timeStamp={x.timeStamp} post={x.post} postId={x.postId} user={x.user} sender={x.sender} latitude={x.latitude} longitude={x.longitude} solved={x.solved}/>
+        ));
+    }
+
     render() {
         let Messages : Array<JSX.Element> = this.props.messages.filter(message => ! message.read).map(x => (
             <Message key={Math.random()} id={x.id} title={x.title} sender={x.sender} content={x.content} read={false}/>
         ));
 
-        let Problems : Array<JSX.Element> = this.props.problems.filter(problem => ! problem.solved).map(x => (
-            <ProblemPreview key={Math.random()} id={x.id} problemType={x.problemType} priority={x.priority} discription={x.discription} shiftName={x.shiftName} 
-            timeStamp={x.timeStamp} post={x.post} postId={x.postId} user={x.user} sender={x.sender} latitude={x.latitude} longitude={x.longitude} solved={x.solved}/>
-        ));
+        let Problems = <List style={styleMarginTop}>{this.renderProblems()}</List> 
+        
         let Posts: Array<JSX.Element> = this.props.posts.map(x => (
             <PostPreview key={Math.random()} id={x.id} title={x.title} addres={x.addres} general={x.general} sector={x.sector} 
                 latitude={x.latitude} longitude={x.longitude} shifts={x.shifts} users={x.users} activeProblem={x.activeProblem}/>
@@ -163,8 +172,8 @@ class OverviewComp extends Component<Props> {
                     <Tab icon={<SmsOutlinedIcon />} label="Nieuw bericht"/>
                 </Tabs>
             <TabPanel value={this.state.value} index={0}>
-                {(Problems.length > 0) && Problems}
-                {(Problems.length === 0) && <h5>Geen problemen</h5>}
+                {Problems}
+                {/* {(Problems.length === 0) && <h5>Geen problemen</h5>} */}
             </TabPanel>
             <TabPanel value={this.state.value} index={1}>
                 {Posts.length > 0 && Posts}

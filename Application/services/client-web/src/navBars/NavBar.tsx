@@ -9,10 +9,9 @@ const styleSticky = {
     height: '10%',
     top: 0,
     zIndex: 2,
-    padding: '2px',
+    padding: '1vh 2vw',
     // background: 'rgb(204, 231, 232)'
     background: 'rgb(0,91,150)',
-    margin: '0px 4px 4px 4px'
 } 
 const TabStyle = {
     margin: '10px'
@@ -128,7 +127,6 @@ class NavBar extends Component<IProps, IState> {
                             }
                         </Grid>
                     <Grid container justify="flex-start" style={TabsStyle}>
-
                         <Grid item style={TabStyle}>
                             {this.state.active === 1 && <Button variant="outlined" onClick={() => this.handleLink("",1)} style={ActiveTabStyle}>
                                 Overview</Button>}
