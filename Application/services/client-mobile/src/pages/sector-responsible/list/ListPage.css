@@ -7,3 +7,25 @@
 .flex_container {
     display: flex;
 }
+
+.colorBlue{
+    color: #0D4F8B;
+}
+
+.colorRed{
+    color: #CC0000;
+}
+
+.colorGreen{
+    color: #228B22;
+}
+
+*{
+    text-decoration:none;
+}
+
+.subTitle{
+    position: absolute;
+    font-size: 0.8em;
+    top: 2vh;
+}

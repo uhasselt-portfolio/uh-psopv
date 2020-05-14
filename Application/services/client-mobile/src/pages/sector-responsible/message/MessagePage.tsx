@@ -7,6 +7,7 @@ import { Dispatch, bindActionCreators } from "redux";
 import {fetchMessagesOf} from './MessageAction'
 
 
+
 import { IonButton, 
   IonListHeader, 
   IonHeader, 
@@ -78,7 +79,9 @@ class Notifications extends Component<any> {
 };
 
 function mapStateToProps(state: any) {
+  console.log(state)
   return({
+    savedActions: state.save,
     areMessagesOfIdFetched: state.message.areMessagesOfIdFetched,
     errorMessage: state.message.errorMessage,
     loading: state.message.loading

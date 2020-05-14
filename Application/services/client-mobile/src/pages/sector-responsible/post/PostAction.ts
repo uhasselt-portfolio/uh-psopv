@@ -20,11 +20,15 @@ function sortUserShifts(a: any, b: any){
     }
 }
 
+
 export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: POST_FETCH_PLANNING_START})
 
         const responsePlannings = await new Database().fetchPlanningsWithPostId(post_id);
+        const responseItems = await new Database().fetchAllItems();
+        const responseProblems = await new Database().fetchAllProblems();
+
 
         /* Add all Same shift together */
         const shifts: any[] = []; // array with shift_id's
@@ -34,12 +38,12 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
             }
         });
 
-
         const userShifts: any[] = []; 
         shifts.forEach((shift_id: number) => {
             let sameShift = responsePlannings.data.data.plannings.filter((element: any) => {
                 return element.shift_id === shift_id
             });
+
 
             /* Add User Names */
             let userNames: any[] = []; 
@@ -50,18 +54,23 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
 
             /* Add items */
             let items: any[] = []; 
-            sameShift.forEach(async (planning: any) => {
-                const responseItems = await new Database().fetchItemsFromPlanning(planning.id);
-                responseItems.data.data.items.forEach((element: any) => {
+            sameShift.forEach((planning: any) => {
+                let new_items = responseItems.data.data.items.filter((item: any) => {
+                    return item.planning_id === planning.id
+                });
+                
+                new_items.forEach((element: any, index: number) => {
                     items.push(element)
                 });
             })
 
             /* Add problems */
             let problems: any[] = []; 
-            sameShift.forEach(async (planning: any) => {
-                const responseProblems = await new Database().fetchProblemsFromPlanning(planning.id);
-                responseProblems.data.data.problems.forEach((element: any, index: number) => {
+            sameShift.forEach((planning: any) => {
+                let new_problems = responseProblems.data.data.problems.filter((problem: any) => {
+                    return problem.planning_id === planning.id
+                });
+                new_problems.forEach((element: any, index: number) => {
                     problems.push(element)
                 });
             })
@@ -71,24 +80,24 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
 
         /* Sort the array by time*/
         userShifts.sort(sortUserShifts)
-
         dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: userShifts})
-
     } catch(error){
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+        // if (error.response) {
+        //     // Server responded with a code high than 2xx
+        //     console.log(error.response.data);
+        //     console.log(error.response.status);
+        //     console.log(error.response.headers);
 
-            dispatch({type: POST_FETCH_PLANNING_FAIL, payload: error.response.data.users})
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }
+        //     dispatch({type: POST_FETCH_PLANNING_FAIL})
+        // } else if (error.request) {
+        //     // No response was received from the server
+        //     dispatch({type: POST_FETCH_PLANNING_FAIL})
+        //     console.log(error.request);
+        // } else {
+        //     // Request couldn't get send
+        //     dispatch({type: POST_FETCH_PLANNING_FAIL})
+        //     console.log('Error', error.message);
+        // }
     }
 }
 
@@ -97,57 +106,49 @@ export const ITEM_TOGGLE_START = 'ITEM_TOGGLE_START'
 export const ITEM_TOGGLE_SUCCESS = 'ITEM_TOGGLE_SUCCESS'
 export const ITEM_TOGGLE_FAIL = 'ITEM_TOGGLE_FAIL'
 
-export const itemToggle = (item_id: number) => async (dispatch: Redux.Dispatch) => {
+export const itemToggle = (item_id: number, shift_id: Number, toggleValue: boolean) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: ITEM_TOGGLE_START})
 
         const response = await new Database().ItemToggle(item_id); // TODO GETUSERID
 
-        dispatch({type: ITEM_TOGGLE_SUCCESS})
+        console.log("toggleValue_ACTION", toggleValue)
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
     } catch(error){
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-
-            dispatch({type: ITEM_TOGGLE_FAIL, payload: error.response.data.items})
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
     }
 }
+
+
 
 export const PROBLEM_TOGGLE_START = 'PROBLEM_TOGGLE_START'
 export const PROBLEM_TOGGLE_SUCCESS = 'PROBLEM_TOGGLE_SUCCESS'
 export const PROBLEM_TOGGLE_FAIL = 'PROBLEM_TOGGLE_FAIL'
 
-export const problemToggle = (probem_id: number) => async (dispatch: Redux.Dispatch) => {
+export const problemToggle = (probem_id: number, shift_id: Number, toggleValue: boolean) => async (dispatch: Redux.Dispatch) => {
     try{
         dispatch({type: PROBLEM_TOGGLE_START})
 
         const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
 
-        dispatch({type: PROBLEM_TOGGLE_SUCCESS})
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: {"problem_id": probem_id, "shift_id": shift_id, "toggleValue": toggleValue}})
     } catch(error){
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: {"problem_id": probem_id, "shift_id": shift_id, "toggleValue": toggleValue}})
 
-            dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }
+        // if (error.response) {
+        //     // Server responded with a code high than 2xx
+        //     console.log(error.response.data);
+        //     console.log(error.response.status);
+        //     console.log(error.response.headers);
+
+        //     dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
+        // } else if (error.request) {
+        //     // No response was received from the server
+        //     console.log(error.request);
+        // } else {
+        //     // Request couldn't get send
+        //     console.log('Error', error.message);
+        // }
     }
 }
 
