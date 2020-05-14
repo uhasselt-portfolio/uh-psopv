@@ -40,7 +40,7 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
-import { ellipse, square, triangle } from 'ionicons/icons';
+import { ellipse, square, mapOutline, listOutline, notificationsOutline, paperPlaneOutline, personOutline } from 'ionicons/icons';
 import {store} from './reducers';
 import {Provider} from 'react-redux';
 
@@ -49,13 +49,13 @@ import {persistStore, persistReducer } from 'redux-persist'
 /* Theme variables */
 import './theme/variables.css';
 import { PersistGate } from 'redux-persist/integration/react';
-import Save from './pages/save_actions/savePage'
+import Save from './pages/save/savePage'
 
 
 
 class App extends React.Component {
   state = {
-    loggedin: false // TODO USERID
+    loggedin: true // TODO USERID
   }
 
   renderTabs(){
@@ -76,23 +76,23 @@ class App extends React.Component {
           </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="MapPage" href="/MapPage">
-              <IonIcon icon={ellipse} />
-              <IonLabel>Map</IonLabel>
+              <IonIcon icon={mapOutline} />
+              <IonLabel>Post-Kaart</IonLabel>
             </IonTabButton>
             <IonTabButton tab="ListView" href="/ListView">
-              <IonIcon icon={square} />
-              <IonLabel>List</IonLabel>
+              <IonIcon icon={listOutline} />
+              <IonLabel>Post-Lijst</IonLabel>
             </IonTabButton>
             <IonTabButton tab="Notifications" href="/Notifications">
-              <IonIcon icon={square} />
-              <IonLabel>Nots</IonLabel>
+              <IonIcon icon={notificationsOutline} />
+              <IonLabel>Notificaties</IonLabel>
             </IonTabButton>
             <IonTabButton tab="SendNotifications" href="/SendNotifications">
-              <IonIcon icon={square} />
-              <IonLabel>Send</IonLabel>
+              <IonIcon icon={paperPlaneOutline} />
+              <IonLabel text-wrap>Verstuur</IonLabel>
             </IonTabButton>
             <IonTabButton tab="Contacts" href="/Contacts">
-              <IonIcon icon={square} />
+              <IonIcon icon={personOutline} />
               <IonLabel>Contacts</IonLabel>
             </IonTabButton>
           </IonTabBar>

@@ -1,7 +1,7 @@
 import {UNROLL_ACTIONS} from './saveAction'
 
 
-// Initial State
+
 
 export default function (state: any, action : any) {
     switch(action.type) {

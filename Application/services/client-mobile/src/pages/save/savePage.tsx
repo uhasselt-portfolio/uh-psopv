@@ -4,12 +4,14 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {doDatabase} from './saveAction'
 import { IonButton } from '@ionic/react';
-import {resetActionList, getActionList, addObjectToActionList} from './saveFunction'
+import {resetActionList, getActionList, addObjectToActionList, setDefaultSector, getDefaultSector, setUserId, getUserId} from './saveFunction'
 
 class Save  extends Component<any> {
     constructor(props: any, storage: Storage) {
         super(props);
         this.handleActions();
+        setDefaultSector(1);
+        setUserId(2);
     }
 
 

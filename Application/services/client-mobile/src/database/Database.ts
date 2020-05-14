@@ -5,7 +5,7 @@ export default class Database {
 
     getRestApiEndpoint(): string | undefined {
         // @ts-ignore
-        if (process.env.NODE_ENV == 'debug')
+        if (process.env.NODE_ENV === 'debug')
             return "http://localhost";
         return "https://psopv.herokuapp.com";
     }
@@ -19,8 +19,8 @@ export default class Database {
         })
     }
 
-    async fetchPlannings(userID : number) {
-        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user/' + userID;
+    async fetchPlannings() {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/all';
 
         console.log("URL ", url);
 
@@ -121,6 +121,12 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async fetchSectorOfUser(user_id: number) {
+        const url = this.getRestApiEndpoint() + '/api/sector/fetch/user/' + user_id;
+
+        return await axios.get(url)
+    }
+
     async fetchUnsolvedProblems() {
         const url = this.getRestApiEndpoint() + '/api/problem/fetch/all/unsolved';
 
@@ -153,6 +159,8 @@ export default class Database {
             }
         })
     }
+
+
 
 
 }

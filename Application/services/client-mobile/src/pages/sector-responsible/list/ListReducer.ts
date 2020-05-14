@@ -27,7 +27,7 @@ export default function (state = {localState: initialState.Posts}, action : AnyA
             });
             
             let sectors = action.payload.posts_sectors
-            let localState = {posts_sectors: sectors, posts_data: posts}
+            let localState = {posts_sectors: sectors, posts_data: posts, default_sector: action.payload.default_sector}
 
             return {...state,
                 localState: localState,

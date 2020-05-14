@@ -5,7 +5,7 @@ import { caretDown, call, mail } from 'ionicons/icons';
 import { match } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {fetchUser} from './PersonAction'
+import {fetchUserById} from './PersonAction'
 import './PersonPage.css'
 
 class PersonPage extends Component<any>{
@@ -14,11 +14,13 @@ class PersonPage extends Component<any>{
       }
     
       componentDidMount(){
-        this.props.fetchUser(this.props.match.params.id);
+        console.log(this.props)
+        this.props.fetchUserById(this.props.match.params.id);
 
       }
 
     renderContactInfo(user: any){
+      console.log(user)
       return(
         <IonCard>
           <IonCardHeader>
@@ -40,27 +42,27 @@ class PersonPage extends Component<any>{
             
             <IonRow className="center_content">
                   <IonCol size="2.5">Naam:</IonCol>
-                  <IonCol>{user.userInfo.first_name} {user.userInfo.last_name}</IonCol>
+                  <IonCol>{user.name}</IonCol>
               </IonRow>
               <IonRow className="center_content">
                   <IonCol size="2.5">Tel:</IonCol>
-                  <IonCol>{user.userInfo.phone_number}</IonCol>
+                  <IonCol>{user.phone_number}</IonCol>
                   
               </IonRow>
               <IonRow className="center_content">
                   <IonCol size="2.5">E-Mail:</IonCol>
-                  <IonCol size="7">{user.userInfo.email}</IonCol>
+                  <IonCol size="7">{user.email}</IonCol>
                   <IonCol size="2">
-                  <IonButton className="contact_btn" href={"mailto:" + user.userInfo.email}>
+                  <IonButton className="contact_btn" href={"mailto:" + user.email}>
                     <IonIcon class="text_end" icon={mail}/>
                   </IonButton >
                 </IonCol>
               </IonRow>
               <IonRow>
                       <IonCol size="2.5">Rol:</IonCol>
-                      <IonCol size= "7">{user.userInfo.permission_type.name}</IonCol>
+                      <IonCol size= "7">{user.function_type}</IonCol>
                       <IonCol size="2">
-                        <IonButton className="contact_btn"  href={"tel:" + user.userInfo.phone_number}>
+                        <IonButton className="contact_btn"  href={"tel:" + user.phone_number}>
                         <IonIcon class="text_end" icon={call}/>
                         </IonButton >
                       </IonCol>
@@ -72,61 +74,59 @@ class PersonPage extends Component<any>{
       )
     }
 
-    renderPukkelpopInfo(user: any){
-      if(user.plannings.length > 0){
-        return(
-          <IonCard>
-              <IonCardHeader>
-                  <IonCardTitle>
-                      Pukkelpop
-                  </IonCardTitle>
-              </IonCardHeader>
-              <IonCardContent>
-                <IonGrid>
-                  <IonRow>
-                      <IonCol size="3">Rol:</IonCol>
-                      <IonCol>{user.userInfo.permission_type.name}</IonCol>
-                  </IonRow>
-                  <IonRow>
-                      <IonCol size="3">Shift:</IonCol>
-                      <IonCol>{}</IonCol>
-                  </IonRow>
-                  <IonRow>
-                      <IonCol size="3">Sector:</IonCol>
-                      <IonCol>todo...</IonCol>
-                  </IonRow>
-                  <IonRow>
-                      <IonCol size="3">Post:</IonCol>
-                      <IonCol>todo...</IonCol>
-                  </IonRow>
-                </IonGrid>
-              </IonCardContent>
-              </IonCard>
-        )
-      }
-      
-    }
-    renderProblemenInfo(user: any){
-      return(
-        <IonCard>
-        <IonCardHeader>
-            <IonCardTitle>
-                Pukkelpop
-            </IonCardTitle>
-        </IonCardHeader>
-        <IonCardContent>
-          <IonGrid>
-            <IonRow>
-                <IonCol>probleem 1 todo...</IonCol>
-            </IonRow>
-          </IonGrid>
-        </IonCardContent>
-        </IonCard>
-      )
-    }     
+    // renderPukkelpopInfo(user: any){
+    //   if(user.plannings.length > 0){
+    //     return(
+    //       <IonCard>
+    //           <IonCardHeader>
+    //               <IonCardTitle>
+    //                   Pukkelpop
+    //               </IonCardTitle>
+    //           </IonCardHeader>
+    //           <IonCardContent>
+    //             <IonGrid>
+    //               <IonRow>
+    //                   <IonCol size="3">Rol:</IonCol>
+    //                   <IonCol>{user.userInfo.permission_type.name}</IonCol>
+    //               </IonRow>
+    //               <IonRow>
+    //                   <IonCol size="3">Shift:</IonCol>
+    //                   <IonCol>{}</IonCol>
+    //               </IonRow>
+    //               <IonRow>
+    //                   <IonCol size="3">Sector:</IonCol>
+    //                   <IonCol>todo...</IonCol>
+    //               </IonRow>
+    //               <IonRow>
+    //                   <IonCol size="3">Post:</IonCol>
+    //                   <IonCol>todo...</IonCol>
+    //               </IonRow>
+    //             </IonGrid>
+    //           </IonCardContent>
+    //           </IonCard>
+    //     )
+    //   }
+    // }
+    // renderProblemenInfo(user: any){
+    //   return(
+    //     <IonCard>
+    //     <IonCardHeader>
+    //         <IonCardTitle>
+    //             Pukkelpop
+    //         </IonCardTitle>
+    //     </IonCardHeader>
+    //     <IonCardContent>
+    //       <IonGrid>
+    //         <IonRow>
+    //             <IonCol>probleem 1 todo...</IonCol>
+    //         </IonRow>
+    //       </IonGrid>
+    //     </IonCardContent>
+    //     </IonCard>
+    //   )
+    // }     
     
     renderUserInfo(user: any){
-        console.log(user);
         return (<IonPage>
             <IonHeader>
                 <IonToolbar>
@@ -172,14 +172,12 @@ class PersonPage extends Component<any>{
   function mapStateToProps(state: any) {
     return({
       isUserFetched: state.person.isUserFetched,
-      errorMessage: state.person.errorMessage,
-      loading: state.person.loading,
     })
   }
   
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-      fetchUser,
+      fetchUserById,
     }, dispatch);
   }
   

@@ -61,7 +61,7 @@ class MapPage extends Component<any> {
         <IonSelect
           interface="popover"  
           value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
-            {this.props.arePostsFetched.posts_sectors.map((sector: number) => {
+            {this.props.localState.posts_sectors.map((sector: number) => {
                 return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
             })}
             <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
@@ -75,11 +75,11 @@ class MapPage extends Component<any> {
   handleSectorChange(sector: number){
     let new_data
     if(sector !== -1){
-      new_data = this.props.arePostsFetched.posts_data.filter((element: any) => {
+      new_data = this.props.localState.posts_data.filter((element: any) => {
         return element.sector_id === sector
       })     
     }else{
-      new_data = this.props.arePostsFetched.posts_data
+      new_data = this.props.localState.posts_data
     }
    
     this.setState({...this.state, selected_sector: sector, data_posts: new_data});
@@ -87,8 +87,8 @@ class MapPage extends Component<any> {
 
   renderPosts(){
     if(this.state.data_posts.length <= 0){
-      this.setState({...this.state, data_posts: this.props.arePostsFetched.posts_data});
-      return this.props.arePostsFetched.posts_data.map((data: any, index: number) =>{
+      this.setState({...this.state, data_posts: this.props.localState.posts_data});
+      return this.props.localState.posts_data.map((data: any, index: number) =>{
         if(data.problem === false){
           return (
             <NormalMarker 
@@ -134,12 +134,10 @@ class MapPage extends Component<any> {
   }
 
   renderContent(){
-    if(this.props.loading == true){
-      return <div>Loading...</div>
-    } else {
-      if(this.props.arePostsFetched !== undefined){
-        if(this.props.arePostsFetched.length <= 0){
-          return <div> No messages found. </div>
+
+      if(this.props.localState !== undefined){
+        if(this.props.localState.length <= 0){
+          return <div> No Posts found. </div>
         } else{
           return (
             <div className="GoogleMaps">
@@ -158,11 +156,10 @@ class MapPage extends Component<any> {
           
         }
       }
-    }
-    
   }
 
   render(){
+    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>
@@ -172,7 +169,6 @@ class MapPage extends Component<any> {
         </IonHeader>
         <IonContent>
           {this.renderContent()}
-       
         </IonContent>
       </IonPage>
     )
@@ -182,6 +178,7 @@ class MapPage extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
+    localState: state.list.localState,
     arePostsFetched: state.map.arePostsFetched,
     errorMessage: state.map.errorMessage,
     loading: state.map.loading

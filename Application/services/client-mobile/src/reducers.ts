@@ -7,6 +7,7 @@ import reduxThunk from "redux-thunk"
 // sector-responsible
 import MessageReducer from './pages/sector-responsible/message/MessageReducer';
 import SendMessageReducer from './pages/sector-responsible/send_message/SendMessageReducer'
+
 import ContactReducer from './pages/sector-responsible/contact/ContactReducer'
 import PersonReducer from './pages/sector-responsible/person/PersonReducer';
 import ListReducer from './pages/sector-responsible/list/ListReducer';
@@ -23,7 +24,7 @@ import {persistStore} from 'redux-persist';
 import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import CounterReducer from './test/testReducer';
-import saveReducer from './pages/save_actions/saveReducer'
+import saveReducer from './pages/save/saveReducer'
 
 
 

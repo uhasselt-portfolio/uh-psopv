@@ -1,6 +1,7 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
+import { getDefaultSector } from "../../save/saveFunction";
 
 
 export const PLANNING_FETCH_START = 'PLANNING_FETCH_START'
@@ -12,6 +13,8 @@ export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
         dispatch({type: PLANNING_FETCH_START})
 
         const responsePosts = await new Database().fetchPosts();
+
+        
         let posts_data = responsePosts.data.data.posts
 
         // get all posts with problems
@@ -38,8 +41,9 @@ export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
                 post["problem"] = false;
               }
         })
+        let default_sector = await getDefaultSector();
 
-        let all_data = {posts_data: posts_data, posts_sectors: sectors}
+        let all_data = {posts_data: posts_data, posts_sectors: sectors, default_sector: default_sector}
 
         console.log(all_data)
         dispatch({type: PLANNING_FETCH_SUCCESS, payload: all_data})

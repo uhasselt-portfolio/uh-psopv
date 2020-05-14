@@ -12,7 +12,7 @@ import {formatDateTime} from '../../../common_functions/date_formatter';
 import {itemToggle, problemToggle} from '../PostAction' 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {resetActionList, getActionList, addObjectToActionList} from '../../../save_actions/saveFunction'
+import {resetActionList, getActionList, addObjectToActionList} from '../../../save/saveFunction'
 
 
   
@@ -49,7 +49,7 @@ class Shift  extends Component<any> {
 
     handleToggleCheckListItem(item_id: Number, item_value: boolean){
         if(!navigator.onLine){
-            addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id)
+            addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id, null)
         }
         this.props.itemToggle(item_id, this.props.shift_id, item_value)
         console.log("toggled item")
@@ -58,7 +58,7 @@ class Shift  extends Component<any> {
     toggleProblemSolved(problem_id: number, item_value: boolean){
         if(!navigator.onLine){
             console.log("toggled problem OFFLINE", item_value)
-            addObjectToActionList('https://psopv.herokuapp.com/api/problem/toggle-solve/' + problem_id)
+            addObjectToActionList('https://psopv.herokuapp.com/api/problem/toggle-solve/' + problem_id, null)
         }
         console.log("toggled problem", item_value)
         this.props.problemToggle(problem_id, this.props.shift_id, item_value)

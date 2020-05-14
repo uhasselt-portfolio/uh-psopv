@@ -1,0 +1,48 @@
+
+.dropDown{
+}
+
+.hideDropDown{
+    display: none;
+}
+
+.onTop{
+    z-index: 100;
+    position: absolute;
+}
+
+.flexVertical{
+    display: flex;
+    flex-direction: column;
+}
+
+.flexHorizontal{
+    display: flex;
+    flex-direction: row;
+}
+
+.listItem{
+    padding: 0;
+    height: 7.5vh;
+}
+
+.listItemRadioButton{
+    right: 5vw;
+    top: 1vh;
+}
+
+.listItemTitle {
+    margin: 0;
+    top:  1vh;
+    left: 10vw;
+    padding: 0;
+    position: absolute;
+    font-size: 1.2em;
+}
+
+.listItemSubTitle{
+    position: absolute;
+    font-size: 0.8em;
+    left: 10vw;
+    top: 2vh;
+}
