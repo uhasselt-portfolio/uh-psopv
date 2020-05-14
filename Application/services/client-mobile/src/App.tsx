@@ -22,8 +22,12 @@ import MapPage from './pages/sector-responsible/map/MapPage';
 
 
 import InfoPage from './pages/volunteer/info/InfoPage';
+import StartPage from './pages/volunteer/start/StartPage';
+import BackgroundLocation from "./pages/volunteer/start/BackgroundLocation";
+
 import VRSendMessagePage from './pages/volunteer/send_message/VR_SendMessage';
 import VRMessage from './pages/volunteer/message/VR_MessagePage'
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';

@@ -16,7 +16,7 @@ import PostReducer from './pages/sector-responsible/post/PostReducer'
 
 // volunteer
 import InfoReducer from './pages/volunteer/info/InfoReducer';
-// import StartReducer from "./pages/volunteer/start/StartReducer";
+import StartReducer from "./pages/volunteer/start/StartReducer";
 import VR_SendMessageReducer from './pages/volunteer/send_message/VR_SendMessageReducer'
 
 

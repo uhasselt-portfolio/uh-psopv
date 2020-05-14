@@ -10,6 +10,7 @@ import itemSeeder from './item.seeder'
 import messageSeeder from './message.seeder'
 import problemTypeSeeder from './problem_types.seeder'
 import problemSeeder from './problem.seeder'
+import sectorSeeder from './sector.seeder'
 
 import PermissionTypeModel from "../models/permission_type.model";
 
@@ -35,6 +36,7 @@ export default async () => {
         await messageSeeder();
         await problemTypeSeeder();
         await problemSeeder();
+        await sectorSeeder();
     } else {
         console.log("Aborted seeding > Database already contains records!")
     }

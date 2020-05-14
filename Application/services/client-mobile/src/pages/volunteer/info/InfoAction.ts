@@ -62,7 +62,6 @@ export const fetchPlanningsFromId = (user_id: number)  => async (dispatch: Redux
         const response =  await new Database().fetchPlanningsWithUserId(user_id);
         let plannings = response.data.data.plannings;
         plannings.sort(sortPlanningsByDate)
-        console.log(plannings)
 
         dispatch({type: PLANNING_FROM_ID_FETCH_SUCCESS, payload: plannings})
     } catch(error){
