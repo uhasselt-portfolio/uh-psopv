@@ -231,9 +231,11 @@ function sortMessagesByDate(a: any, b: any){
         my_volunteers.push(volunteer.user_id)
     })
 
+    let problems: any[] = []
     responseProblems.data.data.problems.forEach((problem: any) => {
+        console.log(problem)
         if(my_volunteers.includes(problem.planning.user.id)){
-            messages.push({
+            problems.push({
                 type: "Problem",
                 id: problem.id,
                 title: problem.problem_type.title,
@@ -241,12 +243,15 @@ function sortMessagesByDate(a: any, b: any){
                 created_by: problem.created_by.first_name,
                 created_by_permission_type: problem.created_by.permission_type.name,
                 created_at: problem.created_at,
-                solved: problem.solved
+                solved: problem.solved,
+                post_id: problem.planning.post_id,
+                shift_id: problem.planning.shift_id,
+                sector_id: problem.planning.post.sector_id
             })
         }
     })
 
-    return messages
+    return {messages: messages, problems: problems}
 }
 
 
@@ -277,13 +282,19 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
         let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems, responsePlannings, default_sector);
         let messages =  getMessages(responseMessages, responseProblems, user_id, volunteers);
 
-        messages.sort(sortMessagesByDate);
+        let message = messages.messages;
+        let problems = messages.problems;
+        message.sort(sortMessagesByDate);
+        problems.sort(sortMessagesByDate);
+
 
         setListLocalStorage('my_volunteers', volunteers);
         setListLocalStorage('contacts', nonVolunteers);
         setListLocalStorage('posts', postsData.posts_data);
         setListLocalStorage('sectors', postsData.posts_sectors);
-        setListLocalStorage('messages', messages);
+        setListLocalStorage('messages', message);
+        setListLocalStorage('problems', problems);
+
 
 
 

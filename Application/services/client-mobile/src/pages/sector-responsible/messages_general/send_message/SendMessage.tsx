@@ -5,9 +5,9 @@ import { caretDown } from 'ionicons/icons';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import {messageAddMessage, fetchUsers} from './SendMessageAction'
-import CustomDropdown from '../list/components/CustomDropdown';
+import CustomDropdown from '../../list/components/CustomDropdown';
 import  SelectContactWindow  from './components/SelectContactPage';
-import { getListLocalStorage, setListLocalStorage } from '../../save/saveFunction';
+import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
 
 const select_types = {volunteers: "Alle Vrijwilligers", sectors: "Alle Sectorverantwoordelijken",
                       everybody: "Iedereen", nobody:"Niemand", specific: "Specifiek"}
@@ -129,19 +129,19 @@ class SendNotifications extends Component<any> {
   render(){
     if(this.props.localStorage != undefined){
         return (
-        <IonPage>
-          <IonHeader>
-            <IonToolbar>
-              <IonTitle>Notificaties versturen</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-            <IonHeader collapse="condense">
-              <IonToolbar>
-                <IonTitle size="large">Blank</IonTitle>
-              </IonToolbar>
-            </IonHeader>
-
+        // <IonPage>
+        //   <IonHeader>
+        //     <IonToolbar>
+        //       <IonTitle>Notificaties versturen</IonTitle>
+        //     </IonToolbar>
+        //   </IonHeader>
+        //   <IonContent>
+        //     <IonHeader collapse="condense">
+        //       <IonToolbar>
+        //         <IonTitle size="large">Blank</IonTitle>
+        //       </IonToolbar>
+        //     </IonHeader>
+        <div>
             <IonItem>
               <IonLabel>Ontvanger(s)</IonLabel>
               {this.renderListOfUser()}
@@ -164,8 +164,10 @@ class SendNotifications extends Component<any> {
             </IonItem>
 
             <IonButton className="sendBtn" onClick={() => this.handleSendMessage()}>Verstuur</IonButton>
-          </IonContent>
-        </IonPage>
+        </div>
+           
+        //   </IonContent>
+        // </IonPage>
       );
       }
       else{

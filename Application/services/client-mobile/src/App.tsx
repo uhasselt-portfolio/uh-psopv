@@ -12,13 +12,14 @@ import {
 import { IonReactRouter } from '@ionic/react-router';
 import ListView from './pages/sector-responsible/list/ListPage';
 import PostView from './pages/sector-responsible/post/PostPage';
-import Notifications from './pages/sector-responsible/message/MessagePage';
-import SendNotifications from './pages/sector-responsible/send_message/SendMessage';
+import Notifications from './pages/sector-responsible/messages_general/message/MessagePage';
+import SendNotifications from './pages/sector-responsible/messages_general/send_message/SendMessage';
 import Contacts from './pages/sector-responsible/contact/ContactPage';
-import NotificationItem from './pages/sector-responsible/message/component/Notification_Item'
+import NotificationItem from './pages/sector-responsible/messages_general/message/component/Notification_Item'
 import LoginPage from './pages/login/LoginPage';
 import PersonPage from './pages/sector-responsible/person/PersonPage';
 import MapPage from './pages/sector-responsible/map/MapPage';
+import MeessageGeneral from './pages/sector-responsible/messages_general/messageGeneralPage'
 
 
 import InfoPage from './pages/volunteer/info/InfoPage';
@@ -72,8 +73,7 @@ class App extends React.Component {
               <Route path="/MapPage" component={MapPage} exact={true} />
               <Route path="/PostView/:sector/:post" component={PostView} exact={true} />
               <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
-              <Route path="/Notifications" component={Notifications} exact={true} />
-              <Route path="/SendNotifications" component={SendNotifications} exact={true} />
+              <Route path="/Notifications" component={MeessageGeneral} exact={true} />
               <Route path="/Contacts" component={Contacts} exact={true} />
               <Route path="/Login" component={LoginPage} exact={true} />
               <Route path="/" render={() => <Redirect to="/MapPage" />} exact={true} />
@@ -90,10 +90,6 @@ class App extends React.Component {
             <IonTabButton tab="Notifications" href="/Notifications">
               <IonIcon icon={notificationsOutline} />
               <IonLabel>Notificaties</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="SendNotifications" href="/SendNotifications">
-              <IonIcon icon={paperPlaneOutline} />
-              <IonLabel text-wrap>Verstuur</IonLabel>
             </IonTabButton>
             <IonTabButton tab="Contacts" href="/Contacts">
               <IonIcon icon={personOutline} />

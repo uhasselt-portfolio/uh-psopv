@@ -15,12 +15,9 @@ import { IonButton,
     IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonRow, IonCol } from '@ionic/react';
 import { Link } from 'react-router-dom';
 import './Notification_Item.css';
-import { read } from 'fs';
 import { connect } from "react-redux";
-import { notifications, trendingUpSharp } from 'ionicons/icons';
-import MessageDataInterface from '../../../../components/interfaces/MessageDataInterface';
 import {MessageToggle} from '../MessageAction'
-import {formatDateTime} from '../../../common_functions/date_formatter'
+import {formatDateTime} from '../../../../common_functions/date_formatter'
 
 
 class NotificationItem extends Component<any> {

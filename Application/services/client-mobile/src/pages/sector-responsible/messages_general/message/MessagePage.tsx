@@ -50,19 +50,18 @@ class Notifications extends Component<any> {
   render(){
     console.log(this.props)
     return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Notifications</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          {/*-- List of Post Items --*/}
+      // <IonPage>
+      //   {/* <IonHeader>
+      //     <IonToolbar>
+      //       <IonTitle>Notifications</IonTitle>
+      //     </IonToolbar>
+      //   </IonHeader> */}
+      //   <IonContent>
           <IonList>
             {this.renderList()}
           </IonList>
-        </IonContent>
-      </IonPage>
+      //   </IonContent>
+      // </IonPage>
     );
     }
 };

@@ -14,7 +14,7 @@ import { call, checkbox } from 'ionicons/icons';
 
 import { render } from '@testing-library/react';
 import { radioButtonOff } from 'ionicons/icons';
-import { getListLocalStorage, setListLocalStorage, removeListLocalStorage } from '../../../save/saveFunction';
+import { getListLocalStorage, setListLocalStorage, removeListLocalStorage } from '../../../../save/saveFunction';
 import { RefresherEventDetail } from '@ionic/core';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';

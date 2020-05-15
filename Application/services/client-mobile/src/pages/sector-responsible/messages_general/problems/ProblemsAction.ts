@@ -1,23 +1,18 @@
 import axios from "axios"
 import Redux from 'redux';
-import Database from '../../../database/Database'
-import { getListLocalStorage } from "../../save/saveFunction";
+import Database from '../../../../database/Database'
+import { getListLocalStorage } from "../../../save/saveFunction";
 
-export const MESSAGE_FETCH_START = 'MESSAGE_FETCH_START'
-export const MESSAGE_FETCH_SUCCESS = 'MESSAGE_FETCH_SUCCESS'
-export const MESSAGE_FETCH_FAIL = 'MESSAGE_FETCH_FAIL'
+export const PROBLEMS_FETCH_SUCCESS = 'PROBLEMS_FETCH_SUCCESS'
 
-
-
-
-export const fetchMessagesOf = (id: number) => async (dispatch: Redux.Dispatch) => {
+export const fetchProblemsOf = () => async (dispatch: Redux.Dispatch) => {
     try{
-        let msg_messages = await getListLocalStorage('messages');
-        dispatch({type: MESSAGE_FETCH_SUCCESS, payload: msg_messages})
+        let problems = await getListLocalStorage('problems');
+        dispatch({type: PROBLEMS_FETCH_SUCCESS, payload: problems})
     } catch(error){
        console.log("error", error)
-       let msg_messages = await getListLocalStorage('messages');
-       dispatch({type: MESSAGE_FETCH_SUCCESS, payload: msg_messages})   
+       let problems = await getListLocalStorage('problems');
+       dispatch({type: PROBLEMS_FETCH_SUCCESS, payload: problems})   
     }
 }
 
