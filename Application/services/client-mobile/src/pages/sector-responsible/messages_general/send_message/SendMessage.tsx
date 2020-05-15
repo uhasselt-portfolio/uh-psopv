@@ -54,7 +54,6 @@ class SendNotifications extends Component<any> {
   }
 
   async selectSectors(){
-    console.log(this.props)
     let list: number[] =[]
 
     let sectors = this.props.localStorage.contacts.filter((item: any)=> {
@@ -71,7 +70,6 @@ class SendNotifications extends Component<any> {
 
 
   async selectVolunteers(){
-    console.log(this.props)
     let list: number[] =[]
 
     this.props.localStorage.my_volunteers.map((item: any)=> {
@@ -88,7 +86,6 @@ class SendNotifications extends Component<any> {
   }
 
   async selectEverybody(){
-    console.log(this.props)
     let list: number[] =[]
 
     if(this.props.localStorage != undefined){

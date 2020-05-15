@@ -84,7 +84,7 @@ class NotificationItem extends Component<any> {
 
     render(){        
         let data = this.props
-        if (this.props.type == "Message"){
+        if (this.props.created_by_permission_type == "Vrijwilliger"){
             if(this.props.solved){
                 return (
                     <div>

@@ -159,7 +159,6 @@ class MapPage extends Component<any> {
   }
 
   render(){
-    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>

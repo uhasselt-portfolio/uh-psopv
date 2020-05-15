@@ -48,26 +48,15 @@ class Notifications extends Component<any> {
 
 
   render(){
-    console.log(this.props)
     return (
-      // <IonPage>
-      //   {/* <IonHeader>
-      //     <IonToolbar>
-      //       <IonTitle>Notifications</IonTitle>
-      //     </IonToolbar>
-      //   </IonHeader> */}
-      //   <IonContent>
-          <IonList>
-            {this.renderList()}
-          </IonList>
-      //   </IonContent>
-      // </IonPage>
+      <IonList>
+        {this.renderList()}
+      </IonList>
     );
     }
 };
 
 function mapStateToProps(state: any) {
-  console.log(state)
   return({
     localStorage: state.message.areMessagesOfIdFetched,
     errorMessage: state.message.errorMessage,

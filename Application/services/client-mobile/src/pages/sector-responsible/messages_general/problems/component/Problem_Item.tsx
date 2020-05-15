@@ -50,8 +50,11 @@ class ProblemItem extends Component<any> {
                         </IonCol>
                     </IonRow>
                     <IonRow className="noPadding">
-                        <IonCol className="noPadding">
+                        <IonCol size="9" className="noPadding">
                         <p className="grey">{this.props.title}: {this.props.message} </p>
+                        </IonCol>
+                        <IonCol size="3">
+                            <IonButton href={this.getPost()}>Ga naar</IonButton>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -72,8 +75,11 @@ class ProblemItem extends Component<any> {
                         </IonCol>
                     </IonRow>
                     <IonRow className="noPadding">
-                        <IonCol className="noPadding">
-                        <p className="grey">{this.props.title}: {this.props.message} </p>
+                        <IonCol size="9" className="noPadding">
+                            <p className="grey">{this.props.title}: {this.props.message} </p>
+                        </IonCol>
+                        <IonCol size="3">
+                            <IonButton href={this.getPost()}>Ga naar</IonButton>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -81,17 +87,18 @@ class ProblemItem extends Component<any> {
         )
     }
         
+    getPost(): string {
+        return '/PostView/'+ this.props.sector_id + '/' + this.props.post_id;
+    }
 
     render(){        
         let data = this.props
-        if (this.props.type == "Message"){
+        if (this.props.created_by_permission_type == "Vrijwilliger"){
             if(this.props.solved){
                 return (
-                    <div>
-                    <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
+                    <IonItem className="ReadItem">
                         {this.renderMessage()}
                     </IonItem>
-                    </div>  
                 );
             } else{
                 return(
@@ -103,11 +110,9 @@ class ProblemItem extends Component<any> {
         } else{
             if(this.props.solved){
                 return (
-                    <div>
                     <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
                         {this.renderProblem()}
                     </IonItem>
-                    </div>  
                 );
             } else{
                 return(
