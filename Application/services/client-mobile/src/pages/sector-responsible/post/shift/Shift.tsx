@@ -280,7 +280,7 @@ class Shift  extends Component<any> {
         let items_data = this.props.items
         let shift_problems = this.props.problems;
         return (
-            <div>
+            <div className="leftAlign">
                 {this.renderShiftInfo()}
                 {this.renderCheckbox()}
                 {this.renderProblemInfo()}

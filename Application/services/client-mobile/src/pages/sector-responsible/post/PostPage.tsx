@@ -1,31 +1,32 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol } from '@ionic/react';
-import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
+import React, { Fragment, useState, Component, ReactNode, useEffect, useRef } from 'react';
 import './PostPage.css';
 import Shift from './shift/Shift';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPlanningsFromPost} from './PostAction'
-import { caretDown, arrowBack, arrowForward } from 'ionicons/icons';
+import { caretDown, arrowBack, arrowForward, constructOutline } from 'ionicons/icons';
 import { formatDateTime } from '../../common_functions/date_formatter';
-
-const checkboxList = [
-  { val: 'Fluo Band', isChecked: false },
-  { val: 'Plaatje', isChecked: false },
-  { val: 'Michiel', isChecked: false },
-  { val: 'Wouter', isChecked: false },
-];
-
+import { Switch } from 'react-router';
 
 const slideOpts = {
   direction: 'horizontal',
   speed: 400,
 };
 
+let swiper: any = null;
+
+const init = async function(this: any) {
+    swiper = await this.getSwiper();
+};
+
+
+
 class PostView extends Component<any, any> {
   state = {
     checkListActive: false,
     show_shift: -1, // niets
-    current_shift: -1 
+    current_shift: -1, 
   }
 
   constructor(props: any){
@@ -36,14 +37,17 @@ class PostView extends Component<any, any> {
     this.setState({...this.state, show_shift: shift});
   }
 
-  getNextShift(){
+  getNextShift(swiper: any){
+    swiper.slideNext();
     if (this.state.show_shift < this.props.localStorage.shifts.length - 1){
       let new_shift = this.state.show_shift + 1
       this.handleShiftSwitch(new_shift);
     }
   }
 
-  getPreviousShift(){
+  getPreviousShift(swiper: any){
+    console.log(swiper)
+    swiper.slidePrev();
     if (this.state.show_shift > 0) {
       let new_shift = this.state.show_shift - 1
       this.handleShiftSwitch(new_shift);
@@ -96,6 +100,37 @@ class PostView extends Component<any, any> {
     }
   }
 
+  handleSlideChange(test: any){
+    // this.getActiveIndex()
+    if(test != null){
+      console.log("changed slide", test.activeIndex)
+      this.handleShiftSwitch(test.activeIndex)
+    }
+  }
+  
+
+  renderShifts(){
+
+    const slideOpts = {
+      initialSlide: 0,
+      speed: 400,
+      direction: 'horizontal'
+    };
+
+    let shifts = this.props.localStorage.shifts.map((shift: any) => {
+      return (<IonSlide>
+              <Shift shift={shift} post={this.props.localStorage}/>
+            </IonSlide>)
+    })
+
+
+    return (
+    <IonSlides onIonSlidesDidLoad={init} pager={true} options={slideOpts} onIonSlideDidChange={()=> this.handleSlideChange(swiper)}>
+      {shifts}
+    </IonSlides>
+    )
+  }
+
   renderBasis(){
     return (
       <IonPage>
@@ -111,18 +146,17 @@ class PostView extends Component<any, any> {
             </IonToolbar>
           </IonHeader>
           <div className="flexrow">
-            <IonButton onClick={() => this.getPreviousShift()}><IonIcon icon={arrowBack}/></IonButton>
+            <IonButton onClick={() => this.getPreviousShift(swiper)}><IonIcon icon={arrowBack}/></IonButton>
                           <IonCardTitle>
                               {this.getCurrentShiftText()}
                           </IonCardTitle>
-            <IonButton onClick={() => this.getNextShift()}><IonIcon icon={arrowForward}/></IonButton>
+            <IonButton onClick={() => this.getNextShift(swiper)}><IonIcon icon={arrowForward}/></IonButton>
           </div>
-        
-          {this.renderPost()}
+          {this.renderShifts()}
+          
         </IonContent>
       </IonPage>
     );
-    
   }
 
   render(){
