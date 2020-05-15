@@ -1,0 +1,29 @@
+.NotReadItem {
+    --ion-background-color: #d7d8da;
+}
+
+.ReadItem{
+    background-color: white;
+}
+
+.grey{
+    color: 	#484848
+}
+
+.right_text{
+    color: 	#484848
+}
+
+.noPadding{
+    padding: 0;
+}
+
+.MessageBorder{
+    border-left-style: solid;
+    border-left-color: green;
+}
+
+.ProblemBorder{
+    border-left-style: solid;
+    border-left-color: coral;
+}
