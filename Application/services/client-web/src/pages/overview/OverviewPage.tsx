@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid} from '@material-ui/core';
+import {Grid, Paper} from '@material-ui/core';
 import OverviewCom from './OverviewComp';
 import {connect} from 'react-redux';
 import PostDataInterface from '../../interfaces/PostDataInterface';
@@ -10,15 +10,11 @@ import {bindActionCreators} from 'redux';
 import {fetch} from './OverviewAction';
 import MyMap from '../map/Map';
 
-
-const styleBorder = {
-    width: '45%',
-    height: '100%'
+const stylePaper = {
+    margin: '1vw',
+    padding: '1vw',
+    height: '100vh',
 } 
-const styleMap = {
-    height: '100%',
-    width: '55%'
-}
 
 type Props = LinkStateProps & LinkDispatchToProps;
 
@@ -58,16 +54,24 @@ class Overview extends Component<Props> {
         }
 
         return(
-            <div>
-                <Grid container>
-                    <Grid item style={styleBorder}>
+            <Grid 
+                container
+                direction="row"
+                justify="center"
+                alignItems="flex-start"
+                >
+                <Grid item xs={5}>
+                    <Paper style={stylePaper}>
                         <OverviewCom />
-                    </Grid>
-                    <Grid item style={styleMap}>
-                        {this.props.isMapFetched && <MyMap problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
-                    </Grid>
+                    </Paper>
                 </Grid>
-            </div>
+                <Grid item xs={7}  >
+                    <Paper style={stylePaper}>
+                        {this.props.isMapFetched && <MyMap problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
+                    </Paper>
+                </Grid>
+
+            </Grid>
         );
     }
 }

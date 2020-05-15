@@ -15,9 +15,10 @@ import Overview from './pages/overview/OverviewPage';
 
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
+import { Grid } from '@material-ui/core';
 
 const appStyle = {
-  background: 'rgb(232, 232, 232)',
+  background: '#eee',
   minheight: '100vh',
   height: '100%',
   paddingBottom: '5px'
@@ -28,8 +29,11 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <div className="App" style={appStyle}>
+        <Grid className="App" style={appStyle}>
+          <Grid>
           <NavBar />
+          </Grid>
+          <Grid>
           <Switch>
             <Route exact path='/' component={Overview} />
             <Route exact path='/Data' component={Data} /> 
@@ -42,7 +46,8 @@ function App() {
             <Route path="/Data/Shifts" component={Planning} />
             <Route path="/Settings" component={Settings} />
           </Switch>
-        </div>
+          </Grid>
+        </Grid>
       </BrowserRouter>
     </Provider>
   );

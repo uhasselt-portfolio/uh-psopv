@@ -1,10 +1,10 @@
 import React, { Fragment, useState, Component} from 'react';
-import './MessagePage.css';
-import NotificationItem from './component/Notification_Item'
+import '../../sector-responsible/message/MessagePage.css';
+import NotificationItem from '../../sector-responsible/message/component/Notification_Item'
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch, bindActionCreators } from "redux";
-import {fetchMessages} from './MessageAction'
+import {fetchMessagesOf} from '../../sector-responsible/message/MessageAction'
 
 
 import { IonButton, 
@@ -20,25 +20,24 @@ import { IonButton,
 
 
 
-class Notifications extends Component<any> {
+class VRMessage extends Component<any> {
   constructor(props: any) {
     super(props);
   }
 
   componentDidMount(){
-    this.props.fetchMessages(1);
+    this.props.fetchMessagesOf(1); // TODO USERID
   }
 
   renderList(){
-    console.log(this.props)
     if(this.props.loading == true){
       return <div>Loading...</div>
     } else {
-      if(this.props.areMessagesFetched !== undefined){
-        if(this.props.areMessagesFetched.length <= 0){
+      if(this.props.areMessagesOfIdFetched !== undefined){
+        if(this.props.areMessagesOfIdFetched.length <= 0){
           return <div> No messages found. </div>
         } else{
-          return this.props.areMessagesFetched.map((data: any, index: number) =>{
+          return this.props.areMessagesOfIdFetched.map((data: any, index: number) =>{
             return (
             <NotificationItem {... data}/>
             )
@@ -46,11 +45,6 @@ class Notifications extends Component<any> {
         }
       }
     }
-  }
-
-
-  handleRead = (index: number) => {
-    // this.props.messageRead(this.props.notificationReducer.Messages[index]);
   }
 
 
@@ -85,7 +79,7 @@ class Notifications extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    areMessagesFetched: state.message.areMessagesFetched,
+    areMessagesOfIdFetched: state.message.areMessagesOfIdFetched,
     errorMessage: state.message.errorMessage,
     loading: state.message.loading
   })
@@ -93,8 +87,8 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchMessages
+    fetchMessagesOf
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
+export default connect(mapStateToProps, mapDispatchToProps)(VRMessage);

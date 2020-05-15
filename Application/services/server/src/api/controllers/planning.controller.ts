@@ -85,6 +85,39 @@ export const fetchPosts = async (req: Request, res: Response) => {
     }
 };
 
+export const fetchActivePlaningViaUserID = async (req: Request, res: Response) => {
+    const userID = req.params.id;
+
+    try{
+        const where = {
+            begin: {[Op.lt]: Date.now()},
+            end: {[Op.gt]: Date.now()}
+        }
+
+        const activePlanning = await PlanningModel.findOne({
+            where: {user_id: userID},include: [{model: UserModel, all: true},{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
+        });
+
+        const statusCode = activePlanning == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                planning: activePlanning
+            },
+            message: null
+        });
+    } catch(error) {
+        console.log(error);
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 
 export const fetchUser = async (req: Request, res: Response) => {
     const userID = req.params.id;
@@ -214,6 +247,56 @@ export const add = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const toggleCheckedIn = async (req: Request, res: Response) => {
+    const userID = req.params.id;
+
+    const where = {
+        begin: {[Op.lt]: Date.now()},
+        end: {[Op.gt]: Date.now()}
+    }
+
+    try {
+        const userExists : UserModel | null = await UserModel.findByPk(userID, eagerLoadingOptions);
+
+        if(!userExists) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'User with that id doesn\'t exists'
+            });
+        }
+
+        const activePlanning = await PlanningModel.findOne({
+            where: {user_id: userID}, include: [{model: ShiftModel, where: where}]
+        });
+
+        if(activePlanning == undefined) {
+            return res.status(404).send({
+                status: 'fail',
+                data: null,
+                message: 'This user doesn\'t have any active planning'
+            });
+        }
+
+        // @ts-ignore
+        const planning = await activePlanning.update({checked_in: !activePlanning.checked_in}, {returning: true});
+
+        res.status(200).send({
+            status: 'success',
+            data: {planning: planning},
+            message: 'message'
+        });
+
+    } catch(error) {
+        console.log(error);
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
 
 export const modify = async (req: Request, res: Response) => {
     const planningID = req.params.id;

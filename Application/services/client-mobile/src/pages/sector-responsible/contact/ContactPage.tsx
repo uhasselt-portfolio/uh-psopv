@@ -1,6 +1,6 @@
 import React, { Fragment, useState, Component } from 'react';
 import ContactItem from './components/Contact_Item'
-import {fetchUsers} from './ContactAction'
+import {fetchContacts} from './ContactAction'
 
 import { IonButton, 
   IonListHeader, 
@@ -15,7 +15,7 @@ import { IonButton,
   IonSelect,
   IonSelectOption,
   IonRow,
-  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol } from '@ionic/react';
+  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol, IonCard, IonCardHeader } from '@ionic/react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -26,30 +26,36 @@ class Contacts extends Component<any> {
   }
 
   componentDidMount(){
-    this.props.fetchUsers();
+    this.props.fetchContacts();
   }
 
   renderList(){
-    if(this.props.loading == true){
-      return <div>Loading...</div>
-    } else {
-      if(this.props.areUsersFetched !== undefined){
-        console.log(this.props.areMessageFetched)
-        if(this.props.areUsersFetched.length <= 0){
-          return <div> No messages found. </div>
-        } else{
-          return this.props.areUsersFetched.map((data: any, index: number) =>{
-            return (
-            <ContactItem {... data}/>
-            )
-          })
-        }
-      }
+    if(this.props.localStorage == undefined){
+      return <div> Loading ... </div>
+    } else{
+      return this.props.localStorage.contacts.map((data: any, index: number) =>{
+        return (
+        <ContactItem {... data}/>
+        )
+      })
+    }
+  }
+
+  renderVrijwilligerList(){
+    if(this.props.localStorage == undefined){
+      return <div> Loading ... </div>
+    } else{
+      return this.props.localStorage.my_volunteers.map((data: any, index: number) =>{
+        return (
+        <ContactItem {... data}/>
+        )
+      })
     }
   }
 
 
   render(){
+    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>
@@ -67,7 +73,12 @@ class Contacts extends Component<any> {
   
       {/*-- List of Post Items --*/}
       <IonList>
+      <IonCard> <IonCardHeader>Mijn Collega's </IonCardHeader>
         {this.renderList()}
+        </IonCard>
+        <IonCard> <IonCardHeader> Mijn vrijwilligers </IonCardHeader>
+        {this.renderVrijwilligerList()}
+        </IonCard>
       </IonList>
     </IonContent>
           
@@ -80,16 +91,15 @@ class Contacts extends Component<any> {
 
 
 function mapStateToProps(state: any) {
+  console.log("state CONTACT", state)
   return({
-    areUsersFetched: state.contact.areUsersFetched,
-    errorMessage: state.contact.errorMessage,
-    loading: state.contact.loading
+    localStorage: state.contact.areUsersFetched,
   })
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchUsers
+    fetchContacts
   }, dispatch);
 }
 

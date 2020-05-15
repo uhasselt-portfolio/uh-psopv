@@ -1,17 +1,20 @@
 import axios from "axios"
 import Redux from 'redux';
+import Database from '../../../database/Database'
+import { getListLocalStorage } from "../../save/saveFunction";
 
 export const USER_FETCH_START = 'USER_FETCH_START'
 export const USER_FETCH_SUCCESS = 'USER_FETCH_SUCCESS'
 export const USER_FETCH_FAIL = 'USER_FETCH_FAIL'
 
-export const fetchUsers = () => async (dispatch: Redux.Dispatch) => {
+export const fetchUserById = (user_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: USER_FETCH_START})
-
-        const response = await axios.get('http://localhost/api/user/fetch/all');
-
-        dispatch({type: USER_FETCH_SUCCESS, payload: response.data.data.users})
+        let volunteers = await getListLocalStorage('my_volunteers');
+        let nonVolunteers = await getListLocalStorage('contacts');
+        let list = volunteers.concat(nonVolunteers);
+        let user_info = list.find((user: any) => { return user_id == user.user_id })
+    
+        dispatch({type: USER_FETCH_SUCCESS, payload: user_info})
     } catch(error){
         if (error.response) {
             // Server responded with a code high than 2xx

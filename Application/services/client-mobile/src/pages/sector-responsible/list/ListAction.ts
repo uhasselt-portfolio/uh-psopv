@@ -1,6 +1,8 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
+import { getDefaultSector, getListLocalStorage } from "../../save/saveFunction";
+
 
 export const PLANNING_FETCH_START = 'PLANNING_FETCH_START'
 export const PLANNING_FETCH_SUCCESS = 'PLANNING_FETCH_SUCCESS'
@@ -8,25 +10,26 @@ export const PLANNING_FETCH_FAIL = 'PLANNING_FETCH_FAIL'
 
 export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: PLANNING_FETCH_START})
 
-        const response = await new Database().fetchPosts(); // TODO GETUSERID
+        let postsData = await getListLocalStorage('posts');
+        let default_sector = await getListLocalStorage('default_sector');
+        let posts_sectors = await getListLocalStorage('sectors');
 
-        dispatch({type: PLANNING_FETCH_SUCCESS, payload: response.data.data.posts})
+
+        let data = {posts_data: postsData, default_sector: default_sector, posts_sectors: posts_sectors}
+        console.log(data)
+
+
+        dispatch({type: PLANNING_FETCH_SUCCESS, payload: data})
     } catch(error){
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+        console.log(error)
 
-            dispatch({type: PLANNING_FETCH_FAIL, payload: error.response.data.data.plannings})
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }
+        let postsData = await getListLocalStorage('posts');
+        let default_sector = await getListLocalStorage('default_sector');
+        let posts_sectors = await getListLocalStorage('sectors');
+
+        let data = {posts_data: postsData, default_sector: default_sector, posts_sectors: posts_sectors}
+
+        dispatch({type: PLANNING_FETCH_SUCCESS, payload: data})
     }
 }

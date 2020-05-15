@@ -31,22 +31,23 @@ class JWTUtil {
 
     public sign(payload: object) : string {
         const token: string = jwt.sign(payload, this.privateKey, JWTUtil.getOptions());
-        return this.cypherTool.encrypt(token)
+        return token;
+        // return this.cypherTool.encrypt(token)
     }
 
     public verify(token: string) : boolean | object | string {
-        const decryptedToken = this.cypherTool.decrypt(token);
+        // const decryptedToken = this.cypherTool.decrypt(token);
 
         try {
-            return jwt.verify(decryptedToken, this.publicKey, JWTUtil.getOptions());
+            return jwt.verify(token, this.publicKey, JWTUtil.getOptions());
         } catch(error) {
             return false;
         }
     }
 
     public decode(token: string) : string | { [key: string]: any; } | null {
-        const decryptedToken = this.cypherTool.decrypt(token);
-        return jwt.decode(decryptedToken, {complete: true})
+        // const decryptedToken = this.cypherTool.decrypt(token);
+        return jwt.decode(token, {complete: true})
     }
 }
 

@@ -1,12 +1,12 @@
 import React, {Component} from 'react';
-import {Paper,Grid, Button} from '@material-ui/core';
+import {Paper,Grid, Button, ListItem} from '@material-ui/core';
 import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import {Redirect} from 'react-router-dom';
+import './ProblemPreview.css'
 
 const PaperStyle = {
     margin: '10px',
-    padding: '10px',
-    background: 'rgb(242,242,250)'
+    background: '#eee'
 }
 const ButtonStyle = {
     background: 'rgb(3,57,108)',
@@ -50,29 +50,18 @@ class ProblemPreview extends Component<ProblemDataInterface> {
 
         return(
             <Paper style={PaperStyle}>
-                <Grid container direction="row">
-                    <Grid container direction="column" style={LeftPartStyle}>
-                        <Grid item>
-                            <h3>{this.props.problemType}</h3>
-                        </Grid>
-                        <Grid item>
-                            <p>{this.props.discription}</p>
-                        </Grid>
-                    </Grid>
-                    <Grid container direction="column" style={RightPartStyle} justify="space-between">
-                        <Grid container direction="row" justify="flex-end">
-                            <Grid item>
-                                <p>{parsedDate}</p>
-                            </Grid>
-                        </Grid>
-                        <Grid container direction="row" justify="flex-end">
-                            <Grid item>
-                                <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>details</Button>
-                            </Grid>
-                        </Grid>
+            <ListItem button divider onClick={this.handleLink}>
+                <Grid container direction="row">                
+                    <Grid item xs={8} justify="flex-start" alignItems="flex-start"><strong>{this.props.problemType}</strong>: {this.props.discription}</Grid>
+                    <Grid container xs={4} justify="flex-end" alignContent="flex-start">
+                        {parsedDate}
+                        {/* <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>details</Button> */}
                     </Grid>
                 </Grid>
+            </ListItem>
             </Paper>
+            
+           
         )
     }
 }

@@ -1,65 +1,96 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
+import { getListLocalStorage } from "../../save/saveFunction";
 
-export const PLANNING_POST_ID_FETCH_START = 'PLANNING_POST_ID_FETCH_START'
-export const PLANNING_POST_ID_FETCH_SUCCESS = 'PLANNING_POST_ID_FETCH_SUCCESS'
-export const PLANNING_POST_ID_FETCH_FAIL = 'PLANNING_POST_ID_FETCH_FAIL'
+export const POST_FETCH_PLANNING_START = 'POST_FETCH_PLANNING_START'
+export const POST_FETCH_PLANNING_SUCCESS = 'POST_FETCH_PLANNING_SUCCESS'
+export const POST_FETCH_PLANNING_FAIL = 'POST_FETCH_PLANNING_FAIL'
 
-function getTiming(data: any): number {
-    let sum = 0;
-    sum += data.slice(0,4) * 10000
 
-    sum += (data.slice(5,7) * 1000)
 
-    sum += (data.slice(8,10) * 100)
 
-    sum += (data.slice(11,13) * 10)
-    return sum
-}
-
-function compare(a: any, b: any) {
-    if (getTiming(a.shift.begin) < getTiming(b.shift.begin)) {
-      return -1;
-    }
-    if (getTiming(a.shift.begin) > getTiming(b.shift.begin)) {
-      return 1;
-    }
-    // a must be equal to b
-    return 0;
-  }
-
-function printDate(data: any){
-    data.forEach((element: any, index: number) => {
-        console.log(index, element.shift.begin)
-    });
-}
-
-export const fetchPlanningsWithPostId = (id: number) => async (dispatch: Redux.Dispatch) => {
+export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: PLANNING_POST_ID_FETCH_START})
+        
+        let posts = await getListLocalStorage('posts');
+        console.log(posts)
 
-        const response = await new Database().fetchPlanningsWithPostId(id);
+        console.log("postsData", posts)
+        let postData = posts.find((element: any) => {
+            return (post_id == element.post_id)
+        })
 
-        // new list with all same_shifts placed together
-        const plannings = response.data.data.plannings
-        plannings.sort(compare)
+        console.log("Shifts data", postData)
 
-        dispatch({type: PLANNING_POST_ID_FETCH_SUCCESS, payload: plannings})
+
+
+        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: postData})
     } catch(error){
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-
-            dispatch({type: PLANNING_POST_ID_FETCH_FAIL, payload: error.response.data.plannings})
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }
+        let postsData = await getListLocalStorage('postsData');
+        console.log(error)
+        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: postsData})
     }
 }
+
+
+export const ITEM_TOGGLE_START = 'ITEM_TOGGLE_START'
+export const ITEM_TOGGLE_SUCCESS = 'ITEM_TOGGLE_SUCCESS'
+export const ITEM_TOGGLE_FAIL = 'ITEM_TOGGLE_FAIL'
+
+export const itemToggle = (item_id: number, shift_id: Number, toggleValue: boolean) => async (dispatch: Redux.Dispatch) => {
+    try{
+        dispatch({type: ITEM_TOGGLE_START})
+
+        const response = await new Database().ItemToggle(item_id); // TODO GETUSERID
+
+        console.log("toggleValue_ACTION", toggleValue)
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
+    } catch(error){
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
+    }
+}
+
+
+
+export const PROBLEM_TOGGLE_SUCCESS = 'PROBLEM_TOGGLE_SUCCESS'
+
+export const problemToggle = (probem_id: number, shift_id: Number, toggleValue: boolean) => async (dispatch: Redux.Dispatch) => {
+    try{
+        const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
+
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: {"problem_id": probem_id, "shift_id": shift_id, "toggleValue": toggleValue}})
+    } catch(error){
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: {"problem_id": probem_id, "shift_id": shift_id, "toggleValue": toggleValue}})
+
+    }
+}
+
+// export const FETCH_PROBLEM_TYPES_START = 'FETCH_PROBLEM_TYPES_START'
+// export const FETCH_PROBLEM_TYPES_SUCCESS = 'FETCH_PROBLEM_TYPES_SUCCESS'
+// export const FETCH_PROBLEM_TYPES_FAIL = 'FETCH_PROBLEM_TYPES_FAIL'
+
+// export const problemToggle = (probem_id: number) => async (dispatch: Redux.Dispatch) => {
+//     try{
+//         dispatch({type: PROBLEM_TOGGLE_START})
+
+//         const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
+
+//         dispatch({type: PROBLEM_TOGGLE_SUCCESS})
+//     } catch(error){
+//         if (error.response) {
+//             // Server responded with a code high than 2xx
+//             console.log(error.response.data);
+//             console.log(error.response.status);
+//             console.log(error.response.headers);
+
+//             dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
+//         } else if (error.request) {
+//             // No response was received from the server
+//             console.log(error.request);
+//         } else {
+//             // Request couldn't get send
+//             console.log('Error', error.message);
+//         }
+//     }
+// }

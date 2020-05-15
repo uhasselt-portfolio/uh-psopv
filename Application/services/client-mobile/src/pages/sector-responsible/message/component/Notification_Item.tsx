@@ -19,31 +19,45 @@ import { read } from 'fs';
 import { connect } from "react-redux";
 import { notifications, trendingUpSharp } from 'ionicons/icons';
 import MessageDataInterface from '../../../../components/interfaces/MessageDataInterface';
-import {fetchMessages} from '../MessageAction'
+import {MessageToggle} from '../MessageAction'
+import {formatDateTime} from '../../../common_functions/date_formatter'
 
 
 class NotificationItem extends Component<any> {
     constructor(props: any){
         super(props)
     }
+
+    state = {
+        seen: false
+    }
     
 
     handleOnMenuItemClicked = (data: any) => {
-        this.props.messageRead(data);
+        this.setState({...this.state, seen: !this.state.seen});
+        this.props.MessageToggle(data.id);
+        console.log(this.state.seen)
     }
 
-    render(){
-        let data = this.props.areMessagesFetched.find(((message: { id: any; }) => message.id === this.props.id)); // makes "this.props.." shorter, because it was a bit too long
+    setStateClicked(clicked: boolean){
+        if(clicked === true && this.state.seen === false){
+            this.setState({...this.state, seen: clicked});
+        }
+    }
 
-       if (true){ // nog aan te passen
+    render(){        
+        let data = this.props
+        console.log("data", this.props)
+        this.setStateClicked(data.seen)
+        if (this.state.seen){
         return (  
-            <IonItem className="ReadItem">
+            <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
                 <IonLabel>
                     <h2> <b>{data.created_by.first_name}:</b> {data.title}</h2>
                     <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <h2>{data.created_at}</h2>
+                    <h2>{formatDateTime(data.created_at)}</h2>
                 </IonLabel>
             </IonItem>
         );
@@ -51,11 +65,11 @@ class NotificationItem extends Component<any> {
         return(
             <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
                 <IonLabel>
-                    <h2> <b>{data.created_by}:</b> {data.title}</h2>
+                    <h2> <b>{data.created_by.first_name}:</b> {data.title}</h2>
                     <p>{data.message}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <h2>{data.created_at}</h2>
+                    <h2>{formatDateTime(data.created_at)}</h2>
                 </IonLabel>
             </IonItem>
         )
@@ -65,15 +79,15 @@ class NotificationItem extends Component<any> {
 
 function mapStateToProps(state: any) {
     return({
-      areMessagesFetched: state.message.areMessagesFetched,
-      errorMessage: state.message.errorMessage,
-      loading: state.message.loading
+        toggleMessage: state.message.toggleMessage,
+        errorMessage: state.message.errorMessage,
+        loading: state.message.loading
     })
   }
   
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-      fetchMessages
+      MessageToggle
     }, dispatch);
   }
   

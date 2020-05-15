@@ -12,6 +12,7 @@ export const loginUser = (email: string | undefined, password: string | undefine
         dispatch({type: USER_LOGIN_START})
 
         const response = await new Database().loginUser(email, password);
+        console.log(response)
 
         const token = response.data.data.jwt;
         localStorage.setItem('token', token);

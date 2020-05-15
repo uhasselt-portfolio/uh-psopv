@@ -17,22 +17,22 @@ import PersonPage from '../../person/PersonPage'
   
 
 class ContactItem  extends Component<any> {
-
     constructor(props: any){
         super(props)
     }
 
-
     render() {
-        function getPost(props: any): string {
-            return '/PersonPage/'+props.id
+        console.log(this.props)
+        
+        function getPerson(props: any): string {
+            return '/PersonPage/'+props.user_id
         }
         
         return (    
-            <IonItem  detail button href={getPost(this.props)}>
+            <IonItem  detail button href={getPerson(this.props)}>
                 <IonLabel>
-                    <h1>{this.props.first_name} {this.props.last_name}</h1>
-                    <p>{this.props.permissions}</p>
+                    <h1>{this.props.name}</h1>
+                    <p>{this.props.function_type}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
                     <IonButton  href={"tel:" + this.props.phone_number}>

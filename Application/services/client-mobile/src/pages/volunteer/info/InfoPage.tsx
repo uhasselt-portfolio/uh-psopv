@@ -1,7 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {fetchPlannings, updateGeolocation} from './InfoAction';
+import {fetchPlanningsFromId, updateGeolocation} from './InfoAction';
+import {checkIfUserInPost, reportUserNotInPost} from "../start/StartAction";
 import {
     IonCard,
     IonCardHeader,
@@ -19,19 +20,40 @@ import {
 import GoogleMapReact from 'google-map-react';
 import NormalMarker from './components/NormalMarker'
 import './InfoPage.css'
-import BackgroundService from "../../../service/BackgroundService";
+import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/background-geolocation";
 
 class InfoPage extends React.Component<any, any> {
 
     componentDidMount() {
-        this.trackAndUpdateUserLocation();
-        this.props.fetchPlannings();
-    }
+        let HIGH = 10;
+        const config = {
+            desiredAccuracy: HIGH,
+            stationaryRadius: 5,
+            interval: 30000,
+            distanceFilter: 5,
+            notificationTitle: 'Pukkelpop App',
+            notificationText: 'Locatie tracking',
+            debug: true, //  enable this hear sounds for background-geolocation life-cycle.
+            stopOnTerminate: false, // enable this to clear background location settings when the app terminates
+        };
 
-    private trackAndUpdateUserLocation() {
-        const backgroundService: BackgroundService = new BackgroundService(this.props.updateGeolocation);
-        console.log("Starting service...")
-        backgroundService.start();
+        BackgroundGeolocation.configure(config)
+            .then(() => {
+                BackgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location) => {
+                    console.log("location: ", location)
+
+                    this.props.updateGeolocation(location);
+                    this.props.checkIfUserInPost(1);
+                    if(!this.props.isUserOnPost) {
+                        this.props.reportUserNotInPost(1);
+                    }
+
+                    BackgroundGeolocation.finish(); // FOR IOS ONLY
+                });
+            });
+        BackgroundGeolocation.start();
+        BackgroundGeolocation.stop();
+        this.props.fetchPlanningsFromId(1);
     }
 
     private formatDate(data: string) {
@@ -54,7 +76,7 @@ class InfoPage extends React.Component<any, any> {
                     <IonGrid>
                         <IonRow>
                             <IonCol size="2">Wie</IonCol>
-                            <IonCol>{shift_data.user.first_name} {shift_data.user.last_name}</IonCol>
+                            <IonCol>{shift_data.user.first_name + " " +shift_data.user.last_name}</IonCol>
                         </IonRow>
                         <IonRow>
                             <IonCol size="2">Wat</IonCol>
@@ -75,7 +97,7 @@ class InfoPage extends React.Component<any, any> {
                         </IonRow>
                     </IonGrid>
 
-                    <div className="GoogleMaps">
+                    <div className="GoogleMapsInfo">
                         <GoogleMapReact
                             bootstrapURLKeys={{key: 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDyMg3eezA_aKnVp1Hvsya23xwxCey32JA'}}
                             defaultCenter={{lat: shift_data.post.latitude, lng: shift_data.post.longitude}}
@@ -91,7 +113,7 @@ class InfoPage extends React.Component<any, any> {
     }
 
     private renderShiftList() {
-        const plannings = this.props.arePlanningsFetched;
+        const plannings = this.props.arePlanningsFromIdFetched;
 
         if (plannings !== undefined) {
             if (plannings.length <= 0) {
@@ -108,15 +130,34 @@ class InfoPage extends React.Component<any, any> {
 
     private renderCoordinates() {
         const coordinates = this.props.isLocationUpdated;
+        console.log(this.props.isLocationUpdated);
         if (coordinates !== undefined) {
             return (
-                <div>
-                    <p>Latitude: {this.props.isLocationUpdated.latitude}</p>
-                    <p>Longitude: {this.props.isLocationUpdated.longitude}</p>
-                </div>
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>
+                            Jouw coördinaten
+                        </IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        <p>Latitude: {this.props.isLocationUpdated.latitude}</p>
+                        <p>Longitude: {this.props.isLocationUpdated.longitude}</p>
+                    </IonCardContent>
+                </IonCard>
             )
         } else {
-            return <div>Loading...</div>
+            return(
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>
+                            Jouw coördinaten
+                        </IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        Laden...
+                    </IonCardContent>
+                </IonCard>
+            )
         }
     }
 
@@ -140,20 +181,22 @@ class InfoPage extends React.Component<any, any> {
 
 function mapStateToProps(state: any) {
     return ({
-        arePlanningsFetched: state.info.arePlanningsFetched,
-        isLocationUpdated: state.info.isLocationUpdated,
-        errorMessage: state.info.errorMessage,
-        loading: state.info.loading,
+        arePlanningsFromIdFetched: state.VRinfo.arePlanningsFromIdFetched,
+        isUserOnPost: state.start.isUserOnPost,
+        isLocationUpdated: state.VRinfo.isLocationUpdated,
+        errorMessage: state.VRinfo.errorMessage,
+        loading: state.VRinfo.loading,
     })
 }
 
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-        fetchPlannings,
-        updateGeolocation
+        updateGeolocation,
+        fetchPlanningsFromId,
+        checkIfUserInPost,
+        reportUserNotInPost
     }, dispatch);
 }
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(InfoPage);
 
