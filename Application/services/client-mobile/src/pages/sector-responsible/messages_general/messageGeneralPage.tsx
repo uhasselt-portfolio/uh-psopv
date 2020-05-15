@@ -19,14 +19,19 @@ class MeessageGeneral extends React.Component {
       selected: 0
     }
 
-    handleSlideChange(slider: any){
-      console.log(slider.activeIndex)
-      this.setState({selected: slider.activeIndex});
-    }      
+    handleSlideChange(){
+      this.setState({selected: swiper.activeIndex});
+    }
+
+    setSlideIndex(i: number){
+      swiper.slideTo(i)
+      this.setState({selected: i});
+    }
+    
 
     renderSlides(){
       return(
-        <IonSlides  onIonSlidesDidLoad={init} pager={true}onIonSlideDidChange={()=> this.handleSlideChange(swiper)}>
+        <IonSlides  onIonSlidesDidLoad={init} pager={true}onIonSlideDidChange={()=> this.handleSlideChange()}>
           <IonSlide className="fullWidth">
             <Notifications />
           </IonSlide>
@@ -62,22 +67,20 @@ class MeessageGeneral extends React.Component {
         <IonGrid>
           <IonRow>
           <IonCol size="6" className="center">
-            <IonTabButton >
               <IonTitle>Notifications</IonTitle>
-            </IonTabButton>
           </IonCol>
           <IonCol size="2" className="center">
-            <IonTabButton>
+          <IonTabButton onClick={() => this.setSlideIndex(0)}>
               {not_icon}
             </IonTabButton>
           </IonCol>
           <IonCol size="2" className="center">
-          <IonTabButton>
+          <IonTabButton onClick={() => this.setSlideIndex(1)}>
             {pro_icon}
             </IonTabButton>
           </IonCol>
           <IonCol size="2" className="center">
-          <IonTabButton>
+          <IonTabButton onClick={() => this.setSlideIndex(2)}>
             {send_icon}
             </IonTabButton>
           </IonCol>
