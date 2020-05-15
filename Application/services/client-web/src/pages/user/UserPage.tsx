@@ -67,7 +67,7 @@ class Users extends Component<Props> {
                             <User userId={x.id} />
                         ));
 
-        switch (this.state.filter) {    //TODO controleren of filter
+        switch (this.state.filter) {
             case "voornaam": { filteredUsers = this.props.users.filter(User => User.name === this.state.filterValue).map(x =>(
                             <User key={x.gsmNumber} userId={x.id}  />
                             ));
@@ -78,12 +78,6 @@ class Users extends Component<Props> {
                             ));
                         break;
             }
-            case "gsm nummer": { filteredUsers = this.props.users.filter(User => User.gsmNumber === this.state.filterValue).map(x =>(
-                            <User key={x.gsmNumber} userId={x.id} />
-                            ));
-                        break;
-            }
-            //TODO persmissions changed
             case "vrijwilliger": { filteredUsers = this.props.users.filter(User => User.permission === 1).map(x =>(
                             <User key={x.gsmNumber} userId={x.id} />
                             ));
@@ -112,6 +106,8 @@ class Users extends Component<Props> {
             }
         }
 
+        console.log(this.props);
+
         return(
             <div>
                 <Grid container justify="center" direction='column' >
@@ -134,7 +130,6 @@ class Users extends Component<Props> {
                                     <MenuItem value="Geen filter">Geen filter</MenuItem>
                                     <MenuItem value="voornaam">naam</MenuItem>
                                     <MenuItem value="achternaam">achternaam</MenuItem>
-                                    <MenuItem value="gsm nummer">gsm nummer</MenuItem>
                                     <MenuItem value="vrijwilliger">vrijwilliger</MenuItem>
                                     <MenuItem value="verantwoordelijke">verantwoordelijke</MenuItem>
                                     <MenuItem value="vereniging">vereniging</MenuItem>

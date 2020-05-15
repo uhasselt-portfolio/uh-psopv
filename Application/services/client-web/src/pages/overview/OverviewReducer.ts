@@ -6,14 +6,15 @@ import MessageInterface from '../../interfaces/MessageDataInterface';
 export default function (state: State = initialState, action : AnyAction): State {
     switch(action.type) {
         case OverviewActions.OVERVIEW_FETCH_START:
-            return {...state, loading: true, isOverviewFetched: false, errorMessage: ""}
+            return {...state, loading: true, isOverviewFetched: false,  isMapFetched: false, errorMessage: ""}
         case OverviewActions.OVERVIEW_FETCH_FAIL:
-            return {...state, loading: false, isOverviewFetched: false, errorMessage: action.payload}   
+            return {...state, loading: false, isOverviewFetched: false, isMapFetched: false, errorMessage: action.payload}   
         case OverviewActions.OVERVIEW_PROBLEM_FETCH_SUCCES:
             return {...state, 
                     loading: false, 
                     isOverviewFetched: true,
                     problems: action.payload,
+                    isMapFetched: true, 
                     errorMessage: ""}
         case OverviewActions.OVERVIEW_MESSAGE_FETCH_SUCCES : 
             return {
@@ -21,6 +22,7 @@ export default function (state: State = initialState, action : AnyAction): State
                 loading: false,
                 isOverviewFetched: true,
                 messages: action.payload,
+                isMapFetched: true, 
                 errorMessage: ""
             }
         case OverviewActions.OVERVIEW_FETCH_SUCCES : 
@@ -34,14 +36,30 @@ export default function (state: State = initialState, action : AnyAction): State
                 items: action.payload.items,
                 posts: action.payload.posts,
                 problems: action.payload.problems,
+                isMapFetched: true, 
                 errorMessage: ""
             }
         case OverviewActions.OVERVIEW_POST_NEW_MESSAGE_SUCCES : 
             return {
                 ...state,
                 loading: false,
-                isOverviewFetched: true,
+                isPostNewMessage: true,
+                isMapFetched: true, 
                 errorMessage: ""
+            }
+            case OverviewActions.OVERVIEW_POST_NEW_MESSAGE_FAIL : 
+            return {
+                ...state,
+                loading: false,
+                isPostNewMessage: false,
+                errorMessage: ""
+            }
+            case OverviewActions.OVERVIEW_POST_NEW_MESSAGE_START : 
+            return {
+                ...state,
+                loading: true,
+                isPostNewMessage: false,
+                errorMessage: action.payload
             }
         case OverviewActions.OVERVIEW_POST_MESSAGE_READ_SUCCES : {
             let otherMessages : MessageInterface[] = state.messages.filter(message => message.id !== action.payload);
@@ -63,6 +81,7 @@ export default function (state: State = initialState, action : AnyAction): State
             ...state,
             loading: true,
             isOverviewFetched: false,
+            isMapFetched: false,
             errorMessage: ""
         }
         case OverviewActions.OVERVIEW_FETCH_POSTS_SUCCES : 
@@ -71,6 +90,7 @@ export default function (state: State = initialState, action : AnyAction): State
                 loading: false,
                 posts: action.payload,
                 isOverviewFetched: true,
+                isMapFetched: true,
                 errorMessage: ""
             }
         case OverviewActions.OVERVIEW_FETCH_POSTS_FAIL : 
@@ -78,6 +98,7 @@ export default function (state: State = initialState, action : AnyAction): State
                 ...state,
                 loading: false,
                 isOverviewFetched: false,
+                isMapFetched: false,
                 errorMessage: action.payload
             }
 

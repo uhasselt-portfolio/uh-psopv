@@ -79,9 +79,6 @@ class PostPreview extends Component<Props> {
             anchorEl: null
         });
     }
-    handleUserLink = () => {
-
-    }
 
     render() {
         if (this.state.redirecting) {
@@ -116,7 +113,7 @@ class PostPreview extends Component<Props> {
             CurrentUsers = this.props.workingUsers[this.state.currentShift].map(x => (
                 <Grid item>
                 <Paper style={UserPaperStyle}>
-                    <h5 onClick={() => this.handleUserLink()}>{x.name + " " + x.lastname}</h5>
+                    <h5>{x.name + " " + x.lastname}</h5>
                 </Paper>
                 </Grid>
             ));
