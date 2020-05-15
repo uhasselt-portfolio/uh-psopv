@@ -109,7 +109,8 @@ export default class Database {
     }
 
     async fetchmessages() {
-        const response = await axios.get('https://psopv.herokuapp.com/api/message//fetch/send-to/' + '3');
+        let adminId : string = '3';
+        const response = await axios.get('https://psopv.herokuapp.com/api/message//fetch/send-to/' + adminId);
 
         let messages : MessageDataInterface[] = [];
         for (let i = 0; i < response.data.data.messages.length; ++i) {

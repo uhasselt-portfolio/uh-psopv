@@ -207,7 +207,7 @@ class Planning extends Component<Props> {
             }
 
             let postsOfShift : PostInterface[] = [];
-            if (selectedShiftIndex != -1) {
+            if (selectedShiftIndex !== -1) {
                 let shiftsPerPost : ShiftInterface[][] = this.sortShiftsperPost(filterdShifts[selectedShiftIndex]);
                 let posts : PostInterface[] = [];
                 let users : UserInterface[][] = [];
@@ -215,7 +215,7 @@ class Planning extends Component<Props> {
                 for (let i = 0; i < shiftsPerPost.length; ++i) {
                     //search the current posts
                     for (let j = 0; j < this.props.posts.length; ++j) {
-                        if (this.props.posts[j].id == shiftsPerPost[i][0].post_id) {
+                        if (this.props.posts[j].id === shiftsPerPost[i][0].post_id) {
                             posts.push(this.props.posts[j]);
                             break;
                         }
@@ -240,7 +240,7 @@ class Planning extends Component<Props> {
                         } 
                     }
 
-                    if (tempItems.length == 0)
+                    if (tempItems.length === 0)
                         tempItems.push("Geen items op deze post");
 
                     users.push(tempUsers);

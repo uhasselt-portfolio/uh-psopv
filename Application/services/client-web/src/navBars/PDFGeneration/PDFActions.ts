@@ -67,7 +67,7 @@ const generatepdfDocument = (problems : ProblemDataInterface[]) => {
             doc.setTextColor(0,0,0);
             doc.text("________________________________________________________________",10,height + 28);
             height += 35;
-            if ((counter % 7) == 0 && counter > 0) {
+            if ((counter % 7) === 0 && counter > 0) {
                 doc.addPage();
                 height = 20;
             }

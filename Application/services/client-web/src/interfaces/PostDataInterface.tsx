@@ -4,8 +4,8 @@ interface PostInterface {
     addres: string,
     sector: Number,
     general: string,
-    latitude: Number,
-    longitude: Number,
+    latitude: number,
+    longitude: number,
     shifts: Number[],
     users: Number[][],
     activeProblem: boolean

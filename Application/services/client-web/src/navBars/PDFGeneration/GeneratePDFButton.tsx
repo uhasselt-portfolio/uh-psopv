@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Button, Grid} from '@material-ui/core';
+import {Button} from '@material-ui/core';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {generatepdf} from './PDFActions';

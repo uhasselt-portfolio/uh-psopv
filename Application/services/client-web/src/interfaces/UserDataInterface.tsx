@@ -8,8 +8,8 @@ interface UserInterface {
     email: string,
     permission: Number,
     association?: string
-    latitude: Number,
-    longitude: Number
+    latitude: number,
+    longitude: number
 }
 
 export default UserInterface;

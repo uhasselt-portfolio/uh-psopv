@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Redux from 'redux';
 import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import MessageDataInterface from '../../interfaces/MessageDataInterface';
@@ -91,9 +90,6 @@ export const fetch = () => async (dispatch: Redux.Dispatch) => {
             type: OverviewActions.OVERVIEW_FETCH_START
         });
 
-        // const problems : ProblemDataInterface[] = await new Database().fetchProblems();
-        // const users : UserDataInterface[] = await new Database().fetchusers();
-        // const posts : PostDataInterface[] = await new Database().fetchPosts();
         const state = await new Database().fetchAll();
 
         dispatch({
@@ -167,7 +163,7 @@ export const postMessageRead = (messageId: Number) => async (dispatch: Redux.Dis
             type: OverviewActions.OVERVIEW_FETCH_START
         });
 
-        const respone = await new Database().patchMessageRead(messageId);
+        await new Database().patchMessageRead(messageId);
 
         dispatch({
             type: OverviewActions.OVERVIEW_POST_MESSAGE_READ_SUCCES,

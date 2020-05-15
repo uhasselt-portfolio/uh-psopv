@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {Grid} from '@material-ui/core';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import PostInterface from '../../interfaces/PostDataInterface';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
@@ -9,6 +8,7 @@ import Shift from '../planning/ShiftComp';
 import ItemInterface from '../../interfaces/ItemDataInterface';
 import {fetchPlanning} from './DetailActions';
 import {bindActionCreators} from 'redux';
+import MyMap from '../map/Map';
 
 const styleBorder = {
     width: '50%',
@@ -18,10 +18,6 @@ const styleBorder = {
 const styleMap = {
     height: '600px',
     width: '50%'
-}
-
-interface IPropsMyMapComponent {
-    isMarkerShown: boolean
 }
 
 interface job {
@@ -101,20 +97,6 @@ class PostDetails extends Component<Props> {
     }
 
     render() {
-        const MyMapComponent = withScriptjs(withGoogleMap((props: IPropsMyMapComponent) =>
-        <GoogleMap
-            defaultZoom={15}
-            defaultCenter={{ lat: 50.962595, lng: 5.358503 }}
-        >
-            <Marker 
-            position={{lat: this.props.location.state.latitude, lng: this.props.location.state.longitude}} 
-            label={this.props.location.state.title} 
-            options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}}
-            />
-
-        </GoogleMap>
-        ));
-
         return(
             <div>
                 <Grid container direction="row">
@@ -142,13 +124,7 @@ class PostDetails extends Component<Props> {
                     </Grid>
 
                     <Grid item style={styleMap}>
-                        <MyMapComponent
-                            isMarkerShown
-                            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT9J4RP-_5EPa6k4L9mY5SLld6rrJa-YM&v=3.exp&libraries=geometry,drawing,places"
-                            loadingElement={<div style={{ height: `100%` }} />}
-                            containerElement={<div style={{ height: `100%` }} />}
-                            mapElement={<div style={{ height: `100%` }} />}
-                        />
+                        {this.props.isMapFetched && <MyMap problems={[]} users={[]} posts={[this.props.location.state]} isMarkerClickable={false}/>}  
                     </Grid>
                 </Grid>
             </div> 
@@ -158,12 +134,14 @@ class PostDetails extends Component<Props> {
 
 interface LinkStateProps {
     planning: ShiftDataInterface[],
-    items: ItemInterface[]
+    items: ItemInterface[],
+    isMapFetched: boolean
 }
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        planning: state.PlanningReducer.planning,
-        items: state.PlanningReducer.items //
+        planning: state.DetailReducer.planning,
+        items: state.DetailReducer.items,
+        isMapFetched: state.DetailReducer.isMapFetched
     };
 }
 
