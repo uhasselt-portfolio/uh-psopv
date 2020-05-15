@@ -4,7 +4,7 @@ import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchSettings, postSettings} from './SettingsAction';
-
+    //TODO deze pagina is eingelijk niet meer nodig
 interface IState {
     changing: boolean
 }
@@ -86,7 +86,7 @@ interface LinkStateProps {
 }
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
-        positionDelay: state.SettingsReducer.positionDelay,
+        positionDelay: 5,
         loading: state.SettingsReducer.loading,
         errormessage: state.SettingsReducer.errorMessage
     }

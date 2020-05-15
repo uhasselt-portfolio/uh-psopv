@@ -111,9 +111,6 @@ class Problem extends Component<Props> {
                             <Grid item>
                                 <Grid container direction="column">
                                     <Grid item>
-                                        <p>Shift: {this.state.Data.shiftName}</p>
-                                    </Grid>
-                                    <Grid item>
                                         <p>Gaat over: {this.state.Data.user}</p>
                                     </Grid>
                                     <Grid item>

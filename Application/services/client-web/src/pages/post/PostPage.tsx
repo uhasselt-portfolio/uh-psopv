@@ -2,11 +2,11 @@ import React, {Component} from 'react';
 import Post from '../../Components/PostComp';
 import {Container, Grid, Button, TextField, MenuItem} from '@material-ui/core';
 import PostInterface from '../../interfaces/PostDataInterface';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchPosts} from './PostAction';
+import MyMap from '../map/Map';
 
 const styleBorder = {
     width: '40%',
@@ -38,10 +38,6 @@ interface IState {
     filterValue: string
 }
 
-interface IPropsMyMapComponent {
-    isMarkerShown: boolean
-}
-
 type Props = LinkStateProps & LinkDispatchToProps;
 
 class Posts extends Component<Props> {
@@ -54,10 +50,19 @@ class Posts extends Component<Props> {
         this.props.fetchPosts();
     }
 
+    /**
+     * function gets called when user commits form without pressing the search button
+     * used to prevent default behavior of html submit
+     */
     handleFilterForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         this.handleFilter();
     }
+    /**
+     * gets called when the filtervalue is changed
+     * the state gets changed to contain the search values of the user
+     * filter gets applied
+     */
     handleFilter = () => {
         let element = (document.getElementById("filterInput")) as HTMLInputElement;
         var value = element.value;
@@ -66,6 +71,11 @@ class Posts extends Component<Props> {
                 filterValue: value
         })
     }
+    /**
+     * gets called when the filter is changed
+     * the state gets changed to contain the new filter
+     * filter gets applied
+     */
     handleFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         let valueElement = (document.getElementById("filterInput")) as HTMLInputElement;
         var valueValue = valueElement.value;
@@ -76,53 +86,28 @@ class Posts extends Component<Props> {
  
     }
 
-    handlePostMarkerClicked = (clicked : string) => {
-        var selectelement = (document.getElementById("filtertype")) as HTMLSelectElement;
-        selectelement.value = "post";
-        var inputelement = (document.getElementById("filterInput")) as HTMLInputElement;
-        inputelement.value = clicked;
-        this.setState({
-                ...this.state,
-                filter: "post",
-                filterValue: clicked
-        });
-    }
-
     render() {
-        let filteredPosts: Array<JSX.Element> = this.props.posts.map(x =>(
+        let filteredPostsComp: Array<JSX.Element> = this.props.posts.map(x =>(
             <Post key={Math.random()} id={x.id} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude} shifts={x.shifts} users={x.users} activeProblem={x.activeProblem}/>
         ));
-        let markers: Array<JSX.Element> = this.props.posts.map(x => (
-            <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
-        ));
+        let filteredPosts: PostInterface[] = this.props.posts;
 
         switch(this.state.filter) {
-            case "Post" : { filteredPosts = this.props.posts.filter(post => post.title === this.state.filterValue).map(x =>(
+            case "Post" : { filteredPostsComp = this.props.posts.filter(post => post.title === this.state.filterValue).map(x =>(
                     <Post key={Math.random()} id={x.id} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude}  shifts={x.shifts} users={x.users} activeProblem={x.activeProblem}/>
                 ));
-                markers = this.props.posts.filter(post => post.title === this.state.filterValue).map(x =>(
-                    <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
-                ));
+                filteredPosts = this.props.posts.filter(post => post.title === this.state.filterValue);
                 break;
             }
-            case "Sector" : {filteredPosts = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue).map(x =>(
+            case "Sector" : {filteredPostsComp = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue).map(x =>(
                     <Post key={Math.random()} id={x.id} title={x.title} addres={x.addres} sector={x.sector} general={x.general} latitude={x.latitude} longitude={x.longitude}  shifts={x.shifts} users={x.users} activeProblem={x.activeProblem}/>
                 ));
-                markers = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue).map(x =>(
-                    <Marker position={{lat: x.latitude, lng: x.longitude}} label={x.title} options={{icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'}} onClick={(e) => this.handlePostMarkerClicked(x.title)}/>
-                ));
+                filteredPosts = this.props.posts.filter(post => post.sector.toString() === this.state.filterValue);
                 break;
             }
         }
 
-        const MyMapComponent = withScriptjs(withGoogleMap((props: IPropsMyMapComponent) =>
-        <GoogleMap
-            defaultZoom={15}
-            defaultCenter={{ lat: 50.962595, lng: 5.358503 }}
-        >
-            {markers}
-        </GoogleMap>
-        ));
+        console.log("posts",filteredPosts);
 
         return(
             <div>
@@ -156,18 +141,12 @@ class Posts extends Component<Props> {
                                 </form>
                             </Grid>
                             <div>
-                                {filteredPosts.length > 0 && filteredPosts}
-                                {filteredPosts.length === 0 && <p>Geen posten beschikbaar</p>}
+                                {filteredPostsComp.length > 0 && filteredPostsComp}
+                                {filteredPostsComp.length === 0 && <p>Geen posten beschikbaar</p>}
                             </div>
                         </Grid>
-                        <Grid item style={styleMap}> {/*map*/}
-                            <MyMapComponent
-                                isMarkerShown
-                                googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT9J4RP-_5EPa6k4L9mY5SLld6rrJa-YM&v=3.exp&libraries=geometry,drawing,places"
-                                loadingElement={<div style={{ height: `100%` }} />}
-                                containerElement={<div style={{ height: `100%` }} />}
-                                mapElement={<div style={{ height: `100%` }} />}
-                            />
+                        <Grid item style={styleMap}>
+                            {this.props.isMapFetched && <MyMap problems={[]} users={[]} posts={filteredPosts} isMarkerClickable={true}/>} 
                         </Grid>
                     </Grid>
                 </Container>
@@ -178,10 +157,12 @@ class Posts extends Component<Props> {
 
 interface LinkStateProps {
     posts: PostInterface[],
+    isMapFetched: boolean
 }
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
         posts: state.PostReducer.posts,
+        isMapFetched: state.PostReducer.isMapFetched
     }
 }
 

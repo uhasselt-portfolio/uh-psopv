@@ -1,10 +1,10 @@
 import React, {Component} from 'react';
 import {Grid, Button} from '@material-ui/core';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker} from "react-google-maps";
 import ProblemInterface from '../../interfaces/ProblemDataInterface';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {problemSolved} from './DetailActions';
+import MyMap from '../map/Map';
 
 const styleBorder = {
     width: '40%',
@@ -19,10 +19,6 @@ const ButtonStyle = {
     background: 'rgb(3,57,108)',
     color: 'white',
     margin: '4px'
-}
-
-interface IPropsMyMapComponent {
-    isMarkerShown: boolean
 }
 
 interface IProps {
@@ -40,18 +36,6 @@ class ProblemDetails extends Component<props> {
     }
 
     render() {
-        const MyMapComponent = withScriptjs(withGoogleMap((props: IPropsMyMapComponent) =>
-        <GoogleMap
-            defaultZoom={15}
-            defaultCenter={{ lat: 50.962595, lng: 5.358503 }}
-        >
-            <Marker 
-            position={{lat: this.props.location.state.latitude, lng: this.props.location.state.longitude}} 
-            label={this.props.location.state.problemType} 
-            />
-
-        </GoogleMap>
-        ));
 
         return(
             <div>
@@ -68,13 +52,10 @@ class ProblemDetails extends Component<props> {
                             </Grid>
                         </Grid>
                         <Grid container justify="center">
-                            <Grid item>
-                                <p>Shift: {this.props.location.state.shiftName}</p>
-                            </Grid> 
                         </Grid>
                         <Grid container justify="center">
                             <Grid item>
-                                <p>tijdstip: {this.props.location.state.timeStamp}</p>
+                                <p>tijdstip: { new Date(this.props.location.state.timeStamp).toLocaleString()}</p>
                             </Grid>
                         </Grid>
                         <Grid container justify="center">
@@ -99,13 +80,7 @@ class ProblemDetails extends Component<props> {
                         </Grid>
                     </Grid>
                     <Grid item style={styleMap}>
-                        <MyMapComponent
-                            isMarkerShown
-                            googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAT9J4RP-_5EPa6k4L9mY5SLld6rrJa-YM&v=3.exp&libraries=geometry,drawing,places"
-                            loadingElement={<div style={{ height: `100%` }} />}
-                            containerElement={<div style={{ height: `100%` }} />}
-                            mapElement={<div style={{ height: `100%` }} />}
-                        />
+                        {<MyMap problems={[[this.props.location.state]]} users={[]} posts={[]} isMarkerClickable={false}/>}
                     </Grid>
                 </Grid>
             </div> 
@@ -116,7 +91,7 @@ class ProblemDetails extends Component<props> {
 interface LinkDispatchToProps {
     problemSolved: (ProblemId: Number) => any
 }
-const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
+const MapDispatchToProps = (dispatch: any) : LinkDispatchToProps => {
     return bindActionCreators({
         problemSolved
     },dispatch);
@@ -124,5 +99,6 @@ const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
 
 
 export default connect(
-    MapDispatchToProp
+    null,
+    MapDispatchToProps
 )(ProblemDetails);

@@ -60,7 +60,8 @@ interface IState {
     value: number,
     specificReceiver: boolean,
     currentSelected: string,
-    messageSend: boolean
+    messageSend: boolean,
+    wrongUser: boolean
 }
 
 type Props = LinkStateProps & LinkDispatchToProps;
@@ -70,7 +71,8 @@ class OverviewComp extends Component<Props> {
         value: 0,
         specificReceiver: false,
         currentSelected: 'iedereen',
-        messageSend: false
+        messageSend: false,
+        wrongUser: false
     }
 
     componentWillMount() {
@@ -91,43 +93,55 @@ class OverviewComp extends Component<Props> {
     };
 
     handleMessage = () => {
+        this.setState({
+            ...this.state,
+            wrongUser: false,
+            messageSend: false
+        })
+
         var messageReceiver = this.state.currentSelected;
         let messageTitle = ((document.getElementById("messageTitle")) as HTMLInputElement).value;
         let messageContent = ((document.getElementById("messageContent")) as HTMLTextAreaElement).value;
         let receiver : string = "";
-        if (this.state.specificReceiver) {
-            receiver = ((document.getElementById("receiver")) as HTMLInputElement).value
-        }
 
-        let receiverId : UserDataInterface = this.props.users.filter(user => (user.name === receiver.split(" ")[0] && 
-            user.lastname === receiver.split(" ")[1]))[0];
-
-        if (receiverId) {
-            this.setState({
-                ...this.state,
-                messageSend: true
-            }) ; //TODO conformatie van de server krijgen of het echt verstuurt is
-            ((document.getElementById("messageTitle")) as HTMLInputElement).value = "";
-            ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
-            switch (messageReceiver) {
-                case "Verantwoordelijke": {
-                    this.sendMessageToVerantwoordelijke(messageTitle,messageContent);
-                    break;
-                }
-                case "Vrijwilliger" : {
-                    this.sendMessageToVrijwilligers(messageTitle,messageContent);
-                    break;
-                }
-                case 'specifiek' : {
-                    this.props.postNewMessage(receiverId.id,messageTitle,messageContent,this.props.admin.id);
-                    break;
-                }
-                case "iedereen" : {
-                    this.sendMessageToAll(messageTitle,messageContent);
-                    break;
-                }
+        switch (messageReceiver) {
+            case "Verantwoordelijke": {
+                this.sendMessageToVerantwoordelijke(messageTitle,messageContent);
+                break;
             }
-        }
+            case "Vrijwilliger" : {
+                this.sendMessageToVrijwilligers(messageTitle,messageContent);
+                break;
+            }
+            case 'specifiek' : {
+                if (this.state.specificReceiver) {
+                    receiver = ((document.getElementById("receiver")) as HTMLInputElement).value
+                    let receiverId : UserDataInterface[] = this.props.users.filter(user => (user.name === receiver.split(" ")[0] && 
+                        user.lastname === receiver.split(" ")[1]));
+                    if (receiverId.length > 0) {
+                        this.props.postNewMessage(receiverId[0].id,messageTitle,messageContent,this.props.admin.id);
+                        this.setState({
+                            ...this.state,
+                            messageSend: true,
+                            wrongUser: false
+                        });
+                        ((document.getElementById("messageTitle")) as HTMLInputElement).value = "";
+                        ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
+                    } else {
+                        this.setState({
+                            ...this.state,
+                            wrongUser: true
+                        })
+                    }
+                }
+                
+                break;
+            }
+            case "iedereen" : {
+                this.sendMessageToAll(messageTitle,messageContent);
+                break;
+            }
+        }          
     }
     handleMessageForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -152,18 +166,39 @@ class OverviewComp extends Component<Props> {
         for (let i = 0; i < this.props.users.length; ++i) {
             this.props.postNewMessage(this.props.users[i].id,title,content,this.props.admin.id);
         }
+        this.setState({
+            ...this.state,
+            messageSend: true,
+            wrongUser: false
+        });
+        ((document.getElementById("messageTitle")) as HTMLInputElement).value = "";
+        ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
     }
     sendMessageToVrijwilligers = (title: string, content: string) =>{
         for (let i = 0; i < this.props.users.length; ++i) {
             if (this.props.users[i].permission === 1)
                 this.props.postNewMessage(this.props.users[i].id,title,content,this.props.admin.id);
         }
+        this.setState({
+            ...this.state,
+            messageSend: true,
+            wrongUser:false
+        });
+        ((document.getElementById("messageTitle")) as HTMLInputElement).value = "";
+        ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
     }
     sendMessageToVerantwoordelijke = (title: string, content: string) => {
         for (let i = 0; i < this.props.users.length; ++i) {
             if (this.props.users[i].permission === 2)
                 this.props.postNewMessage(this.props.users[i].id,title,content,this.props.admin.id);
         }
+        this.setState({
+            ...this.state,
+            messageSend: true,
+            wrongUser: false
+        });
+        ((document.getElementById("messageTitle")) as HTMLInputElement).value = "";
+        ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
     } 
 
     render() {
@@ -255,9 +290,24 @@ class OverviewComp extends Component<Props> {
                         <Grid item>
                             <Button variant="outlined" onClick={this.handleMessage} style={ButtonStyle}>verstuur</Button>
                         </Grid>
-                        {this.state.messageSend && 
+                        {this.state.messageSend && this.props.isPostNewMessage && ! this.props.loading && this.props.errorMessage === "" &&
                             <Grid item>
                                 <h4>Het bericht is verstuurt</h4>
+                            </Grid>
+                        }
+                        {this.state.messageSend && ! this.props.isPostNewMessage && this.props.loading && this.props.errorMessage === "" &&
+                            <Grid item>
+                                <h4>Het bericht is aan het verzenden</h4>
+                            </Grid>
+                        }
+                        {this.state.messageSend && ! this.props.isPostNewMessage && ! this.props.loading && this.props.errorMessage !== "" &&
+                            <Grid item>
+                                <h4>Er trad een probleem op tijdens het versturen van het bericht: {this.props.errorMessage}</h4>
+                            </Grid>
+                        }
+                        {this.state.wrongUser &&
+                            <Grid item>
+                                <h4>Deze gebruiker bestaat niet</h4>
                             </Grid>
                         }
                     </form>
@@ -274,7 +324,10 @@ interface LinkStateProps {
     admin: UserDataInterface,
     posts: PostDataInterface[],
     users: UserDataInterface[],
-    planning: ShiftDataInterface[]
+    planning: ShiftDataInterface[],
+    loading: boolean,
+    isPostNewMessage: boolean,
+    errorMessage: string
 }
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
@@ -283,7 +336,10 @@ const MapStateToProps = (state : AppState): LinkStateProps => {
         admin: state.OverviewReducer.loggedIn,
         posts: state.OverviewReducer.posts,
         users: state.OverviewReducer.users,
-        planning: state.OverviewReducer.planning
+        planning: state.OverviewReducer.planning,
+        loading: state.OverviewReducer.loading,
+        isPostNewMessage: state.OverviewReducer.isPostNewMessage,
+        errorMessage: state.OverviewReducer.errorMessage
     }
 }
 

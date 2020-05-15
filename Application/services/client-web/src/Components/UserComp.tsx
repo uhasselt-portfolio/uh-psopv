@@ -10,7 +10,7 @@ interface IProps {
     userId: Number
 }
 const paperStyle = {
-    background: 'rgb(250,250,250)',
+    background: 'rgb(242,242,250)',
     padding: '10px',
     margin: '10px',
     borderRadius: '50px',
@@ -88,7 +88,9 @@ class User extends Component<Props> {
                         </Grid>
                         <Grid container justify="center">
                             <Grid item style={labelStyle}>
-                                <p>verantwoordelijke</p>
+                                {this.props.userData.permission === 2 && <p>verantwoordelijke</p>}
+                                {this.props.userData.permission === 1 && <p>vrijwilliger</p>}
+                                {this.props.userData.permission === 3 && <p>Admin</p>}
                             </Grid>
                         </Grid>
                         <Grid container justify="center">

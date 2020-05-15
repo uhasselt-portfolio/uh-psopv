@@ -87,9 +87,7 @@ class Post extends Component<IProps> {
                         {this.state.dropdownItems && <Button variant="contained" startIcon={<ArrowDropUpIcon />} 
                             onClick={this.handleDropdownItems} style={ButtonStyle}>Items</Button>}
                     </Grid>
-                    {/* <Grid item>
-                        dropdown changebutton?
-                    </Grid> */}
+
                     <Grid container direction="row" justify="center">
                         <Grid item>
                             <Grid container direction="column">

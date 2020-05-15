@@ -9,8 +9,8 @@ interface ProblemInterface {
     postId: Number,
     user: string,
     sender: string,
-    latitude: Number,
-    longitude: Number,
+    latitude: number,
+    longitude: number,
     solved: boolean
 }
 

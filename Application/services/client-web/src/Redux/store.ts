@@ -5,14 +5,15 @@ import MapReducer from '../pages/map/MapReducer';
 import OverviewReducer from '../pages/overview/OverviewReducer';
 import PlanningReducer from '../pages/planning/PlanningReducer';
 import PostReducer from '../pages/post/PostReducer';
-import RapporeringReducer from '../pages/rapportering/RapporteringReducer';
 import SettingsReducer from '../pages/settings/SettingsReducer';
 import UsersReducer from '../pages/user/UserReducer';
 import ComponentReducer from '../Components/ComponentReducers';
+import PdfReducer from '../navBars/PDFGeneration/PDFReducer';
+import DetailReducer from '../pages/detailpages/DetailReducer';
 
 const rootReducer = combineReducers( {
-    MapReducer, OverviewReducer, PlanningReducer, PostReducer, 
-    ProblemReducer, RapporeringReducer, SettingsReducer, UsersReducer, ComponentReducer
+    MapReducer, OverviewReducer, PlanningReducer, PostReducer, DetailReducer,
+    ProblemReducer, SettingsReducer, UsersReducer, ComponentReducer, PdfReducer
 });
 export type AppState = ReturnType<typeof rootReducer>;
 

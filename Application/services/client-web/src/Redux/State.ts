@@ -12,8 +12,7 @@ export default interface State {
     users: UserDataInterface[],
     planning: ShiftDataInterface[],
     items: ItemDataInterface[],
-    pdfGenerated: boolean,
-    positionDelay: Number,
+    allProblems: ProblemDataInterface[]
 
     loading: boolean,
     errorMessage: string,
@@ -22,11 +21,11 @@ export default interface State {
     isOverviewFetched: boolean,
     isPlanningFetched: boolean,
     isPostFetched: boolean,
-    isSettingsFetched: boolean,
     isUsersFetched: boolean,
     isProblemSolvedPosted: boolean,
     isUserConnectionChanged: boolean,
-    loggedIn: UserDataInterface
+    loggedIn: UserDataInterface,
+    isPostNewMessage: boolean
 }
 
 export const initialState : State = {
@@ -39,8 +38,7 @@ export const initialState : State = {
     messages: [],
     planning: [],
     items: [],
-    pdfGenerated: false,
-    positionDelay: 15,
+    allProblems: [],
     isProblemFetched : false,
     loading: false,
     isMapFetched: false,
@@ -48,8 +46,8 @@ export const initialState : State = {
     isOverviewFetched: false,
     isPlanningFetched: false,
     isPostFetched: false,
-    isSettingsFetched: false,
     isUsersFetched: false,
     isProblemSolvedPosted: false,
-    isUserConnectionChanged: false
+    isUserConnectionChanged: false,
+    isPostNewMessage: false
 }

@@ -10,20 +10,12 @@ import Settings from './pages/settings/SettingsPage';
 import PukkelpopMap from './pages/map/MapPage';
 import Posts from './pages/post/PostPage';
 import Users from './pages/user/UserPage';
-import Rapportering from './pages/rapportering/Rappoteringpage';
 import Data from './pages/data/DataPage';
 import Overview from './pages/overview/OverviewPage';
 
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
 
-// const customTheme = {
-//   palette: { 
-//     primary1Color:'#3f51b5',
-//     primary2Color: '#00bcd4',
-//     primary3Color: "#2196f3"
-//   }
-// };
 const appStyle = {
   background: 'rgb(232, 232, 232)',
   minheight: '100vh',
@@ -40,7 +32,6 @@ function App() {
           <NavBar />
           <Switch>
             <Route exact path='/' component={Overview} />
-            <Route path='/Rapportering' component={Rapportering} />
             <Route exact path='/Data' component={Data} /> 
             <Route path="/Data/Users" component={Users} />
             <Route path="/Data/Posts" component={Posts} />  
