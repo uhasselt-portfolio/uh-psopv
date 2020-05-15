@@ -111,8 +111,6 @@ export async function resetActionList() {
   }
 
   export async function setListLocalStorage(id: string, list: any) {
-    console.log(list)
-
     const x = 
     await Storage.set(
       {

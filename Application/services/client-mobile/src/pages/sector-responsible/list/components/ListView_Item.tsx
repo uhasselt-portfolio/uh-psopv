@@ -27,8 +27,8 @@ class ListViewItem  extends Component<any> {
 
     }
     
-    getPost(props: any): string {
-        return '/PostView/'+ props.sector + '/' + props.post;
+    getPost(): string {
+        return '/PostView/'+ this.props.sector_id + '/' + this.props.post_id;
     }
 
     renderProblemIcon(){
@@ -40,18 +40,15 @@ class ListViewItem  extends Component<any> {
 
     render() {
         let color = this.state.colors[this.props.sector_id - 1]
-        function getPost(props: any): string {
-            return '/PostView/'+props.id+"/"+props.sector_id
-        }           
-
-
         return (   
-            <a href={getPost(this.props)} > 
+            <a href={this.getPost()} > 
             <IonItem  detail button>
                 <IonLabel>
-                    <h2>Post {this.props.id}</h2>
-                    <h3>{this.props.title}</h3>
-                    <p>{this.props.address}</p>
+                    <h2>Post {this.props.post_id}</h2>
+                    <h4>{this.props.loc_description}</h4>
+                    <h4>{this.props.loc_address}</h4>
+                    <p>{this.props.post_description}</p>
+
                 </IonLabel>
                 <IonLabel class="right_text" >
                     <h2 className={color}>Sector {this.props.sector_id}</h2>

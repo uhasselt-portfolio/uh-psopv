@@ -16,6 +16,7 @@ import Overview from './pages/overview/OverviewPage';
 
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
+import { Grid } from '@material-ui/core';
 
 // const customTheme = {
 //   palette: { 
@@ -25,9 +26,9 @@ import {store} from './Redux/store';
 //   }
 // };
 const appStyle = {
-  background: 'rgb(232, 232, 232)',
-  minheight: '100vh',
-  height: '100%'
+  background: '#eee',
+  width: '100vw',
+  height: '100vh',
 }
 
 
@@ -35,8 +36,11 @@ function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
-        <div className="App" style={appStyle}>
+        <Grid className="App" style={appStyle}>
+          <Grid>
           <NavBar />
+          </Grid>
+          <Grid>
           <Switch>
             <Route exact path='/' component={Overview} />
             <Route path='/Rapportering' component={Rapportering} />
@@ -50,7 +54,8 @@ function App() {
             <Route path="/Data/Shifts" component={Planning} />
             <Route path="/Settings" component={Settings} />
           </Switch>
-        </div>
+          </Grid>
+        </Grid>
       </BrowserRouter>
     </Provider>
   );

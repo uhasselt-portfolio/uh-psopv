@@ -27,13 +27,6 @@ const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand"}
 class ListView extends Component<any> {
   constructor(props: any) {
     super(props);
-
-    this.setDefaultSector();
-  }
-
-  async setDefaultSector(){
-    let x = await getDefaultSector();
-    this.setState({...this.state, default_sector: x, selected_sector: x});
   }
 
   state={
@@ -45,24 +38,25 @@ class ListView extends Component<any> {
 
   async componentDidMount(){
     this.props.fetchPosts();
-    let x = await getDefaultSector();
-    this.handleSectorChange(x)
   }
 
 
   handleSectorChange(sector: number){
     let new_data: any;
-    console.log(this.props.localState.posts_data)
     if(sector !== -1){
-      new_data = this.props.localState.posts_data.filter((element: any) => {
+      new_data = this.props.localStorage.posts_data.filter((element: any) => {
         return element.sector_id === sector
       })     
     }else{
-      console.log(this.props.localState.posts_data)
-      new_data = this.props.localState.posts_data
+      console.log(this.props.localStorage.posts_data)
+      new_data = this.props.localStorage.posts_data
     }
    
-    this.setState({...this.state, selected_sector: sector, data_posts: new_data});
+    // this.setState({selected_sector: sector, data_posts: new_data});
+    // // Correct
+    this.setState((state, props) => ({
+      selected_sector: sector, data_posts: new_data
+    }));
   }
 
   handleSortChange(sort: string){
@@ -108,8 +102,11 @@ class ListView extends Component<any> {
 
   renderListOfItems(){
     if(this.state.data_posts.length <= 0){
-      this.setState({...this.state, data_posts: this.props.localState.posts_data});
-      return this.props.localState.posts_data.map((data: any, index: number) =>{
+      let data_default = this.props.localStorage.posts_data.filter((data: any) =>{
+        return (data.sector_id == this.props.localStorage.default_sector)
+      })
+      this.setState({...this.state, data_posts: data_default, default_sector: this.props.localStorage.default_sector, selected_sector: this.props.localStorage.default_sector});
+      return data_default.map((data: any, index: number) =>{
         return (
           <ListViewItem {...data}/>
         )
@@ -128,9 +125,9 @@ class ListView extends Component<any> {
 
    renderButtons(){
     let list: { title: string; subinfo: string; }[] = [];
-    this.props.localState.posts_sectors.map((element: any) => {
+    this.props.localStorage.posts_sectors.map((element: any) => {
         let item = {title: "Sector " + element, subinfo: ""}
-        if(element == this.props.localState.default_sector){
+        if(element == this.props.localStorage.default_sector){
            item = {title: "Sector " + element, subinfo: "default"}
         } 
         list.push(item)
@@ -154,7 +151,7 @@ class ListView extends Component<any> {
         <IonSelect
           interface="popover"  
           value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
-            {this.props.localState.posts_sectors.map((sector: number) => {
+            {this.props.localStorage.posts_sectors.map((sector: number) => {
               if(this.state.default_sector === sector){
                 return <IonSelectOption  value={sector}>Sector {sector}</IonSelectOption>
               } else{
@@ -202,12 +199,12 @@ class ListView extends Component<any> {
 
   render()
   {
-    console.log("REEENDDDEEERR", this.props.localState)
-      if(this.props.localState != undefined){
-        if(this.props.localState.posts_sectors <= 0){
+    console.log(this.props)
+      if(this.props.localStorage != undefined){
+        if(this.props.localStorage.posts_sectors <= 0){
           return <div>No interconnection found</div>
         }
-        if(this.props.localState.posts_sectors.length > 0){
+        if(this.props.localStorage.posts_sectors.length > 0){
           return this.renderBasis();
         }
       } else{
@@ -220,8 +217,7 @@ class ListView extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    localState: state.list.localState,
-    arePostsFetched: state.list.arePostsFetched,
+    localStorage: state.list.localStorage,
     errorMessage: state.list.errorMessage,
     loading: state.list.loading
   })

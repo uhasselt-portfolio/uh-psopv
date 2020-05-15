@@ -24,6 +24,7 @@ class Shift  extends Component<any> {
 
     state = {
         checkListActive: false,
+        problemListActive: false,
         problemTitle: "",
         problemContent: ""
     }
@@ -65,14 +66,15 @@ class Shift  extends Component<any> {
     }
 
 
-    showCheckList(checklist_data: any) {
+    showCheckList() {
+        let checklist_data = this.props.shift.shift_items
         if(this.state.checkListActive){
         return(
             <IonCardContent>
             {checklist_data.map((item: any, i: number) => (
             <IonItem key={i}>
-                <IonLabel>{item.user}: {item.name}</IonLabel>
-                    <IonCheckbox slot="end" value={item.name} checked={!item.item_lost}
+                <IonLabel>{item.item_from}: {item.item_name}</IonLabel>
+                    <IonCheckbox slot="end" value={item.item_name} checked={!item.item_lost}
                         onIonChange={e => this.handleToggleCheckListItem(item.id, !item.item_lost)}
                     />
             </IonItem>
@@ -88,7 +90,11 @@ class Shift  extends Component<any> {
         this.setState({...this.state, checkListActive: !this.state.checkListActive});
     }
 
-    renderCheckbox(data: any){
+    handleToggleProblemList(){
+        this.setState({...this.state, problemListActive: !this.state.problemListActive});
+    }
+
+    renderCheckbox(){
         return(
             <IonCard>
                 <IonCardHeader>
@@ -98,7 +104,7 @@ class Shift  extends Component<any> {
                 </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
-                    {this.showCheckList(data)}
+                    {this.showCheckList()}
                 </IonCardContent>
             </IonCard>
         )
@@ -106,7 +112,7 @@ class Shift  extends Component<any> {
     }
 
     getUsersFromShift(){
-        let names_array = this.props.users
+        let names_array = this.props.shift.shift_users
         var names = ""
         for(var i = 0; i < names_array.length - 1; ++i){
             var names = names.concat(names_array[0] + " en ")
@@ -116,12 +122,12 @@ class Shift  extends Component<any> {
         return names
     }
 
-    renderShiftInfo(data: any){
+    renderShiftInfo(){
         return(
         <IonCard>
-                <IonCardHeader className="flexrow">
+                <IonCardHeader>
                         <IonCardTitle>
-                            Shift Info
+                            Shift Info 
                         </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>
@@ -139,7 +145,7 @@ class Shift  extends Component<any> {
                                 Wat
                             </IonCol>
                             <IonCol>
-                                {data.title}
+                                {this.props.post.post_description}
                             </IonCol>
                         </IonRow>
                         <IonRow>
@@ -147,7 +153,12 @@ class Shift  extends Component<any> {
                                 Waar
                             </IonCol>
                             <IonCol>
-                                {data.address}
+                                <IonRow>
+                                    {this.props.post.loc_description}, 
+                                </IonRow>
+                                <IonRow>
+                                    {this.props.post.loc_address}
+                                </IonRow>
                             </IonCol>
                         </IonRow>
                         <IonRow>
@@ -155,7 +166,7 @@ class Shift  extends Component<any> {
                                 Start
                             </IonCol>
                             <IonCol>
-                                {formatDateTime(data.shift_begin)}
+                                {formatDateTime(this.props.shift.shift_start)}
                             </IonCol>
                         </IonRow>
                         <IonRow>
@@ -163,7 +174,7 @@ class Shift  extends Component<any> {
                                 Einde
                             </IonCol>
                             <IonCol>
-                                {formatDateTime(data.shift_end)}
+                                {formatDateTime(this.props.shift.shift_end)}
                             </IonCol>
                         </IonRow>
                     </IonGrid>
@@ -180,14 +191,32 @@ class Shift  extends Component<any> {
         )
     }
 
-    renderProblems(shift_problems: any){
+    showProblemList() {
+        let checklist_data = this.props.shift.shift_items
+        if(this.state.problemListActive){
+        return(
+            <IonCardContent>
+                <IonGrid>
+                    {this.renderProblems()}
+                </IonGrid>
+            </IonCardContent>
+        )
+        } else{
+        return <div></div>
+        }
+    }
+
+    renderProblems(){
+        let shift_problems = this.props.shift.shift_problems
+        console.log(shift_problems)
+
         return shift_problems.map((problem: any) => {
-            if(problem.solved === false){
+            if(problem.problem_solved === false){
                 return (
-                    <IonGrid className="grid" key={problem.id}>
-                    <IonRow key={problem.id}> 
+                    <IonGrid className="grid" key={problem.problem_id}>
+                    <IonRow key={problem.problem_id}> 
                         <IonCol>
-                            {problem.user}
+                            {problem.created_by_name}
                         </IonCol>
                         <IonCol className="rightContent">
                             {formatDateTime(problem.created_at)}
@@ -195,7 +224,7 @@ class Shift  extends Component<any> {
                     </IonRow>
                     <IonRow>
                     <IonCol>
-                        {problem.title}, {problem.description}
+                        {problem.problem_title}, {problem.problem_description}
                     </IonCol>
                     <IonCol className="rightContent" size="4">
                         <IonButton onClick={() => this.toggleProblemSolved(problem.id, !problem.solved)}>Ok</IonButton>
@@ -211,7 +240,7 @@ class Shift  extends Component<any> {
                     <IonGrid className="gridSolved">
                     <IonRow key={problem.id}> 
                         <IonCol>
-                            {problem.user}
+                            {problem.created_by_name}
                         </IonCol>
                         <IonCol className="rightContent">
                             {formatDateTime(problem.created_at)}
@@ -219,7 +248,7 @@ class Shift  extends Component<any> {
                     </IonRow>
                     <IonRow>
                     <IonCol>
-                        {problem.title}, {problem.description}
+                    {problem.problem_title}, {problem.problem_description}
                     </IonCol>
                     </IonRow>
                     <IonRow>
@@ -228,37 +257,33 @@ class Shift  extends Component<any> {
                     </IonGrid>
                 )
             }
-            
         })
         
     }
 
-    renderProblemInfo(shift_problems: any){
+    renderProblemInfo(){
         return(
           <IonCard>
             <IonCardHeader>
-              <IonCardTitle>
+              <IonCardTitle onClick={() => this.handleToggleProblemList()}>
                 Problemen Log
-                <IonIcon/>
+                <IonIcon class="text_end" icon={caretDown}/>
               </IonCardTitle>
             </IonCardHeader>
-            <IonCardContent>
-                <IonGrid>
-                {this.renderProblems(shift_problems)}
-                </IonGrid>
-            </IonCardContent>
+            {this.showProblemList()}
           </IonCard>
         )
     }
 
     render() {
+        console.log(this.props)
         let items_data = this.props.items
         let shift_problems = this.props.problems;
         return (
             <div>
-                {this.renderShiftInfo(this.props)}
-                {this.renderCheckbox(items_data)}
-                {this.renderProblemInfo(shift_problems)}
+                {this.renderShiftInfo()}
+                {this.renderCheckbox()}
+                {this.renderProblemInfo()}
             </div>    
             ) 
     }  

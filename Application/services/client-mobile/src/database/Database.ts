@@ -4,9 +4,8 @@ import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocatio
 export default class Database {
 
     getRestApiEndpoint(): string | undefined {
-        console.log("PROCESSS:", process.env.NODE_ENV)
         // @ts-ignore
-        if (process.env.NODE_ENV == 'debug' || process.env.NODE_ENV == 'development')
+        if (process.env.NODE_ENV === 'debug')
             return "http://localhost";
         return "https://psopv.herokuapp.com";
     }
@@ -22,8 +21,6 @@ export default class Database {
 
     async fetchPlannings() {
         const url = this.getRestApiEndpoint() + '/api/planning/fetch/all';
-
-        console.log("URL ", url);
 
         return await axios.get(url)
     }

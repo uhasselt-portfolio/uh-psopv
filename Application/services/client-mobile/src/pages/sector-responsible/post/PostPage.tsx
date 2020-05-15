@@ -37,7 +37,7 @@ class PostView extends Component<any, any> {
   }
 
   getNextShift(){
-    if (this.state.show_shift < this.props.localState.shifts_data.length - 1){
+    if (this.state.show_shift < this.props.localStorage.shifts.length - 1){
       let new_shift = this.state.show_shift + 1
       this.handleShiftSwitch(new_shift);
     }
@@ -71,8 +71,8 @@ class PostView extends Component<any, any> {
   setCurrentlyActiveShift(){
     var current_time = new Date();
 
-    this.props.localState.shifts_data.map((element: any, index: number) => {
-      var shift_begin = new Date(element.shift_begin)
+    this.props.localStorage.shifts.map((element: any, index: number) => {
+      var shift_begin = new Date(element.shift_start)
       var shift_end = new Date(element.shift_end)
 
       if((current_time > shift_begin) && (current_time < shift_end)){
@@ -86,23 +86,17 @@ class PostView extends Component<any, any> {
   }
 
   renderPost(): any{
-      if(this.props.localState.shifts_data.length <= 0){
-        return <div>No interconnection found</div>
-      }
-      if(this.props.localState.shifts_data.length > 0){
-        if(this.state.show_shift === -1){
-          this.setCurrentlyActiveShift();
-          return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
-        } else{
-          let data = this.props.localState.shifts_data[this.state.show_shift];
-          return <Shift {...data}/>
-        }
-      }
+    console.log(this.props)
+    if(this.state.show_shift === -1){
+      this.setCurrentlyActiveShift();
+      return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
+    } else{
+      let data = this.props.localStorage.shifts[this.state.show_shift];
+      return <Shift shift={data} post={this.props.localStorage}/>
+    }
   }
 
-
-  render(){
-    console.log(this.props)
+  renderBasis(){
     return (
       <IonPage>
         <IonHeader>
@@ -128,15 +122,25 @@ class PostView extends Component<any, any> {
         </IonContent>
       </IonPage>
     );
+    
+  }
+
+  render(){
+    console.log(this.props)
+    if(this.props.localStorage != undefined){
+      return this.renderBasis();
+    } else{
+      return <div> No internet connection </div>
+    }
   };
 }
   
 
 
 function mapStateToProps(state: any) {
+  console.log(state)
   return({
-    localState: state.post.localState,
-    arePlanningsFormPostFetched: state.post.arePlanningsFormPostFetched,
+    localStorage: state.post.localStorage,
     errorMessage: state.post.errorMessage,
     loading: state.post.loading,
   })
