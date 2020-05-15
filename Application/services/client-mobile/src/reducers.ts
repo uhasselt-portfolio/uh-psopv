@@ -27,14 +27,6 @@ import CounterReducer from './test/testReducer';
 import saveReducer from './pages/save/saveReducer'
 
 
-
-
-const persistConfig = {
-    key: 'root',
-    storage, 
-    whitelist: ['post']
-}
-
 const rootReducer = combineReducers({
     login: LoginReducer,
     list: ListReducer,
@@ -55,11 +47,9 @@ const rootReducer = combineReducers({
 })
 
 export const store = createStore(
-    persistReducer(persistConfig, rootReducer),
+    rootReducer,
     applyMiddleware(reduxThunk),
 )
 
 
-export const persistor = persistStore(store);
-
-export default {store, persistor};
+export default {store};

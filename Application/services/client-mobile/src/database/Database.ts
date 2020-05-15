@@ -22,8 +22,6 @@ export default class Database {
     async fetchPlannings() {
         const url = this.getRestApiEndpoint() + '/api/planning/fetch/all';
 
-        console.log("URL ", url);
-
         return await axios.get(url)
     }
 

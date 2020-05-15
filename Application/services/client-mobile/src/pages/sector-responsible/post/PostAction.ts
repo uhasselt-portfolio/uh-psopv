@@ -13,12 +13,22 @@ export const POST_FETCH_PLANNING_FAIL = 'POST_FETCH_PLANNING_FAIL'
 export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         
-        let postsData = await getListLocalStorage('postsData');
+        let posts = await getListLocalStorage('posts');
+        console.log(posts)
 
-        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: postsData})
+        console.log("postsData", posts)
+        let postData = posts.find((element: any) => {
+            return (post_id == element.post_id)
+        })
+
+        console.log("Shifts data", postData)
+
+
+
+        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: postData})
     } catch(error){
         let postsData = await getListLocalStorage('postsData');
-
+        console.log(error)
         dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: postsData})
     }
 }

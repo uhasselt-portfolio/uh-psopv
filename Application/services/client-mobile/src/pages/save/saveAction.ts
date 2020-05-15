@@ -4,8 +4,8 @@ import Database from '../../database/Database'
 import {resetActionList, getActionList, addObjectToActionList, getDefaultSector, getUserId, setListLocalStorage} from './saveFunction'
 
 function sortUserShifts(a: any, b: any){
-    var shift_begin_a = new Date(a.shift.begin)
-    var shift_begin_b = new Date(b.shift.begin)
+    var shift_begin_a = new Date(a.shift_start)
+    var shift_begin_b = new Date(b.shift_start)
 
     if(shift_begin_a < shift_begin_b){
         return -1
@@ -97,7 +97,6 @@ async function getPostsData(){
             }
         })
 
-        console.log(postsWithProblems)
 
         // make list of sectors
         let sectors: any[] = []
@@ -105,8 +104,6 @@ async function getPostsData(){
             if(!sectors.includes(post.sector_id)){
                 sectors.push(post.sector_id)
             }
-
-            console.log(post)
 
             // add param "problem"
             if(postsWithProblems.includes(post.post_id)){
@@ -166,6 +163,7 @@ async function getPostsData(){
                             item_id: element.id,
                             item_lost: element.item_lost,
                             item_name: element.item_type.name,
+                            item_from: element.planning.user.first_name
                         })
                     });
                 })
@@ -184,6 +182,7 @@ async function getPostsData(){
                             problem_title: element.problem_type.title,
                             problem_description: element.problem_type.description,
                             problem_priority: element.problem_type.priority,
+                            created_at:element.created_at,
                             created_by_name: element.created_by.first_name + " " + element.created_by.last_name,
                             created_by_phone_number: element.created_by.phone_number,
                             created_by_email: element.created_by.email
@@ -227,11 +226,14 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
 
         setListLocalStorage('my_volunteers', volunteers);
         setListLocalStorage('contacts', nonVolunteers);
-        setListLocalStorage('postsData', postsData);
+        setListLocalStorage('posts', postsData.posts_data);
+        setListLocalStorage('sectors', postsData.posts_sectors);
+
 
         resetActionList();
         dispatch({type: UNROLL_ACTIONS})
 
     } catch(error){
+        console.log(error)
     }
 }

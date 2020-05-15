@@ -27,13 +27,6 @@ const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand"}
 class ListView extends Component<any> {
   constructor(props: any) {
     super(props);
-
-    this.setDefaultSector();
-  }
-
-  async setDefaultSector(){
-    let x = await getDefaultSector();
-    this.setState({...this.state, default_sector: x, selected_sector: x});
   }
 
   state={
@@ -45,14 +38,11 @@ class ListView extends Component<any> {
 
   async componentDidMount(){
     this.props.fetchPosts();
-    let x = await getDefaultSector();
-    this.handleSectorChange(x)
   }
 
 
   handleSectorChange(sector: number){
     let new_data: any;
-    console.log(this.props.localStorage.posts_data)
     if(sector !== -1){
       new_data = this.props.localStorage.posts_data.filter((element: any) => {
         return element.sector_id === sector
@@ -62,7 +52,11 @@ class ListView extends Component<any> {
       new_data = this.props.localStorage.posts_data
     }
    
-    this.setState({...this.state, selected_sector: sector, data_posts: new_data});
+    // this.setState({selected_sector: sector, data_posts: new_data});
+    // // Correct
+    this.setState((state, props) => ({
+      selected_sector: sector, data_posts: new_data
+    }));
   }
 
   handleSortChange(sort: string){
@@ -108,8 +102,11 @@ class ListView extends Component<any> {
 
   renderListOfItems(){
     if(this.state.data_posts.length <= 0){
-      this.setState({...this.state, data_posts: this.props.localStorage.posts_data});
-      return this.props.localStorage.posts_data.map((data: any, index: number) =>{
+      let data_default = this.props.localStorage.posts_data.filter((data: any) =>{
+        return (data.sector_id == this.props.localStorage.default_sector)
+      })
+      this.setState({...this.state, data_posts: data_default, default_sector: this.props.localStorage.default_sector, selected_sector: this.props.localStorage.default_sector});
+      return data_default.map((data: any, index: number) =>{
         return (
           <ListViewItem {...data}/>
         )
@@ -202,6 +199,7 @@ class ListView extends Component<any> {
 
   render()
   {
+    console.log(this.props)
       if(this.props.localStorage != undefined){
         if(this.props.localStorage.posts_sectors <= 0){
           return <div>No interconnection found</div>
