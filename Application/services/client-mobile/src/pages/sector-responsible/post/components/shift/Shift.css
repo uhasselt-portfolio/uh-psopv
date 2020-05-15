@@ -35,4 +35,5 @@
 
 .leftAlign{
     text-align: left;
+    align-content: top;
 }

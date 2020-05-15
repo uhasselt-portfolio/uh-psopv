@@ -1,13 +1,14 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol, IonPopover } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect, useRef } from 'react';
 import './PostPage.css';
-import Shift from './shift/Shift';
+import Shift from './components/shift/Shift';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPlanningsFromPost} from './PostAction'
 import { caretDown, arrowBack, arrowForward, constructOutline } from 'ionicons/icons';
 import { formatDateTime } from '../../common_functions/date_formatter';
 import { Switch } from 'react-router';
+import SelectShiftWindow from './components/SelectShiftWindow';
 
 const slideOpts = {
   direction: 'horizontal',
@@ -20,18 +21,35 @@ const init = async function(this: any) {
     swiper = await this.getSwiper();
 };
 
+let selectShiftWindow: any = null;
+
 
 
 class PostView extends Component<any, any> {
+  constructor(props: any){
+    super(props)
+
+    this.getData = this.getData.bind(this);
+  }
+
   state = {
     checkListActive: false,
     show_shift: -1, // niets
     current_shift: -1, 
+    showPopover: false,
+    swiper: null
   }
 
-  constructor(props: any){
-    super(props)
+  hidePopover(){
+    this.setState({...this.state, showPopover: false});
   }
+
+  showPopOver(){
+      this.setState({...this.state, showPopover: true});
+  }
+
+
+
 
   handleShiftSwitch(shift: number){
     this.setState({...this.state, show_shift: shift});
@@ -100,21 +118,26 @@ class PostView extends Component<any, any> {
     }
   }
 
-  handleSlideChange(test: any){
+  handleSlideChange(slider: any){
     // this.getActiveIndex()
-    if(test != null){
-      console.log("changed slide", test.activeIndex)
-      this.handleShiftSwitch(test.activeIndex)
+    if(slider != null){
+      console.log("changed slide", slider.activeIndex)
+      this.handleShiftSwitch(slider.activeIndex)
     }
+  }
+
+  setShiftActive(shift_id: number){
+    // this.getActiveIndex()
+      this.handleShiftSwitch(shift_id)
+    
   }
   
 
   renderShifts(){
-
     const slideOpts = {
       initialSlide: 0,
       speed: 400,
-      direction: 'horizontal'
+      direction: 'horizontal',
     };
 
     let shifts = this.props.localStorage.shifts.map((shift: any) => {
@@ -125,9 +148,42 @@ class PostView extends Component<any, any> {
 
 
     return (
-    <IonSlides onIonSlidesDidLoad={init} pager={true} options={slideOpts} onIonSlideDidChange={()=> this.handleSlideChange(swiper)}>
+    <IonSlides className="FullWidth" onIonSlidesDidLoad={init} pager={true} options={slideOpts} onIonSlideDidChange={()=> this.handleSlideChange(swiper)}>
       {shifts}
     </IonSlides>
+    )
+  }
+
+  getData(val: any){
+    // do not forget to bind getData in constructor
+    console.log(val.shift_id);
+    console.log(swiper)
+
+    let index_shift = 0;
+    this.props.localStorage.shifts.map((element: any, index: number) => {
+      if(element.shift_id == val.shift_id){
+        index_shift = index;
+      }
+    })
+    
+
+    this.setShiftActive(val.shift_id);
+    swiper.slideTo(index_shift);
+    this.hidePopover();
+  }
+
+  renderSelectShiftWindow(){
+    selectShiftWindow = <SelectShiftWindow shifts={this.props.localStorage.shifts} sendData={this.getData}/>
+    console.log(selectShiftWindow)
+    return(
+    <>
+      <IonPopover
+        isOpen={this.state.showPopover}
+        onDidDismiss={() => this.hidePopover()}
+      >
+      {selectShiftWindow}
+      </IonPopover>
+    </>
     )
   }
 
@@ -136,7 +192,10 @@ class PostView extends Component<any, any> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</IonTitle>
+            <IonTitle className="align_center"> 
+              <div className="text_start">Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</div>
+              <IonButton className="text_end" onClick={() => this.showPopOver()}>shift</IonButton>
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -153,6 +212,7 @@ class PostView extends Component<any, any> {
             <IonButton onClick={() => this.getNextShift(swiper)}><IonIcon icon={arrowForward}/></IonButton>
           </div>
           {this.renderShifts()}
+          {this.renderSelectShiftWindow()}
           
         </IonContent>
       </IonPage>

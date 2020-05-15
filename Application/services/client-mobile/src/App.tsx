@@ -67,17 +67,17 @@ class App extends React.Component {
       if(true){
         return(
           <IonTabs>
-          <IonRouterOutlet>
-            <Route path="/ListView" component={ListView} exact={true} />
-            <Route path="/MapPage" component={MapPage} exact={true} />
-            <Route path="/PostView/:sector/:post" component={PostView} exact={true} />
-            <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
-            <Route path="/Notifications" component={Notifications} exact={true} />
-            <Route path="/SendNotifications" component={SendNotifications} exact={true} />
-            <Route path="/Contacts" component={Contacts} exact={true} />
-            <Route path="/Login" component={LoginPage} exact={true} />
-            <Route path="/" render={() => <Redirect to="/MapPage" />} exact={true} />
-          </IonRouterOutlet>
+            <IonRouterOutlet>
+              <Route path="/ListView" component={ListView} exact={true} />
+              <Route path="/MapPage" component={MapPage} exact={true} />
+              <Route path="/PostView/:sector/:post" component={PostView} exact={true} />
+              <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
+              <Route path="/Notifications" component={Notifications} exact={true} />
+              <Route path="/SendNotifications" component={SendNotifications} exact={true} />
+              <Route path="/Contacts" component={Contacts} exact={true} />
+              <Route path="/Login" component={LoginPage} exact={true} />
+              <Route path="/" render={() => <Redirect to="/MapPage" />} exact={true} />
+            </IonRouterOutlet>
           <IonTabBar slot="bottom">
             <IonTabButton tab="MapPage" href="/MapPage">
               <IonIcon icon={mapOutline} />

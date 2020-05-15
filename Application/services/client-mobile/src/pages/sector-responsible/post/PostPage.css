@@ -2,9 +2,26 @@
     float: right;
 }
 
+.text_start{
+    float: left;
+    width: 100px;
+   
+}
+
+.align_center{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
 .flexrow{
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-around;
+}
+
+.centerContent{
+    vertical-align: center;
 }

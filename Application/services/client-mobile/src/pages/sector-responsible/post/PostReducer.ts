@@ -1,10 +1,6 @@
 import {POST_FETCH_PLANNING_FAIL, POST_FETCH_PLANNING_START, POST_FETCH_PLANNING_SUCCESS, ITEM_TOGGLE_SUCCESS, PROBLEM_TOGGLE_SUCCESS} from "./PostAction";
 import {AnyAction} from "redux";
 
-import {initialState} from './States/localStorage'
-import ShiftData from "./States/ShiftData";
-import ShiftProblem from "./States/ShiftProblem";
-import ShiftItem from "./States/ShiftItem";
 import { toggle } from "ionicons/icons";
 
 
