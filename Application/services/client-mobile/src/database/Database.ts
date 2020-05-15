@@ -4,9 +4,8 @@ import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocatio
 export default class Database {
 
     getRestApiEndpoint(): string | undefined {
-        console.log("PROCESSS:", process.env.NODE_ENV)
         // @ts-ignore
-        if (process.env.NODE_ENV == 'debug' || process.env.NODE_ENV == 'development')
+        if (process.env.NODE_ENV === 'debug')
             return "http://localhost";
         return "https://psopv.herokuapp.com";
     }
@@ -20,10 +19,8 @@ export default class Database {
         })
     }
 
-    async fetchPlannings(userID : number) {
-        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user/' + userID;
-
-        console.log("URL ", url);
+    async fetchPlannings() {
+        const url = this.getRestApiEndpoint() + '/api/planning/fetch/all';
 
         return await axios.get(url)
     }
@@ -109,6 +106,19 @@ export default class Database {
         return await axios.patch(url)
     }
 
+    async fetchAllItems() {
+        const url = this.getRestApiEndpoint() + '/api/item/fetch/all';
+        return await axios.get(url)
+    }
+
+    async fetchAllProblems() {
+        const url = this.getRestApiEndpoint() + '/api/problem/fetch/all';
+        return await axios.get(url)
+    }
+
+    
+
+
     async fetchItemsFromPlanning(planning_id: number) {
         const url = this.getRestApiEndpoint() + '/api/item/fetch/planning/' + planning_id;
 
@@ -117,6 +127,12 @@ export default class Database {
 
     async fetchProblemsFromPlanning(planning_id: number) {
         const url = this.getRestApiEndpoint() + '/api/problem/fetch/planning/' + planning_id;
+
+        return await axios.get(url)
+    }
+
+    async fetchSectorOfUser(user_id: number) {
+        const url = this.getRestApiEndpoint() + '/api/sector/fetch/user/' + user_id;
 
         return await axios.get(url)
     }

@@ -37,7 +37,7 @@ class PostView extends Component<any, any> {
   }
 
   getNextShift(){
-    if (this.state.show_shift < this.props.arePlanningsFormPostFetched.length - 1){
+    if (this.state.show_shift < this.props.localStorage.shifts.length - 1){
       let new_shift = this.state.show_shift + 1
       this.handleShiftSwitch(new_shift);
     }
@@ -71,9 +71,9 @@ class PostView extends Component<any, any> {
   setCurrentlyActiveShift(){
     var current_time = new Date();
 
-    this.props.arePlanningsFormPostFetched.map((element: any, index: number) => {
-      var shift_begin = new Date(element.shift_data[0].shift.begin)
-      var shift_end = new Date(element.shift_data[0].shift.end)
+    this.props.localStorage.shifts.map((element: any, index: number) => {
+      var shift_begin = new Date(element.shift_start)
+      var shift_end = new Date(element.shift_end)
 
       if((current_time > shift_begin) && (current_time < shift_end)){
         this.setState({...this.state, show_shift: index, current_shift: index});
@@ -85,33 +85,18 @@ class PostView extends Component<any, any> {
     this.props.fetchPlanningsFromPost(this.props.match.params.post);
   }
 
-
   renderPost(): any{
-    if(this.props.loading == true){
-        return <div>Loading...</div>
-      } else {
-        if(this.props.arePlanningsFormPostFetched !== undefined){
-          if(this.props.arePlanningsFormPostFetched.length <= 0){
-            return <div> No info found.</div>
-          } else{
-            if(this.state.show_shift === -1){
-              this.setCurrentlyActiveShift();
-              return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
-            } else{
-              let data = this.props.arePlanningsFormPostFetched[this.state.show_shift];
-              console.log("show_shift", this.state.show_shift, data)
-              return <Shift key={data.id} {...data}/>
-            }
-            
-          }
-        } else{
-          return <div> loading ...</div>
-        }
-      }
-}
+    console.log(this.props)
+    if(this.state.show_shift === -1){
+      this.setCurrentlyActiveShift();
+      return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
+    } else{
+      let data = this.props.localStorage.shifts[this.state.show_shift];
+      return <Shift shift={data} post={this.props.localStorage}/>
+    }
+  }
 
-
-  render(){
+  renderBasis(){
     return (
       <IonPage>
         <IonHeader>
@@ -137,14 +122,25 @@ class PostView extends Component<any, any> {
         </IonContent>
       </IonPage>
     );
+    
+  }
+
+  render(){
+    console.log(this.props)
+    if(this.props.localStorage != undefined){
+      return this.renderBasis();
+    } else{
+      return <div> No internet connection </div>
+    }
   };
 }
   
 
 
 function mapStateToProps(state: any) {
+  console.log(state)
   return({
-    arePlanningsFormPostFetched: state.post.arePlanningsFormPostFetched,
+    localStorage: state.post.localStorage,
     errorMessage: state.post.errorMessage,
     loading: state.post.loading,
   })

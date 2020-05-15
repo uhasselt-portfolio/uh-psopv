@@ -12,26 +12,19 @@ import {
     IonButton
 } from '@ionic/react';
 import {Redirect} from "react-router";
-import {updateGeolocation} from "../info/InfoAction";
-import {checkIfUserInPost, reportUserNotInPost} from "./StartAction";
 
 class StartPage extends Component<any> {
 
     componentDidMount() {
-        console.log("FETCHING ACTIVE PLANNING..")
         this.props.fetchActivePlanningOfUser(1);
-        console.log("FETCHED ACTIVE PLANNING")
     }
 
     private handleUpdateUserCheckInStatus(event: any): void {
-        console.log("HANDLE UPDATE CKECKIN STATUS");
         event.preventDefault();
         this.props.updateUserCheckInStatus(1);
-        console.log("UPDATE CHECKIN STATUS")
     }
 
     private showContent() {
-        console.log("---- ACTIVE PLANNING HIT", this.props.isActivePlanningFetched)
         const planning = this.props.isActivePlanningFetched;
         if (planning != undefined) {
             if (!planning.checked_in) {

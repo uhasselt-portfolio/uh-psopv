@@ -15,12 +15,14 @@ import { IonButton,
   IonSelect,
   IonSelectOption,
   IonRow,
-  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol } from '@ionic/react';
+  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol, IonRadioGroup } from '@ionic/react';
 import { bindActionCreators } from 'redux';
 import {fetchPosts} from './ListAction'
 import { connect } from 'react-redux';
+import { getDefaultSector } from '../../save/saveFunction';
+import CustomDropdown from './components/CustomDropdown';
 
-const sort_types = {alfabetisch: "alfa", afstand: "afstand"}
+const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand"}
 
 class ListView extends Component<any> {
   constructor(props: any) {
@@ -30,24 +32,31 @@ class ListView extends Component<any> {
   state={
     selected_sector: -1, //if -1 = selected all sectors
     selected_sort: sort_types.alfabetisch,
-    data_posts: []
+    data_posts: [],
+    default_sector: -1, // -1 = none
   }
 
-  componentDidMount(){
+  async componentDidMount(){
     this.props.fetchPosts();
   }
 
+
   handleSectorChange(sector: number){
-    let new_data
+    let new_data: any;
     if(sector !== -1){
-      new_data = this.props.arePostsFetched.posts_data.filter((element: any) => {
+      new_data = this.props.localStorage.posts_data.filter((element: any) => {
         return element.sector_id === sector
       })     
     }else{
-      new_data = this.props.arePostsFetched.posts_data
+      console.log(this.props.localStorage.posts_data)
+      new_data = this.props.localStorage.posts_data
     }
    
-    this.setState({...this.state, selected_sector: sector, data_posts: new_data});
+    // this.setState({selected_sector: sector, data_posts: new_data});
+    // // Correct
+    this.setState((state, props) => ({
+      selected_sector: sector, data_posts: new_data
+    }));
   }
 
   handleSortChange(sort: string){
@@ -93,10 +102,13 @@ class ListView extends Component<any> {
 
   renderListOfItems(){
     if(this.state.data_posts.length <= 0){
-      this.setState({...this.state, data_posts: this.props.arePostsFetched.posts_data});
-      return this.props.arePostsFetched.posts_data.map((data: any, index: number) =>{
+      let data_default = this.props.localStorage.posts_data.filter((data: any) =>{
+        return (data.sector_id == this.props.localStorage.default_sector)
+      })
+      this.setState({...this.state, data_posts: data_default, default_sector: this.props.localStorage.default_sector, selected_sector: this.props.localStorage.default_sector});
+      return data_default.map((data: any, index: number) =>{
         return (
-          <ListViewItem {... data}/>
+          <ListViewItem {...data}/>
         )
       })
     } else {
@@ -108,7 +120,19 @@ class ListView extends Component<any> {
     }  
   }
 
-  renderButtons(){
+  
+  
+
+   renderButtons(){
+    let list: { title: string; subinfo: string; }[] = [];
+    this.props.localStorage.posts_sectors.map((element: any) => {
+        let item = {title: "Sector " + element, subinfo: ""}
+        if(element == this.props.localStorage.default_sector){
+           item = {title: "Sector " + element, subinfo: "default"}
+        } 
+        list.push(item)
+    })
+
     return(
       <IonGrid>
       <IonRow>
@@ -123,71 +147,77 @@ class ListView extends Component<any> {
           </IonButton>
         </IonCol>
         <IonCol>
-          <IonButton>
-            <IonSelect
-              interface="popover"  
-              value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
-                {this.props.arePostsFetched.posts_sectors.map((sector: number) => {
-                    return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
-                })}
-                <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
+        <IonButton>
+        <IonSelect
+          interface="popover"  
+          value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
+            {this.props.localStorage.posts_sectors.map((sector: number) => {
+              if(this.state.default_sector === sector){
+                return <IonSelectOption  value={sector}>Sector {sector}</IonSelectOption>
+              } else{
+                return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
 
-            </IonSelect>
+              }
+            })}
+            <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
+          </IonSelect> 
           </IonButton>
+          {/* <CustomDropdown list={list} title="Sectors"></CustomDropdown> */}
         </IonCol>
       </IonRow>
       </IonGrid>
     )
-    
+
+
+         
+  }
+
+  renderBasis(){
+    return (
+      <IonPage>
+        <IonHeader>
+          <IonToolbar>
+            <IonTitle>Lijst van posten</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+        <IonContent>
+          <IonHeader collapse="condense">
+            <IonToolbar>
+              <IonTitle size="large">Blank</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            {this.renderButtons()}
+          <IonList>
+            {this.renderListOfItems()}
+          </IonList>
+        </IonContent>
+        </IonContent>
+      </IonPage>
+    );   
   }
 
   render()
   {
-    console.log(this.props.arePostsFetched)
-
-    if(this.props.loading == true){
-      return <div>Loading...</div>
-    } else {
-      if(this.props.arePostsFetched !== undefined){
-        if(this.props.arePostsFetched.posts_data.length <= 0){
-          return <div> No messages found. </div>
-        } else{
-          return (
-            <IonPage>
-              <IonHeader>
-                <IonToolbar>
-                  <IonTitle>Lijst van posten</IonTitle>
-                </IonToolbar>
-              </IonHeader>
-              <IonContent>
-                <IonHeader collapse="condense">
-                  <IonToolbar>
-                    <IonTitle size="large">Blank</IonTitle>
-                  </IonToolbar>
-                </IonHeader>
-                <IonContent>
-                  {this.renderButtons()}
-                <IonList>
-                  {this.renderListOfItems()}
-                </IonList>
-              </IonContent>
-              </IonContent>
-            </IonPage>
-          );   
+    console.log(this.props)
+      if(this.props.localStorage != undefined){
+        if(this.props.localStorage.posts_sectors <= 0){
+          return <div>No interconnection found</div>
+        }
+        if(this.props.localStorage.posts_sectors.length > 0){
+          return this.renderBasis();
         }
       } else{
-        return <div></div>
+        return <div>loading</div>
       }
-    }
-    
-   
+      
   }
   
 };
 
 function mapStateToProps(state: any) {
   return({
-    arePostsFetched: state.list.arePostsFetched,
+    localStorage: state.list.localStorage,
     errorMessage: state.list.errorMessage,
     loading: state.list.loading
   })

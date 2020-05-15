@@ -1,32 +1,23 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
+import { getUserId, getDefaultSector, setListLocalStorage, getListLocalStorage } from "../../save/saveFunction";
 
-export const USERS_FETCH_START = 'USERS_FETCH_START'
 export const USERS_FETCH_SUCCESS = 'USERS_FETCH_SUCCESS'
-export const USERS_FETCH_FAIL = 'USERS_FETCH_FAIL'
 
-export const fetchUsers = () => async (dispatch: Redux.Dispatch) => {
+export const fetchContacts= () => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: USERS_FETCH_START})
+        let volunteers = await getListLocalStorage('my_volunteers');
+        let nonVolunteers = await getListLocalStorage('contacts');
 
-        const response = await new Database().fetchUsers();
+        let data = {my_volunteers: volunteers, contacts: nonVolunteers}
+        console.log(data)
 
-        dispatch({type: USERS_FETCH_SUCCESS, payload: response.data.data.users})
+        dispatch({type: USERS_FETCH_SUCCESS, payload: data})
     } catch(error){
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+        let volunteers = await getListLocalStorage('my_volunteers');
+        let nonVolunteers = await getListLocalStorage('contacts');
 
-            dispatch({type: USERS_FETCH_FAIL, payload: error.response.data.users})
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }
+        dispatch({type: USERS_FETCH_SUCCESS, payload: {my_volunteers: volunteers, contacts: nonVolunteers}})
     }
 }

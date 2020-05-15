@@ -2,6 +2,7 @@ import React from 'react'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {fetchPlanningsFromId, updateGeolocation} from './InfoAction';
+import {checkIfUserInPost, reportUserNotInPost} from "../start/StartAction";
 import {
     IonCard,
     IonCardHeader,
@@ -24,7 +25,6 @@ import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/
 class InfoPage extends React.Component<any, any> {
 
     componentDidMount() {
-        console.log("jip..")
         let HIGH = 10;
         const config = {
             desiredAccuracy: HIGH,
@@ -43,6 +43,10 @@ class InfoPage extends React.Component<any, any> {
                     console.log("location: ", location)
 
                     this.props.updateGeolocation(location);
+                    this.props.checkIfUserInPost(1);
+                    if(!this.props.isUserOnPost) {
+                        this.props.reportUserNotInPost(1);
+                    }
 
                     BackgroundGeolocation.finish(); // FOR IOS ONLY
                 });
@@ -129,13 +133,31 @@ class InfoPage extends React.Component<any, any> {
         console.log(this.props.isLocationUpdated);
         if (coordinates !== undefined) {
             return (
-                <div>
-                    <p>Latitude: {this.props.isLocationUpdated.latitude}</p>
-                    <p>Longitude: {this.props.isLocationUpdated.longitude}</p>
-                </div>
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>
+                            Jouw coördinaten
+                        </IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        <p>Latitude: {this.props.isLocationUpdated.latitude}</p>
+                        <p>Longitude: {this.props.isLocationUpdated.longitude}</p>
+                    </IonCardContent>
+                </IonCard>
             )
         } else {
-            return <div>Loading...</div>
+            return(
+                <IonCard>
+                    <IonCardHeader>
+                        <IonCardTitle>
+                            Jouw coördinaten
+                        </IonCardTitle>
+                    </IonCardHeader>
+                    <IonCardContent>
+                        Laden...
+                    </IonCardContent>
+                </IonCard>
+            )
         }
     }
 
@@ -160,6 +182,7 @@ class InfoPage extends React.Component<any, any> {
 function mapStateToProps(state: any) {
     return ({
         arePlanningsFromIdFetched: state.VRinfo.arePlanningsFromIdFetched,
+        isUserOnPost: state.start.isUserOnPost,
         isLocationUpdated: state.VRinfo.isLocationUpdated,
         errorMessage: state.VRinfo.errorMessage,
         loading: state.VRinfo.loading,
@@ -169,7 +192,9 @@ function mapStateToProps(state: any) {
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
         updateGeolocation,
-        fetchPlanningsFromId
+        fetchPlanningsFromId,
+        checkIfUserInPost,
+        reportUserNotInPost
     }, dispatch);
 }
 
