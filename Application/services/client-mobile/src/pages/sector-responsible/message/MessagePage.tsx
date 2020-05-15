@@ -31,25 +31,24 @@ class Notifications extends Component<any> {
   }
 
   renderList(){
-    if(this.props.loading == true){
-      return <div>Loading...</div>
-    } else {
-      if(this.props.areMessagesOfIdFetched !== undefined){
-        if(this.props.areMessagesOfIdFetched.length <= 0){
+    if(this.props.localStorage != undefined){
+      if(this.props.localStorage.length <= 0){
           return <div> No messages found. </div>
-        } else{
-          return this.props.areMessagesOfIdFetched.map((data: any, index: number) =>{
-            return (
-            <NotificationItem {... data}/>
-            )
-          })
+      } else{
+        return this.props.localStorage.map((data: any, index: number) =>{
+          return (
+          <NotificationItem {... data}/>
+          )
+        })
         }
-      }
+      } else{
+        return <div> No internet connection ... </div>
     }
   }
 
 
   render(){
+    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>
@@ -58,20 +57,10 @@ class Notifications extends Component<any> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonHeader collapse="condense">
-            <IonToolbar>
-              <IonTitle size="large">Blank</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
-
-
-      {/*-- List of Post Items --*/}
-      <IonList>
-        {this.renderList()}
-      </IonList>
-    </IonContent>
-          
+          {/*-- List of Post Items --*/}
+          <IonList>
+            {this.renderList()}
+          </IonList>
         </IonContent>
       </IonPage>
     );
@@ -81,8 +70,7 @@ class Notifications extends Component<any> {
 function mapStateToProps(state: any) {
   console.log(state)
   return({
-    savedActions: state.save,
-    areMessagesOfIdFetched: state.message.areMessagesOfIdFetched,
+    localStorage: state.message.areMessagesOfIdFetched,
     errorMessage: state.message.errorMessage,
     loading: state.message.loading
   })

@@ -12,7 +12,7 @@ import { IonButton,
     IonList, 
     IonItem, 
     IonLabel,
-    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar } from '@ionic/react';
+    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonRow, IonCol } from '@ionic/react';
 import { Link } from 'react-router-dom';
 import './Notification_Item.css';
 import { read } from 'fs';
@@ -28,52 +28,98 @@ class NotificationItem extends Component<any> {
         super(props)
     }
 
-    state = {
-        seen: false
+    handleOnMenuItemClicked = (data: any) => {
+        this.props.MessageToggle(data.id);
     }
+
+    // setStateClicked(clicked: boolean){
+    //     if(clicked === true && this.state.seen === false){
+    //         this.setState({...this.state, seen: clicked});
+    //     }
+    // }
+
     
 
-    handleOnMenuItemClicked = (data: any) => {
-        this.setState({...this.state, seen: !this.state.seen});
-        this.props.MessageToggle(data.id);
-        console.log(this.state.seen)
+    renderMessage(){
+        return(
+            <IonLabel>
+                <IonGrid className="MessageBorder">
+                    <IonRow className="noPadding">
+                        <IonCol size="9" className="noPadding">
+                            <p><b>{this.props.created_by}</b> ({this.props.created_by_permission_type}) </p>
+                        </IonCol>
+                        <IonCol size="3" className="noPadding">
+                            <p className="right_text">{formatDateTime(this.props.created_at)}</p>
+                        </IonCol>
+                    </IonRow>
+                    <IonRow className="noPadding">
+                        <IonCol className="noPadding">
+                        <p className="grey">{this.props.title}: {this.props.message} </p>
+                        </IonCol>
+                    </IonRow>
+                </IonGrid>
+            </IonLabel>
+        )
     }
 
-    setStateClicked(clicked: boolean){
-        if(clicked === true && this.state.seen === false){
-            this.setState({...this.state, seen: clicked});
-        }
+    renderProblem(){
+        return(
+            <IonLabel>
+                <IonGrid className="ProblemBorder">
+                    <IonRow className="noPadding">
+                        <IonCol size="9" className="noPadding">
+                            <p><b>{this.props.created_by}</b> ({this.props.created_by_permission_type}) </p>
+                        </IonCol>
+                        <IonCol size="3" className="noPadding">
+                            <p className="right_text">{formatDateTime(this.props.created_at)}</p>
+                        </IonCol>
+                    </IonRow>
+                    <IonRow className="noPadding">
+                        <IonCol className="noPadding">
+                        <p className="grey">{this.props.title}: {this.props.message} </p>
+                        </IonCol>
+                    </IonRow>
+                </IonGrid>
+            </IonLabel>
+        )
     }
+        
 
     render(){        
         let data = this.props
-        console.log("data", this.props)
-        this.setStateClicked(data.seen)
-        if (this.state.seen){
-        return (  
-            <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
-                <IonLabel>
-                    <h2> <b>{data.created_by.first_name}:</b> {data.title}</h2>
-                    <p>{data.message}</p>
-                </IonLabel>
-                <IonLabel class="right_text">
-                    <h2>{formatDateTime(data.created_at)}</h2>
-                </IonLabel>
-            </IonItem>
-        );
-    } else{
-        return(
-            <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
-                <IonLabel>
-                    <h2> <b>{data.created_by.first_name}:</b> {data.title}</h2>
-                    <p>{data.message}</p>
-                </IonLabel>
-                <IonLabel class="right_text">
-                    <h2>{formatDateTime(data.created_at)}</h2>
-                </IonLabel>
-            </IonItem>
-        )
-    }
+        if (this.props.type == "Message"){
+            if(this.props.solved){
+                return (
+                    <div>
+                    <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
+                        {this.renderMessage()}
+                    </IonItem>
+                    </div>  
+                );
+            } else{
+                return(
+                    <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
+                        {this.renderMessage()}
+                    </IonItem>
+                )
+            }
+        } else{
+            if(this.props.solved){
+                return (
+                    <div>
+                    <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
+                        {this.renderProblem()}
+                    </IonItem>
+                    </div>  
+                );
+            } else{
+                return(
+                    <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
+                        {this.renderProblem()}
+                    </IonItem>
+                )
+            }
+        }
     }
 }
 

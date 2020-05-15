@@ -36,8 +36,7 @@ class SelectShiftWindow extends React.Component<any> {
             return (
             <IonItem button onClick={() => this.handleClick(element)}>
                 <IonLabel>
-                <h2>Shift: {element.shift_id}</h2>
-                <p>{formatDateTime(element.shift_start) + " - " + formatDateTime(element.shift_end)}</p>
+                <p> <strong>Shift: </strong> {formatDateTime(element.shift_start) + " - " + formatDateTime(element.shift_end)}</p>
                 </IonLabel>
             </IonItem>
             )

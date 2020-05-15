@@ -9,7 +9,6 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import {store} from './reducers'
 import {PersistGate} from 'redux-persist/integration/react';
-import Test from './test/test'
 
 
 config({path: resolve(__dirname, '../.env')});

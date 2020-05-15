@@ -17,10 +17,23 @@ function sortUserShifts(a: any, b: any){
     }
 }
 
-async function getVolunteersFromSector(default_sector: number){
-    const responsePlanning = await new Database().fetchPlannings();
+function sortMessagesByDate(a: any, b: any){
+    var a_data = new Date(a.created_at)
+    var b_data = new Date(b.created_at)
 
-    let users = responsePlanning.data.data.plannings.filter((element: any) => {
+    if(a_data < b_data){
+        return -1
+    }
+    else if(a_data > b_data){
+        return 1
+    } else{
+        return 0
+    }
+}
+
+ function getVolunteersFromSector(responsePlannings: any, default_sector: number){
+
+    let users = responsePlannings.data.data.plannings.filter((element: any) => {
         return element.post.sector_id == default_sector;
     });
 
@@ -42,10 +55,7 @@ async function getVolunteersFromSector(default_sector: number){
 
     return volunteers
 }
-async function getNonVolunteers(){
-    const responseUsers = await new Database().fetchUsers();
-    const user_id = await getUserId();
-
+ function getNonVolunteers(responseUsers: any, user_id: number){
     let workers: any[] = []
     let done_workers: Number[] = [];
     responseUsers.data.data.users.map((user: any) => {
@@ -66,12 +76,9 @@ async function getNonVolunteers(){
 
     return workers;
 }
-async function getPostsData(){
-    const responsePosts = await new Database().fetchPosts();
-    const responseUnsolvedProblems = await new Database().fetchUnsolvedProblems();
-    const responseItems = await new Database().fetchAllItems();
-    const responseProblems = await new Database().fetchAllProblems();
-    const responsePlannings = await new Database().fetchPlannings();
+ function getPostsData(responsePosts: any, responseUnsolvedProblems: any, responseItems: any,
+    responseProblems: any, responsePlannings: any, default_sector: number){
+
 
 
         let posts_data: {}[] = []
@@ -113,8 +120,6 @@ async function getPostsData(){
               }
         })
         
-        let default_sector = await getDefaultSector();
-
         // get shifts
         posts_data.forEach((plannings: any) => {
             let plannings_post = responsePlannings.data.data.plannings.filter((planning: any) => {
@@ -204,6 +209,45 @@ async function getPostsData(){
         let all_data = {posts_data: posts_data, posts_sectors: sectors, default_sector: default_sector};
         return all_data;
 }
+ function getMessages(responseMessages: any, responseProblems: any, user_id: number, volunteers: any){
+
+    console.log(    responseMessages.data.data       )
+    let messages: any[] = []
+    responseMessages.data.data.messages.forEach((message: any) => {
+        messages.push({
+            type: "Message",
+            id: message.id,
+            title: message.title,
+            message: message.message,
+            created_by: message.created_by.first_name,
+            created_by_permission_type: message.created_by.permission_type.name,
+            created_at: message.created_at,
+            solved: message.seen
+        })
+    })
+
+    let my_volunteers: Number[] = []
+    volunteers.map((volunteer: any) => {
+        my_volunteers.push(volunteer.user_id)
+    })
+
+    responseProblems.data.data.problems.forEach((problem: any) => {
+        if(my_volunteers.includes(problem.planning.user.id)){
+            messages.push({
+                type: "Problem",
+                id: problem.id,
+                title: problem.problem_type.title,
+                message: problem.problem_type.description,
+                created_by: problem.created_by.first_name,
+                created_by_permission_type: problem.created_by.permission_type.name,
+                created_at: problem.created_at,
+                solved: problem.solved
+            })
+        }
+    })
+
+    return messages
+}
 
 
 export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'  
@@ -218,16 +262,31 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
             }
         });
 
+        const responsePosts = await new Database().fetchPosts();
+        const responseUnsolvedProblems = await new Database().fetchUnsolvedProblems();
+        const responseItems = await new Database().fetchAllItems();
+        const responseProblems = await new Database().fetchAllProblems();
+        const responsePlannings = await new Database().fetchPlannings();
+        const responseUsers = await new Database().fetchUsers();
+        const user_id = await getUserId();
+        const responseMessages = await new Database().fetchMessagesFrom(user_id);
         const default_sector = await getDefaultSector();
-        let volunteers = await getVolunteersFromSector(default_sector);
-        let nonVolunteers = await getNonVolunteers();
-        let postsData = await getPostsData();
 
+        let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
+        let nonVolunteers = getNonVolunteers(responseUsers, user_id);
+        let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems, responsePlannings, default_sector);
+        let messages =  getMessages(responseMessages, responseProblems, user_id, volunteers);
+
+        messages.sort(sortMessagesByDate);
 
         setListLocalStorage('my_volunteers', volunteers);
         setListLocalStorage('contacts', nonVolunteers);
         setListLocalStorage('posts', postsData.posts_data);
         setListLocalStorage('sectors', postsData.posts_sectors);
+        setListLocalStorage('messages', messages);
+
+
+
 
 
         resetActionList();

@@ -16,7 +16,7 @@ class SendNotifications extends Component<any> {
     title: "",
     message: "",
     priority: 1,
-    selected_type: select_types.volunteers,
+    selected_type: select_types.nobody,
     showPopover: false,
   }
 
@@ -48,6 +48,7 @@ class SendNotifications extends Component<any> {
     }else if(value === select_types.sectors){
       await this.selectSectors();
     } else if (value === select_types.specific){
+      this.setState({...this.state, selected_type: select_types.specific});
       this.showPopOver();
     }
   }
@@ -90,9 +91,11 @@ class SendNotifications extends Component<any> {
     console.log(this.props)
     let list: number[] =[]
 
-    this.props.localStorage.checkboxList.map((item: any)=> {
-       list.push(item.value_id)
-    })
+    if(this.props.localStorage != undefined){
+      this.props.localStorage.checkboxList.map((item: any)=> {
+        list.push(item.value_id)
+      })
+    }
 
     await setListLocalStorage('send_msg', list)
 
