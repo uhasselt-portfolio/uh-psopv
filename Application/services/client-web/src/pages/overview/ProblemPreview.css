@@ -1,3 +1,13 @@
 .MarginTop{
     margin-top:  50px;
 }
+
+.flexVertical{
+    display: flex;
+    flex-direction: column;
+}
+
+.center{
+    align-items: center;
+    text-align: center;
+}

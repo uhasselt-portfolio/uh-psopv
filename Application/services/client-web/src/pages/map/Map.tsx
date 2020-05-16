@@ -231,8 +231,7 @@ class MyMap extends React.Component<IProps> {
       }
     
     return (
-        <div id="mapid" style={{height: '700px'}}>
-            
+        <div id="mapid" style={{height: '100%'}}>
         </div>
       )
   }
