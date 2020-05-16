@@ -17,10 +17,9 @@ import {
     IonToolbar,
     IonTitle
 } from '@ionic/react';
-import GoogleMapReact from 'google-map-react';
-import NormalMarker from './components/NormalMarker'
 import './InfoPage.css'
 import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/background-geolocation";
+import Map from '../../common_functions/Map';
 
 class InfoPage extends React.Component<any, any> {
 
@@ -98,14 +97,13 @@ class InfoPage extends React.Component<any, any> {
                     </IonGrid>
 
                     <div className="GoogleMapsInfo">
-                        <GoogleMapReact
-                            bootstrapURLKeys={{key: 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDyMg3eezA_aKnVp1Hvsya23xwxCey32JA'}}
-                            defaultCenter={{lat: shift_data.post.latitude, lng: shift_data.post.longitude}}
-                            defaultZoom={13}>
-                            <NormalMarker
-                                lat={shift_data.post.latitude}
-                                lng={shift_data.post.longitude}/>
-                        </GoogleMapReact>
+                        <Map problems={[]} users={[]} posts={[{
+                            latitude: shift_data.post.latitude, 
+                            longitude: shift_data.post.longitude,
+                            title: shift_data.post.title}]} isMarkerClickable={false} containerId={"map" + shift_data.id} 
+                            centerLat={shift_data.post.latitude}
+                            centerLong={ shift_data.post.longitude}
+                            mapHeight={200}/>
                     </div>
                 </IonCardContent>
             </IonCard>
@@ -182,7 +180,7 @@ class InfoPage extends React.Component<any, any> {
 function mapStateToProps(state: any) {
     return ({
         arePlanningsFromIdFetched: state.VRinfo.arePlanningsFromIdFetched,
-        isUserOnPost: state.start.isUserOnPost,
+        isUserOnPost: true, //TODO state.start.isUserOnPost gaf error
         isLocationUpdated: state.VRinfo.isLocationUpdated,
         errorMessage: state.VRinfo.errorMessage,
         loading: state.VRinfo.loading,
