@@ -1,7 +1,7 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
-import { getListLocalStorage } from "../../save/saveFunction";
+import { getListLocalStorage, getUserId } from "../../save/saveFunction";
 
 export const POST_FETCH_PLANNING_START = 'POST_FETCH_PLANNING_START'
 export const POST_FETCH_PLANNING_SUCCESS = 'POST_FETCH_PLANNING_SUCCESS'
@@ -14,6 +14,8 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
     try{
         
         let posts = await getListLocalStorage('posts');
+        let problemTypes = await getListLocalStorage('problem_types');
+        let my_user_id = await getUserId();
         console.log(posts)
 
         console.log("postsData", posts)
@@ -23,11 +25,11 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
 
         console.log("Shifts data", postData)
 
-
-
-        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: postData})
+        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: {... postData, problemTypes: problemTypes, my_user_id: my_user_id}})
     } catch(error){
         let postsData = await getListLocalStorage('postsData');
+        let problemTypes = await getListLocalStorage('problem_types');
+
         console.log(error)
         dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: postsData})
     }

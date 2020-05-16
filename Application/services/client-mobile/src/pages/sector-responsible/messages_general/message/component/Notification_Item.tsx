@@ -18,6 +18,7 @@ import './Notification_Item.css';
 import { connect } from "react-redux";
 import {MessageToggle} from '../MessageAction'
 import {formatDateTime} from '../../../../common_functions/date_formatter'
+import { addObjectToActionList } from '../../../../save/saveFunction';
 
 
 class NotificationItem extends Component<any> {
@@ -25,15 +26,18 @@ class NotificationItem extends Component<any> {
         super(props)
     }
 
-    handleOnMenuItemClicked = (data: any) => {
-        this.props.MessageToggle(data.id);
+    state = {
+        seen: this.props.solved
     }
 
-    // setStateClicked(clicked: boolean){
-    //     if(clicked === true && this.state.seen === false){
-    //         this.setState({...this.state, seen: clicked});
-    //     }
-    // }
+    handleOnMenuItemClicked = (data: any) => {
+        console.log("clicked", data)
+        // this.props.MessageToggle(data.id);
+        if(this.state.seen === false){
+            addObjectToActionList('https://psopv.herokuapp.com/api/message/toggle-seen/' + data.id, null);
+            this.setState({...this.state, seen: !this.state.seen});
+        }
+    }
 
     
 
@@ -85,7 +89,7 @@ class NotificationItem extends Component<any> {
     render(){        
         let data = this.props
         if (this.props.created_by_permission_type == "Vrijwilliger"){
-            if(this.props.solved){
+            if(this.state.seen){
                 return (
                     <div>
                     <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
@@ -101,7 +105,7 @@ class NotificationItem extends Component<any> {
                 )
             }
         } else{
-            if(this.props.solved){
+            if(this.state.seen){
                 return (
                     <div>
                     <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>

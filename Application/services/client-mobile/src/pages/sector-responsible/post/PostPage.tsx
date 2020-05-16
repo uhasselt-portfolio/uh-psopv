@@ -114,7 +114,7 @@ class PostView extends Component<any, any> {
       return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
     } else{
       let data = this.props.localStorage.shifts[this.state.show_shift];
-      return <Shift shift={data} post={this.props.localStorage}/>
+      return <Shift shift={data} post={this.props.localStorage} problem_types={this.props.localStorage.problemTypes} />
     }
   }
 
@@ -142,7 +142,9 @@ class PostView extends Component<any, any> {
 
     let shifts = this.props.localStorage.shifts.map((shift: any) => {
       return (<IonSlide>
-              <Shift shift={shift} post={this.props.localStorage}/>
+              <Shift shift={shift} post={this.props.localStorage} 
+              problemTypes={this.props.localStorage.problemTypes}
+              my_user_id={this.props.localStorage.my_user_id}/>
             </IonSlide>)
     })
 
@@ -194,7 +196,7 @@ class PostView extends Component<any, any> {
           <IonToolbar>
             <IonTitle className="align_center"> 
               <div className="text_start">Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</div>
-              <IonButton className="text_end" onClick={() => this.showPopOver()}>shift</IonButton>
+              <IonButton className="text_end" onClick={() => this.showPopOver()}>Ga naar</IonButton>
             </IonTitle>
           </IonToolbar>
         </IonHeader>
