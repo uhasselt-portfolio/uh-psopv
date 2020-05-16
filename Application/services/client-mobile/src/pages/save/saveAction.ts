@@ -211,7 +211,6 @@ function sortMessagesByDate(a: any, b: any){
 }
  function getMessages(responseMessages: any, responseProblems: any, user_id: number, volunteers: any){
 
-    console.log(    responseMessages.data.data       )
     let messages: any[] = []
     responseMessages.data.data.messages.forEach((message: any) => {
         messages.push({
@@ -233,7 +232,6 @@ function sortMessagesByDate(a: any, b: any){
 
     let problems: any[] = []
     responseProblems.data.data.problems.forEach((problem: any) => {
-        console.log(problem)
         if(my_volunteers.includes(problem.planning.user.id)){
             problems.push({
                 type: "Problem",

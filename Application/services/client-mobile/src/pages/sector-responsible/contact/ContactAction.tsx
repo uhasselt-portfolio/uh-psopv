@@ -11,7 +11,6 @@ export const fetchContacts= () => async (dispatch: Redux.Dispatch) => {
         let nonVolunteers = await getListLocalStorage('contacts');
 
         let data = {my_volunteers: volunteers, contacts: nonVolunteers}
-        console.log(data)
 
         dispatch({type: USERS_FETCH_SUCCESS, payload: data})
     } catch(error){

@@ -269,9 +269,6 @@ class Shift  extends Component<any> {
     }
 
     render() {
-        console.log(this.props)
-        let items_data = this.props.items
-        let shift_problems = this.props.problems;
         return (
             <div className="leftAlign">
                 {this.renderShiftInfo()}

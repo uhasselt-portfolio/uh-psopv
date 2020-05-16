@@ -46,7 +46,6 @@ class SelectShiftWindow extends React.Component<any> {
   
 
     renderWindow(){
-        console.log(this.props)
       return(
             <IonList>
                 <IonListHeader>
