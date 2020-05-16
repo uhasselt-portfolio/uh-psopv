@@ -5,8 +5,8 @@ import {createStore} from "redux";
 import reduxThunk from "redux-thunk"
 
 // sector-responsible
-import MessageReducer from './pages/sector-responsible/message/MessageReducer';
-import SendMessageReducer from './pages/sector-responsible/send_message/SendMessageReducer'
+import MessageReducer from './pages/sector-responsible/messages_general/message/MessageReducer';
+import SendMessageReducer from './pages/sector-responsible/messages_general/send_message/SendMessageReducer'
 
 import ContactReducer from './pages/sector-responsible/contact/ContactReducer'
 import PersonReducer from './pages/sector-responsible/person/PersonReducer';
@@ -23,8 +23,8 @@ import VR_SendMessageReducer from './pages/volunteer/send_message/VR_SendMessage
 import {persistStore} from 'redux-persist';
 import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import CounterReducer from './test/testReducer';
 import saveReducer from './pages/save/saveReducer'
+import ProblemsReducer from './pages/sector-responsible/messages_general/problems/ProblemsReducer';
 
 
 const rootReducer = combineReducers({
@@ -36,11 +36,11 @@ const rootReducer = combineReducers({
     sendMessage: SendMessageReducer,
     person: PersonReducer,
     post: PostReducer,
+    problems: ProblemsReducer,
     
     // start: StartReducer,
     VRinfo: InfoReducer,
     vrSendMessage: VR_SendMessageReducer,
-    counter: CounterReducer,
 
     // save
     save: saveReducer

@@ -1,10 +1,10 @@
 import React, { Fragment, useState, Component} from 'react';
-import '../../sector-responsible/message/MessagePage.css';
-import NotificationItem from '../../sector-responsible/message/component/Notification_Item'
+import '../../sector-responsible/messages_general/message/MessagePage.css';
+import NotificationItem from '../../sector-responsible/messages_general/message/component/Notification_Item'
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch, bindActionCreators } from "redux";
-import {fetchMessagesOf} from '../../sector-responsible/message/MessageAction'
+import {fetchMessagesOf} from '../../sector-responsible/messages_general/message/MessageAction'
 
 
 import { IonButton, 

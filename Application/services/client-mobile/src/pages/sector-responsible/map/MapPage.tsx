@@ -47,7 +47,7 @@ class MapPage extends Component<any> {
         <IonSelect
           interface="popover"  
           value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
-            {this.props.localState.posts_sectors.map((sector: number) => {
+            {this.props.localStorage.posts_sectors.map((sector: number) => {
                 return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
             })}
             <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
@@ -61,11 +61,11 @@ class MapPage extends Component<any> {
   handleSectorChange(sector: number){
     let new_data
     if(sector !== -1){
-      new_data = this.props.localState.posts_data.filter((element: any) => {
+      new_data = this.props.localStorage.posts_data.filter((element: any) => {
         return element.sector_id === sector
       })     
     }else{
-      new_data = this.props.localState.posts_data
+      new_data = this.props.localStorage.posts_data
     }
    
     this.setState({...this.state, selected_sector: sector, data_posts: new_data});
@@ -73,8 +73,8 @@ class MapPage extends Component<any> {
 
   renderPosts(){
     if(this.state.data_posts.length <= 0){
-      this.setState({...this.state, data_posts: this.props.localState.posts_data});
-      return this.props.localState.posts_data.map((data: any, index: number) =>{
+      this.setState({...this.state, data_posts: this.props.localStorage.posts_data});
+      return this.props.localStorage.posts_data.map((data: any, index: number) =>{
         if(data.problem === false){
           return (
             <NormalMarker 
@@ -122,8 +122,8 @@ class MapPage extends Component<any> {
   renderContent(){
     console.log("blabla");
     console.log(this.props);
-      if(this.props.localState !== undefined){
-        if(this.props.localState.length <= 0){
+      if(this.props.localStorage !== undefined){
+        if(this.props.localStorage.posts_data.length <= 0){
           return <div> No Posts found. </div>
         } else{
           console.log("jfkls");
@@ -131,15 +131,15 @@ class MapPage extends Component<any> {
             <div className="GoogleMaps">
             {this.renderButtons()}
 
-            <GoogleMapReact
+            {/* <GoogleMapReact
               bootstrapURLKeys={{ key: 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDyMg3eezA_aKnVp1Hvsya23xwxCey32JA' }}
               defaultCenter={this.props.center}
               defaultZoom={this.props.zoom}
             >        
               {this.renderPosts()}
 
-            </GoogleMapReact>
-            {/* <Map problems={[]} users={[]} posts={[]} isMarkerClickable={false}/> */}
+            </GoogleMapReact> */}
+            <Map problems={[]} users={[]} posts={[]} isMarkerClickable={false}/>
           </div>
           )
           
@@ -150,7 +150,6 @@ class MapPage extends Component<any> {
   }
 
   render(){
-    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>
@@ -169,7 +168,7 @@ class MapPage extends Component<any> {
 
 function mapStateToProps(state: any) {
   return({
-    localState: state.list.localState,
+    localStorage: state.list.localStorage,
     arePostsFetched: state.map.arePostsFetched,
     errorMessage: state.map.errorMessage,
     loading: state.map.loading

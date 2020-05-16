@@ -199,7 +199,6 @@ class ListView extends Component<any> {
 
   render()
   {
-    console.log(this.props)
       if(this.props.localStorage != undefined){
         if(this.props.localStorage.posts_sectors <= 0){
           return <div>No interconnection found</div>
