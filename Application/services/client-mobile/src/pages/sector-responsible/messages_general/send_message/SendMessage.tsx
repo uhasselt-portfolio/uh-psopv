@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover, IonToast } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { caretDown } from 'ionicons/icons';
@@ -18,6 +18,7 @@ class SendNotifications extends Component<any> {
     priority: 1,
     selected_type: select_types.nobody,
     showPopover: false,
+    showToast: false
   }
 
   hidePopover(){
@@ -98,9 +99,14 @@ class SendNotifications extends Component<any> {
 
     // await this.props.fetchUsers();
   }
+
+  setShowToast(state: boolean){
+    this.setState({...this.state, showToast: state});
+  }
   
   handleSendMessage(){
     this.props.messageAddMessage(this.state.title, this.state.message, this.state.priority); // TODO USERID
+    this.setShowToast(true)
   }
 
   handleTitleChange(new_title: string | null | undefined){
@@ -126,18 +132,6 @@ class SendNotifications extends Component<any> {
   render(){
     if(this.props.localStorage != undefined){
         return (
-        // <IonPage>
-        //   <IonHeader>
-        //     <IonToolbar>
-        //       <IonTitle>Notificaties versturen</IonTitle>
-        //     </IonToolbar>
-        //   </IonHeader>
-        //   <IonContent>
-        //     <IonHeader collapse="condense">
-        //       <IonToolbar>
-        //         <IonTitle size="large">Blank</IonTitle>
-        //       </IonToolbar>
-        //     </IonHeader>
         <div>
             <IonItem>
               <IonLabel>Ontvanger(s)</IonLabel>
@@ -161,6 +155,13 @@ class SendNotifications extends Component<any> {
             </IonItem>
 
             <IonButton className="sendBtn" onClick={() => this.handleSendMessage()}>Verstuur</IonButton>
+
+            <IonToast
+              isOpen={this.state.showToast}
+              onDidDismiss={() => this.setShowToast(false)}
+              message="Bericht verzonden."
+              duration={400}
+            />
         </div>
            
         //   </IonContent>

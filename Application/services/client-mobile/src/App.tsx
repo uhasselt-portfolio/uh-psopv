@@ -89,7 +89,7 @@ class App extends React.Component {
             </IonTabButton>
             <IonTabButton tab="Notifications" href="/Notifications">
               <IonIcon icon={notificationsOutline} />
-              <IonLabel>Notificaties</IonLabel>
+              <IonLabel>Berichten</IonLabel>
             </IonTabButton>
             <IonTabButton tab="Contacts" href="/Contacts">
               <IonIcon icon={personOutline} />
