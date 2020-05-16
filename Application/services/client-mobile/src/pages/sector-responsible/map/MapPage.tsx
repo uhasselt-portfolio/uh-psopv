@@ -1,17 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { IonButton, 
-    IonListHeader, 
+import { IonButton,  
     IonHeader, 
     IonPage, 
     IonTitle, 
     IonToolbar, 
-    IonList, 
-    IonItem, 
-    IonLabel,
-    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonIcon, IonSelect, IonSelectOption } from '@ionic/react';
-import { Link } from 'react-router-dom';
-import { caretDown, call, mail } from 'ionicons/icons';
+    IonContent, IonSelect, IonSelectOption } from '@ionic/react';
 
 import './MapPage.css';
 import GoogleMapReact from 'google-map-react';
@@ -20,16 +14,8 @@ import ProblemMarker from './components/ProblemMarker';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
+import Map from './components/Map';
 
-const testMarker = (props: any) => {
-  const { color, name, id } = props;
-  return (
-    <div className="normal_marker"
-      style={{ backgroundColor: color, cursor: 'pointer'}}
-      title={name}
-    ></div>
-  );
-};
 
 class MapPage extends Component<any> {
 
@@ -134,11 +120,13 @@ class MapPage extends Component<any> {
   }
 
   renderContent(){
-
+    console.log("blabla");
+    console.log(this.props);
       if(this.props.localState !== undefined){
         if(this.props.localState.length <= 0){
           return <div> No Posts found. </div>
         } else{
+          console.log("jfkls");
           return (
             <div className="GoogleMaps">
             {this.renderButtons()}
@@ -151,10 +139,13 @@ class MapPage extends Component<any> {
               {this.renderPosts()}
 
             </GoogleMapReact>
+            {/* <Map problems={[]} users={[]} posts={[]} isMarkerClickable={false}/> */}
           </div>
           )
           
         }
+      } else {
+        console.log("eeeee");
       }
   }
 
