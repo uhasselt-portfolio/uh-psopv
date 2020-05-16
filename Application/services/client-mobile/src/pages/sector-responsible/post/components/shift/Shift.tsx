@@ -8,11 +8,11 @@ import { IonButton,
     IonCard, IonIcon, IonSlide, IonRow, IonCol, IonGrid, IonItem, IonLabel, IonCheckbox, IonInput, IonTextarea } from '@ionic/react';
 import './Shift.css';
 import { arrowBack, arrowForward, caretDown } from 'ionicons/icons';
-import {formatDateTime} from '../../../common_functions/date_formatter';
-import {itemToggle, problemToggle} from '../PostAction' 
+import {formatDateTime} from '../../../../common_functions/date_formatter';
+import {itemToggle, problemToggle} from '../../PostAction' 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {resetActionList, getActionList, addObjectToActionList} from '../../../save/saveFunction'
+import {resetActionList, getActionList, addObjectToActionList} from '../../../../save/saveFunction'
 
 
   
@@ -49,20 +49,13 @@ class Shift  extends Component<any> {
     }
 
     handleToggleCheckListItem(item_id: Number, item_value: boolean){
-        if(!navigator.onLine){
-            addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id, null)
-        }
-        this.props.itemToggle(item_id, this.props.shift_id, item_value)
+        addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id, null)
         console.log("toggled item")
     }
 
     toggleProblemSolved(problem_id: number, item_value: boolean){
-        if(!navigator.onLine){
-            console.log("toggled problem OFFLINE", item_value)
-            addObjectToActionList('https://psopv.herokuapp.com/api/problem/toggle-solve/' + problem_id, null)
-        }
+        addObjectToActionList('https://psopv.herokuapp.com/api/problem/toggle-solve/' + problem_id, null)
         console.log("toggled problem", item_value)
-        this.props.problemToggle(problem_id, this.props.shift_id, item_value)
     }
 
 
@@ -75,7 +68,7 @@ class Shift  extends Component<any> {
             <IonItem key={i}>
                 <IonLabel>{item.item_from}: {item.item_name}</IonLabel>
                     <IonCheckbox slot="end" value={item.item_name} checked={!item.item_lost}
-                        onIonChange={e => this.handleToggleCheckListItem(item.id, !item.item_lost)}
+                        onIonChange={e => this.handleToggleCheckListItem(item.item_id, !item.item_lost)}
                     />
             </IonItem>
             ))}
@@ -227,7 +220,7 @@ class Shift  extends Component<any> {
                         {problem.problem_title}, {problem.problem_description}
                     </IonCol>
                     <IonCol className="rightContent" size="4">
-                        <IonButton onClick={() => this.toggleProblemSolved(problem.id, !problem.solved)}>Ok</IonButton>
+                        <IonButton onClick={() => this.toggleProblemSolved(problem.problem_id, !problem.problem_solved)}>Ok</IonButton>
                     </IonCol>
                     </IonRow>
                     <IonRow>
@@ -276,11 +269,8 @@ class Shift  extends Component<any> {
     }
 
     render() {
-        console.log(this.props)
-        let items_data = this.props.items
-        let shift_problems = this.props.problems;
         return (
-            <div>
+            <div className="leftAlign">
                 {this.renderShiftInfo()}
                 {this.renderCheckbox()}
                 {this.renderProblemInfo()}

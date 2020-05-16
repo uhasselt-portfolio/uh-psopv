@@ -21,9 +21,7 @@ class ContactItem  extends Component<any> {
         super(props)
     }
 
-    render() {
-        console.log(this.props)
-        
+    render() {        
         function getPerson(props: any): string {
             return '/PersonPage/'+props.user_id
         }

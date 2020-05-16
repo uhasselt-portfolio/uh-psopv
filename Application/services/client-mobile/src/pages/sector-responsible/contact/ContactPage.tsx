@@ -55,7 +55,6 @@ class Contacts extends Component<any> {
 
 
   render(){
-    console.log(this.props)
     return (
       <IonPage>
         <IonHeader>
@@ -91,7 +90,6 @@ class Contacts extends Component<any> {
 
 
 function mapStateToProps(state: any) {
-  console.log("state CONTACT", state)
   return({
     localStorage: state.contact.areUsersFetched,
   })

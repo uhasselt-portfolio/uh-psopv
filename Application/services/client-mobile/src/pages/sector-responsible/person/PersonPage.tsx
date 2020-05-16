@@ -14,7 +14,6 @@ class PersonPage extends Component<any>{
       }
     
       componentDidMount(){
-        console.log(this.props)
         this.props.fetchUserById(this.props.match.params.id);
 
       }

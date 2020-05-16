@@ -32,3 +32,8 @@
     border-color: lightgrey;
     background-color: lightgrey;
 }
+
+.leftAlign{
+    text-align: left;
+    align-content: top;
+}

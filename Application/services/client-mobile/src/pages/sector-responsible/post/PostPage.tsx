@@ -1,49 +1,71 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol } from '@ionic/react';
-import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol, IonPopover } from '@ionic/react';
+import React, { Fragment, useState, Component, ReactNode, useEffect, useRef } from 'react';
 import './PostPage.css';
-import Shift from './shift/Shift';
+import Shift from './components/shift/Shift';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPlanningsFromPost} from './PostAction'
-import { caretDown, arrowBack, arrowForward } from 'ionicons/icons';
+import { caretDown, arrowBack, arrowForward, constructOutline } from 'ionicons/icons';
 import { formatDateTime } from '../../common_functions/date_formatter';
-
-const checkboxList = [
-  { val: 'Fluo Band', isChecked: false },
-  { val: 'Plaatje', isChecked: false },
-  { val: 'Michiel', isChecked: false },
-  { val: 'Wouter', isChecked: false },
-];
-
+import { Switch } from 'react-router';
+import SelectShiftWindow from './components/SelectShiftWindow';
 
 const slideOpts = {
   direction: 'horizontal',
   speed: 400,
 };
 
+let swiper: any = null;
+
+const init = async function(this: any) {
+    swiper = await this.getSwiper();
+};
+
+let selectShiftWindow: any = null;
+
+
+
 class PostView extends Component<any, any> {
+  constructor(props: any){
+    super(props)
+
+    this.getData = this.getData.bind(this);
+  }
+
   state = {
     checkListActive: false,
     show_shift: -1, // niets
-    current_shift: -1 
+    current_shift: -1, 
+    showPopover: false,
+    swiper: null
   }
 
-  constructor(props: any){
-    super(props)
+  hidePopover(){
+    this.setState({...this.state, showPopover: false});
   }
+
+  showPopOver(){
+      this.setState({...this.state, showPopover: true});
+  }
+
+
+
 
   handleShiftSwitch(shift: number){
     this.setState({...this.state, show_shift: shift});
   }
 
-  getNextShift(){
+  getNextShift(swiper: any){
+    swiper.slideNext();
     if (this.state.show_shift < this.props.localStorage.shifts.length - 1){
       let new_shift = this.state.show_shift + 1
       this.handleShiftSwitch(new_shift);
     }
   }
 
-  getPreviousShift(){
+  getPreviousShift(swiper: any){
+    console.log(swiper)
+    swiper.slidePrev();
     if (this.state.show_shift > 0) {
       let new_shift = this.state.show_shift - 1
       this.handleShiftSwitch(new_shift);
@@ -96,12 +118,84 @@ class PostView extends Component<any, any> {
     }
   }
 
+  handleSlideChange(slider: any){
+    // this.getActiveIndex()
+    if(slider != null){
+      console.log("changed slide", slider.activeIndex)
+      this.handleShiftSwitch(slider.activeIndex)
+    }
+  }
+
+  setShiftActive(shift_id: number){
+    // this.getActiveIndex()
+      this.handleShiftSwitch(shift_id)
+    
+  }
+  
+
+  renderShifts(){
+    const slideOpts = {
+      initialSlide: 0,
+      speed: 400,
+      direction: 'horizontal',
+    };
+
+    let shifts = this.props.localStorage.shifts.map((shift: any) => {
+      return (<IonSlide>
+              <Shift shift={shift} post={this.props.localStorage}/>
+            </IonSlide>)
+    })
+
+
+    return (
+    <IonSlides className="FullWidth" onIonSlidesDidLoad={init} pager={true} options={slideOpts} onIonSlideDidChange={()=> this.handleSlideChange(swiper)}>
+      {shifts}
+    </IonSlides>
+    )
+  }
+
+  getData(val: any){
+    // do not forget to bind getData in constructor
+    console.log(val.shift_id);
+    console.log(swiper)
+
+    let index_shift = 0;
+    this.props.localStorage.shifts.map((element: any, index: number) => {
+      if(element.shift_id == val.shift_id){
+        index_shift = index;
+      }
+    })
+    
+
+    this.setShiftActive(val.shift_id);
+    swiper.slideTo(index_shift);
+    this.hidePopover();
+  }
+
+  renderSelectShiftWindow(){
+    selectShiftWindow = <SelectShiftWindow shifts={this.props.localStorage.shifts} sendData={this.getData}/>
+    console.log(selectShiftWindow)
+    return(
+    <>
+      <IonPopover
+        isOpen={this.state.showPopover}
+        onDidDismiss={() => this.hidePopover()}
+      >
+      {selectShiftWindow}
+      </IonPopover>
+    </>
+    )
+  }
+
   renderBasis(){
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</IonTitle>
+            <IonTitle className="align_center"> 
+              <div className="text_start">Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</div>
+              <IonButton className="text_end" onClick={() => this.showPopOver()}>shift</IonButton>
+            </IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
@@ -111,18 +205,18 @@ class PostView extends Component<any, any> {
             </IonToolbar>
           </IonHeader>
           <div className="flexrow">
-            <IonButton onClick={() => this.getPreviousShift()}><IonIcon icon={arrowBack}/></IonButton>
+            <IonButton onClick={() => this.getPreviousShift(swiper)}><IonIcon icon={arrowBack}/></IonButton>
                           <IonCardTitle>
                               {this.getCurrentShiftText()}
                           </IonCardTitle>
-            <IonButton onClick={() => this.getNextShift()}><IonIcon icon={arrowForward}/></IonButton>
+            <IonButton onClick={() => this.getNextShift(swiper)}><IonIcon icon={arrowForward}/></IonButton>
           </div>
-        
-          {this.renderPost()}
+          {this.renderShifts()}
+          {this.renderSelectShiftWindow()}
+          
         </IonContent>
       </IonPage>
     );
-    
   }
 
   render(){
