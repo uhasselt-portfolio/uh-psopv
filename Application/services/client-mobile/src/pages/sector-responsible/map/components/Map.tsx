@@ -177,8 +177,10 @@ class MyMap extends React.Component<IProps> {
         this.setState({
             ...this.state,
             map: mymap
-        })
+        });
+        setTimeout(function(){ mymap.invalidateSize()}, 1000);
     }
+
 
     /**
      * function will update the markers when the redux props change
@@ -231,7 +233,7 @@ class MyMap extends React.Component<IProps> {
 
     return (
         <div id="mapid" style={{height: '700px'}}>
-            
+
         </div>
       )
   }

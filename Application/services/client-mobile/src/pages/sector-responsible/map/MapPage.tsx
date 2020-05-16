@@ -122,8 +122,8 @@ class MapPage extends Component<any> {
   renderContent(){
     console.log("blabla");
     console.log(this.props);
-      if(this.props.localState !== undefined){
-        if(this.props.localState.length <= 0){
+      if(this.props.localStorage !== undefined){
+        if(this.props.localStorage.posts_data.length <= 0){
           return <div> No Posts found. </div>
         } else{
           console.log("jfkls");
@@ -131,15 +131,15 @@ class MapPage extends Component<any> {
             <div className="GoogleMaps">
             {this.renderButtons()}
 
-            <GoogleMapReact
+            {/* <GoogleMapReact
               bootstrapURLKeys={{ key: 'https://maps.googleapis.com/maps/api/js?v=3.exp&key=AIzaSyDyMg3eezA_aKnVp1Hvsya23xwxCey32JA' }}
               defaultCenter={this.props.center}
               defaultZoom={this.props.zoom}
             >        
               {this.renderPosts()}
 
-            </GoogleMapReact>
-            {/* <Map problems={[]} users={[]} posts={[]} isMarkerClickable={false}/> */}
+            </GoogleMapReact> */}
+            <Map problems={[]} users={[]} posts={[]} isMarkerClickable={false}/>
           </div>
           )
           
