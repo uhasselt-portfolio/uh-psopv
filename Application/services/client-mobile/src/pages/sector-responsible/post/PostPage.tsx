@@ -201,11 +201,6 @@ class PostView extends Component<any, any> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonHeader collapse="condense">
-            <IonToolbar>
-              <IonTitle size="large">Blank</IonTitle>
-            </IonToolbar>
-          </IonHeader>
           <div className="flexrow">
             <IonButton onClick={() => this.getPreviousShift(swiper)}><IonIcon icon={arrowBack}/></IonButton>
                           <IonCardTitle>

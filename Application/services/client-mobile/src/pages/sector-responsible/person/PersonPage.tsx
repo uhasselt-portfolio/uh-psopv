@@ -133,12 +133,6 @@ class PersonPage extends Component<any>{
                 </IonToolbar>
             </IonHeader>
             <IonContent>
-                <IonHeader collapse="condense">
-                <IonToolbar>
-                    <IonTitle size="large">Blank</IonTitle>
-                </IonToolbar>
-                </IonHeader>
-
             {this.renderContactInfo(user)}
             {/* {this.renderPukkelpopInfo(user)}
             {this.renderProblemenInfo(user)} */}

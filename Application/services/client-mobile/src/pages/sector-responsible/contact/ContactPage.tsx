@@ -62,12 +62,6 @@ class Contacts extends Component<any> {
             <IonTitle>Contacts</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent>
-          <IonHeader collapse="condense">
-            <IonToolbar>
-              <IonTitle size="large">Blank</IonTitle>
-            </IonToolbar>
-          </IonHeader>
           <IonContent>
   
       {/*-- List of Post Items --*/}
@@ -80,8 +74,7 @@ class Contacts extends Component<any> {
         </IonCard>
       </IonList>
     </IonContent>
-          
-        </IonContent>
+
       </IonPage>
     );
   }
