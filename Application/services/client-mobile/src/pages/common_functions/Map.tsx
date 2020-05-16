@@ -5,7 +5,7 @@ import { Redirect } from 'react-router-dom';
 var problemIcon = L.icon({
     iconUrl: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
     iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
-    popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
+    popupAnchor:  [-500, -56] // point from which the popup should open relative to the iconAnchor
 });
 var postIcon = L.icon({
     iconUrl: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
@@ -22,7 +22,11 @@ interface IProps {
     problems : any[][],
     users: any[],
     posts: any[],
-    isMarkerClickable: boolean
+    isMarkerClickable: boolean,
+    containerId: string,
+    centerLat: number,
+    centerLong: number,
+    mapHeight: number
 }
 
 interface IState {
@@ -101,6 +105,7 @@ class MyMap extends React.Component<IProps> {
      * if mulitple porblems are on the same post, puts them together
      */
     addproblemMarkers = (problems: any[][] ,map : L.Map) => {
+        console.log(problems);
         for (let i = 0; i < problems.length; ++i) {
             if (problems[i].length === 1) {
                 let marker : L.Marker = L.marker([problems[i][0].latitude, problems[i][0].longitude], {icon: problemIcon})
@@ -157,8 +162,8 @@ class MyMap extends React.Component<IProps> {
      * creates the map and attatches all the problems, posts, users as markers
      */
     componentDidMount = () => {
-        var latlng1 = L.latLng(50.962595, 5.358503);
-        var mymap : L.Map = L.map('mapid').setView(latlng1, 18);
+        var latlng1 = L.latLng(this.props.centerLat, this.props.centerLong);
+        var mymap : L.Map = L.map(this.props.containerId).setView(latlng1, 18);
 
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 25,
@@ -229,10 +234,8 @@ class MyMap extends React.Component<IProps> {
         }
       }
     
-      console.log("rendering");
-
     return (
-        <div id="mapid" style={{height: '700px'}}>
+        <div id={this.props.containerId} style={{height: this.props.mapHeight.toString() + 'px'}}>
 
         </div>
       )
