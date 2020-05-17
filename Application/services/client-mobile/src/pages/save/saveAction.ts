@@ -152,8 +152,9 @@ function sortMessagesByDate(a: any, b: any){
                 /* Add User Names */
                 let userNames: any[] = []; 
                 sameShift.forEach((element: any) => {
+                    console.log(element)
                     const name = element.user.first_name + " " + element.user.last_name
-                    userNames.push(name)
+                    userNames.push({name: name, user_id: element.user.id, phone_number: element.phone_number, email: element.email, planning_id: element.id})
                 })
 
                 /* Add items */
@@ -195,7 +196,8 @@ function sortMessagesByDate(a: any, b: any){
                     });
                 })
                 
-                userShifts.push({shift_id: shift_id, 
+                userShifts.push({
+                    shift_id: shift_id, 
                     shift_start: shifts_data.shift_begin,
                     shift_end: shifts_data.shift_end,
                     shift_users: userNames,shift_items: items, shift_problems: problems});
@@ -274,6 +276,8 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
         const user_id = await getUserId();
         const responseMessages = await new Database().fetchMessagesFrom(user_id);
         const default_sector = await getDefaultSector();
+        const problemTypes = await new Database().fetchAllProblemTypes();
+
 
         let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
         let nonVolunteers = getNonVolunteers(responseUsers, user_id);
@@ -292,11 +296,7 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
         setListLocalStorage('sectors', postsData.posts_sectors);
         setListLocalStorage('messages', message);
         setListLocalStorage('problems', problems);
-
-
-
-
-
+        setListLocalStorage('problem_types', problemTypes.data.data.problemTypes);
 
         resetActionList();
         dispatch({type: UNROLL_ACTIONS})

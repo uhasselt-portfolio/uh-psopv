@@ -27,7 +27,7 @@ class Notifications extends Component<any> {
   }
 
   componentDidMount(){
-    this.props.fetchMessagesOf(2); // TODO USERID
+    this.props.fetchMessagesOf(); // TODO USERID
   }
 
   renderList(){

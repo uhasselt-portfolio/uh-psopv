@@ -131,6 +131,13 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async fetchAllProblemTypes() {
+        const url = this.getRestApiEndpoint() + '/api/problem_type/fetch/all';
+
+        return await axios.get(url)
+    }
+
+
     async fetchSectorOfUser(user_id: number) {
         const url = this.getRestApiEndpoint() + '/api/sector/fetch/user/' + user_id;
 

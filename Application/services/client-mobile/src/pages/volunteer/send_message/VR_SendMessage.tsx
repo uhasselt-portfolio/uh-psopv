@@ -75,14 +75,7 @@ class VRSendMessagePage extends Component<any> {
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonHeader collapse="condense">
-            <IonToolbar>
-              <IonTitle size="large">Blank</IonTitle>
-            </IonToolbar>
-          </IonHeader>
       
-
-
           <IonItem>
             <IonLabel>Ontvanger</IonLabel>
             <IonSelect interface="popover" value={this.state.send_to_id} placeholder="Selecteer" onIonChange={e => this.handleSendToChange(e.detail.value)}>

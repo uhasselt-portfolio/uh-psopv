@@ -5,7 +5,7 @@ import { IonButton,
     IonCardHeader,
     IonCardContent,
     IonCardTitle,
-    IonCard, IonIcon, IonSlide, IonRow, IonCol, IonGrid, IonItem, IonLabel, IonCheckbox, IonInput, IonTextarea } from '@ionic/react';
+    IonCard, IonIcon, IonSlide, IonRow, IonCol, IonGrid, IonItem, IonLabel, IonCheckbox, IonInput, IonTextarea, IonList, IonPopover, IonToast } from '@ionic/react';
 import './Shift.css';
 import { arrowBack, arrowForward, caretDown } from 'ionicons/icons';
 import {formatDateTime} from '../../../../common_functions/date_formatter';
@@ -13,21 +13,42 @@ import {itemToggle, problemToggle} from '../../PostAction'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {resetActionList, getActionList, addObjectToActionList} from '../../../../save/saveFunction'
+import ShiftProblem from './ShiftProblem';
+import AddProblem from './AddProblem';
 
 
-  
 class Shift  extends Component<any> {
     constructor(props: any) {
         super(props);
+
+        this.getDataAddProblem = this.getDataAddProblem.bind(this);
     }
     
 
     state = {
         checkListActive: false,
         problemListActive: false,
+        problemStates: [],
         problemTitle: "",
-        problemContent: ""
+        problemContent: "",
+        showAddProblem: false,
+        showToast: false,
     }
+
+    getDataAddProblem(val: any){
+        // do not forget to bind getData in constructor
+        console.log(val);
+        let params = {planning_id: val.selected_planning_id,
+                    problem_type_id: val.problem_id,
+                    created_by: this.props.my_user_id,
+                    created_by_id: this.props.my_user_id}
+
+        addObjectToActionList('https://psopv.herokuapp.com/api/problem/add', params)
+    
+        this.setShowToast(true);
+      }
+
+      
 
     handleSendMessage(){
         this.props.addProblem(this.state.problemTitle, this.state.problemContent); // TODO USERID
@@ -51,11 +72,6 @@ class Shift  extends Component<any> {
     handleToggleCheckListItem(item_id: Number, item_value: boolean){
         addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id, null)
         console.log("toggled item")
-    }
-
-    toggleProblemSolved(problem_id: number, item_value: boolean){
-        addObjectToActionList('https://psopv.herokuapp.com/api/problem/toggle-solve/' + problem_id, null)
-        console.log("toggled problem", item_value)
     }
 
 
@@ -108,9 +124,9 @@ class Shift  extends Component<any> {
         let names_array = this.props.shift.shift_users
         var names = ""
         for(var i = 0; i < names_array.length - 1; ++i){
-            var names = names.concat(names_array[0] + " en ")
+            var names = names.concat(names_array[i].name + " en ")
         }
-        var names = names.concat(names_array[names_array.length - 1])
+        var names = names.concat(names_array[names_array.length - 1].name)
 
         return names
     }
@@ -188,10 +204,13 @@ class Shift  extends Component<any> {
         let checklist_data = this.props.shift.shift_items
         if(this.state.problemListActive){
         return(
-            <IonCardContent>
-                <IonGrid>
+            <IonCardContent className="noPadding">
+                <IonItem>
+                    <IonButton className="bigSize" onClick={() => this.showAddProblem()}> Voeg een probleem toe </IonButton>
+                </IonItem>
+                <IonList>
                     {this.renderProblems()}
-                </IonGrid>
+                </IonList>
             </IonCardContent>
         )
         } else{
@@ -203,55 +222,16 @@ class Shift  extends Component<any> {
         let shift_problems = this.props.shift.shift_problems
         console.log(shift_problems)
 
-        return shift_problems.map((problem: any) => {
-            if(problem.problem_solved === false){
-                return (
-                    <IonGrid className="grid" key={problem.problem_id}>
-                    <IonRow key={problem.problem_id}> 
-                        <IonCol>
-                            {problem.created_by_name}
-                        </IonCol>
-                        <IonCol className="rightContent">
-                            {formatDateTime(problem.created_at)}
-                        </IonCol>
-                    </IonRow>
-                    <IonRow>
-                    <IonCol>
-                        {problem.problem_title}, {problem.problem_description}
-                    </IonCol>
-                    <IonCol className="rightContent" size="4">
-                        <IonButton onClick={() => this.toggleProblemSolved(problem.problem_id, !problem.problem_solved)}>Ok</IonButton>
-                    </IonCol>
-                    </IonRow>
-                    <IonRow>
-                    
-                    </IonRow>
-                    </IonGrid>
-                )
-            } else{
-                return (
-                    <IonGrid className="gridSolved">
-                    <IonRow key={problem.id}> 
-                        <IonCol>
-                            {problem.created_by_name}
-                        </IonCol>
-                        <IonCol className="rightContent">
-                            {formatDateTime(problem.created_at)}
-                        </IonCol>
-                    </IonRow>
-                    <IonRow>
-                    <IonCol>
-                    {problem.problem_title}, {problem.problem_description}
-                    </IonCol>
-                    </IonRow>
-                    <IonRow>
-                    
-                    </IonRow>
-                    </IonGrid>
-                )
-            }
+        let shift_problems_not_solved = shift_problems.filter((problem: any) => {return problem.problem_solved == true})
+        let shift_problems_solved = shift_problems.filter((problem: any) => {return problem.problem_solved == false})
+        let problems = shift_problems_solved.concat(shift_problems_not_solved);
+
+        return problems.map((problem: any) => {
+            return (
+                <ShiftProblem {...problem} />
+            )
         })
-        
+    
     }
 
     renderProblemInfo(){
@@ -268,12 +248,43 @@ class Shift  extends Component<any> {
         )
     }
 
+
+
+    hideAddProblem(){
+        this.setState({...this.state, showAddProblem: false});
+    }
+
+    showAddProblem(){
+        this.setState({...this.state, showAddProblem: true}); 
+    }
+
+    setShowToast(state: boolean){
+        this.setState({...this.state, showAddProblem: false, showToast: true});
+    }
+
     render() {
+        console.log(this.props)
         return (
             <div className="leftAlign">
                 {this.renderShiftInfo()}
                 {this.renderCheckbox()}
                 {this.renderProblemInfo()}
+                <>
+                <IonPopover
+                  isOpen={this.state.showAddProblem}
+                  onDidDismiss={() => this.hideAddProblem()}
+                >
+                <AddProblem problemTypes={this.props.problemTypes} users={this.props.shift.shift_users} sendData={this.getDataAddProblem}/>
+                </IonPopover>
+                </>
+                <IonToast
+                isOpen={this.state.showToast}
+                onDidDismiss={() => this.setShowToast(false)}
+                message="Probleem is gemeld."
+                duration={400}
+                />
+                
+                
             </div>    
             ) 
     }  
