@@ -73,6 +73,7 @@ export default function (state: State = initialState, action : AnyAction): State
                 loading: false,
                 messages: [...otherMessages, newMessage],
                 isOverviewFetched: true,
+                isMapFetched: true,
                 errorMessage: ""
             }
         }
