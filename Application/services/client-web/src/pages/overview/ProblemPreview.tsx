@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Paper,Grid, Button, ListItem} from '@material-ui/core';
+import {Paper,Grid, ListItem} from '@material-ui/core';
 import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import {Redirect} from 'react-router-dom';
 import './ProblemPreview.css'
@@ -8,16 +8,7 @@ const PaperStyle = {
     margin: '10px',
     background: '#eee'
 }
-const ButtonStyle = {
-    background: 'rgb(3,57,108)',
-    color: 'white',
-}
-const LeftPartStyle = {
-    width: '70%'
-}
-const RightPartStyle = {
-    width: '30%'
-}
+
 
 interface IState {
     redirecting: boolean

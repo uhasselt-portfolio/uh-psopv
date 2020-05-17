@@ -13,7 +13,8 @@ import MyMap from '../map/Map';
 const stylePaper = {
     margin: '1vw',
     padding: '1vw',
-    height: '100vh',
+    minHeight: '100vh',
+    height: '100%',
 } 
 
 type Props = LinkStateProps & LinkDispatchToProps;

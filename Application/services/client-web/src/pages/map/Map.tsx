@@ -4,21 +4,21 @@ import PostDataInterface from '../../interfaces/PostDataInterface';
 import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import UserDataInterface from '../../interfaces/UserDataInterface';
 import { Redirect } from 'react-router-dom';
+import {Map, TileLayer, Marker, Popup} from 'react-leaflet';
+import { Button } from '@material-ui/core';
 
 var problemIcon = L.icon({
     iconUrl: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-    iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
-    popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
+    iconAnchor:   [15, 20], // point of the icon which will correspond to marker's location
+    //popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
 });
 var postIcon = L.icon({
     iconUrl: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-    iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
-    popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
+    iconAnchor:   [15, 20], // point of the icon which will correspond to marker's location
 });
 var userIcon = L.icon({
     iconUrl: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-    iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
-    popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
+    iconAnchor:   [15, 20], // point of the icon which will correspond to marker's location
 }) 
 
 interface IProps {
@@ -34,11 +34,7 @@ interface IState {
     postClicked: boolean,
     post: PostDataInterface | null,
     userClicked: boolean,
-    user: UserDataInterface | null,
-    map: L.Map | null,
-    markers: L.Marker[],
-    updating: boolean,
-    markergroup: L.FeatureGroup
+    user: UserDataInterface | null
 }
 
 class MyMap extends React.Component<IProps> {
@@ -49,10 +45,6 @@ class MyMap extends React.Component<IProps> {
         post: null,
         userClicked: false,
         user: null,
-        map: null,
-        markers: [],
-        updating: false,
-        markergroup: new L.FeatureGroup()
     }
 
     /**
@@ -63,20 +55,6 @@ class MyMap extends React.Component<IProps> {
             problem: problem,
             problemClicked: true
         })
-    }
-
-    /**
-     * function to show all the problems on a specific post on a click
-     */
-    onMultipleProblemsClicked = (problems: ProblemDataInterface[],map : L.Map,marker: L.Marker) => { //TODO
-        let popup : string = "";
-        // for (let i = 0; i < problems.length; ++i) {
-        //     popup = popup + '<Button onclick={fun()} >' + problems[i].problemType + '</Button></br>';
-        // }
-       for (let i = 0; i < problems.length; ++i) {
-           popup = popup + '<div>' + problems[i].problemType + '</div></br>';
-       }
-        marker.bindPopup(popup);
     }
 
     /**
@@ -100,105 +78,90 @@ class MyMap extends React.Component<IProps> {
     }
 
     /**
-     * adds all the problems the component got in its props to the map
+     * returns all the problemMarkers the component got in its props
      * if mulitple porblems are on the same post, puts them together
      */
-    addproblemMarkers = (problems: ProblemDataInterface[][] ,map : L.Map) => {
-        for (let i = 0; i < problems.length; ++i) {
+    getProblemMarkers = (problems: ProblemDataInterface[][]) : Array<JSX.Element> => {
+        let markers : Array<JSX.Element> = [];
+
+        for (let i = 0; i < problems.length; ++i){
             if (problems[i].length === 1) {
-                let marker : L.Marker = L.marker([problems[i][0].latitude, problems[i][0].longitude], {icon: problemIcon})
-                    .bindTooltip(problems[i][0].problemType, {
-                        permanent: true,
-                        direction: 'top'
-                    })
-                    .on('click',() => {this.onProblemClicked(problems[i][0])});
-                marker.addTo(this.state.markergroup);
+                markers.push(
+                    <Marker
+                        position={L.latLng(problems[i][0].latitude, problems[i][0].longitude)}
+                        icon={problemIcon}
+                    >
+                        <Popup>
+                            <Button onClick={() => {this.onProblemClicked(problems[i][0])}} variant="outlined">{problems[i][0].problemType}</Button>
+                        </Popup>
+                    </Marker>
+                )
             } else {
-                let marker : L.Marker = L.marker([problems[i][0].latitude, problems[i][0].longitude], {icon: problemIcon})
-                    .bindTooltip("Problemen", {
-                        permanent: true,
-                        direction: 'top'
-                    })
-                marker.on('click',() => {this.onMultipleProblemsClicked(problems[i],map,marker)});
-                marker.addTo(this.state.markergroup);
+                let popup : Array<JSX.Element> = problems[i].map(problem => {
+                    return (
+                        <Button onClick={() => this.onProblemClicked(problem)} variant="outlined" style={{margin:"3px"}}>
+                            {problem.problemType}</Button>
+                    )
+                })
+                markers.push(
+                    <Marker
+                    position={L.latLng(problems[i][0].latitude, problems[i][0].longitude)}
+                    icon={problemIcon}
+                    >
+                        <Popup>
+                            {popup}
+                        </Popup>
+                    </Marker>
+                )
             }
         }
+
+        return markers;
     }
 
     /**
-     * adds all the posts the component got in its props to the map
+     * returns all the postMarkers the component got in its props
      * these are all the posts without a problem, to prevent overlap
      */
-    addPostMarkers = (posts: PostDataInterface[], map : L.Map) => {
+    getPostMarkers = (posts: PostDataInterface[]) : Array<JSX.Element> => {
+        let markers : Array<JSX.Element> = [];
         for (let i = 0; i < posts.length; ++i) {
-            let marker : L.Marker = L.marker([posts[i].latitude,posts[i].longitude], {icon: postIcon})
-            .bindTooltip(posts[i].title, {
-                permanent: true,
-                direction: 'top'
-            })
-            .on('click',() => {this.onPostClicked(posts[i])});
-            marker.addTo(this.state.markergroup);
+            markers.push(
+                <Marker
+                    position={new L.LatLng(posts[i].latitude,posts[i].longitude)}
+                    icon={postIcon}
+                >
+                    <Popup>
+                        {posts[i].title}
+                        <br></br>
+                        <Button onClick={() => {this.onPostClicked(posts[i])}} variant="outlined">Details</Button>
+                    </Popup>
+                </Marker>
+            );
         }
+        return markers;
     }
 
     /**
-     * adds all the users the component got int its props to the map
+     * returns all the userMarkers the component got int its props
      */
-    addUserMarkers = (users: UserDataInterface[],map: L.Map) => {
+    getUserMarkes = (users: UserDataInterface[]) : Array<JSX.Element> => {
+        let markers : Array<JSX.Element> = [];
         for (let i = 0; i < users.length; ++i) {
-            let marker : L.Marker = L.marker([users[i].latitude,users[i].longitude], {icon: userIcon})
-            .bindTooltip(users[i].name, {
-                permanent: true,
-                direction: 'top'
-            })
-            .on('click',() => {this.onUserClicked(users[i])});
-            marker.addTo(this.state.markergroup);
+            markers.push( 
+                <Marker 
+                    position={new L.LatLng(users[i].latitude, users[i].longitude)}
+                    icon={userIcon}
+                >
+                    <Popup>
+                        {users[i].name}
+                        <br></br>
+                        <Button onClick={() => {this.onUserClicked(users[i])}} >Details</Button>
+                    </Popup>
+                </Marker>
+            );
         }
-    }
-
-    /**
-     * creates the map and attatches all the problems, posts, users as markers
-     */
-    componentDidMount = () => {
-        var latlng1 = L.latLng(50.962595, 5.358503);
-        var mymap : L.Map = L.map('mapid').setView(latlng1, 18);
-
-        L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
-            maxZoom: 25,
-            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
-                '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-                'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-            id: 'mapbox/streets-v11',
-            tileSize: 512,
-            zoomOffset: -1
-        }).addTo(mymap);
-
-        this.addproblemMarkers(this.props.problems,mymap);
-        this.addPostMarkers(this.props.posts,mymap);
-        this.addUserMarkers(this.props.users,mymap);
-        mymap.addLayer(this.state.markergroup);
-        this.setState({
-            ...this.state,
-            map: mymap
-        })
-    }
-
-    /**
-     * function will update the markers when the redux props change
-     */
-    componentWillReceiveProps = (nextProps : IProps) => {
-        console.log(nextProps);
-        if (this.props !== nextProps) {
-            console.log("different");
-            if (this.state.map !== null) {
-                this.state.map.removeLayer(this.state.markergroup);
-                this.state.markergroup = new L.FeatureGroup();
-                this.state.markergroup.addTo(this.state.map);
-                this.addproblemMarkers(nextProps.problems,this.state.map);
-                this.addPostMarkers(nextProps.posts,this.state.map);
-                this.addUserMarkers(nextProps.users,this.state.map);
-            }
-        }
+        return markers;
     }
 
   render () {
@@ -222,18 +185,30 @@ class MyMap extends React.Component<IProps> {
         if (this.state.userClicked) {
             return (
                 <Redirect to={{
-                    pathname: '/Data/User',
+                    pathname: '/Data/Users',
                     state: this.state.user
                 }} 
                 />
             )
         }
       }
-    
+
+      let userMarkers : Array<JSX.Element> = this.getUserMarkes(this.props.users);
+      let postMarkers : Array<JSX.Element> = this.getPostMarkers(this.props.posts);
+      let problemMarkers : Array<JSX.Element> = this.getProblemMarkers(this.props.problems);
+
     return (
-        <div id="mapid" style={{height: '700px'}}>
-            
-        </div>
+        <Map center={L.latLng(50.962595, 5.358503)} zoom={18} style={{height: '700px'}}>
+            <TileLayer
+            attribution={'&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
+                     '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+                     'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>'}
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            {postMarkers}
+            {userMarkers}
+            {problemMarkers}
+        </Map>
       )
   }
 }
