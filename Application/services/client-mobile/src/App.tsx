@@ -1,15 +1,15 @@
-import React from 'react';
-import { Redirect, Route } from 'react-router-dom';
+import React, {Fragment} from 'react';
+import {Redirect, Route} from 'react-router-dom';
 import {
-  IonApp,
-  IonIcon,
-  IonLabel,
-  IonRouterOutlet,
-  IonTabBar,
-  IonTabButton,
-  IonTabs
+    IonApp,
+    IonIcon,
+    IonLabel,
+    IonRouterOutlet,
+    IonTabBar,
+    IonTabButton,
+    IonTabs
 } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
+import {IonReactRouter} from '@ionic/react-router';
 import ListView from './pages/sector-responsible/list/ListPage';
 import PostView from './pages/sector-responsible/post/PostPage';
 import Notifications from './pages/sector-responsible/message/MessagePage';
@@ -44,122 +44,118 @@ import '@ionic/react/css/text-alignment.css';
 import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
-import { ellipse, square, mapOutline, listOutline, notificationsOutline, paperPlaneOutline, personOutline } from 'ionicons/icons';
+import {
+    ellipse,
+    square,
+    mapOutline,
+    listOutline,
+    notificationsOutline,
+    paperPlaneOutline,
+    personOutline
+} from 'ionicons/icons';
 import {store} from './reducers';
-import {Provider} from 'react-redux';
+import {connect, Provider} from 'react-redux';
 
-import {persistStore, persistReducer } from 'redux-persist'
+import {persistStore, persistReducer} from 'redux-persist'
 
 /* Theme variables */
 import './theme/variables.css';
-import { PersistGate } from 'redux-persist/integration/react';
+import {PersistGate} from 'redux-persist/integration/react';
 import Save from './pages/save/savePage'
+// import JWTUtil from "../../server/src/api/utils/jwt.util";
+import {bindActionCreators} from "redux";
+import {checkUserExists} from "./pages/login/LoginAction";
+import SectorManagerApplication from "./pages/sector-responsible/SectorManagerApplication";
+import VolunteerApplication from "./pages/volunteer/VolunteerApplication";
+import JWTUtil from "./utils/JWTUtil";
+// import {config} from 'dotenv';
 
 
+class App extends React.Component<any, any> {
+    //
+    // constructor(props : any) {
+    //     super(props);
+    //     config({path: "../"});
+    // }
 
-class App extends React.Component {
-  state = {
-    loggedin: true // TODO USERID
-  }
-
-  renderTabs(){
-    if(this.state.loggedin){ // TODO USERID
-      if(true){
+    renderLoginPage() : React.ReactNode {
         return(
-          <IonTabs>
-          <IonRouterOutlet>
-            <Route path="/ListView" component={ListView} exact={true} />
-            <Route path="/MapPage" component={MapPage} exact={true} />
-            <Route path="/PostView/:post/:sector" component={PostView} exact={true} />
-            <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
-            <Route path="/Notifications" component={Notifications} exact={true} />
-            <Route path="/SendNotifications" component={SendNotifications} exact={true} />
-            <Route path="/Contacts" component={Contacts} exact={true} />
-            <Route path="/Login" component={LoginPage} exact={true} />
-            <Route path="/" render={() => <Redirect to="/MapPage" />} exact={true} />
-          </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="MapPage" href="/MapPage">
-              <IonIcon icon={mapOutline} />
-              <IonLabel>Post-Kaart</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="ListView" href="/ListView">
-              <IonIcon icon={listOutline} />
-              <IonLabel>Post-Lijst</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="Notifications" href="/Notifications">
-              <IonIcon icon={notificationsOutline} />
-              <IonLabel>Notificaties</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="SendNotifications" href="/SendNotifications">
-              <IonIcon icon={paperPlaneOutline} />
-              <IonLabel text-wrap>Verstuur</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="Contacts" href="/Contacts">
-              <IonIcon icon={personOutline} />
-              <IonLabel>Contacts</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-          </IonTabs>
+            <Fragment>
+                <IonRouterOutlet>
+                    <Route path="/Login" component={LoginPage} exact={true}/>
+                    <Route path="/" render={() => <Redirect to="/Login"/>} exact={true}/>
+                </IonRouterOutlet>
+            </Fragment>
         )
-      } else{
-        return(
-          <IonTabs>
-            <IonRouterOutlet>
-              <Route path="/InfoPage" component={InfoPage} exact={true} />
-              <Route path="/Login" component={LoginPage} exact={true} />
-              <Route path="/VRMessage" component={VRMessage} exact={true} />
-              <Route path="/VRSendMessagePage" component={VRSendMessagePage} exact={true} />
-              <Route path="/" render={() => <Redirect to="/InfoPage" />} exact={true} />
-            </IonRouterOutlet>
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="InfoPage" href="/InfoPage">
-                <IonIcon icon={ellipse} />
-                <IonLabel>Map</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="VRMessage" href="/VRMessage">
-                <IonIcon icon={ellipse} />
-                <IonLabel>Msg</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="VRSendMessagePage" href="/VRSendMessagePage">
-                <IonIcon icon={ellipse} />
-                <IonLabel>Send</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
-          )
-      }
-      
-    } else {
-      return(
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route path="/Login" component={LoginPage} exact={true} />
-          <Route path="/" render={() => <Redirect to="/Login" />} exact={true} />
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-        <IonTabButton tab="Login" href="/Login">
-          <IonIcon icon={square} />
-          <IonLabel>Login</IonLabel>
-        </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-      )
     }
-  }
 
-  render(){
-    return (
-      <Provider store={store}>
-      <IonApp>
-          <Save />
-          <IonReactRouter>
-              {this.renderTabs()}
-            </IonReactRouter>          
-      </IonApp>
-  </Provider>
-    )
-  }
+    renderVolunteerApplication() : React.ReactNode {
+        console.log("RENDERING VOLUNTEER APP...");
+        return (
+            <VolunteerApplication />
+        )
+    }
+
+    renderManagerApplication() : React.ReactNode {
+        console.log("RENDERING MANAGER APP...");
+        return (
+            <SectorManagerApplication />
+        )
+    }
+
+    
+    renderApplication() : React.ReactNode {
+
+        const token : string | null = localStorage.getItem('token');
+
+        if(token == null)
+            return this.renderLoginPage();
+
+        const decodedToken = new JWTUtil().decode(token);
+
+        console.log("DECODED TOKEN", decodedToken);
+
+        if(!this.props.isUserLoggedIn) {
+            console.log("NOT LOGGED IN", this.props.isisUserLoggedIn)
+            return this.renderLoginPage();
+        }else {
+            console.log("LOGGED IN", this.props.isisUserLoggedIn)
+            return this.renderManagerApplication();
+        }
+
+        // TODO Solve the weird error that ! gives a syntax error
+
+        // if(token == null)
+        //     return this.renderLoginPage();
+        //
+        // const isUserLoggedIn = new JWTUtil().verify(token);
+        //
+        // if(!isUserLoggedIn)
+        //     return this.renderLoginPage();
+
+        // TODO Check how to get to the other application
+
+        // TODO Check the permission type inside the token
+    }
+
+    render() {
+        return (
+            <Provider store={store}>
+                <IonApp>
+                    <Save/>
+                    <IonReactRouter>
+                        {this.renderApplication()}
+                    </IonReactRouter>
+                </IonApp>
+            </Provider>
+        )
+    }
 }
 
-export default App;
+function mapStateToProps(state: any) {
+    return({
+        isUserLoggedIn: state.login.isUserLoggedIn,
+    })
+}
+
+export default connect(mapStateToProps)(App);
