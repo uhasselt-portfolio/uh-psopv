@@ -267,16 +267,18 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
             }
         });
 
-        const responsePosts = await new Database().fetchPosts();
-        const responseUnsolvedProblems = await new Database().fetchUnsolvedProblems();
-        const responseItems = await new Database().fetchAllItems();
-        const responseProblems = await new Database().fetchAllProblems();
-        const responsePlannings = await new Database().fetchPlannings();
-        const responseUsers = await new Database().fetchUsers();
+        const database = new Database();
+
+        const responsePosts = await database.fetchPosts();
+        const responseUnsolvedProblems = await database.fetchUnsolvedProblems();
+        const responseItems = await database.fetchAllItems();
+        const responseProblems = await database.fetchAllProblems();
+        const responsePlannings = await database.fetchPlannings();
+        const responseUsers = await database.fetchUsers();
         const user_id = await getUserId();
-        const responseMessages = await new Database().fetchMessagesFrom(user_id);
+        const responseMessages = await database.fetchMessagesFrom(user_id);
         const default_sector = await getDefaultSector();
-        const problemTypes = await new Database().fetchAllProblemTypes();
+        const problemTypes = await database.fetchAllProblemTypes();
 
 
         let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
@@ -288,7 +290,6 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
         let problems = messages.problems;
         message.sort(sortMessagesByDate);
         problems.sort(sortMessagesByDate);
-
 
         setListLocalStorage('my_volunteers', volunteers);
         setListLocalStorage('contacts', nonVolunteers);

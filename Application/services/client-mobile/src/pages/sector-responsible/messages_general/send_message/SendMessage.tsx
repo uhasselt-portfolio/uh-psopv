@@ -10,7 +10,7 @@ import  SelectContactWindow  from './components/SelectContactPage';
 import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
 
 const select_types = {volunteers: "Alle Vrijwilligers", sectors: "Alle Sectorverantwoordelijken",
-                      everybody: "Iedereen", nobody:"Niemand", specific: "Specifiek"}
+                      everybody: "Iedereen", nobody:"Ontvangers", specific: "Specifiek"}
 class SendNotifications extends Component<any> {
   state = {
     title: "",
@@ -134,7 +134,7 @@ class SendNotifications extends Component<any> {
         return (
         <div>
             <IonItem>
-              <IonLabel>Ontvanger(s)</IonLabel>
+              <IonLabel>Aan: </IonLabel>
               {this.renderListOfUser()}
               <>
                 <IonPopover
@@ -147,11 +147,11 @@ class SendNotifications extends Component<any> {
             </IonItem>
 
             <IonItem>
-                <IonInput value={this.state.title} placeholder="Enter Titel" onIonChange={e => this.handleTitleChange(e.detail.value)}></IonInput>
+                <IonInput value={this.state.title} placeholder="Titel..." onIonChange={e => this.handleTitleChange(e.detail.value)}></IonInput>
             </IonItem>
             
             <IonItem>
-                <IonTextarea className="textArea" value={this.state.message} placeholder="Enter bericht" onIonChange={e => this.handleContentChange(e.detail.value)}></IonTextarea>
+                <IonTextarea className="textArea" value={this.state.message} placeholder="Bericht..." onIonChange={e => this.handleContentChange(e.detail.value)}></IonTextarea>
             </IonItem>
 
             <IonButton className="sendBtn" onClick={() => this.handleSendMessage()}>Verstuur</IonButton>

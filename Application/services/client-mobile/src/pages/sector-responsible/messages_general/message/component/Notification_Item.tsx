@@ -46,7 +46,7 @@ class NotificationItem extends Component<any> {
             <IonLabel>
                 <IonGrid className="MessageBorder">
                     <IonRow className="noPadding">
-                        <IonCol size="9" className="noPadding">
+                        <IonCol size="8" className="noPadding">
                             <p><b>{this.props.created_by}</b> ({this.props.created_by_permission_type}) </p>
                         </IonCol>
                         <IonCol size="3" className="noPadding">
