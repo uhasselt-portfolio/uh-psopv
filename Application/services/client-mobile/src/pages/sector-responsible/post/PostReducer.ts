@@ -21,7 +21,7 @@ export default function (state = {}, action : AnyAction) {
         case PROBLEM_TOGGLE_SUCCESS:
             console.log(action.payload)
             // let localstate: any = updateProblemFromState(action.payload.problem_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
-            // return {...state, localState: localstate, loading: false, isProblemToggled: action.payload, errorMessage: ""}
+            return {...state, loading: false, isProblemToggled: action.payload, errorMessage: ""}
         default:
             return state
     }

@@ -29,7 +29,7 @@ class AddProblem extends React.Component<any> {
 
     state = {
       showPopover: true,
-      selected_volunteer: "Niemand",
+      selected_volunteer: "Selecteer",
       selected_planning_id: -1,
       activeProblemType: 1
     }  

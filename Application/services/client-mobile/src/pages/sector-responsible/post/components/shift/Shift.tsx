@@ -70,7 +70,7 @@ class Shift  extends Component<any> {
     }
 
     handleToggleCheckListItem(item_id: Number, item_value: boolean){
-        addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id, null)
+        this.props.itemToggle(item_id);
         console.log("toggled item")
     }
 
@@ -201,7 +201,6 @@ class Shift  extends Component<any> {
     }
 
     showProblemList() {
-        let checklist_data = this.props.shift.shift_items
         if(this.state.problemListActive){
         return(
             <IonCardContent className="noPadding">
