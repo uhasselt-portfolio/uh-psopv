@@ -47,8 +47,6 @@ class PostView extends Component<any, any> {
   }
 
 
-
-
   handleShiftSwitch(shift: number){
     this.setState({...this.state, show_shift: shift});
   }

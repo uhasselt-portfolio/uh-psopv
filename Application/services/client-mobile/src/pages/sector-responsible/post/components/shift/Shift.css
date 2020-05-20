@@ -44,9 +44,11 @@
 }
 
 .notSolved{
+    margin-top: 10px;
+    margin-bottom: 10px;
     background-color: white;
     border-right-style: solid;
-    border-right-width: 2px;
+    border-right-width: 3px;
     border-right-color: crimson;
 }
 
@@ -90,4 +92,11 @@
 
 .item {
     background-color: red;
+}
+
+
+.offlineMsg{
+    text-align: right;
+    color: crimson;
+    padding: 5px;
 }

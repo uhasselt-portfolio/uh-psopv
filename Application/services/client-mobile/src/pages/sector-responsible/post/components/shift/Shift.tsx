@@ -194,9 +194,16 @@ class Shift  extends Component<any> {
 
 
     showProblemList() {
+        let offlineMessage = "";
+        if(!navigator.onLine){
+            offlineMessage = "U bent offline, problemen worden pas doorgegeven aan derden eens u terug online gaat."
+        } 
+
+        
         if(this.state.problemListActive){
         return(
             <IonCardContent className="noPadding">
+                <div className="offlineMsg">{offlineMessage}</div>
                 <IonItem>
                     <IonButton className="bigSize" onClick={() => this.showAddProblem()}> Voeg een probleem toe </IonButton>
                 </IonItem>

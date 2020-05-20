@@ -59,7 +59,7 @@ class Contacts extends Component<any> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Contacts</IonTitle>
+            <IonTitle>Contacten</IonTitle>
           </IonToolbar>
         </IonHeader>
           <IonContent>

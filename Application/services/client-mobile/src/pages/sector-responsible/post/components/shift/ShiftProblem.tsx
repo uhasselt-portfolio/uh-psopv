@@ -124,6 +124,7 @@ class ShiftProblem extends React.Component<any> {
 
 
     render(){
+
         if(this.state.solved == false){
             return (
                 <IonItem className="noPadding">

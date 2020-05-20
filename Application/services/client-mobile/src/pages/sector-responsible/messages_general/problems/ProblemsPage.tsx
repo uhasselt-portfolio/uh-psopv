@@ -58,7 +58,6 @@ class ProblemsPage extends Component<any> {
 };
 
 function mapStateToProps(state: any) {
-  console.log(state)
   return({
     localStorage: state.problems.areProblemsFetched,
     errorMessage: state.problems.errorMessage,

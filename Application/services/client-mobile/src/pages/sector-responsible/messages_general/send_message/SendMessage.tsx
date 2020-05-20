@@ -8,9 +8,12 @@ import {messageAddMessage, fetchUsers} from './SendMessageAction'
 import CustomDropdown from '../../list/components/CustomDropdown';
 import  SelectContactWindow  from './components/SelectContactPage';
 import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
+import './SendMessage.css'
 
 const select_types = {volunteers: "Alle Vrijwilligers", sectors: "Alle Sectorverantwoordelijken",
                       everybody: "Iedereen", nobody:"Ontvangers", specific: "Specifiek"}
+
+
 class SendNotifications extends Component<any> {
   state = {
     title: "",
@@ -130,9 +133,15 @@ class SendNotifications extends Component<any> {
     }
       
   render(){
+    let offlineMessage = "";
+    if(!navigator.onLine){
+      offlineMessage = "U bent offline, berichten worden pas verstuurd eens u terug online gaat."
+    } 
+
     if(this.props.localStorage != undefined){
         return (
         <div>
+            <div className="offlineMsg">{offlineMessage}</div>
             <IonItem>
               <IonLabel>Aan: </IonLabel>
               {this.renderListOfUser()}
