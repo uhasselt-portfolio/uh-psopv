@@ -17,7 +17,7 @@ import { radioButtonOff } from 'ionicons/icons';
 import { getListLocalStorage, setListLocalStorage, removeListLocalStorage, addObjectToActionList } from '../../../../save/saveFunction';
 import { formatDateTime } from '../../../../common_functions/date_formatter';
 import './Shift.css'
-import {problemToggle} from '../../PostAction'
+import {problemToggle, removeProblem} from '../../PostAction'
 
 import RemoveProblem from './RemoveProblem'
 import { bindActionCreators } from 'redux';
@@ -60,9 +60,8 @@ class ShiftProblem extends React.Component<any> {
     }
 
     getDataRemoveProblem(val: any){
-        console.log(val);
         if(val == true){
-            addObjectToActionList('https://psopv.herokuapp.com/api/problem/delete/' + this.props.problem_id, null)
+            this.props.removeProblem(this.props.shift_id, this.props.post_id, this.props.problem_id);
             this.setShowToast(true)
         } else{
             this.hideRemoveProblem();
@@ -180,7 +179,8 @@ function mapStateToProps(state: any) {
   
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-      problemToggle
+      problemToggle,
+      removeProblem
     }, dispatch);
   }
   

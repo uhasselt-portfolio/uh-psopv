@@ -49,6 +49,12 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async removeProblem(problem_id: number){
+        const url = this.getRestApiEndpoint() + '/api/problem/delete/' + problem_id;
+
+        return await axios.delete(url)
+    }
+
 
     
 

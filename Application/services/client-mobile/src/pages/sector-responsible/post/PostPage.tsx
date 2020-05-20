@@ -23,8 +23,6 @@ const init = async function(this: any) {
 
 let selectShiftWindow: any = null;
 
-
-
 class PostView extends Component<any, any> {
   constructor(props: any){
     super(props)
