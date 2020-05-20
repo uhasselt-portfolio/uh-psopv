@@ -1,4 +1,4 @@
-import {POST_FETCH_PLANNING_FAIL, POST_FETCH_PLANNING_START, POST_FETCH_PLANNING_SUCCESS, ITEM_TOGGLE_SUCCESS, PROBLEM_TOGGLE_SUCCESS} from "./PostAction";
+import {ADD_PROBLEM_SUCCESS, POST_FETCH_PLANNING_FAIL, POST_FETCH_PLANNING_START, POST_FETCH_PLANNING_SUCCESS, ITEM_TOGGLE_SUCCESS, PROBLEM_TOGGLE_SUCCESS} from "./PostAction";
 import {AnyAction} from "redux";
 
 import { toggle } from "ionicons/icons";
@@ -17,11 +17,14 @@ export default function (state = {}, action : AnyAction) {
         case ITEM_TOGGLE_SUCCESS:
             console.log("ITEM_TOGGLE_SUCCESS")
             // let new_localstate: any = updateItemFromState(action.payload.item_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
-            // return {...state, localState: new_localstate, loading: false, isItemToggled: action.payload, errorMessage: ""}
+            return {...state, localStorage: action.payload, loading: false, errorMessage: ""}
         case PROBLEM_TOGGLE_SUCCESS:
-            console.log(action.payload)
             // let localstate: any = updateProblemFromState(action.payload.problem_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
-            return {...state, loading: false, isProblemToggled: action.payload, errorMessage: ""}
+            return {...state, localStorage: action.payload, loading: false, errorMessage: ""}
+        case ADD_PROBLEM_SUCCESS:
+            // let localstate: any = updateProblemFromState(action.payload.problem_id, action.payload.shift_id, state.localState, action.payload.toggleValue)            
+            return {...state, localStorage: action.payload, loading: false, errorMessage: ""}
+            
         default:
             return state
     }

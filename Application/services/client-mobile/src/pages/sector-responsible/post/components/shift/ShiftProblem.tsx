@@ -42,7 +42,7 @@ class ShiftProblem extends React.Component<any> {
 
     toggleSolved(){
       this.setState({...this.state, solved: !this.state.solved});
-      this.props.problemToggle(this.props.problem_id);
+      this.props.problemToggle(this.props.problem_id, this.props.shift_id, this.props.post_id);
       console.log("problem toggled")
     }
 

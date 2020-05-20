@@ -45,12 +45,10 @@ class AddProblem extends React.Component<any> {
     }
 
     handleProblemClick(problem_id: any){
-      console.log("clicked");
       this.setState({...this.state, activeProblemType: problem_id});
     }
 
     handleVolunteerChange(event: any){
-      console.log("clicked", event);
       this.setState({...this.state, selected_planning_id: event});
     }
   
@@ -58,7 +56,6 @@ class AddProblem extends React.Component<any> {
 
   handleClick(){
     let data = this.state
-    console.log("clicked");
     this.props.sendData({selected_planning_id: data.selected_planning_id, problem_id:data.activeProblemType});
   }
 
@@ -88,7 +85,6 @@ class AddProblem extends React.Component<any> {
 
     renderWindow(){
       let volunteers = this.props.users.map((user: any) => {
-        console.log(user)
         return <IonSelectOption value={user.planning_id}> {user.name}</IonSelectOption>
       })
 
@@ -113,7 +109,6 @@ class AddProblem extends React.Component<any> {
 
 
     render(){
-      console.log(this.props)
         return (
           <div className="generalPadding blueBackground" >
               {this.renderWindow()}

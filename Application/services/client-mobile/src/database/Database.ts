@@ -137,6 +137,11 @@ export default class Database {
         return await axios.get(url)
     }
 
+    async addProblem(params: any){
+        const url = this.getRestApiEndpoint() + '/api/problem/add';
+        return await axios.post(url, params)
+    }
+
 
     async fetchSectorOfUser(user_id: number) {
         const url = this.getRestApiEndpoint() + '/api/sector/fetch/user/' + user_id;
@@ -146,6 +151,12 @@ export default class Database {
 
     async fetchUnsolvedProblems() {
         const url = this.getRestApiEndpoint() + '/api/problem/fetch/all/unsolved';
+
+        return await axios.get(url)
+    }
+
+    async getProblemType(id: number){
+        const url = this.getRestApiEndpoint() + '/api/problem_type/fetch/' + id;
 
         return await axios.get(url)
     }
