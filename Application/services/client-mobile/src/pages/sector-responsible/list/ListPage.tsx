@@ -21,14 +21,19 @@ import {fetchPosts} from './ListAction'
 import { connect } from 'react-redux';
 import { getDefaultSector } from '../../save/saveFunction';
 import CustomDropdown from './components/CustomDropdown';
+import { Plugins } from '@capacitor/core';
 
-const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand"}
+const { Geolocation } = Plugins;
+
+const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand", best_route: "beste route"}
+
+
 
 class ListView extends Component<any> {
   constructor(props: any) {
     super(props);
   }
-
+  
   state={
     selected_sector: -1, //if -1 = selected all sectors
     selected_sort: sort_types.alfabetisch,
@@ -40,6 +45,17 @@ class ListView extends Component<any> {
     this.props.fetchPosts();
   }
 
+  async getCurrentLocation() {
+    const position = await Geolocation.getCurrentPosition();
+    console.log(position.coords.latitude);
+    console.log(position.coords.longitude);
+    return position;
+  }
+
+  watchPosition() {
+    const wait = Geolocation.watchPosition({}, (position, err) => {
+    })
+  }
 
   handleSectorChange(sector: number){
     let new_data: any;
@@ -63,6 +79,17 @@ class ListView extends Component<any> {
     if (sort === sort_types.alfabetisch){
       this.sortDataAlphabetical();
     }
+    if (sort === sort_types.afstand){
+      this.sortDataByDistance();
+    }
+    if (sort === sort_types.best_route){
+      this.sortDataByBestRoute();
+    }
+  }
+
+ 
+  sortDataByBestRoute(){
+    let new_data = this.state.data_posts
   }
 
   funcSortDataAlphabetical(a: any, b: any){
@@ -98,6 +125,31 @@ class ListView extends Component<any> {
     let new_data = this.state.data_posts
     new_data.sort(this.funcSortDataAlphabetical)  
     this.setState({...this.state, selected_sort: sort_types.alfabetisch, data_posts: new_data});
+  }
+
+  funcSortDistance(currentUserLocation:any) {
+    return function(o1: any, o2: any){
+      let distance1 = Math.sqrt(Math.pow( (o1.loc_lat - currentUserLocation.coords.latitude) ,2) +
+      Math.pow( (o1.loc_lng - currentUserLocation.coords.longitude) ,2));
+      let distance2 = Math.sqrt(Math.pow( (o2.loc_lat - currentUserLocation.coords.latitude) ,2) +
+      Math.pow( (o2.loc_lng - currentUserLocation.coords.longitude) ,2));
+      console.log("distance1", distance1, "distance2", distance2)
+  
+      if (distance1 < distance2)
+          return -1;
+      if (distance2 < distance1)
+          return 1;
+      return 0;
+    }
+  }
+
+  async sortDataByDistance(){
+    let new_data = this.state.data_posts
+    let currentUserLocation = await this.getCurrentLocation();
+
+
+    new_data.sort(this.funcSortDistance(currentUserLocation))
+    this.setState({...this.state, selected_sort: sort_types.afstand, data_posts: new_data});
   }
 
   renderListOfItems(){
@@ -166,10 +218,7 @@ class ListView extends Component<any> {
         </IonCol>
       </IonRow>
       </IonGrid>
-    )
-
-
-         
+    ) 
   }
 
   renderBasis(){
