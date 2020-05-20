@@ -46,6 +46,7 @@
     "redux-offline-queue": "^1.0.8",
     "redux-persist": "^6.0.0",
     "redux-thunk": "^2.3.0",
+    "shortest-route": "0.0.7",
     "typescript": "3.7.4"
   },
   "scripts": {

@@ -67,7 +67,6 @@ class ListView extends Component<any> {
       console.log(this.props.localStorage.posts_data)
       new_data = this.props.localStorage.posts_data
     }
-   
     // this.setState({selected_sector: sector, data_posts: new_data});
     // // Correct
     this.setState((state, props) => ({
@@ -87,9 +86,50 @@ class ListView extends Component<any> {
     }
   }
 
+  getShortest(pos: {lat: number, lng: number}, list: any[]){
+
+    let distance = Math.sqrt(Math.pow( (list[0].loc_lat - pos.lat) ,2) + Math.pow( (list[0].loc_lng - pos.lng) ,2));;
+    let selected_element = list[0];
+    for(let i = 0; i<list.length; i++){
+      let element = list[i];
+      let lat = element.loc_lat;
+      let lng = element.loc_lng;
+
+      let new_distance = Math.sqrt(Math.pow( (lat - pos.lat) ,2) + 
+                                        Math.pow( (lng - pos.lng) ,2));
+
+      if(distance == 0){
+        distance = new_distance;
+        selected_element = element
+      }
+      if(new_distance < distance){
+        distance = new_distance
+        selected_element = element;
+      }
+    }
+    console.log(distance)
+    return selected_element;
+  }
+
  
-  sortDataByBestRoute(){
+  async sortDataByBestRoute(){
+    const position = await Geolocation.getCurrentPosition();
+    let pos = {lat: position.coords.latitude, lng: position.coords.longitude}
+
     let new_data = this.state.data_posts
+    let loop_data_length = this.state.data_posts.length;
+    let best_route = [];
+
+
+    for(let i = 0; i < loop_data_length; i++){
+      let new_shortest = this.getShortest(pos, new_data);
+      new_data = new_data.filter((element: any) => {
+                    return (element.post_id != new_shortest.post_id)
+                  })
+      best_route.push(new_shortest);
+    }
+
+    console.log(best_route);
   }
 
   funcSortDataAlphabetical(a: any, b: any){
@@ -195,6 +235,7 @@ class ListView extends Component<any> {
               value={this.state.selected_sort} placeholder={this.state.selected_sort} onIonChange={e => this.handleSortChange(e.detail.value)}>
                 <IonSelectOption value={sort_types.alfabetisch}> {sort_types.alfabetisch}</IonSelectOption>
                 <IonSelectOption value={sort_types.afstand}> {sort_types.afstand}</IonSelectOption>
+                <IonSelectOption value={sort_types.best_route}> {sort_types.best_route}</IonSelectOption>
             </IonSelect>
           </IonButton>
         </IonCol>
