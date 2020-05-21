@@ -16,6 +16,9 @@ export enum PlanningActions {
     SHIFTCHANGE_POST_FAIL = 'SHIFTCHANGE_POST_FAIL'
 };
 
+/**
+ * gets the latest planning( shifts, items, users , post) from the database
+ */
 export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
     console.log("in planning fetch");
     try {
@@ -23,10 +26,12 @@ export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
             type: PlanningActions.PLANNING_FETCH_START
         });
 
-        let shifts: ShiftDatainterface[] = await new Database().fetchPlanning();
-        let items: ItemDataInterface[] = await new Database().fetchItems();
-        let users: UserDataInterface[] = await new Database().fetchusers();
-        let posts: PostDataInterface[] = await new Database().fetchPosts();
+        let database : Database = new Database();
+
+        let shifts: ShiftDatainterface[] = await database.fetchPlanning();
+        let items: ItemDataInterface[] = await database.fetchItems();
+        let users: UserDataInterface[] = await database.fetchusers();
+        let posts: PostDataInterface[] = await database.fetchPosts();
 
         dispatch({
             type: PlanningActions.PLANNING_FETCH_SUCCES,

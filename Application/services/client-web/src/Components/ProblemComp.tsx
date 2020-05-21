@@ -48,6 +48,10 @@ class Problem extends Component<Props> {
         Solved: false
     }
 
+    /**
+     * gets calles when the component is mounted
+     * updates the state with the props
+     */
     componentDidMount() {
         this.setState({
             ...this.state,
@@ -68,6 +72,9 @@ class Problem extends Component<Props> {
         });
     } 
 
+    /**
+     * updates the state to indicate the problem is solved
+     */
     handleSolved = () => {
         this.props.problemSolved(this.state.Data.id);
         this.setState({
@@ -76,6 +83,9 @@ class Problem extends Component<Props> {
         });
     }
 
+    /**
+     * updates the state to redirect to the specific problem page
+     */
     handleRedirectButton = () => {
         this.setState({
             ...this.state,
@@ -83,6 +93,9 @@ class Problem extends Component<Props> {
         })
     }
 
+    /**
+     * renders the component
+     */
     render() {
         if (this.state.Redirecting)
             return (

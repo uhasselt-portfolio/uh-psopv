@@ -19,12 +19,18 @@ class ProblemPreview extends Component<ProblemDataInterface> {
         redirecting: false
     }
 
+    /**
+     * sets the state to go to the specific problem page
+     */
     handleLink = () => {
         this.setState({
             redirecting: true
         });
     }
 
+    /**
+     * renders the component
+     */
     render() {
 
         if (this.state.redirecting) {

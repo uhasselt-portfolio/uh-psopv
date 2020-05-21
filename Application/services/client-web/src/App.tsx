@@ -24,6 +24,7 @@ const appStyle = {
   paddingBottom: '5px'
 }
 
+//TODO op veel plekken nog loading and failed messages maken
 
 function App() {
   return (

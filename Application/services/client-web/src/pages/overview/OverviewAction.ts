@@ -18,6 +18,9 @@ export enum OverviewActions {
     OVERVIEW_FETCH_POSTS_FAIL = 'OVERVIEW_GET_POSTS_FAIL'
 };
 
+/**
+ * gets all the problems from the database
+ */
 export const fetchProblems = () => async (dispatch : Redux.Dispatch) => {
     console.log("overview problem fetc");
     try {
@@ -50,6 +53,9 @@ export const fetchProblems = () => async (dispatch : Redux.Dispatch) => {
     }
 }
 
+/**
+ * gets all the messages from the database
+ */
 export const fetchMessages = () => async (dispatch : Redux.Dispatch) => {
     console.log("overview messagesfetc");
     try {
@@ -83,6 +89,9 @@ export const fetchMessages = () => async (dispatch : Redux.Dispatch) => {
     }
 }
 
+/**
+ * getss all the messages, users, items, posts, problems and the planning/shifts from the database
+ */
 export const fetch = () => async (dispatch: Redux.Dispatch) => {
     console.log("overview fetch");
     try {

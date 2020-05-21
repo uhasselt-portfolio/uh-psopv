@@ -62,14 +62,25 @@ class Planning extends Component<Props> {
             shiftFilter: ''
     }
 
+    /**
+     * called before the component is mounted
+     * gets the latest planning from the database
+     */
     componentWillMount = () => {
         this.props.fetchPlanning();
     }
 
+    /**
+     * handles the submit of the user of the filter from
+     * prevents the default page reload of a html form
+     */
     handleFilterForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         this.handleFilter();
     }
+    /**
+     * getls the value that the user searched for an applies it
+     */
     handleFilter = () => {
         let element = (document.getElementById("filterInput")) as HTMLInputElement;
         var value = element.value;
@@ -78,6 +89,9 @@ class Planning extends Component<Props> {
                 filterValue: value
         })
     }
+    /**
+     * gets the new filter and applies it
+     */
     handleFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         let valueElement = (document.getElementById("filterInput")) as HTMLInputElement;
         var valueValue = valueElement.value;
@@ -87,12 +101,18 @@ class Planning extends Component<Props> {
         });
     }
 
+    /**
+     * 
+     */
     handleShiftFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             shiftFilter: event.target.value
         });
     }
 
+    /**
+     * 
+     */
     organizePlanningFilter = () :ShiftProps[] => {
         let allShifts : ShiftInterface[] = this.props.planning;
         let shifts : ShiftProps[] = [];

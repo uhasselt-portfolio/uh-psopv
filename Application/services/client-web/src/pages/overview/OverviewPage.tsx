@@ -21,11 +21,17 @@ type Props = LinkStateProps & LinkDispatchToProps;
 
 class Overview extends Component<Props> {
 
+    /**
+     * called before the component is mounted
+     * gets all the relevant data from the database to show the user
+     */
     componentWillMount = () => {
         this.props.fetch();
     }
 
-
+    /**
+     * renders the component
+     */
     render() {
         let sortedProblems : ProblemDataInterface[][] = [];
         for (let i = 0; i < this.props.problems.length; ++i) {

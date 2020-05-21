@@ -46,6 +46,9 @@ class PostPreview extends Component<Props> {
         anchorEl: null,
     }
 
+    /**
+     * sets the state to redirect to the specific post
+     */
     handleLink = () => {
         this.setState({
             ...this.state,
@@ -53,6 +56,9 @@ class PostPreview extends Component<Props> {
         })
     }
 
+    /**
+     * show the nex shift from the one show
+     */
     handleNextShift = () => {
         if (this.state.currentShift < this.props.planning.length - 1)
             this.setState({
@@ -60,6 +66,9 @@ class PostPreview extends Component<Props> {
                 currentShift: this.state.currentShift + 1
             })
     }
+    /**
+     * show the previous shift from the one show
+     */
     handleShiftprev = () => {
         if (this.state.currentShift > 0)
         this.setState({
@@ -67,19 +76,10 @@ class PostPreview extends Component<Props> {
             currentShift: this.state.currentShift - 1
         })
     }
-    handleShowUsers = (event: React.MouseEvent<HTMLButtonElement>) => {
-        this.setState({
-            ...this.state,
-            anchorEl: event.currentTarget
-        });
-    }
-    handleClose = () => {
-        this.setState({
-            ...this.state,
-            anchorEl: null
-        });
-    }
 
+    /**
+     * renders the component
+     */
     render() {
         if (this.state.redirecting) {
             return (

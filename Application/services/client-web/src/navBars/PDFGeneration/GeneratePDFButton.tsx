@@ -18,10 +18,16 @@ type Props = IProps & LinkDispatchToProps;
 
 class GeneratePdfButton extends Component<Props> {
 
+    /**
+     * generates the pdf
+     */
     onClick = () => {
         this.props.generatepdf();
     }
 
+    /**
+     * renders the component
+     */
     render = () => {
         return(
             <Button onClick={this.onClick} style={ButtonStyle}>Rapportering</Button>

@@ -9,6 +9,9 @@ export enum PDFActions {
     PDF_FETCH_FAIL = 'PDF_FETCH_FAIL'
 };
 
+/**
+ * gets all the problems from the database and puts them all in a pdf
+ */
 export const generatepdf = () => async (dispatch : Redux.Dispatch) => {
     console.log("in generationg pdf");
     try {
@@ -38,6 +41,10 @@ export const generatepdf = () => async (dispatch : Redux.Dispatch) => {
     }
 }
 
+/**
+ * function to generate the pdf and open it in a new window after it's done
+ * @param problems the problems to display in the pdf
+ */
 const generatepdfDocument = (problems : ProblemDataInterface[]) => {
     let sortedproblems : ProblemDataInterface[][] = sortPerUser(problems);
     var doc = new jsPDF();
@@ -83,6 +90,11 @@ const generatepdfDocument = (problems : ProblemDataInterface[]) => {
     window.open(doc.output('bloburl'), '_blank');
 }
 
+/**
+ * function to sort the given problems per user
+ * @param Problems the problems to sort
+ * @returns all the problems sorted in an array per user
+ */
 const sortPerUser = (Problems : ProblemDataInterface[]) : ProblemDataInterface[][] => {
     let sorted : ProblemDataInterface[][] = [];
     for (let i = 0; i < Problems.length; ++i) {

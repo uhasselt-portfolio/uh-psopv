@@ -164,6 +164,9 @@ class MyMap extends React.Component<IProps> {
         return markers;
     }
 
+    /**
+     * renders the component
+     */
   render () {
       if (this.props.isMarkerClickable) {
         if (this.state.postClicked) {

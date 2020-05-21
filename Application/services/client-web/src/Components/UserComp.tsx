@@ -23,14 +23,24 @@ type Props = LinkDispatchToProps & LinkStateToProps & IProps
 
 class User extends Component<Props> {
 
+    /**
+     * is called before the component is mounted
+     * will request the latest state of the users from the database
+     */
     componentWillMount = () => {
         this.props.fetchuser();
     }
 
+    /**
+     * updates the connection of the user in the database
+     */
     handleChangeInternet = () => {
         this.props.changeConnection(this.props.userData.id, ! this.props.userData.has_internet);
     }
 
+    /**
+     * renders the component
+     */
     render() {
         if (this.props.userData.id === -1) {
             return(
