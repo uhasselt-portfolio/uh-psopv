@@ -47,6 +47,9 @@ const generatepdfDocument = (problems : ProblemDataInterface[]) => {
     let height: number = 20;
     let counter : number = 0;
     for (let i = 0; i < sortedproblems.length; ++i) {
+        doc.text("problemen van " + sortedproblems[i][0].user,10,height);
+        counter = 0;
+        height = 30;    
         for (let j = 0; j < sortedproblems[i].length; ++j) {
             let problem: ProblemDataInterface = sortedproblems[i][j];
             doc.text(problem.problemType,10,height);
@@ -73,7 +76,9 @@ const generatepdfDocument = (problems : ProblemDataInterface[]) => {
             }
             ++counter;
         }
-         
+        if (i < sortedproblems.length -1)
+            doc.addPage();
+        height = 20;
     }
     window.open(doc.output('bloburl'), '_blank');
 }

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Tabs, Tab, Typography, Box, Grid, Button, TextField, MenuItem, List} from '@material-ui/core';
+import {Tabs, Tab, Typography, Grid, Button, TextField, MenuItem, List} from '@material-ui/core';
 import Message from './MessageComp';
 import ProblemPreview from './ProblemPreview';
 import ProblemInterface from '../../interfaces/ProblemDataInterface';
