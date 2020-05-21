@@ -7,7 +7,8 @@ import {
   IonRouterOutlet,
   IonTabBar,
   IonTabButton,
-  IonTabs
+  IonTabs,
+  IonBadge
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import ListView from './pages/sector-responsible/list/ListPage';
@@ -55,15 +56,38 @@ import {persistStore, persistReducer } from 'redux-persist'
 import './theme/variables.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import Save from './pages/save/savePage'
+import { getListLocalStorage } from './pages/save/saveFunction';
+
 
 
 
 class App extends React.Component {
+  constructor(props: any) {
+    super(props);
+    this.setAmountMessage();
+}
+
   state = {
-    loggedin: true // TODO USERID
+    loggedin: true, // TODO USERID
+    amount_msg: 0
+  }
+
+  async setAmountMessage(){
+    let msg = await getListLocalStorage('messages');
+    msg = msg.filter((element: any) => {
+      return (element.solved == false)
+    })
+
+    let problems = await getListLocalStorage('problems');
+    problems = problems.filter((element: any) => {
+      return (element.solved == false)
+    })
+    const total = msg.length + problems.length;
+    this.setState({...this.state, amount_msg: total});
   }
 
   renderTabs(){
+
     if(this.state.loggedin){ // TODO USERID
       if(true){
         return(
@@ -88,6 +112,7 @@ class App extends React.Component {
               <IonLabel>Post-Lijst</IonLabel>
             </IonTabButton>
             <IonTabButton tab="Notifications" href="/Notifications">
+              <IonBadge color="primary">{this.state.amount_msg}</IonBadge>
               <IonIcon icon={notificationsOutline} />
               <IonLabel>Berichten</IonLabel>
             </IonTabButton>
