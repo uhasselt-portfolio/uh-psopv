@@ -263,12 +263,14 @@ class ListView extends Component<any> {
           value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
             {this.props.localStorage.posts_sectors.map((sector: number) => {
               if(this.state.default_sector === sector){
-                return <IonSelectOption  value={sector}>Sector {sector}</IonSelectOption>
+                return <IonSelectOption  value={sector}>Sector {sector}(D) </IonSelectOption>
               } else{
                 return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
               }
             })}
             <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
+            {/* <IonSelectOption value={this.state.default_sector}>Default sector</IonSelectOption> */}
+
           </IonSelect> 
           </IonButton>
           {/* <CustomDropdown list={list} title="Sectors"></CustomDropdown> */}

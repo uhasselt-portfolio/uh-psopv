@@ -11,15 +11,16 @@ import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunc
 import './SendMessage.css'
 
 const select_types = {volunteers: "Alle Vrijwilligers", sectors: "Alle Sectorverantwoordelijken",
-                      everybody: "Iedereen", nobody:"Ontvangers", specific: "Specifiek"}
+                      everybody: "Iedereen", nobody:"Niemand", specific: "Specifiek"}
+
+let title_value: string = "";
+let content_value: string = "";
 
 
 class SendNotifications extends Component<any> {
   state = {
-    title: "",
-    message: "",
     priority: 1,
-    selected_type: select_types.nobody,
+    selected_type: "Ontvangers",
     showPopover: false,
     showToast: false
   }
@@ -108,26 +109,26 @@ class SendNotifications extends Component<any> {
   }
   
   handleSendMessage(){
-    this.props.messageAddMessage(this.state.title, this.state.message, this.state.priority); // TODO USERID
+    this.props.messageAddMessage(title_value, content_value, this.state.priority); // TODO USERID
     this.setShowToast(true)
   }
 
   handleTitleChange(new_title: string | null | undefined){
-    this.setState({...this.state, title: new_title});
+    title_value = String(new_title);
   }
 
   handleContentChange(new_message: string | null | undefined){
-    this.setState({...this.state, message: new_message});
+    content_value = String(new_message);
   }
 
   renderListOfUser(){
     return (
         <IonSelect interface="popover" value={this.state.selected_type} placeholder={this.state.selected_type} onIonChange={e => this.handleQuickBtnChange(e.detail.value)}>
           <IonSelectOption value={select_types.everybody}>{select_types.everybody}</IonSelectOption>
-          <IonSelectOption value={select_types.nobody}>{select_types.nobody}</IonSelectOption>
-          <IonSelectOption value={select_types.volunteers}>{select_types.volunteers}</IonSelectOption>
           <IonSelectOption value={select_types.sectors}>{select_types.sectors}</IonSelectOption>
+          <IonSelectOption value={select_types.volunteers}>{select_types.volunteers}</IonSelectOption>
           <IonSelectOption value={select_types.specific}>{select_types.specific}</IonSelectOption>
+          <IonSelectOption value={select_types.nobody}>{select_types.nobody}</IonSelectOption>
         </IonSelect>
       )
     }
@@ -137,6 +138,7 @@ class SendNotifications extends Component<any> {
     if(!navigator.onLine){
       offlineMessage = "U bent offline, berichten worden pas verstuurd eens u terug online gaat."
     } 
+
 
     if(this.props.localStorage != undefined){
         return (
@@ -156,11 +158,11 @@ class SendNotifications extends Component<any> {
             </IonItem>
 
             <IonItem>
-                <IonInput value={this.state.title} placeholder="Titel..." onIonChange={e => this.handleTitleChange(e.detail.value)}></IonInput>
-            </IonItem>
+            <IonInput value={title_value} placeholder="Titel..." onIonChange={e => this.handleTitleChange(e.detail.value)} />
+             </IonItem>
             
             <IonItem>
-                <IonTextarea className="textArea" value={this.state.message} placeholder="Bericht..." onIonChange={e => this.handleContentChange(e.detail.value)}></IonTextarea>
+                <IonTextarea className="textArea" value={content_value} placeholder="Bericht..." onIonChange={e => this.handleContentChange(e.detail.value)}></IonTextarea>
             </IonItem>
 
             <IonButton className="sendBtn" onClick={() => this.handleSendMessage()}>Verstuur</IonButton>
@@ -172,9 +174,6 @@ class SendNotifications extends Component<any> {
               duration={400}
             />
         </div>
-           
-        //   </IonContent>
-        // </IonPage>
       );
       }
       else{
