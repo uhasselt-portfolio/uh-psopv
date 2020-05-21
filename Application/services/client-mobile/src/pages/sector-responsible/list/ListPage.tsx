@@ -19,7 +19,7 @@ import { IonButton,
 import { bindActionCreators } from 'redux';
 import {fetchPosts} from './ListAction'
 import { connect } from 'react-redux';
-import { getDefaultSector } from '../../save/saveFunction';
+import { getDefaultSector, ConcatListToActionList } from '../../save/saveFunction';
 import CustomDropdown from './components/CustomDropdown';
 import { Plugins } from '@capacitor/core';
 
@@ -32,6 +32,23 @@ const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand", best_route: 
 class ListView extends Component<any> {
   constructor(props: any) {
     super(props);
+  }
+
+  addALotMessage(){
+    let function_list: any[] = [];
+    for( let i = 0; i < 10; i++){
+      let params = {
+          title: "double",
+          message: "message",
+          created_by_id: 1,
+          send_to_id: 2,
+          priority: 5,
+      }
+  
+      function_list = [...function_list, {url: 'https://psopv.herokuapp.com/api/message/add', params: params}]
+    }
+  ConcatListToActionList(function_list);
+
   }
   
   state={
@@ -249,7 +266,6 @@ class ListView extends Component<any> {
                 return <IonSelectOption  value={sector}>Sector {sector}</IonSelectOption>
               } else{
                 return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
-
               }
             })}
             <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
@@ -287,6 +303,10 @@ class ListView extends Component<any> {
           return <div>No interconnection found</div>
         }
         if(this.props.localStorage.posts_sectors.length > 0){
+          // return <div>
+          //   <IonButton onClick={() => this.addALotMessage()}></IonButton>
+          // </div>
+          
           return this.renderBasis();
         }
       } else{

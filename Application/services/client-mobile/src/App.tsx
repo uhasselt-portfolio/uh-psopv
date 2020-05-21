@@ -20,7 +20,7 @@ import NotificationItem from './pages/sector-responsible/messages_general/messag
 import LoginPage from './pages/login/LoginPage';
 import PersonPage from './pages/sector-responsible/person/PersonPage';
 import MapPage from './pages/sector-responsible/map/MapPage';
-import MeessageGeneral from './pages/sector-responsible/messages_general/messageGeneralPage'
+import MessageGeneral from './pages/sector-responsible/messages_general/messageGeneralPage'
 
 
 import InfoPage from './pages/volunteer/info/InfoPage';
@@ -97,7 +97,7 @@ class App extends React.Component {
               <Route path="/MapPage" component={MapPage} exact={true} />
               <Route path="/PostView/:sector/:post" component={PostView} exact={true} />
               <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
-              <Route path="/Notifications" component={MeessageGeneral} exact={true} />
+              <Route path="/Notifications" component={MessageGeneral} exact={true} />
               <Route path="/Contacts" component={Contacts} exact={true} />
               <Route path="/Login" component={LoginPage} exact={true} />
               <Route path="/" render={() => <Redirect to="/MapPage" />} exact={true} />

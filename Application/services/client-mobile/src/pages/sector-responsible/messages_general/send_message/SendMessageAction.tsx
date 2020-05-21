@@ -13,7 +13,6 @@ export const messageAddMessage = (title: string | undefined,
      message: string | undefined,
      priority: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        let next = true;
         let created_by_id = await getUserId()
         let send_to_list = await getListLocalStorage('send_msg')
 
@@ -43,7 +42,10 @@ export const messageAddMessage = (title: string | undefined,
         let created_by_id = await getUserId()
         let send_to_list = await getListLocalStorage('send_msg')
 
-        send_to_list.forEach( async (send_to_id: string) => {
+        let function_list:  any[] = [];
+
+        send_to_list.forEach(async (send_to_id_string: string) => {
+            let send_to_id = Number(send_to_id_string)
             let params = {
                 title: title,
                 message: message,
@@ -52,8 +54,10 @@ export const messageAddMessage = (title: string | undefined,
                 priority: priority,
             }
 
-            await addObjectToActionList('https://psopv.herokuapp.com/api/message/add', params)
-        });
+            function_list = [...function_list, {url: 'https://psopv.herokuapp.com/api/message/add', params: params}]
+        })
+
+        ConcatListToActionList(function_list);
     }
 }
 
