@@ -152,7 +152,6 @@ function sortMessagesByDate(a: any, b: any){
                 /* Add User Names */
                 let userNames: any[] = []; 
                 sameShift.forEach((element: any) => {
-                    console.log(element)
                     const name = element.user.first_name + " " + element.user.last_name
                     userNames.push({name: name, user_id: element.user.id, phone_number: element.phone_number, email: element.email, planning_id: element.id})
                 })
@@ -254,6 +253,15 @@ function sortMessagesByDate(a: any, b: any){
     return {messages: messages, problems: problems}
 }
 
+function getCurrentUserInfo(ResponseCurrentUser: any){
+    let userinfo = ResponseCurrentUser.data.data.user;
+    console.log(userinfo)
+
+    return{email: userinfo.email, phone_number: userinfo.phone_number, first_name: userinfo.first_name,
+        last_name: userinfo.last_name, permission_type: userinfo.permission_type.name, association: userinfo.association.name}
+
+
+}
 
 export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'  
 
@@ -267,28 +275,31 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
             }
         });
 
-        const responsePosts = await new Database().fetchPosts();
-        const responseUnsolvedProblems = await new Database().fetchUnsolvedProblems();
-        const responseItems = await new Database().fetchAllItems();
-        const responseProblems = await new Database().fetchAllProblems();
-        const responsePlannings = await new Database().fetchPlannings();
-        const responseUsers = await new Database().fetchUsers();
+        const database = new Database();
+
+        const responsePosts = await database.fetchPosts();
+        const responseUnsolvedProblems = await database.fetchUnsolvedProblems();
+        const responseItems = await database.fetchAllItems();
+        const responseProblems = await database.fetchAllProblems();
+        const responsePlannings = await database.fetchPlannings();
+        const responseUsers = await database.fetchUsers();
         const user_id = await getUserId();
-        const responseMessages = await new Database().fetchMessagesFrom(user_id);
+        const responseMessages = await database.fetchMessagesFrom(user_id);
         const default_sector = await getDefaultSector();
-        const problemTypes = await new Database().fetchAllProblemTypes();
+        const problemTypes = await database.fetchAllProblemTypes();
+        const current_user = await database.fetchUserById(user_id);
 
 
         let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
         let nonVolunteers = getNonVolunteers(responseUsers, user_id);
         let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems, responsePlannings, default_sector);
         let messages =  getMessages(responseMessages, responseProblems, user_id, volunteers);
+        let user_info = getCurrentUserInfo(current_user);
 
         let message = messages.messages;
         let problems = messages.problems;
         message.sort(sortMessagesByDate);
         problems.sort(sortMessagesByDate);
-
 
         setListLocalStorage('my_volunteers', volunteers);
         setListLocalStorage('contacts', nonVolunteers);
@@ -297,6 +308,8 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
         setListLocalStorage('messages', message);
         setListLocalStorage('problems', problems);
         setListLocalStorage('problem_types', problemTypes.data.data.problemTypes);
+        setListLocalStorage('user_info', user_info);
+
 
         resetActionList();
         dispatch({type: UNROLL_ACTIONS})

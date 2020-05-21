@@ -10,8 +10,8 @@ class Save  extends Component<any> {
     constructor(props: any, storage: Storage) {
         super(props);
         this.handleActions();
-        setDefaultSector(1);
-        setUserId(2);
+        setDefaultSector(1); //TODO USERID
+        setUserId(2); //TODO USERID
     }
 
 

@@ -41,12 +41,12 @@ class NotificationItem extends Component<any> {
 
     
 
-    renderMessage(){
+    renderMessage(title: string, message: string){
         return(
             <IonLabel>
                 <IonGrid className="MessageBorder">
                     <IonRow className="noPadding">
-                        <IonCol size="9" className="noPadding">
+                        <IonCol size="8" className="noPadding">
                             <p><b>{this.props.created_by}</b> ({this.props.created_by_permission_type}) </p>
                         </IonCol>
                         <IonCol size="3" className="noPadding">
@@ -55,7 +55,7 @@ class NotificationItem extends Component<any> {
                     </IonRow>
                     <IonRow className="noPadding">
                         <IonCol className="noPadding">
-                        <p className="grey">{this.props.title}: {this.props.message} </p>
+                        <p className="grey">{title}: {message} </p>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -63,7 +63,7 @@ class NotificationItem extends Component<any> {
         )
     }
 
-    renderProblem(){
+    renderProblem(title: string, message: string){
         return(
             <IonLabel>
                 <IonGrid className="ProblemBorder">
@@ -77,7 +77,7 @@ class NotificationItem extends Component<any> {
                     </IonRow>
                     <IonRow className="noPadding">
                         <IonCol className="noPadding">
-                        <p className="grey">{this.props.title}: {this.props.message} </p>
+                        <p className="grey">{title}: {message}</p>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -86,21 +86,36 @@ class NotificationItem extends Component<any> {
     }
         
 
-    render(){        
+    render(){   
+        let title;
+        console.log(this.props)
+        if(this.props.title == ""){
+            title = "Geen titel"
+        } else{
+            title=this.props.title
+        }
+
+        let message;
+        if(this.props.message == ""){
+            message = "Geen beschrijving"
+        } else{
+            message=this.props.message
+        }
+
         let data = this.props
         if (this.props.created_by_permission_type == "Vrijwilliger"){
             if(this.state.seen){
                 return (
                     <div>
                     <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
-                        {this.renderMessage()}
+                        {this.renderMessage(title, message)}
                     </IonItem>
                     </div>  
                 );
             } else{
                 return(
                     <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
-                        {this.renderMessage()}
+                        {this.renderMessage(title, message)}
                     </IonItem>
                 )
             }
@@ -109,14 +124,14 @@ class NotificationItem extends Component<any> {
                 return (
                     <div>
                     <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
-                        {this.renderProblem()}
+                        {this.renderProblem(title, message)}
                     </IonItem>
                     </div>  
                 );
             } else{
                 return(
                     <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
-                        {this.renderProblem()}
+                        {this.renderProblem(title, message)}
                     </IonItem>
                 )
             }

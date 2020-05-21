@@ -1,7 +1,7 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
-import { getListLocalStorage, getUserId } from "../../save/saveFunction";
+import { getListLocalStorage, getUserId, addObjectToActionList, setListLocalStorage, getUserInfo } from "../../save/saveFunction";
 
 export const POST_FETCH_PLANNING_START = 'POST_FETCH_PLANNING_START'
 export const POST_FETCH_PLANNING_SUCCESS = 'POST_FETCH_PLANNING_SUCCESS'
@@ -16,83 +16,301 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
         let posts = await getListLocalStorage('posts');
         let problemTypes = await getListLocalStorage('problem_types');
         let my_user_id = await getUserId();
-        console.log(posts)
 
-        console.log("postsData", posts)
         let postData = posts.find((element: any) => {
             return (post_id == element.post_id)
         })
 
-        console.log("Shifts data", postData)
-
         dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: {... postData, problemTypes: problemTypes, my_user_id: my_user_id}})
     } catch(error){
-        let postsData = await getListLocalStorage('postsData');
+        let posts = await getListLocalStorage('posts');
         let problemTypes = await getListLocalStorage('problem_types');
+        let my_user_id = await getUserId();
 
-        console.log(error)
-        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: postsData})
+        let postData = posts.find((element: any) => {
+            return (post_id == element.post_id)
+        })
+
+        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: {... postData, problemTypes: problemTypes, my_user_id: my_user_id}})
     }
 }
 
-
-export const ITEM_TOGGLE_START = 'ITEM_TOGGLE_START'
 export const ITEM_TOGGLE_SUCCESS = 'ITEM_TOGGLE_SUCCESS'
-export const ITEM_TOGGLE_FAIL = 'ITEM_TOGGLE_FAIL'
 
-export const itemToggle = (item_id: number, shift_id: Number, toggleValue: boolean) => async (dispatch: Redux.Dispatch) => {
+export const itemToggle = (item_id: number, shift_id: number, post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: ITEM_TOGGLE_START})
-
         const response = await new Database().ItemToggle(item_id); // TODO GETUSERID
 
-        console.log("toggleValue_ACTION", toggleValue)
-        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
+        let result = await toggleItem(item_id, shift_id, post_id);
+        
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: result})
     } catch(error){
-        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: {"item_id": item_id, "shift_id": shift_id, "toggleValue": toggleValue}})
+        addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id, null)
+        let result = toggleItem(item_id, shift_id, post_id);
+
+        dispatch({type: ITEM_TOGGLE_SUCCESS, payload: result})
+        
     }
 }
-
-
 
 export const PROBLEM_TOGGLE_SUCCESS = 'PROBLEM_TOGGLE_SUCCESS'
 
-export const problemToggle = (probem_id: number, shift_id: Number, toggleValue: boolean) => async (dispatch: Redux.Dispatch) => {
+export const problemToggle = (probem_id: number, shift_id: number, post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
 
-        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: {"problem_id": probem_id, "shift_id": shift_id, "toggleValue": toggleValue}})
-    } catch(error){
-        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: {"problem_id": probem_id, "shift_id": shift_id, "toggleValue": toggleValue}})
+        let result = await toggleProblem(probem_id, shift_id, post_id);
 
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: result})
+
+        // dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: response})
+    } catch(error){
+        addObjectToActionList('https://psopv.herokuapp.com/api/problem/toggle-solve/' + probem_id, null)
+
+        let result = toggleProblem(probem_id, shift_id, post_id);
+        
+        dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: result})
     }
 }
 
-// export const FETCH_PROBLEM_TYPES_START = 'FETCH_PROBLEM_TYPES_START'
-// export const FETCH_PROBLEM_TYPES_SUCCESS = 'FETCH_PROBLEM_TYPES_SUCCESS'
-// export const FETCH_PROBLEM_TYPES_FAIL = 'FETCH_PROBLEM_TYPES_FAIL'
+async function toggleItem(item_id: number, shift_id: number, post_id: number){
+    let posts = await getListLocalStorage('posts');
+    let problemTypes = await getListLocalStorage('problem_types');
+    let my_user_id = await getUserId();
 
-// export const problemToggle = (probem_id: number) => async (dispatch: Redux.Dispatch) => {
-//     try{
-//         dispatch({type: PROBLEM_TOGGLE_START})
+    let post_index = 0;
+    let postData = posts.find((element: any, index: number) => {
+        post_index = index;
+        return (post_id == element.post_id)
+    })
 
-//         const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
+    let otherPostData = posts.filter((element: any) => {
+        return (post_id != element.post_id)
+    })
 
-//         dispatch({type: PROBLEM_TOGGLE_SUCCESS})
-//     } catch(error){
-//         if (error.response) {
-//             // Server responded with a code high than 2xx
-//             console.log(error.response.data);
-//             console.log(error.response.status);
-//             console.log(error.response.headers);
+    let shift_index = 0;
+    let shiftData = postData.shifts.find((element: any, index: number) => {
+        shift_index = index;
+        return (shift_id == element.shift_id)
+    })
 
-//             dispatch({type: PROBLEM_TOGGLE_FAIL, payload: error.response.data.items})
-//         } else if (error.request) {
-//             // No response was received from the server
-//             console.log(error.request);
-//         } else {
-//             // Request couldn't get send
-//             console.log('Error', error.message);
-//         }
-//     }
-// }
+    let otherShiftsData = postData.shifts.filter((element: any) => {
+        return (shift_id != element.shift_id)
+    })
+
+    let item_index = 0;
+    let problemData = shiftData.shift_items.find((element: any, index: number) => {
+        item_index = index;
+        return (item_id == element.item_id)
+    })
+
+    let OtherProblems = shiftData.shift_items.filter((element: any) => {
+        return (item_id != element.item_id)
+    })
+
+    let new_problemData = {...problemData, item_lost: !problemData.item_lost}
+    OtherProblems.splice(item_index, 0, new_problemData);
+
+    shiftData = {...shiftData, shift_items: OtherProblems};
+    otherShiftsData.splice(shift_index, 0, shiftData);
+
+    postData = {...postData, shifts: otherShiftsData};
+    otherPostData.splice(post_index, 0, postData);
+
+
+    await setListLocalStorage('posts', otherPostData);
+
+    return {... postData, problemTypes: problemTypes, my_user_id: my_user_id}
+}
+
+async function toggleProblem(probem_id: number, shift_id: number, post_id: number){
+    let posts = await getListLocalStorage('posts');
+    let problemTypes = await getListLocalStorage('problem_types');
+    let my_user_id = await getUserId();
+
+    let post_index = 0;
+    let postData = posts.find((element: any, index: number) => {
+        post_index = index;
+        return (post_id == element.post_id)
+    })
+
+    let otherPostData = posts.filter((element: any) => {
+        return (post_id != element.post_id)
+    })
+
+    let shift_index = 0;
+    let shiftData = postData.shifts.find((element: any, index: number) => {
+        shift_index = index;
+        return (shift_id == element.shift_id)
+    })
+
+    let otherShiftsData = postData.shifts.filter((element: any) => {
+        return (shift_id != element.shift_id)
+    })
+
+    let problem_index = 0;
+    let problemData = shiftData.shift_problems.find((element: any, index:number) => {
+        problem_index = index;
+        return (probem_id == element.problem_id)
+    })
+
+    let OtherProblems = shiftData.shift_problems.filter((element: any) => {
+        return (probem_id != element.problem_id)
+    })
+
+    let ProblemData = {...problemData, problem_solved: !problemData.problem_solved}
+    OtherProblems.splice(problem_index, 0, ProblemData);
+
+    shiftData = {...shiftData, shift_problems: OtherProblems};
+    otherShiftsData.splice(shift_index, 0, shiftData);
+
+    postData = {...postData, shifts: otherShiftsData};
+    otherPostData.splice(post_index, 0, postData);
+
+    await setListLocalStorage('posts', otherPostData);
+
+    return {... postData, problemTypes: problemTypes, my_user_id: my_user_id};
+}
+
+
+
+export const ADD_PROBLEM_SUCCESS = 'ADD_PROBLEM_SUCCESS'
+
+export const addProblem = (shift_id: number, post_id: number, params: any) => async (dispatch: Redux.Dispatch) => {
+    try{
+        const responseAddProblem = await new Database().addProblem(params); // TODO GETUSERID
+        const responseToggleProblem = await new Database().ProblemToggle(responseAddProblem.data.data.problem.id); // TODO GETUSERID
+
+
+        let result = await addProblemToLocalStorage(shift_id, post_id, params, responseAddProblem.data.data.problem);
+
+        dispatch({type: ADD_PROBLEM_SUCCESS, payload: result})
+    } catch(error){
+        addObjectToActionList('https://psopv.herokuapp.com/api/problem/add', params)
+
+        // let result = await addProblemToLocalStorage(shift_id, post_id, params);
+
+        // dispatch({type: ADD_PROBLEM_SUCCESS, payload: result})
+    }
+}
+
+async function addProblemToLocalStorage(shift_id: number, post_id: number, params: any, problem: any){
+    let posts = await getListLocalStorage('posts');
+    let problemTypes = await getListLocalStorage('problem_types');
+    let my_user_id = await getUserId();
+    let user_info = await getUserInfo();
+
+    let response_post_details = await new Database().getProblemType(params.problem_type_id);
+    let post_details = response_post_details.data.data.problemType;
+
+    let new_problem = {
+        problem_id: problem.id,
+        problem_solved: true,
+        problem_title: post_details.title,
+        problem_description: post_details.description,
+        problem_priority: post_details.priority,
+        created_at: post_details.created_at,
+        created_by_name: user_info.first_name + user_info.last_name,
+        created_by_phone_number: user_info.phone_number,
+        created_by_email: user_info.email}
+
+
+    let post_index = 0;
+    let postData = posts.find((element: any, index: number) => {
+        post_index = index;
+        return (post_id == element.post_id)
+    })
+    let otherPostData = posts.filter((element: any) => {
+        return (post_id != element.post_id)
+    })
+    let shift_index = 0;
+    let shiftData = postData.shifts.find((element: any, index: number) => {
+        shift_index = index;
+        return (shift_id == element.shift_id)
+    })
+    let otherShiftsData = postData.shifts.filter((element: any) => {
+        return (shift_id != element.shift_id)
+    })
+
+    let newShiftProblems = shiftData.shift_problems.concat(new_problem)
+    console.log(newShiftProblems);    
+
+    shiftData = {...shiftData, shift_problems: newShiftProblems};
+    otherShiftsData.splice(shift_index, 0, shiftData);
+    console.log(otherShiftsData)
+
+    postData = {...postData, shifts: otherShiftsData};
+    otherPostData.splice(post_index, 0, postData);
+
+    await setListLocalStorage('posts', otherPostData);
+
+    return {... postData, problemTypes: problemTypes, my_user_id: my_user_id};
+
+}
+
+
+export const REMOVE_PROBLEM_SUCCESS = 'REMOVE_PROBLEM_SUCCESS'
+
+export const removeProblem = (shift_id: number, post_id: number, problem_id: any) => async (dispatch: Redux.Dispatch) => {
+    try{
+        console.log("REMOVEEE PROBLEEEM")
+
+        // const response = await new Database().removeProblem(problem_id); // TODO REMOVE DATABASE
+
+        let result = await removeProblemToLocalStorage(shift_id, post_id, problem_id);
+
+        dispatch({type: REMOVE_PROBLEM_SUCCESS, payload: result})
+    } catch(error){
+        console.log(error)
+        addObjectToActionList('https://psopv.herokuapp.com/api/problem/delete/' + problem_id, null)
+
+        let result = await removeProblemToLocalStorage(shift_id, post_id, problem_id);
+
+        dispatch({type: REMOVE_PROBLEM_SUCCESS, payload: result})
+    }
+}
+
+async function removeProblemToLocalStorage(shift_id: number, post_id: number, problem_id: any){
+    let posts = await getListLocalStorage('posts');
+    let problemTypes = await getListLocalStorage('problem_types');
+    let my_user_id = await getUserId();
+
+    let post_index = 0;
+    let postData = posts.find((element: any, index: number) => {
+        post_index = index;
+        return (post_id == element.post_id)
+    })
+
+
+    let otherPostData = posts.filter((element: any) => {
+        return (post_id != element.post_id)
+    })
+    let shift_index = 0;
+    let shiftData = postData.shifts.find((element: any, index: number) => {
+        shift_index = index;
+        return (shift_id == element.shift_id)
+    })
+    let otherShiftsData = postData.shifts.filter((element: any) => {
+        return (shift_id != element.shift_id)
+    })
+    
+    // remove the problem
+    let OtherProblems = shiftData.shift_problems.filter((element: any) => {
+        return (problem_id != element.problem_id)
+    })
+
+    console.log(OtherProblems, "OtherProblems")
+
+    shiftData = {...shiftData, shift_problems: OtherProblems};
+    otherShiftsData.splice(shift_index, 0, shiftData);
+    console.log(otherShiftsData)
+
+    postData = {...postData, shifts: otherShiftsData};
+    otherPostData.splice(post_index, 0, postData);
+
+    await setListLocalStorage('posts', otherPostData);
+
+    return {... postData, problemTypes: problemTypes, my_user_id: my_user_id};
+
+}
+

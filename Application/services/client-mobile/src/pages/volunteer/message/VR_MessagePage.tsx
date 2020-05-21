@@ -53,7 +53,7 @@ class VRMessage extends Component<any> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Notifications</IonTitle>
+            <IonTitle>Berichten</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>

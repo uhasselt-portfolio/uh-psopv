@@ -198,7 +198,7 @@ class MyMap extends React.Component<IProps> {
       let problemMarkers : Array<JSX.Element> = this.getProblemMarkers(this.props.problems);
 
     return (
-        <Map center={L.latLng(50.962595, 5.358503)} zoom={18} style={{height: '700px'}}>
+        <Map center={L.latLng(50.962595, 5.358503)} zoom={18} style={{height: '100vh'}}>
             <TileLayer
             attribution={'&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
                      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +

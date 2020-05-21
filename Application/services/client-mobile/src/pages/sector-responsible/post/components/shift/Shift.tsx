@@ -9,7 +9,7 @@ import { IonButton,
 import './Shift.css';
 import { arrowBack, arrowForward, caretDown } from 'ionicons/icons';
 import {formatDateTime} from '../../../../common_functions/date_formatter';
-import {itemToggle, problemToggle} from '../../PostAction' 
+import {itemToggle, problemToggle, addProblem} from '../../PostAction' 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {resetActionList, getActionList, addObjectToActionList} from '../../../../save/saveFunction'
@@ -36,14 +36,15 @@ class Shift  extends Component<any> {
     }
 
     getDataAddProblem(val: any){
-        // do not forget to bind getData in constructor
-        console.log(val);
         let params = {planning_id: val.selected_planning_id,
                     problem_type_id: val.problem_id,
                     created_by: this.props.my_user_id,
                     created_by_id: this.props.my_user_id}
 
-        addObjectToActionList('https://psopv.herokuapp.com/api/problem/add', params)
+        console.log(this.props, "PRROPSS")
+        this.props.addProblem(this.props.shift.shift_id, this.props.post.post_id, params)
+
+        // this.props.sendDataAddProblem(this.props.shift.shift_id, this.props.post.post_id, params);
     
         this.setShowToast(true);
       }
@@ -70,8 +71,7 @@ class Shift  extends Component<any> {
     }
 
     handleToggleCheckListItem(item_id: Number, item_value: boolean){
-        addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id, null)
-        console.log("toggled item")
+        this.props.itemToggle(item_id, this.props.shift.shift_id, this.props.post.post_id);
     }
 
 
@@ -192,19 +192,18 @@ class Shift  extends Component<any> {
         )
     }
 
-    renderAddProblem(){
-        return(
-            <div>
-
-            </div>
-        )
-    }
 
     showProblemList() {
-        let checklist_data = this.props.shift.shift_items
+        let offlineMessage = "";
+        if(!navigator.onLine){
+            offlineMessage = "U bent offline, problemen worden pas doorgegeven aan derden eens u terug online gaat."
+        } 
+
+        
         if(this.state.problemListActive){
         return(
             <IonCardContent className="noPadding">
+                <div className="offlineMsg">{offlineMessage}</div>
                 <IonItem>
                     <IonButton className="bigSize" onClick={() => this.showAddProblem()}> Voeg een probleem toe </IonButton>
                 </IonItem>
@@ -220,7 +219,6 @@ class Shift  extends Component<any> {
 
     renderProblems(){
         let shift_problems = this.props.shift.shift_problems
-        console.log(shift_problems)
 
         let shift_problems_not_solved = shift_problems.filter((problem: any) => {return problem.problem_solved == true})
         let shift_problems_solved = shift_problems.filter((problem: any) => {return problem.problem_solved == false})
@@ -228,7 +226,7 @@ class Shift  extends Component<any> {
 
         return problems.map((problem: any) => {
             return (
-                <ShiftProblem {...problem} />
+                <ShiftProblem {...problem} shift_id={this.props.shift.shift_id} post_id={this.props.post.post_id}/>
             )
         })
     
@@ -263,7 +261,7 @@ class Shift  extends Component<any> {
     }
 
     render() {
-        console.log(this.props)
+        console.log("SHIFT", this.props)
         return (
             <div className="leftAlign">
                 {this.renderShiftInfo()}
@@ -303,7 +301,8 @@ function mapStateToProps(state: any) {
   function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
       itemToggle,
-      problemToggle
+      problemToggle,
+      addProblem
     }, dispatch);
   }
   

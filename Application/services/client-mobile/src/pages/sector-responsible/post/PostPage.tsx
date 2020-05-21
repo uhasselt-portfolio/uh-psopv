@@ -23,8 +23,6 @@ const init = async function(this: any) {
 
 let selectShiftWindow: any = null;
 
-
-
 class PostView extends Component<any, any> {
   constructor(props: any){
     super(props)
@@ -49,8 +47,6 @@ class PostView extends Component<any, any> {
   }
 
 
-
-
   handleShiftSwitch(shift: number){
     this.setState({...this.state, show_shift: shift});
   }
@@ -64,7 +60,6 @@ class PostView extends Component<any, any> {
   }
 
   getPreviousShift(swiper: any){
-    console.log(swiper)
     swiper.slidePrev();
     if (this.state.show_shift > 0) {
       let new_shift = this.state.show_shift - 1
@@ -108,20 +103,18 @@ class PostView extends Component<any, any> {
   }
 
   renderPost(): any{
-    console.log(this.props)
     if(this.state.show_shift === -1){
       this.setCurrentlyActiveShift();
       return <IonCard>Er is op deze post geen actieve shift bezig</IonCard>
     } else{
       let data = this.props.localStorage.shifts[this.state.show_shift];
-      return <Shift shift={data} post={this.props.localStorage} problem_types={this.props.localStorage.problemTypes} />
+      return <Shift shift={data} post={this.props.localStorage} problem_types={this.props.localStorage.problemTypes}/>
     }
   }
 
   handleSlideChange(slider: any){
     // this.getActiveIndex()
     if(slider != null){
-      console.log("changed slide", slider.activeIndex)
       this.handleShiftSwitch(slider.activeIndex)
     }
   }
@@ -144,7 +137,8 @@ class PostView extends Component<any, any> {
       return (<IonSlide>
               <Shift shift={shift} post={this.props.localStorage} 
               problemTypes={this.props.localStorage.problemTypes}
-              my_user_id={this.props.localStorage.my_user_id}/>
+              my_user_id={this.props.localStorage.my_user_id}
+              />
             </IonSlide>)
     })
 
@@ -158,16 +152,12 @@ class PostView extends Component<any, any> {
 
   getData(val: any){
     // do not forget to bind getData in constructor
-    console.log(val.shift_id);
-    console.log(swiper)
-
     let index_shift = 0;
     this.props.localStorage.shifts.map((element: any, index: number) => {
       if(element.shift_id == val.shift_id){
         index_shift = index;
       }
     })
-    
 
     this.setShiftActive(val.shift_id);
     swiper.slideTo(index_shift);
@@ -176,7 +166,6 @@ class PostView extends Component<any, any> {
 
   renderSelectShiftWindow(){
     selectShiftWindow = <SelectShiftWindow shifts={this.props.localStorage.shifts} sendData={this.getData}/>
-    console.log(selectShiftWindow)
     return(
     <>
       <IonPopover
@@ -217,8 +206,8 @@ class PostView extends Component<any, any> {
   }
 
   render(){
-    console.log(this.props)
     if(this.props.localStorage != undefined){
+      console.log("POST", this.props)
       return this.renderBasis();
     } else{
       return <div> No internet connection </div>
@@ -229,7 +218,6 @@ class PostView extends Component<any, any> {
 
 
 function mapStateToProps(state: any) {
-  console.log(state)
   return({
     localStorage: state.post.localStorage,
     errorMessage: state.post.errorMessage,

@@ -17,8 +17,11 @@ import { radioButtonOff } from 'ionicons/icons';
 import { getListLocalStorage, setListLocalStorage, removeListLocalStorage, addObjectToActionList } from '../../../../save/saveFunction';
 import { formatDateTime } from '../../../../common_functions/date_formatter';
 import './Shift.css'
+import {problemToggle, removeProblem} from '../../PostAction'
 
 import RemoveProblem from './RemoveProblem'
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 
 
@@ -39,7 +42,7 @@ class ShiftProblem extends React.Component<any> {
 
     toggleSolved(){
       this.setState({...this.state, solved: !this.state.solved});
-      addObjectToActionList('https://psopv.herokuapp.com/api/problem/toggle-solve/' + this.props.problem_id, null)
+      this.props.problemToggle(this.props.problem_id, this.props.shift_id, this.props.post_id);
       console.log("problem toggled")
     }
 
@@ -57,15 +60,13 @@ class ShiftProblem extends React.Component<any> {
     }
 
     getDataRemoveProblem(val: any){
-        console.log(val);
         if(val == true){
-            addObjectToActionList('https://psopv.herokuapp.com/api/problem/delete/' + this.props.problem_id, null)
+            this.props.removeProblem(this.props.shift_id, this.props.post_id, this.props.problem_id);
             this.setShowToast(true)
         } else{
             this.hideRemoveProblem();
 
         }
-    
       }
 
 
@@ -123,6 +124,7 @@ class ShiftProblem extends React.Component<any> {
 
 
     render(){
+
         if(this.state.solved == false){
             return (
                 <IonItem className="noPadding">
@@ -171,5 +173,17 @@ class ShiftProblem extends React.Component<any> {
 };
 
 
-
-export default (ShiftProblem);
+function mapStateToProps(state: any) {
+    return({
+    })
+  }
+  
+  function mapDispatchToProps(dispatch: any) {
+    return bindActionCreators({
+      problemToggle,
+      removeProblem
+    }, dispatch);
+  }
+  
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(ShiftProblem);

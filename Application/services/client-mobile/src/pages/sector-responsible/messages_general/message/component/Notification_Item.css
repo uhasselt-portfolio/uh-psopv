@@ -20,10 +20,10 @@
 
 .MessageBorder{
     border-left-style: solid;
-    border-left-color: green;
+    border-left-color: purple;
 }
 
 .ProblemBorder{
     border-left-style: solid;
-    border-left-color: coral;
+    border-left-color: gold;
 }
