@@ -64,8 +64,6 @@ class ListView extends Component<any> {
 
   async getCurrentLocation() {
     const position = await Geolocation.getCurrentPosition();
-    console.log(position.coords.latitude);
-    console.log(position.coords.longitude);
     return position;
   }
 
@@ -81,11 +79,8 @@ class ListView extends Component<any> {
         return element.sector_id === sector
       })     
     }else{
-      console.log(this.props.localStorage.posts_data)
       new_data = this.props.localStorage.posts_data
     }
-    // this.setState({selected_sector: sector, data_posts: new_data});
-    // // Correct
     this.setState((state, props) => ({
       selected_sector: sector, data_posts: new_data
     }));
@@ -124,10 +119,8 @@ class ListView extends Component<any> {
         selected_element = element;
       }
     }
-    console.log(distance)
     return selected_element;
   }
-
  
   async sortDataByBestRoute(){
     const position = await Geolocation.getCurrentPosition();
@@ -135,7 +128,7 @@ class ListView extends Component<any> {
 
     let new_data = this.state.data_posts
     let loop_data_length = this.state.data_posts.length;
-    let best_route = [];
+    let best_route: any[] = [];
 
 
     for(let i = 0; i < loop_data_length; i++){
@@ -146,31 +139,33 @@ class ListView extends Component<any> {
       best_route.push(new_shortest);
     }
 
-    console.log(best_route);
+    this.setState((state, props) => ({
+      selected_sort: sort_types.afstand, data_posts: best_route
+    }));
   }
 
   funcSortDataAlphabetical(a: any, b: any){
     if(a.sector_id < b.sector_id){
-      if(a.id < b.id){
+      if(a.post_id < b.post_id){
         return -1
-      } else if(a.id > b.id){
+      } else if(a.post_id > b.post_id){
         return 1
       } else{
         return 0
       }
     
     } else if(a.sector_id > b.sector_id){
-      if(a.id < b.id){
+      if(a.post_id < b.post_id){
         return -1
-      } else if(a.id > b.id){
+      } else if(a.post_id > b.post_id){
         return 1
       } else{
         return 0
       }
     } else{
-      if(a.id < b.id){
+      if(a.post_id < b.post_id){
         return -1
-      } else if(a.id > b.id){
+      } else if(a.post_id > b.post_id){
         return 1
       } else{
         return 0
@@ -180,8 +175,11 @@ class ListView extends Component<any> {
 
   sortDataAlphabetical(){
     let new_data = this.state.data_posts
-    new_data.sort(this.funcSortDataAlphabetical)  
-    this.setState({...this.state, selected_sort: sort_types.alfabetisch, data_posts: new_data});
+    new_data.sort(this.funcSortDataAlphabetical) 
+    console.log("alha",new_data) 
+    this.setState((state, props) => ({
+      selected_sort: sort_types.alfabetisch, data_posts: new_data
+    }));
   }
 
   funcSortDistance(currentUserLocation:any) {
@@ -203,10 +201,10 @@ class ListView extends Component<any> {
   async sortDataByDistance(){
     let new_data = this.state.data_posts
     let currentUserLocation = await this.getCurrentLocation();
-
-
     new_data.sort(this.funcSortDistance(currentUserLocation))
-    this.setState({...this.state, selected_sort: sort_types.afstand, data_posts: new_data});
+    this.setState((state, props) => ({
+      selected_sort: sort_types.afstand, data_posts: new_data
+    }));
   }
 
   getSectorColor(sector_id: number){
@@ -229,6 +227,7 @@ class ListView extends Component<any> {
         )
       })
     } else {
+      console.log(this.state)
       return this.state.data_posts.map((data: any) =>{
         return (
           <ListViewItem {... data} color={this.getSectorColor(data.sector_id)} />

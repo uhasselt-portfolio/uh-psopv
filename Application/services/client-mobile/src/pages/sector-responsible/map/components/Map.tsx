@@ -8,7 +8,6 @@ import { Plugins } from '@capacitor/core';
 const { Geolocation } = Plugins;
  
 interface IProps {
-    currentPos: {lat: number, lng: number},
     problems : any[][],
     users: any[],
     posts: any[],
@@ -20,7 +19,6 @@ interface IProps {
 }
  
 interface IState {
-    currentPos: {lat: number, lng: number},
     problemClicked: boolean,
     problem: any | null,
     postClicked: boolean,
@@ -37,7 +35,6 @@ interface IState {
  
 class MyMap extends React.Component<any> {
     state: IState = {
-        currentPos: {lat: 0, lng: 0},
         problemClicked: false,
         problem: null,
         postClicked: false,
@@ -49,8 +46,6 @@ class MyMap extends React.Component<any> {
         updating: false,
         markergroup: new L.FeatureGroup(),
     }
-
-
  
     /**
      * function to redirect the user to the detailspage of the problem on a click
@@ -104,20 +99,6 @@ class MyMap extends React.Component<any> {
         })
         return sector_info.color
     }
-
-    addUserMarker(){
-        let icon = postIcon({sector_id: 0, sector_color: this.getSectorColor(1)});
-        let marker : L.Marker = L.marker([this.state.currentPos.lat,this.state.currentPos.lng], {icon: icon})
-        marker.bindTooltip("mezelf", {
-            permanent: false,
-            direction: 'top',
-            offset: new Point(0, -40)
-
-        })
-        .on('click',() => {this.onPostClicked(1)});
-        marker.addTo(this.state.markergroup);
-    }
- 
     /**
      * adds all the posts the component got in its props to the map
      * these are all the posts without a problem, to prevent overlap
@@ -162,7 +143,6 @@ class MyMap extends React.Component<any> {
  
         // this.addproblemMarkers(this.props.problems,mymap);
         this.addPostMarkers(this.props.posts,mymap);
-        this.addUserMarker();
         mymap.addLayer(this.state.markergroup);
         this.setState({
             ...this.state,
@@ -178,7 +158,6 @@ class MyMap extends React.Component<any> {
     componentWillReceiveProps = (nextProps : IProps) => {
         if (this.props !== nextProps) {
             if (this.state.map != null) {
-                this.state.currentPos = nextProps.currentPos;
                 this.state.map.removeLayer(this.state.markergroup);
                 this.state.markergroup = new L.FeatureGroup();
                 this.state.markergroup.addTo(this.state.map);
@@ -191,6 +170,7 @@ class MyMap extends React.Component<any> {
     console.log(this.props)
     return (
         <div id={this.props.containerId} style={{height: this.props.mapHeight.toString() + 'px'}}>
+ 
         </div>
       )
   }

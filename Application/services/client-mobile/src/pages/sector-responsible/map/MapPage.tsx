@@ -12,8 +12,6 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
 import Map from './components/Map';
-import { Plugins } from '@capacitor/core';
-const { Geolocation } = Plugins;
  
 
 class MapPage extends Component<any> {
@@ -26,18 +24,7 @@ class MapPage extends Component<any> {
   state={
     selected_sector: -1, //if -1 = selected all sectors
     data_posts: [],
-    currentPos: {lat: 0, lng: 0},
   }
-
-  watchPosition() {
-    const wait = Geolocation.watchPosition({}, (position, err) => {
-        if(position != null){
-            console.log("STATE,", position, this.state)
-            this.setState({...this.state, currentPos: {lat: position.coords.latitude, lng:position.coords.longitude}});
-        }
-    })
-  }
-
 
   static defaultProps = {
     center: {
@@ -85,12 +72,12 @@ class MapPage extends Component<any> {
       this.setState({...this.state, data_posts: this.props.localStorage.posts_data});
       return (
         <Map posts={this.props.localStorage.posts_data} sectors={this.props.localStorage.posts_sectors} isMarkerClickable={true} containerId={"map"} 
-        centerLat={50.962595} centerLong={5.358503} mapHeight={700} currentPos={this.state.currentPos}/>
+        centerLat={50.962595} centerLong={5.358503} mapHeight={700} />
       )
     } else {
       return (
         <Map posts={this.state.data_posts} sectors={this.props.localStorage.posts_sectors} isMarkerClickable={true} containerId={"map"} 
-        centerLat={50.962595} centerLong={5.358503} currentPos={this.state.currentPos} mapHeight={700}/>
+        centerLat={50.962595} centerLong={5.358503} mapHeight={700}/>
       )
     }  
   }
@@ -130,8 +117,6 @@ class MapPage extends Component<any> {
   }
 
   render(){
-    this.watchPosition();
-
     return (
       <IonPage>
         <IonHeader>
