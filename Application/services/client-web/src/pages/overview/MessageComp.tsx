@@ -45,6 +45,10 @@ class Message extends Component<Props> {
         }
     }
 
+    /**
+     * gets called after the component is mounted
+     * updates the state of the component with the props
+     */
     componentDidMount() {
         this.setState({
             data: {
@@ -57,10 +61,16 @@ class Message extends Component<Props> {
         })
     }
 
+    /**
+     * updates the database that the message has been read
+     */
     handleButton = () => {
         this.props.postMessageRead(this.props.id);
     }
 
+    /**
+     * renders the component
+     */
     render() {
         return (
             <Paper style={PaperStyle}>

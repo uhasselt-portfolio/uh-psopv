@@ -31,10 +31,16 @@ type props = LinkDispatchToProps & IProps;
 
 class ProblemDetails extends Component<props> {
 
+    /**
+     * updates the database that the problems has been solved
+     */
     handleSolvedButton = () => {
         this.props.problemSolved(this.props.location.state.id);
     }
 
+    /**
+     * renders the component
+     */
     render() {
 
         return(

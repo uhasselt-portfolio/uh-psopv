@@ -63,6 +63,9 @@ class NavBar extends Component<IProps, IState> {
         }
     }
 
+    /**
+     * updates the state to display the menu
+     */
     handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         this.setState({
             ...this.state,
@@ -70,6 +73,9 @@ class NavBar extends Component<IProps, IState> {
         });
     }
 
+    /**
+     * updates the state to close the menu
+     */
     handleClose = () => {
         this.setState({
             ...this.state,
@@ -77,6 +83,9 @@ class NavBar extends Component<IProps, IState> {
         });
     };
 
+    /**
+     * updates the state to redirect to the right tab
+     */
     handleLink = (tab: string, active: Number) => {
         this.setState({
             value: '/' + tab,
@@ -86,6 +95,9 @@ class NavBar extends Component<IProps, IState> {
         });
     }
 
+    /**
+     * renders the component
+     */
     render() {
         if (this.state.redirecting) {
             this.setState({

@@ -8,6 +8,11 @@ export enum DataActions {
     DATA_POST_FAIL = 'DATA_POST_FAIL'
 };
 
+/**
+ * lets the database use the file to update its content
+ * @param file the file to be uploaded
+ * @param isUpdateMode boolean toggle to indicate if the file should update the existing database or override it
+ */
 export const uploadFile = (file : File, isUpdateMode : boolean) => async (dispatch : Redux.Dispatch) => {
     console.log("in file upload");
     try {

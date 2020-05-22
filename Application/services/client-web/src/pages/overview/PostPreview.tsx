@@ -9,6 +9,7 @@ import {connect} from 'react-redux';
 import userDataInterface from '../../interfaces/UserDataInterface';
 import ShiftDataInterface from '../../interfaces/ShiftDataInterface';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
+import {formatTime, formatDate} from '../../Components/date_formatter'; 
 
 import './ProblemPreview.css'
 
@@ -53,6 +54,9 @@ class PostPreview extends Component<Props> {
         anchorEl: null,
     }
 
+    /**
+     * sets the state to redirect to the specific post
+     */
     handleLink = () => {
         this.setState({
             ...this.state,
@@ -60,6 +64,9 @@ class PostPreview extends Component<Props> {
         })
     }
 
+    /**
+     * show the nex shift from the one show
+     */
     handleNextShift = () => {
         if (this.state.currentShift < this.props.planning.length - 1)
             this.setState({
@@ -67,6 +74,9 @@ class PostPreview extends Component<Props> {
                 currentShift: this.state.currentShift + 1
             })
     }
+    /**
+     * show the previous shift from the one show
+     */
     handleShiftprev = () => {
         if (this.state.currentShift > 0)
         this.setState({
@@ -74,19 +84,10 @@ class PostPreview extends Component<Props> {
             currentShift: this.state.currentShift - 1
         })
     }
-    handleShowUsers = (event: React.MouseEvent<HTMLButtonElement>) => {
-        this.setState({
-            ...this.state,
-            anchorEl: event.currentTarget
-        });
-    }
-    handleClose = () => {
-        this.setState({
-            ...this.state,
-            anchorEl: null
-        });
-    }
 
+    /**
+     * renders the component
+     */
     render() {
         if (this.state.redirecting) {
             return (
@@ -114,18 +115,18 @@ class PostPreview extends Component<Props> {
 
         if (this.props.planning.length > 0) {
             let date: Date = new Date(this.props.planning[this.state.currentShift].beginDate);
-            let parsedBeginDate: string = date.toLocaleString();
+            let tempDate : string = formatDate(date.toString());
+            let startTime : string =  formatTime(date.toString());
             let enddate: Date = new Date(this.props.planning[this.state.currentShift].endDate);
-            let parseEndDate : string = enddate.toLocaleString().split(" ")[1];
-            parsedDate = parsedBeginDate + " tot " + parseEndDate;
-            for(let i = 0; i < this.props.workingUsers[this.state.currentShift].length -1; i++){
-                let x = this.props.workingUsers[this.state.currentShift][i];
-                this_users += x.name + " " + x.lastname + ", ";
-            }
-            let last_user = this.props.workingUsers[this.state.currentShift][this.props.workingUsers[this.state.currentShift].length -1];
-            this_users += last_user.name + " " + last_user.lastname;
-            // this.props.workingUsers[this.state.currentShift].map(x => (
-            // ));
+            let endTime : string = formatTime(enddate.toString());
+            parsedDate = tempDate + " " + startTime + " tot " + endTime;
+            CurrentUsers = this.props.workingUsers[this.state.currentShift].map(x => (
+                <Grid item>
+                <Paper style={UserPaperStyle}>
+                    <h5>{x.name + " " + x.lastname}</h5>
+                </Paper>
+                </Grid>
+            ));
         }
 
         return(
