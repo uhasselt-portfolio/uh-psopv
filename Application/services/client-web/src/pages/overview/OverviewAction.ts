@@ -21,14 +21,14 @@ export enum OverviewActions {
 /**
  * gets all the problems from the database
  */
-export const fetchProblems = () => async (dispatch : Redux.Dispatch) => {
+export const fetchProblems = (amount: number) => async (dispatch : Redux.Dispatch) => {
     console.log("overview problem fetc");
     try {
         dispatch({
             type: OverviewActions.OVERVIEW_FETCH_START
         });
 
-        const problems : ProblemDataInterface[] = await new Database().fetchProblems();
+        const problems : ProblemDataInterface[] = await new Database().fetchProblemsSubset(amount);
 
         dispatch({
             type: OverviewActions.OVERVIEW_PROBLEM_FETCH_SUCCES,

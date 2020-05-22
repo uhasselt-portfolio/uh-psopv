@@ -4,7 +4,6 @@ import {Grid, Paper, Button, ListItem} from '@material-ui/core';
 import {connect} from 'react-redux'
 import {postMessageRead} from './OverviewAction'
 import {bindActionCreators} from 'redux';
-import { spacing } from '@material-ui/system';
 
 
 interface IState {
@@ -20,16 +19,6 @@ const ButtonStyle = {
     background: 'rgb(3,57,108)',
     color: 'white',
     margin: '5px'
-}
-const LeftPartStyle = {
-    width: '70%'
-}
-const RightPartStyle = {
-    width: '30%'
-}
-const noPadding = {
-    padding: '0',
-    margin: '0'
 }
 
 type Props = LinkDispatchToProps & MessageInterface;

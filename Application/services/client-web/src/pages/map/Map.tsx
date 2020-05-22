@@ -25,7 +25,8 @@ interface IProps {
     problems : ProblemDataInterface[][],
     users: UserDataInterface[],
     posts: PostDataInterface[],
-    isMarkerClickable: boolean
+    isMarkerClickable: boolean,
+    height: number
 }
 
 interface IState {
@@ -215,7 +216,7 @@ class MyMap extends React.Component<IProps> {
       }
 
     return (
-        <Map center={center} zoom={13} style={{height: '700px'}} zoomControl={false}>
+        <Map center={center} zoom={13} style={{height: this.props.height + 'vh'}} zoomControl={false}>
             <TileLayer
             attribution={'&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
                      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +

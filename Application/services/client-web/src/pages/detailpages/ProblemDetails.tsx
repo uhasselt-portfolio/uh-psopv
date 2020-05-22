@@ -86,7 +86,7 @@ class ProblemDetails extends Component<props> {
                         </Grid>
                     </Grid>
                     <Grid item style={styleMap}>
-                        {<MyMap problems={[[this.props.location.state]]} users={[]} posts={[]} isMarkerClickable={false}/>}
+                        {<MyMap problems={[[this.props.location.state]]} height={80} users={[]} posts={[]} isMarkerClickable={false}/>}
                     </Grid>
                 </Grid>
             </div> 

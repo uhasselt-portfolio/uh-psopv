@@ -24,7 +24,7 @@ const styleFormElement = {
 
 const styleMarginTop = {
     margin: '2vh 0 0 0',
-    height: '50vh'
+
 }
 const newMessageStyle = {
     padding: '10px',
@@ -94,7 +94,11 @@ class OverviewComp extends Component<Props> {
      * gets all the problems from the database
      */
     componentWillMount() {
-        this.props.fetchProblems();
+        this.props.fetchProblems(5);
+    }
+
+    fetchMoreProblems = () => {
+        this.props.fetchProblems(this.props.problems.length + 5);
     }
 
     /**
@@ -104,8 +108,9 @@ class OverviewComp extends Component<Props> {
      * fetches the messages
      */
     handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        console.log("ee");
         if (newValue === 0)
-            this.props.fetchProblems();
+            this.props.fetchProblems(this.props.problems.length);
         else if (newValue === 1)
             this.props.fetchPosts();
         else if (newValue === 2)
@@ -292,9 +297,6 @@ class OverviewComp extends Component<Props> {
         }
     }
 
-    /**
-     * renders the component
-     */
     renderMessages = () : Array<JSX.Element> => {
         return this.props.messages.filter(message => ! message.read).map(x => (
             <Message key={Math.random()} id={x.id} title={x.title} sender={x.sender} content={x.content} read={false}/>
@@ -345,8 +347,15 @@ class OverviewComp extends Component<Props> {
                     <Tab icon={<SmsOutlinedIcon />} label="Nieuw bericht"/>
                 </Tabs>
             <TabPanel value={this.state.value} index={0}>
-                {Problems}
-                {/* {(Problems.length === 0) && <h5>Geen problemen</h5>} */}
+                <Grid container direction='row' justify='space-between'>
+                    <Grid item>
+                        {Problems}
+                        {/* {(Problems === 0) && <h5>Geen problemen</h5>} */}
+                    </Grid>
+                    <Grid container direction="column" justify="center">
+                        <Button variant="outlined" onClick={this.fetchMoreProblems}>Toon meer problemen</Button>
+                    </Grid>
+                </Grid>
             </TabPanel>
             <TabPanel value={this.state.value} index={1}>
                 {Posts}
@@ -456,7 +465,7 @@ interface LinkStateProps {
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
         messages: state.OverviewReducer.messages,
-        problems: state.OverviewReducer.problems,
+        problems: state.OverviewReducer.problemsSubset,
         admin: state.OverviewReducer.loggedIn,
         posts: state.OverviewReducer.posts,
         users: state.OverviewReducer.users,
@@ -470,7 +479,7 @@ const MapStateToProps = (state : AppState): LinkStateProps => {
 interface LinkDispatchToProps {
     fetchMessages: () => any,
     postNewMessage: (receiverId: Number, title: string, content: string, adminId: Number) => any,
-    fetchProblems: () => any,
+    fetchProblems: (amount: number) => any,
     fetchPosts: () => any
 }
 const MapDispatchToProps = (dispatch: any) : LinkDispatchToProps => {

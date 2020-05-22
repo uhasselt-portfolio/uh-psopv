@@ -67,6 +67,33 @@ export default class Database {
 
         return problems;
     }
+    async fetchProblemsSubset(Amount: number) {
+        const response = await axios.get( this.ServerUrl + '/api/problem/fetch/all/unsolved');
+        
+        let problems: ProblemDataInterface[] = [];
+
+        for (let i = 0; i < response.data.data.problems.length; ++i) {
+            if (i >= Amount)
+                break;
+            problems.push({
+                id: response.data.data.problems[i].id,
+                problemType: response.data.data.problems[i].problem_type.title,
+                priority: response.data.data.problems[i].problem_type.priority,
+                discription: response.data.data.problems[i].problem_type.description,
+                timeStamp: response.data.data.problems[i].created_at,
+                shiftName: response.data.data.problems[i].planning.shift.name,
+                post: response.data.data.problems[i].planning.post.title,
+                postId: response.data.data.problems[i].planning.post_id,
+                user: response.data.data.problems[i].planning.user.first_name + " " + response.data.data.problems[i].planning.user.last_name,
+                sender: response.data.data.problems[i].created_by.first_name + " " + response.data.data.problems[i].created_by.last_name,
+                latitude: response.data.data.problems[i].planning.post.latitude,
+                longitude: response.data.data.problems[i].planning.post.longitude,
+                solved: response.data.data.problems[i].solved
+            });
+        }
+
+        return problems;
+    }
 
     async fetchPosts() {
         const responsePosts = await axios.get(this.ServerUrl + '/api/post/fetch/all');
