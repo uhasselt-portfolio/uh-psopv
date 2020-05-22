@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover, IonToast } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router';
 import { caretDown } from 'ionicons/icons';
@@ -8,9 +8,12 @@ import {messageAddMessage, fetchUsers} from './SendMessageAction'
 import CustomDropdown from '../../list/components/CustomDropdown';
 import  SelectContactWindow  from './components/SelectContactPage';
 import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
+import './SendMessage.css'
 
 const select_types = {volunteers: "Alle Vrijwilligers", sectors: "Alle Sectorverantwoordelijken",
-                      everybody: "Iedereen", nobody:"Niemand", specific: "Specifiek"}
+                      everybody: "Iedereen", nobody:"Ontvangers", specific: "Specifiek"}
+
+
 class SendNotifications extends Component<any> {
   state = {
     title: "",
@@ -18,6 +21,7 @@ class SendNotifications extends Component<any> {
     priority: 1,
     selected_type: select_types.nobody,
     showPopover: false,
+    showToast: false
   }
 
   hidePopover(){
@@ -98,9 +102,14 @@ class SendNotifications extends Component<any> {
 
     // await this.props.fetchUsers();
   }
+
+  setShowToast(state: boolean){
+    this.setState({...this.state, showToast: state});
+  }
   
   handleSendMessage(){
     this.props.messageAddMessage(this.state.title, this.state.message, this.state.priority); // TODO USERID
+    this.setShowToast(true)
   }
 
   handleTitleChange(new_title: string | null | undefined){
@@ -124,23 +133,17 @@ class SendNotifications extends Component<any> {
     }
       
   render(){
+    let offlineMessage = "";
+    if(!navigator.onLine){
+      offlineMessage = "U bent offline, berichten worden pas verstuurd eens u terug online gaat."
+    } 
+
     if(this.props.localStorage != undefined){
         return (
-        // <IonPage>
-        //   <IonHeader>
-        //     <IonToolbar>
-        //       <IonTitle>Notificaties versturen</IonTitle>
-        //     </IonToolbar>
-        //   </IonHeader>
-        //   <IonContent>
-        //     <IonHeader collapse="condense">
-        //       <IonToolbar>
-        //         <IonTitle size="large">Blank</IonTitle>
-        //       </IonToolbar>
-        //     </IonHeader>
         <div>
+            <div className="offlineMsg">{offlineMessage}</div>
             <IonItem>
-              <IonLabel>Ontvanger(s)</IonLabel>
+              <IonLabel>Aan: </IonLabel>
               {this.renderListOfUser()}
               <>
                 <IonPopover
@@ -153,14 +156,21 @@ class SendNotifications extends Component<any> {
             </IonItem>
 
             <IonItem>
-                <IonInput value={this.state.title} placeholder="Enter Titel" onIonChange={e => this.handleTitleChange(e.detail.value)}></IonInput>
+                <IonInput value={this.state.title} placeholder="Titel..." onIonChange={e => this.handleTitleChange(e.detail.value)}></IonInput>
             </IonItem>
             
             <IonItem>
-                <IonTextarea className="textArea" value={this.state.message} placeholder="Enter bericht" onIonChange={e => this.handleContentChange(e.detail.value)}></IonTextarea>
+                <IonTextarea className="textArea" value={this.state.message} placeholder="Bericht..." onIonChange={e => this.handleContentChange(e.detail.value)}></IonTextarea>
             </IonItem>
 
             <IonButton className="sendBtn" onClick={() => this.handleSendMessage()}>Verstuur</IonButton>
+
+            <IonToast
+              isOpen={this.state.showToast}
+              onDidDismiss={() => this.setShowToast(false)}
+              message="Bericht verzonden."
+              duration={400}
+            />
         </div>
            
         //   </IonContent>

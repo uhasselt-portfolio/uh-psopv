@@ -18,6 +18,7 @@ import './Notification_Item.css';
 import { connect } from "react-redux";
 import {MessageToggle} from '../MessageAction'
 import {formatDateTime} from '../../../../common_functions/date_formatter'
+import { addObjectToActionList } from '../../../../save/saveFunction';
 
 
 class NotificationItem extends Component<any> {
@@ -25,24 +26,27 @@ class NotificationItem extends Component<any> {
         super(props)
     }
 
-    handleOnMenuItemClicked = (data: any) => {
-        this.props.MessageToggle(data.id);
+    state = {
+        seen: this.props.solved
     }
 
-    // setStateClicked(clicked: boolean){
-    //     if(clicked === true && this.state.seen === false){
-    //         this.setState({...this.state, seen: clicked});
-    //     }
-    // }
+    handleOnMenuItemClicked = (data: any) => {
+        console.log("clicked", data)
+        // this.props.MessageToggle(data.id);
+        if(this.state.seen === false){
+            addObjectToActionList('https://psopv.herokuapp.com/api/message/toggle-seen/' + data.id, null);
+            this.setState({...this.state, seen: !this.state.seen});
+        }
+    }
 
     
 
-    renderMessage(){
+    renderMessage(title: string, message: string){
         return(
             <IonLabel>
                 <IonGrid className="MessageBorder">
                     <IonRow className="noPadding">
-                        <IonCol size="9" className="noPadding">
+                        <IonCol size="8" className="noPadding">
                             <p><b>{this.props.created_by}</b> ({this.props.created_by_permission_type}) </p>
                         </IonCol>
                         <IonCol size="3" className="noPadding">
@@ -51,7 +55,7 @@ class NotificationItem extends Component<any> {
                     </IonRow>
                     <IonRow className="noPadding">
                         <IonCol className="noPadding">
-                        <p className="grey">{this.props.title}: {this.props.message} </p>
+                        <p className="grey">{title}: {message} </p>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -59,7 +63,7 @@ class NotificationItem extends Component<any> {
         )
     }
 
-    renderProblem(){
+    renderProblem(title: string, message: string){
         return(
             <IonLabel>
                 <IonGrid className="ProblemBorder">
@@ -73,7 +77,7 @@ class NotificationItem extends Component<any> {
                     </IonRow>
                     <IonRow className="noPadding">
                         <IonCol className="noPadding">
-                        <p className="grey">{this.props.title}: {this.props.message} </p>
+                        <p className="grey">{title}: {message}</p>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -82,37 +86,52 @@ class NotificationItem extends Component<any> {
     }
         
 
-    render(){        
+    render(){   
+        let title;
+        console.log(this.props)
+        if(this.props.title == ""){
+            title = "Geen titel"
+        } else{
+            title=this.props.title
+        }
+
+        let message;
+        if(this.props.message == ""){
+            message = "Geen beschrijving"
+        } else{
+            message=this.props.message
+        }
+
         let data = this.props
         if (this.props.created_by_permission_type == "Vrijwilliger"){
-            if(this.props.solved){
+            if(this.state.seen){
                 return (
                     <div>
                     <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
-                        {this.renderMessage()}
+                        {this.renderMessage(title, message)}
                     </IonItem>
                     </div>  
                 );
             } else{
                 return(
                     <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
-                        {this.renderMessage()}
+                        {this.renderMessage(title, message)}
                     </IonItem>
                 )
             }
         } else{
-            if(this.props.solved){
+            if(this.state.seen){
                 return (
                     <div>
                     <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
-                        {this.renderProblem()}
+                        {this.renderProblem(title, message)}
                     </IonItem>
                     </div>  
                 );
             } else{
                 return(
                     <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
-                        {this.renderProblem()}
+                        {this.renderProblem(title, message)}
                     </IonItem>
                 )
             }

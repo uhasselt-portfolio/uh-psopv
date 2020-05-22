@@ -33,7 +33,70 @@
     background-color: lightgrey;
 }
 
+.noPadding{
+    padding: 0;
+    margin: 0;
+}
+
 .leftAlign{
     text-align: left;
     align-content: top;
+}
+
+.notSolved{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    background-color: white;
+    border-right-style: solid;
+    border-right-width: 3px;
+    border-right-color: crimson;
+}
+
+.solved{
+    background-color: #eee;
+}
+
+.greyText{
+    color: grey;
+}
+
+.bigSize{
+    float: right;
+}
+
+.listHeight{
+    height: 200px;
+}
+
+.addProblemHeight{
+    height: 400px;
+}
+
+.generalPadding{
+    padding: 10px;
+}
+
+.blueBackground{
+    background-color: #1874CD;
+    color: white;
+}
+
+.whiteBackground{
+    background-color: white;
+    color: #135a9f;
+}
+
+.activeProblemType{
+    background-color: #cce3f9;
+}
+
+.item {
+    background-color: red;
+}
+
+
+.offlineMsg{
+    text-align: right;
+    color: crimson;
+    padding: 5px;
 }

@@ -67,7 +67,7 @@ class MeessageGeneral extends React.Component {
         <IonGrid>
           <IonRow>
           <IonCol size="6" className="center">
-              <IonTitle>Notifications</IonTitle>
+              <IonTitle>Berichten</IonTitle>
           </IonCol>
           <IonCol size="2" className="center">
           <IonTabButton onClick={() => this.setSlideIndex(0)}>

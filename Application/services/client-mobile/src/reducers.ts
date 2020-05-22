@@ -26,7 +26,6 @@ import storage from 'redux-persist/lib/storage';
 import saveReducer from './pages/save/saveReducer'
 import ProblemsReducer from './pages/sector-responsible/messages_general/problems/ProblemsReducer';
 
-
 const rootReducer = combineReducers({
     login: LoginReducer,
     list: ListReducer,

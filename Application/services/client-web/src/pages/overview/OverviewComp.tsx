@@ -23,18 +23,22 @@ const styleFormElement = {
 }
 
 const styleMarginTop = {
-    margin: '2vh 0 0 0'
+    margin: '2vh 0 0 0',
+    height: '50vh'
 }
 const newMessageStyle = {
-    background: 'rgb(242,242,250)',
     padding: '10px',
-    width: '50%',
+    width: '100%',
     textAlign: 'center' as 'center'
 }
 const ButtonStyle = {
     background: 'rgb(3,57,108)',
     color: 'white',
     margin: '4px'
+}
+
+const fullWidth = {
+    width: '100%'
 }
 
 interface TabPanelProps {
@@ -291,17 +295,25 @@ class OverviewComp extends Component<Props> {
     /**
      * renders the component
      */
-    render() {
-        let Messages : Array<JSX.Element> = this.props.messages.filter(message => ! message.read).map(x => (
+    renderMessages = () : Array<JSX.Element> => {
+        return this.props.messages.filter(message => ! message.read).map(x => (
             <Message key={Math.random()} id={x.id} title={x.title} sender={x.sender} content={x.content} read={false}/>
         ));
+    }
 
-        let Problems = <List style={styleMarginTop}>{this.renderProblems()}</List> 
-        
-        let Posts: Array<JSX.Element> = this.props.posts.map(x => (
+    renderPosts(){
+        return this.props.posts.map(x => (
             <PostPreview key={Math.random()} id={x.id} title={x.title} addres={x.addres} general={x.general} sector={x.sector} 
                 latitude={x.latitude} longitude={x.longitude} shifts={x.shifts} users={x.users} activeProblem={x.activeProblem}/>
         ));
+    }
+
+    render() {
+        let Messages = <List style={styleMarginTop}>{this.renderMessages()}</List> 
+
+        let Problems = <List style={styleMarginTop}>{this.renderProblems()}</List> 
+        
+        let Posts = <List style={styleMarginTop}>{this.renderPosts()}</List> 
 
         let LocalTime : Date = new Date();
         let LocalHourString : string = LocalTime.toLocaleTimeString();
@@ -337,16 +349,16 @@ class OverviewComp extends Component<Props> {
                 {/* {(Problems.length === 0) && <h5>Geen problemen</h5>} */}
             </TabPanel>
             <TabPanel value={this.state.value} index={1}>
-                {Posts.length > 0 && Posts}
-                {Posts.length === 0 && <h5>Er zijn geen posten</h5>} 
+                {Posts}
+                {/* {Posts.length === 0 && <h5>Er zijn geen posten</h5>}  */}
             </TabPanel>
             <TabPanel value={this.state.value} index={2}>
                 {(Notifications.length > 0) && Notifications}
-                {(Messages.length > 0) && Messages}
-                {(Messages.length === 0) && <h5>Geen berichten</h5>}
+                {Messages}
+                {/* {(Messages.length === 0) && <h5>Geen berichten</h5>} */}
             </TabPanel>
             <TabPanel value={this.state.value} index={3}>
-                <Grid container justify="center">
+                <Grid container style={fullWidth}>
                     <form id="message" onSubmit={this.handleMessageForm} style={newMessageStyle}>
                         <Grid item>
                             <TextField
@@ -366,10 +378,10 @@ class OverviewComp extends Component<Props> {
                                 </TextField>
                         </Grid>
                         {this.state.specificReceiver && 
-                            <Grid item>
-                                <TextField variant="outlined" placeholder="ontvanger" id="receiver" style={styleFormElement}/>
-                            </Grid>}
                         <Grid item>
+                            <TextField variant="outlined" placeholder="ontvanger" id="receiver" style={styleFormElement}/>
+                        </Grid>}
+                        <Grid item xs={12}>
                             <TextField variant="outlined" type="text" placeholder="titel" id="messageTitle" style={styleFormElement}/>
                         </Grid>
                         <Grid item>

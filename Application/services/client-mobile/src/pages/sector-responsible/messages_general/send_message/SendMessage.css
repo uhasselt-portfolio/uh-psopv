@@ -6,3 +6,9 @@
     margin: 20px;
     float: right;
 }
+
+.offlineMsg{
+    text-align: right;
+    color: crimson;
+    padding: 5px;
+}

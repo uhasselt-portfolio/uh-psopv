@@ -53,23 +53,16 @@ class VRMessage extends Component<any> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Notifications</IonTitle>
+            <IonTitle>Berichten</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
-          <IonHeader collapse="condense">
-            <IonToolbar>
-              <IonTitle size="large">Blank</IonTitle>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent>
 
 
       {/*-- List of Post Items --*/}
       <IonList>
         {this.renderList()}
       </IonList>
-    </IonContent>
           
         </IonContent>
       </IonPage>

@@ -199,7 +199,7 @@ class MapPage extends Component<any> {
       <IonPage>
         <IonHeader>
           <IonToolbar>
-            <IonTitle>Map</IonTitle>
+            <IonTitle>Kaart met posten</IonTitle>
           </IonToolbar>
         </IonHeader>
         <IonContent>
