@@ -214,16 +214,29 @@ class ListView extends Component<any> {
       let data_default = this.props.localStorage.posts_data.filter((data: any) =>{
         return (data.sector_id == this.props.localStorage.default_sector)
       })
+      let sector = 0;
+      let colorIndex = -1;
       this.setState({...this.state, data_posts: data_default, default_sector: this.props.localStorage.default_sector, selected_sector: this.props.localStorage.default_sector});
       return data_default.map((data: any, index: number) =>{
+        if(data.sector_id != sector){
+          colorIndex++;
+          sector = data.sector_id
+        }
         return (
-          <ListViewItem {...data}/>
+          <ListViewItem {...data} color={this.props.localStorage.sector_colors[colorIndex].color}/>
         )
       })
     } else {
-      return this.state.data_posts.map((data: any, index: number) =>{
+      let sector = 0;
+      let colorIndex = -1;
+      return this.state.data_posts.map((data: any) =>{
+        if(data.sector_id != sector){
+          colorIndex++;
+          sector = data.sector_id;
+        }
+        console.log(this.props.localStorage.sector_colors[colorIndex].color)
         return (
-          <ListViewItem {... data}/>
+          <ListViewItem {... data} color={this.props.localStorage.sector_colors[colorIndex].color} />
         )
       })
     }  
@@ -235,9 +248,9 @@ class ListView extends Component<any> {
    renderButtons(){
     let list: { title: string; subinfo: string; }[] = [];
     this.props.localStorage.posts_sectors.map((element: any) => {
-        let item = {title: "Sector " + element, subinfo: ""}
+        let item = {title: "Sector " + element.sector_id, subinfo: ""}
         if(element == this.props.localStorage.default_sector){
-           item = {title: "Sector " + element, subinfo: "default"}
+           item = {title: "Sector " + element.sector_id, subinfo: "default"}
         } 
         list.push(item)
     })
@@ -261,11 +274,11 @@ class ListView extends Component<any> {
         <IonSelect
           interface="popover"  
           value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
-            {this.props.localStorage.posts_sectors.map((sector: number) => {
+            {this.props.localStorage.posts_sectors.map((sector: any) => {
               if(this.state.default_sector === sector){
-                return <IonSelectOption  value={sector}>Sector {sector}(D) </IonSelectOption>
+                return <IonSelectOption  value={sector.sector_id}>Sector {sector.sector_id}(D) </IonSelectOption>
               } else{
-                return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
+                return <IonSelectOption value={sector.sector_id}>Sector {sector.sector_id}</IonSelectOption>
               }
             })}
             <IonSelectOption value={-1}>Alle sectors</IonSelectOption>

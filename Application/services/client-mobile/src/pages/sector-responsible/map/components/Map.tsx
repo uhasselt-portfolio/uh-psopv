@@ -1,17 +1,16 @@
 import React from 'react'
-import L from 'leaflet';
+import L, { Point } from 'leaflet';
 import { Redirect } from 'react-router-dom';
- 
+import './Map.css'
+import postIcon from './NormalMarker'
+
+
 var problemIcon = L.icon({
     iconUrl: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
     iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
-    popupAnchor:  [-500, -56] // point from which the popup should open relative to the iconAnchor
+    popupAnchor:  [0, 600] // point from which the popup should open relative to the iconAnchor
 });
-var postIcon = L.icon({
-    iconUrl: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-    iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
-    popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
-});
+
 var userIcon = L.icon({
     iconUrl: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
     iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
@@ -55,6 +54,8 @@ class MyMap extends React.Component<IProps> {
         updating: false,
         markergroup: new L.FeatureGroup()
     }
+
+    
  
     /**
      * function to redirect the user to the detailspage of the problem on a click
@@ -107,8 +108,9 @@ class MyMap extends React.Component<IProps> {
             if (problems[i].length === 1) {
                 let marker : L.Marker = L.marker([problems[i][0].latitude, problems[i][0].longitude], {icon: problemIcon})
                     .bindTooltip(problems[i][0].problemType, {
-                        permanent: true,
-                        direction: 'top'
+                        permanent: false,
+                        direction: 'top',
+                        offset: new Point(0, 0)
                     })
                     .on('click',() => {this.onProblemClicked(problems[i][0])});
                 marker.addTo(this.state.markergroup);
@@ -116,8 +118,10 @@ class MyMap extends React.Component<IProps> {
                 console.log("multiple");
                 let marker : L.Marker = L.marker([problems[i][0].latitude, problems[i][0].longitude], {icon: problemIcon})
                     .bindTooltip("Problemen", {
-                        permanent: true,
-                        direction: 'top'
+                        permanent: false,
+                        direction: 'top',
+                        offset: new Point(0, 0)
+
                     })
                 marker.on('click',() => {this.onMultipleProblemsClicked(problems[i],map,marker)});
                 marker.addTo(this.state.markergroup);
@@ -131,10 +135,13 @@ class MyMap extends React.Component<IProps> {
      */
     addPostMarkers = (posts: any[], map : L.Map) => {
         for (let i = 0; i < posts.length; ++i) {
-            let marker : L.Marker = L.marker([posts[i].latitude,posts[i].longitude], {icon: postIcon})
+            console.log(posts[i])
+            let marker : L.Marker = L.marker([posts[i].latitude,posts[i].longitude], {icon: postIcon(i)})
             .bindTooltip(posts[i].title, {
-                permanent: true,
-                direction: 'top'
+                permanent: false,
+                direction: 'top',
+                offset: new Point(0, -50)
+
             })
             .on('click',() => {this.onPostClicked(posts[i])});
             marker.addTo(this.state.markergroup);
@@ -161,7 +168,7 @@ class MyMap extends React.Component<IProps> {
      */
     componentDidMount = () => {
         var latlng1 = L.latLng(this.props.centerLat, this.props.centerLong);
-        var mymap : L.Map = L.map(this.props.containerId).setView(latlng1, 18);
+        var mymap : L.Map = L.map(this.props.containerId).setView(latlng1, 12);
  
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 25,

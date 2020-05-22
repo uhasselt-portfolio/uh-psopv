@@ -1,7 +1,8 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../database/Database'
-import {resetActionList, getActionList, addObjectToActionList, getDefaultSector, getUserId, setListLocalStorage} from './saveFunction'
+import {resetActionList, getActionList, addObjectToActionList, getDefaultSector, getUserId, setListLocalStorage, getListLocalStorage} from './saveFunction'
+import { push } from "ionicons/icons";
 
 function sortUserShifts(a: any, b: any){
     var shift_begin_a = new Date(a.shift_start)
@@ -107,9 +108,13 @@ function sortMessagesByDate(a: any, b: any){
 
         // make list of sectors
         let sectors: any[] = []
-        posts_data.map((post: any) => {
-            if(!sectors.includes(post.sector_id)){
-                sectors.push(post.sector_id)
+        let list_colors = ["green", "blue", "purple", "red", "darkblue", "darkred", "orange", "black"]
+        let sectors_number: number[] = [];
+
+        posts_data.map((post: any, index: number) => {
+            if(!sectors_number.includes(post.sector_id)){
+                sectors_number.push(post.sector_id)
+                sectors.push({sector_id: post.sector_id, color: list_colors[index]})
             }
 
             // add param "problem"
@@ -259,8 +264,18 @@ function getCurrentUserInfo(ResponseCurrentUser: any){
 
     return{email: userinfo.email, phone_number: userinfo.phone_number, first_name: userinfo.first_name,
         last_name: userinfo.last_name, permission_type: userinfo.permission_type.name, association: userinfo.association.name}
+}
 
-
+function generateSectorColors(sectors: number[], sectorColors: any){
+    console.log(sectorColors)
+    let colors: { sector_id: number; color: string; }[] = []
+    let list_colors = ["green", "blue", "purple", "red", "darkblue", "darkred", "orange", "black"]
+    // if(sectorColors.length <= 0){
+        sectors.map((sector: number, index: number) => {
+            colors.push({sector_id: sector, color:list_colors[index]})
+        })
+    // }
+    return colors;
 }
 
 export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'  
@@ -288,6 +303,8 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
         const default_sector = await getDefaultSector();
         const problemTypes = await database.fetchAllProblemTypes();
         const current_user = await database.fetchUserById(user_id);
+        const sectorColors = await getListLocalStorage('sector_colors');
+
 
 
         let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
@@ -295,12 +312,16 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
         let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems, responsePlannings, default_sector);
         let messages =  getMessages(responseMessages, responseProblems, user_id, volunteers);
         let user_info = getCurrentUserInfo(current_user);
+        let sector_colors = generateSectorColors(postsData.posts_sectors, sectorColors);
 
         let message = messages.messages;
         let problems = messages.problems;
         message.sort(sortMessagesByDate);
         problems.sort(sortMessagesByDate);
 
+        if(sector_colors.length > 0){
+            setListLocalStorage('sector_colors', sector_colors);
+        }
         setListLocalStorage('my_volunteers', volunteers);
         setListLocalStorage('contacts', nonVolunteers);
         setListLocalStorage('posts', postsData.posts_data);

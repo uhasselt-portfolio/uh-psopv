@@ -11,7 +11,7 @@ import './MapPage.css';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
-import Map from '../../common_functions/Map';
+import Map from './components/Map';
 
 
 class MapPage extends Component<any> {
@@ -44,8 +44,8 @@ class MapPage extends Component<any> {
         <IonSelect
           interface="popover"  
           value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
-            {this.props.localStorage.posts_sectors.map((sector: number) => {
-                return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
+            {this.props.localStorage.posts_sectors.map((sector: any) => {
+                return <IonSelectOption value={sector.sector_id}>Sector {sector.sector_id}</IonSelectOption>
             })}
             <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
 
