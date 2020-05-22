@@ -146,7 +146,7 @@ class Posts extends Component<Props> {
                             </div>
                         </Grid>
                         <Grid item style={styleMap}>
-                            {this.props.isMapFetched && <MyMap problems={[]} users={[]} posts={filteredPosts} isMarkerClickable={true}/>} 
+                            {this.props.isMapFetched && <MyMap height={100} problems={[]} users={[]} posts={filteredPosts} isMarkerClickable={true}/>} 
                         </Grid>
                     </Grid>
                 </Container>

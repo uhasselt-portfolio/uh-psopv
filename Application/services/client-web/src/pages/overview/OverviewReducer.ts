@@ -19,7 +19,7 @@ export default function (state: State = initialState, action : AnyAction): State
             return {...state, 
                     loading: false, 
                     isOverviewFetched: true,
-                    problems: action.payload,
+                    problemsSubset: action.payload,
                     isMapFetched: true, 
                     errorMessage: ""}
         case OverviewActions.OVERVIEW_MESSAGE_FETCH_SUCCES : 

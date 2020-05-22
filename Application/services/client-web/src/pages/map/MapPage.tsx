@@ -57,7 +57,7 @@ class PukkelpopMap extends Component<Props> {
 
         return(
             <div>
-                {this.props.isMapFetched && <MyMap problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
+                {this.props.isMapFetched && <MyMap height={90} problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
             </div>
         );
     }

@@ -133,7 +133,7 @@ class PostDetails extends Component<Props> {
                     </Grid>
 
                     <Grid item style={styleMap}>
-                        {this.props.isMapFetched && <MyMap problems={[]} users={[]} posts={[this.props.location.state]} isMarkerClickable={false}/>}  
+                        {this.props.isMapFetched && <MyMap height={80} problems={[]} users={[]} posts={[this.props.location.state]} isMarkerClickable={false}/>}  
                     </Grid>
                 </Grid>
             </div> 

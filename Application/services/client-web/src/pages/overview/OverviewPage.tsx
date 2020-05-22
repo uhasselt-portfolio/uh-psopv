@@ -13,7 +13,7 @@ import MyMap from '../map/Map';
 const stylePaper = {
     margin: '1vw',
     padding: '1vw',
-    height: '85vh',
+    height: '83vh',
     overflow: 'auto'
 } 
 
@@ -77,7 +77,7 @@ class Overview extends Component<Props> {
                 </Grid>
                 <Grid item xs={7}  >
                     <Paper style={stylePaper}>
-                        {this.props.isMapFetched && <MyMap problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
+                        {this.props.isMapFetched && <MyMap height={83} problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
                     </Paper>
                 </Grid>
 
