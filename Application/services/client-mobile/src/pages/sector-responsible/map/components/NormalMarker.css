@@ -1,14 +1,52 @@
+.marker-pin {
+  width: 24px;
+  height: 24px;
+  border-radius: 50% 50% 50% 0;
+  /* background: #c30b82; */
+  position: absolute;
+  transform: rotate(-45deg);
+  left: 50%;
+  top: 50%;
+  margin: -15px 0 0 -15px;
+}
 
-.normal_marker {
+.marker-pin::after {
+    content: '';
+    width: 18px;
+    height: 18px;
+    margin: 3px 0 0 3px;
+    background: #fff;
     position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    background-color: #00ff;
-    border: 2px solid #fff;
-    border-radius: 100%;
-    user-select: none;
-    /* transform: translate(-50%, -50%); */
-    /* background-image: url(../../../images/warning_sign.svg); */
+    border-radius: 50%;
+ }
+
+.custom-div-icon i {
+   position: absolute;
+   width: 18px;
+   font-size: auto;
+   left: 2px;
+   right: 0;
+   top: 10px;
+   text-align: center;
+}
+
+.warningsign {
+  position: relative; /* So we can position the content as absolute */
+  /* Using the borders to create a triangle  */
+  border-left: 0.70em solid transparent;
+  border-right: 0.70em solid transparent;
+  border-bottom: 1.35em solid yellow;
+
+  bottom: -0.5em;    
+  right: 0;      /* Correction because of the CSS Triangle trick*/
+}
+  .warningsign::before {
+      content: "⚠";
+      /* Position the character over the triangle */
+      top: 0.45em;
+      left: -0.45em;
+      position: absolute;
+      color: black;
+      font-size: 2em;
+      line-height: 1em;
   }

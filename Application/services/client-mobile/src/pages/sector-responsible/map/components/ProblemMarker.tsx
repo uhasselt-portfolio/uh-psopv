@@ -1,22 +1,19 @@
 
 import React from 'react';
-import './ProblemMarker.css';
+import './NormalMarker.css';
 import WarningSign from "../../../images/warning_sign"
+import { IonIcon } from '@ionic/react';
+import L, { Point } from 'leaflet';
+import {marker} from 'leaflet';
+import {MapLayer} from 'react-leaflet';
 
-const ProblemMarker = (props: any) => {
+    
+const ProblemIcon = (props: any)  => L.divIcon({
+    className: 'custom-div-icon',
+    html: `<div style="background-color: ${props.sector_color};" class='marker-pin'></div><i class='material-icons'>${props.post_id}</i><span class="warningsign" />`,
+    iconSize: [30, 42],
+    iconAnchor: [15, 42]
+});
 
-    function showInfo(){
-        console.log(props)
-    }
 
-    const { color, name, id } = props;
-    return (
-      <a href={'/PostView/'+props.post_id+"/"+props.sector_id}>
-      <div className="marker" onClick={() => showInfo()}
-        style={{ backgroundColor: color, cursor: 'pointer'}}
-        title={name}
-      ><WarningSign /></div></a>
-    );
-  };
-
-  export default ProblemMarker;
+export default ProblemIcon;

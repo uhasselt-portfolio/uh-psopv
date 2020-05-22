@@ -107,14 +107,16 @@ function sortMessagesByDate(a: any, b: any){
 
 
         // make list of sectors
+        let colorindex = 0;
         let sectors: any[] = []
-        let list_colors = ["green", "blue", "purple", "red", "darkblue", "darkred", "orange", "black"]
+        let list_colors = ["#696969", "#bada55", "#7fe5f0", "#ff80ed", "#0050EF", "#407294", "#cbcba9", "#5ac18e"]
         let sectors_number: number[] = [];
 
         posts_data.map((post: any, index: number) => {
             if(!sectors_number.includes(post.sector_id)){
                 sectors_number.push(post.sector_id)
-                sectors.push({sector_id: post.sector_id, color: list_colors[index]})
+                sectors.push({sector_id: post.sector_id, color: list_colors[colorindex]})
+                colorindex++;
             }
 
             // add param "problem"

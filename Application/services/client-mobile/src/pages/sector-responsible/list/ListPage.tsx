@@ -209,6 +209,14 @@ class ListView extends Component<any> {
     this.setState({...this.state, selected_sort: sort_types.afstand, data_posts: new_data});
   }
 
+  getSectorColor(sector_id: number){
+    console.log(sector_id, this.props)
+    let sector_info = this.props.localStorage.posts_sectors.find((element: any) =>{
+        return (element.sector_id == sector_id);
+    })
+    return sector_info.color
+}
+
   renderListOfItems(){
     if(this.state.data_posts.length <= 0){
       let data_default = this.props.localStorage.posts_data.filter((data: any) =>{
@@ -223,20 +231,15 @@ class ListView extends Component<any> {
           sector = data.sector_id
         }
         return (
-          <ListViewItem {...data} color={this.props.localStorage.sector_colors[colorIndex].color}/>
+          <ListViewItem {...data} color={this.props.localStorage.posts_sectors[colorIndex].color}/>
         )
       })
     } else {
       let sector = 0;
       let colorIndex = -1;
       return this.state.data_posts.map((data: any) =>{
-        if(data.sector_id != sector){
-          colorIndex++;
-          sector = data.sector_id;
-        }
-        console.log(this.props.localStorage.sector_colors[colorIndex].color)
         return (
-          <ListViewItem {... data} color={this.props.localStorage.sector_colors[colorIndex].color} />
+          <ListViewItem {... data} color={this.getSectorColor(data.sector_id)} />
         )
       })
     }  
