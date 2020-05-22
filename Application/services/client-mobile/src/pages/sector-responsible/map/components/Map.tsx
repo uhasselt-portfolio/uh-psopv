@@ -3,8 +3,12 @@ import L, { Point } from 'leaflet';
 import { Redirect } from 'react-router-dom';
 import postIcon from './NormalMarker'
 import ProblemIcon from './ProblemMarker'
+
+import { Plugins } from '@capacitor/core';
+const { Geolocation } = Plugins;
  
 interface IProps {
+    currentPos: {lat: number, lng: number},
     problems : any[][],
     users: any[],
     posts: any[],
@@ -16,6 +20,7 @@ interface IProps {
 }
  
 interface IState {
+    currentPos: {lat: number, lng: number},
     problemClicked: boolean,
     problem: any | null,
     postClicked: boolean,
@@ -27,9 +32,12 @@ interface IState {
     updating: boolean,
     markergroup: L.FeatureGroup
 }
+
+
  
 class MyMap extends React.Component<any> {
     state: IState = {
+        currentPos: {lat: 0, lng: 0},
         problemClicked: false,
         problem: null,
         postClicked: false,
@@ -39,10 +47,10 @@ class MyMap extends React.Component<any> {
         map: null,
         markers: [],
         updating: false,
-        markergroup: new L.FeatureGroup()
+        markergroup: new L.FeatureGroup(),
     }
 
-    
+
  
     /**
      * function to redirect the user to the detailspage of the problem on a click
@@ -74,6 +82,10 @@ class MyMap extends React.Component<any> {
             postClicked: true
         })
     }
+
+    getPost(): string {
+        return '/PostView/'+ this.props.sector_id + '/' + this.props.post_id;
+    }
  
     /**
      * function to redirect the user to the detailspage of the user on a click
@@ -84,37 +96,6 @@ class MyMap extends React.Component<any> {
             userClicked: true
         })
     }
- 
-    // /**
-    //  * adds all the problems the component got in its props to the map
-    //  * if mulitple porblems are on the same post, puts them together
-    //  */
-    // addproblemMarkers = (problems: any[][] ,map : L.Map) => {
-    //     console.log("prob",problems);
-    //     for (let i = 0; i < problems.length; ++i) {
-    //         if (problems[i].length === 1) {
-    //             let marker : L.Marker = L.marker([problems[i][0].latitude, problems[i][0].longitude], {icon: problemIcon})
-    //                 .bindTooltip(problems[i][0].problemType, {
-    //                     permanent: false,
-    //                     direction: 'top',
-    //                     offset: new Point(0, 0)
-    //                 })
-    //                 .on('click',() => {this.onProblemClicked(problems[i][0])});
-    //             marker.addTo(this.state.markergroup);
-    //         } else {
-    //             console.log("multiple");
-    //             let marker : L.Marker = L.marker([problems[i][0].latitude, problems[i][0].longitude], {icon: problemIcon})
-    //                 .bindTooltip("Problemen", {
-    //                     permanent: false,
-    //                     direction: 'top',
-    //                     offset: new Point(0, 0)
-
-    //                 })
-    //             marker.on('click',() => {this.onMultipleProblemsClicked(problems[i],map,marker)});
-    //             marker.addTo(this.state.markergroup);
-    //         }
-    //     }
-    // }
 
     getSectorColor(sector_id: number){
         console.log(sector_id, this.props)
@@ -122,6 +103,19 @@ class MyMap extends React.Component<any> {
             return (element.sector_id == sector_id);
         })
         return sector_info.color
+    }
+
+    addUserMarker(){
+        let icon = postIcon({sector_id: 0, sector_color: this.getSectorColor(1)});
+        let marker : L.Marker = L.marker([this.state.currentPos.lat,this.state.currentPos.lng], {icon: icon})
+        marker.bindTooltip("mezelf", {
+            permanent: false,
+            direction: 'top',
+            offset: new Point(0, -40)
+
+        })
+        .on('click',() => {this.onPostClicked(1)});
+        marker.addTo(this.state.markergroup);
     }
  
     /**
@@ -131,15 +125,17 @@ class MyMap extends React.Component<any> {
     addPostMarkers = (posts: any[], map : L.Map) => {
         for (let i = 0; i < posts.length; ++i) {
             console.log(posts[i])
-            let icon = postIcon({post_id: posts[i].post_id, sector_color: this.getSectorColor(posts[i].sector_id)});
+            let icon = postIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
             if(posts[i].problem){
-                icon = ProblemIcon({post_id: posts[i].post_id, sector_color: this.getSectorColor(posts[i].sector_id)});
+                icon = ProblemIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
             }
             let marker : L.Marker = L.marker([posts[i].loc_lat,posts[i].loc_lng], {icon: icon})
-            .bindTooltip(posts[i].title, {
+
+
+            marker.bindTooltip(posts[i].loc_description, {
                 permanent: false,
                 direction: 'top',
-                offset: new Point(0, -50)
+                offset: new Point(0, -40)
 
             })
             .on('click',() => {this.onPostClicked(posts[i])});
@@ -166,6 +162,7 @@ class MyMap extends React.Component<any> {
  
         // this.addproblemMarkers(this.props.problems,mymap);
         this.addPostMarkers(this.props.posts,mymap);
+        this.addUserMarker();
         mymap.addLayer(this.state.markergroup);
         this.setState({
             ...this.state,
@@ -181,6 +178,7 @@ class MyMap extends React.Component<any> {
     componentWillReceiveProps = (nextProps : IProps) => {
         if (this.props !== nextProps) {
             if (this.state.map != null) {
+                this.state.currentPos = nextProps.currentPos;
                 this.state.map.removeLayer(this.state.markergroup);
                 this.state.markergroup = new L.FeatureGroup();
                 this.state.markergroup.addTo(this.state.map);
@@ -190,10 +188,9 @@ class MyMap extends React.Component<any> {
     }
  
   render () {    
-      console.log(this.props)
+    console.log(this.props)
     return (
         <div id={this.props.containerId} style={{height: this.props.mapHeight.toString() + 'px'}}>
- 
         </div>
       )
   }

@@ -12,7 +12,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
 import Map from './components/Map';
-
+import { Plugins } from '@capacitor/core';
+const { Geolocation } = Plugins;
+ 
 
 class MapPage extends Component<any> {
 
@@ -23,8 +25,19 @@ class MapPage extends Component<any> {
 
   state={
     selected_sector: -1, //if -1 = selected all sectors
-    data_posts: []
+    data_posts: [],
+    currentPos: {lat: 0, lng: 0},
   }
+
+  watchPosition() {
+    const wait = Geolocation.watchPosition({}, (position, err) => {
+        if(position != null){
+            console.log("STATE,", position, this.state)
+            this.setState({...this.state, currentPos: {lat: position.coords.latitude, lng:position.coords.longitude}});
+        }
+    })
+  }
+
 
   static defaultProps = {
     center: {
@@ -63,8 +76,6 @@ class MapPage extends Component<any> {
     }else{
       new_data = this.props.localStorage.posts_data
     }
-
-    console.log(new_data)
    
     this.setState({...this.state, selected_sector: sector, data_posts: new_data});
   }
@@ -73,13 +84,13 @@ class MapPage extends Component<any> {
     if(this.state.data_posts.length <= 0){
       this.setState({...this.state, data_posts: this.props.localStorage.posts_data});
       return (
-        <Map posts={this.props.localStorage.posts_data} sectors={this.props.localStorage.posts_sectors} isMarkerClickable={false} containerId={"map"} 
-        centerLat={50.962595} centerLong={5.358503} mapHeight={700}/>
+        <Map posts={this.props.localStorage.posts_data} sectors={this.props.localStorage.posts_sectors} isMarkerClickable={true} containerId={"map"} 
+        centerLat={50.962595} centerLong={5.358503} mapHeight={700} currentPos={this.state.currentPos}/>
       )
     } else {
       return (
-        <Map posts={this.state.data_posts} sectors={this.props.localStorage.posts_sectors} isMarkerClickable={false} containerId={"map"} 
-        centerLat={50.962595} centerLong={5.358503} mapHeight={700}/>
+        <Map posts={this.state.data_posts} sectors={this.props.localStorage.posts_sectors} isMarkerClickable={true} containerId={"map"} 
+        centerLat={50.962595} centerLong={5.358503} currentPos={this.state.currentPos} mapHeight={700}/>
       )
     }  
   }
@@ -106,51 +117,6 @@ class MapPage extends Component<any> {
         if(this.props.localStorage.posts_data.length <= 0){
           return <div> No Posts found. </div>
         } else{
-          
-          // let problems : any[] = [];
-          // let posts : any[] = [];
-
-          // if(this.state.data_posts.length <= 0){
-          //   this.setState({...this.state, data_posts: this.props.localStorage.posts_data});
-          //   for (let i = 0; i < this.props.localStorage.posts_data.length; ++i) {
-          //     let data : any = this.props.localStorage.posts_data[i];
-          //     if (data.problem !== false) {
-          //       problems.push({
-          //         latitude: data.loc_lat,
-          //         longitude: data.loc_lng,
-          //         post_id : data.post_id,
-          //         problemType: "Er is een probleem"
-          //       });
-          //     } else {
-          //       posts.push({
-          //         latitude: data.loc_lat,
-          //         longitude: data.loc_lng,
-          //         title: data.loc_description
-          //       });
-          //     }
-          //   }
-          // } else {
-          //   for (let i = 0; i < this.state.data_posts.length; ++i) {
-          //     let data : any = this.state.data_posts[i];
-          //     if (data.problem !== false) {
-          //       problems.push({
-          //         latitude: data.loc_lat,
-          //         longitude: data.loc_lng,
-          //         post_id : data.post_id,
-          //         problemType: "Er is een probleem"
-          //       });
-          //     } else {
-          //       posts.push({
-          //         latitude: data.loc_lat,
-          //         longitude: data.loc_lng,
-          //         title: data.loc_description
-          //       });
-          //     }
-          //   }
-          // }
-          // let filteredProblems : any[][] = this.filterProblems(problems);
-
-          console.log(this.props)
           return (
             <div className="GoogleMaps">
             {this.renderButtons()}
@@ -164,6 +130,8 @@ class MapPage extends Component<any> {
   }
 
   render(){
+    this.watchPosition();
+
     return (
       <IonPage>
         <IonHeader>

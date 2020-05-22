@@ -222,21 +222,13 @@ class ListView extends Component<any> {
       let data_default = this.props.localStorage.posts_data.filter((data: any) =>{
         return (data.sector_id == this.props.localStorage.default_sector)
       })
-      let sector = 0;
-      let colorIndex = -1;
       this.setState({...this.state, data_posts: data_default, default_sector: this.props.localStorage.default_sector, selected_sector: this.props.localStorage.default_sector});
       return data_default.map((data: any, index: number) =>{
-        if(data.sector_id != sector){
-          colorIndex++;
-          sector = data.sector_id
-        }
         return (
-          <ListViewItem {...data} color={this.props.localStorage.posts_sectors[colorIndex].color}/>
+          <ListViewItem {...data} color={this.getSectorColor(data.sector_id)}/>
         )
       })
     } else {
-      let sector = 0;
-      let colorIndex = -1;
       return this.state.data_posts.map((data: any) =>{
         return (
           <ListViewItem {... data} color={this.getSectorColor(data.sector_id)} />
@@ -285,11 +277,9 @@ class ListView extends Component<any> {
               }
             })}
             <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
-            {/* <IonSelectOption value={this.state.default_sector}>Default sector</IonSelectOption> */}
 
           </IonSelect> 
           </IonButton>
-          {/* <CustomDropdown list={list} title="Sectors"></CustomDropdown> */}
         </IonCol>
       </IonRow>
       </IonGrid>
