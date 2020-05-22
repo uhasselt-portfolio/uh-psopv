@@ -4,7 +4,7 @@ import PostDataInterface from '../../interfaces/PostDataInterface';
 import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import UserDataInterface from '../../interfaces/UserDataInterface';
 import { Redirect } from 'react-router-dom';
-import {Map, TileLayer, Marker, Popup} from 'react-leaflet';
+import {Map, TileLayer, Marker, Popup, Tooltip} from 'react-leaflet';
 import { Button } from '@material-ui/core';
 
 var problemIcon = L.icon({
@@ -90,10 +90,14 @@ class MyMap extends React.Component<IProps> {
                     <Marker
                         position={L.latLng(problems[i][0].latitude, problems[i][0].longitude)}
                         icon={problemIcon}
+                        onClick={() => {this.onProblemClicked(problems[i][0])}}
                     >
-                        <Popup>
+                        <Tooltip permanent={true} offset={new L.Point(0,-15)} direction={'top'}>
+                            {problems[i][0].problemType}
+                        </Tooltip>
+                        {/* <Popup>
                             <Button onClick={() => {this.onProblemClicked(problems[i][0])}} variant="outlined">{problems[i][0].problemType}</Button>
-                        </Popup>
+                        </Popup> */}
                     </Marker>
                 )
             } else {
@@ -108,6 +112,9 @@ class MyMap extends React.Component<IProps> {
                     position={L.latLng(problems[i][0].latitude, problems[i][0].longitude)}
                     icon={problemIcon}
                     >
+                    <Tooltip permanent={true} offset={new L.Point(0,-15)} direction={'top'}>
+                        Er zijn {popup.length} problemen
+                    </Tooltip>
                         <Popup>
                             {popup}
                         </Popup>
@@ -130,12 +137,11 @@ class MyMap extends React.Component<IProps> {
                 <Marker
                     position={new L.LatLng(posts[i].latitude,posts[i].longitude)}
                     icon={postIcon}
+                    onclick={() => {this.onPostClicked(posts[i])}}
                 >
-                    <Popup>
+                    <Tooltip permanent={true} offset={new L.Point(0,-15)} direction={'top'}>
                         {posts[i].title}
-                        <br></br>
-                        <Button onClick={() => {this.onPostClicked(posts[i])}} variant="outlined">Details</Button>
-                    </Popup>
+                    </Tooltip>
                 </Marker>
             );
         }
@@ -152,12 +158,11 @@ class MyMap extends React.Component<IProps> {
                 <Marker 
                     position={new L.LatLng(users[i].latitude, users[i].longitude)}
                     icon={userIcon}
+                    onClick={() => {this.onUserClicked(users[i])}}
                 >
-                    <Popup>
+                    <Tooltip permanent={true} offset={new L.Point(0,-15)} direction={'top'}>
                         {users[i].name}
-                        <br></br>
-                        <Button onClick={() => {this.onUserClicked(users[i])}} >Details</Button>
-                    </Popup>
+                    </Tooltip>
                 </Marker>
             );
         }
@@ -200,8 +205,17 @@ class MyMap extends React.Component<IProps> {
       let postMarkers : Array<JSX.Element> = this.getPostMarkers(this.props.posts);
       let problemMarkers : Array<JSX.Element> = this.getProblemMarkers(this.props.problems);
 
+      let center : L.LatLng = new L.LatLng(50.962595, 5.358503);
+      if (this.props.posts.length > 0) {
+        center = new L.LatLng(this.props.posts[0].latitude, this.props.posts[0].longitude);
+      } else if (this.props.problems.length > 0) {
+        center = new L.LatLng(this.props.problems[0][0].latitude, this.props.problems[0][0].longitude);
+      } else if (this.props.users.length > 0) {
+        center = new L.LatLng(this.props.users[0].latitude,this.props.users[0].longitude);
+      }
+
     return (
-        <Map center={L.latLng(50.962595, 5.358503)} zoom={18} style={{height: '700px'}}>
+        <Map center={center} zoom={13} style={{height: '700px'}} zoomControl={false}>
             <TileLayer
             attribution={'&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
                      '<a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +

@@ -161,7 +161,7 @@ class MyMap extends React.Component<IProps> {
      */
     componentDidMount = () => {
         var latlng1 = L.latLng(this.props.centerLat, this.props.centerLong);
-        var mymap : L.Map = L.map(this.props.containerId).setView(latlng1, 18);
+        var mymap : L.Map = L.map(this.props.containerId, {zoomControl: false}).setView(latlng1, 13);
  
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 25,

@@ -9,6 +9,7 @@ import {connect} from 'react-redux';
 import userDataInterface from '../../interfaces/UserDataInterface';
 import ShiftDataInterface from '../../interfaces/ShiftDataInterface';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
+import {formatTime, formatDate} from '../../Components/date_formatter'; 
 
 const PaperStyle = {
     margin: '10px',
@@ -106,10 +107,11 @@ class PostPreview extends Component<Props> {
 
         if (this.props.planning.length > 0) {
             let date: Date = new Date(this.props.planning[this.state.currentShift].beginDate);
-            let parsedBeginDate: string = date.toLocaleString();
+            let tempDate : string = formatDate(date.toString());
+            let startTime : string =  formatTime(date.toString());
             let enddate: Date = new Date(this.props.planning[this.state.currentShift].endDate);
-            let parseEndDate : string = enddate.toLocaleString().split(" ")[1];
-            parsedDate = parsedBeginDate + " tot " + parseEndDate;
+            let endTime : string = formatTime(enddate.toString());
+            parsedDate = tempDate + " " + startTime + " tot " + endTime;
             CurrentUsers = this.props.workingUsers[this.state.currentShift].map(x => (
                 <Grid item>
                 <Paper style={UserPaperStyle}>

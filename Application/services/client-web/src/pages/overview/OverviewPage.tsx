@@ -22,11 +22,14 @@ type Props = LinkStateProps & LinkDispatchToProps;
 class Overview extends Component<Props> {
 
     /**
-     * called before the component is mounted
-     * gets all the relevant data from the database to show the user
+     * gets called before the component is mounted
+     * gets all the data from the database
+     * and a installs a timer to check the database every 5 minutes to get updates
      */
     componentWillMount = () => {
-        this.props.fetch();
+        this.props.fetch();         
+        setInterval(this.props.fetch(),300000);
+        // setInterval(this.props.fetchMap,100);
     }
 
     /**

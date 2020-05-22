@@ -10,6 +10,8 @@ import {bindActionCreators} from 'redux';
 import {fetchPlanning} from './PlanningAction';
 import Post from './PlanningPost';
 import UserInterface from '../../interfaces/UserDataInterface';
+import {formatTime, formatDate} from '../../Components/date_formatter'; 
+
 
 const styleFilter = {
     background: 'rgb(242,242,250)',
@@ -205,26 +207,38 @@ class Planning extends Component<Props> {
 
         if (filterdShifts.length > 0 ) {
             shiftChoices = filterdShifts.map(x => {
+                // let date: Date = new Date(x[0].beginDate);
+                // let parsedBeginDate: string = date.toLocaleString();
+                // let enddate: Date = new Date(x[0].endDate);
+                // let parseEndDate : string = enddate.toLocaleString().split(" ")[1];
+
                 let date: Date = new Date(x[0].beginDate);
-                let parsedBeginDate: string = date.toLocaleString();
-                let enddate: Date = new Date(x[0].endDate);
-                let parseEndDate : string = enddate.toLocaleString().split(" ")[1];
+                let tempDate: string = formatDate(date.toString());
+                let beginTime : string = formatTime(x[0].beginDate);
+                let endtTime : string = formatTime(x[0].endDate);
+
                 return (
-                    <MenuItem value={x[0].shiftName + parsedBeginDate}>{parsedBeginDate + " tot " + parseEndDate}</MenuItem>
+                    <MenuItem value={x[0].shiftName + date + beginTime}>{tempDate + " " + beginTime + " tot " + endtTime}</MenuItem>
                 );
             });
 
             let selectedShiftId : Number = -1;
             let selectedShiftIndex : number = -1;
-            for (let i = 0; i <  filterdShifts.length; ++i) {
+            for (let i = 0; i <  filterdShifts.length; ++i) { //TODO misschien code verbeteren
                 let date: Date = new Date(filterdShifts[i][0].beginDate);
-                let parsedBeginDate: string = date.toLocaleString();
-                if (filterdShifts[i][0].shiftName + parsedBeginDate === this.state.shiftFilter) {
+                let parsedBeginDate: string = date.toLocaleString().split(" ")[1];
+                if ((date.getHours()-2) < 10) 
+                    parsedBeginDate = "0" + (date.getHours()-2) + ":" + parsedBeginDate.split(":")[1];
+                else
+                    parsedBeginDate = (date.getHours()-2) + ":" + parsedBeginDate.split(":")[1];
+
+                if (filterdShifts[i][0].shiftName + date.toString() + parsedBeginDate === this.state.shiftFilter) {
                     selectedShiftId = filterdShifts[i][0].shiftId;
                     selectedShiftIndex = i;
                     break;
                 }
             }
+
 
             let postsOfShift : PostInterface[] = [];
             if (selectedShiftIndex !== -1) {
@@ -277,6 +291,7 @@ class Planning extends Component<Props> {
 
         }
 
+        console.log(postsUi);
 
         // let uniqueShifts : ShiftInterface[] = [];
         // for (let i = 0; i < this.props.planning.length; ++i) {

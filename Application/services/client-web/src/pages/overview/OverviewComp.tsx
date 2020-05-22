@@ -271,6 +271,20 @@ class OverviewComp extends Component<Props> {
                 costumMessage: true,
                 templateSelected: value
             });
+        } else if (value === "Naar post") {
+            this.setState({
+                ...this.state,
+                costumMessage: false,
+                template: "Gelieve naar uw post te gaan",
+                templateSelected: value
+            });
+        } else if (value === "wat probleem") {
+            this.setState({
+                ...this.state,
+                costumMessage: false,
+                template: "Wat is uw probleem",
+                templateSelected: value
+            });
         }
     }
 
@@ -371,6 +385,8 @@ class OverviewComp extends Component<Props> {
                             >
                                 <MenuItem value={'vrij bericht'}>vrij bericht</MenuItem>
                                 <MenuItem value={'Geen pauze'}>Geen pauze</MenuItem>  {/*TODO meer templates*/}
+                                <MenuItem value={"Naar post"}>Ga naar post</MenuItem>
+                                <MenuItem value={"wat probleem"}>Wat is het probleem</MenuItem>
                             </TextField>
                         </Grid>
                         { this.state.costumMessage && 
