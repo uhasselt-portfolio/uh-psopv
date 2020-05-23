@@ -1,5 +1,5 @@
 import React from "react";
-import { IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonLabel, IonHeader, IonToolbar, IonTitle, IonPage, IonContent, IonSlides, IonSlide, IonGrid, IonCol, IonRow } from "@ionic/react";
+import { IonTabs, IonRouterOutlet, IonTabBar, IonTabButton, IonIcon, IonLabel, IonHeader, IonToolbar, IonTitle, IonPage, IonContent, IonSlides, IonSlide, IonGrid, IonCol, IonRow, IonBadge } from "@ionic/react";
 import { Route, Redirect } from "react-router";
 import { notificationsOutline, paperPlaneOutline, warningOutline, notifications, paperPlane, warning } from "ionicons/icons";
 import { IonReactRouter } from "@ionic/react-router";
@@ -7,6 +7,7 @@ import Notifications from './message/MessagePage'
 import SendNotifications from './send_message/SendMessage'
 import './messageGeneralePage.css'
 import ProblemsPage from "./problems/ProblemsPage";
+import { getListLocalStorage } from "../../save/saveFunction";
 
 let swiper: any = null;
 
@@ -14,9 +15,30 @@ const init = async function(this: any) {
     swiper = await this.getSwiper();
 };
 
-class MeessageGeneral extends React.Component {
+class MessageGeneral extends React.Component {
+
+    constructor(props: any) {
+      super(props);
+      this.setAmountMessage();
+  }
+
     state= {
-      selected: 0
+      selected: 0,
+      amount_msg: 0,
+      amount_problems: 0
+    }
+  
+    async setAmountMessage(){
+      let msg = await getListLocalStorage('messages');
+      msg = msg.filter((element: any) => {
+        return (element.solved == false)
+      })
+  
+      let problems = await getListLocalStorage('problems');
+      problems = problems.filter((element: any) => {
+        return (element.solved == false)
+      })
+      this.setState({...this.state, amount_msg: msg.length, amount_problems: problems.length});
     }
 
     handleSlideChange(){
@@ -70,17 +92,19 @@ class MeessageGeneral extends React.Component {
               <IonTitle>Berichten</IonTitle>
           </IonCol>
           <IonCol size="2" className="center">
-          <IonTabButton onClick={() => this.setSlideIndex(0)}>
+            <IonTabButton className="absolute" onClick={() => this.setSlideIndex(0)}>
+              <IonBadge color="primary">{this.state.amount_msg}</IonBadge>
               {not_icon}
             </IonTabButton>
           </IonCol>
           <IonCol size="2" className="center">
-          <IonTabButton onClick={() => this.setSlideIndex(1)}>
+          <IonTabButton className="absolute" onClick={() => this.setSlideIndex(1)}>
+            <IonBadge color="primary">{this.state.amount_problems}</IonBadge>
             {pro_icon}
             </IonTabButton>
           </IonCol>
           <IonCol size="2" className="center">
-          <IonTabButton onClick={() => this.setSlideIndex(2)}>
+          <IonTabButton className="absolute" onClick={() => this.setSlideIndex(2)}>
             {send_icon}
             </IonTabButton>
           </IonCol>
@@ -106,4 +130,4 @@ class MeessageGeneral extends React.Component {
     }
   }
   
-  export default MeessageGeneral;
+  export default MessageGeneral;

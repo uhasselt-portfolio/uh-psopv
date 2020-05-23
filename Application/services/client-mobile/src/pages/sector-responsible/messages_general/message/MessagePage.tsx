@@ -4,7 +4,8 @@ import NotificationItem from './component/Notification_Item'
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch, bindActionCreators } from "redux";
-import {fetchMessagesOf} from './MessageAction'
+import {fetchMessagesOf, loadMessages} from './MessageAction'
+import {updateMessages} from '../../../save/saveAction'
 
 
 
@@ -22,12 +23,31 @@ import { IonButton,
 
 
 class Notifications extends Component<any> {
+  interval: NodeJS.Timeout | undefined;
+
   constructor(props: any) {
     super(props);
   }
 
+  state = {
+    state: 0
+  }
+
+
+  componentWillUnmount() {
+    if(this.interval != undefined){
+      clearInterval(this.interval);
+    }
+  }
+
+
   componentDidMount(){
     this.props.fetchMessagesOf(); // TODO USERID
+
+    this.interval = setInterval(() => {
+      console.log("interval MessagePage")
+      this.props.fetchMessagesOf(); // TODO USERID
+    }, 10000);
   }
 
   renderList(){
@@ -35,7 +55,9 @@ class Notifications extends Component<any> {
       if(this.props.localStorage.length <= 0){
           return <div> No messages found. </div>
       } else{
-        return this.props.localStorage.map((data: any, index: number) =>{
+        // let new_list = this.props.localStorage.slice(this.state.start_index, this.state.end_index);
+
+        return this.props.localStorage.messages.map((data: any, index: number) =>{
           return (
           <NotificationItem {... data}/>
           )
@@ -46,14 +68,33 @@ class Notifications extends Component<any> {
     }
   }
 
+  loadMoreMessage(){
+    this.props.loadMessages();
+    // this.setState({...this.state, end_index: this.state.start_index + this.state.increase_index_by});
+  }
+
 
   render(){
-    return (
-      <IonList>
-        {this.renderList()}
-      </IonList>
-    );
+    if(this.props.localStorage != undefined){
+      console.log(this.props)
+      let button;
+      if(!this.props.localStorage.loaded){
+        button = <IonButton className="marginBottom" onClick={() => this.loadMoreMessage()}> Meer berichten laden ... </IonButton>
+      } else{
+        button = <div></div>;
+      }
+  
+      return (
+        <IonList>
+          {this.renderList()}
+          {button}
+        </IonList>
+      );
+    } else{
+      return (<div></div>)
     }
+  }
+   
 };
 
 function mapStateToProps(state: any) {
@@ -66,7 +107,9 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchMessagesOf
+    fetchMessagesOf,
+    loadMessages,
+    updateMessages
   }, dispatch);
 }
 

@@ -31,10 +31,8 @@ class NotificationItem extends Component<any> {
     }
 
     handleOnMenuItemClicked = (data: any) => {
-        console.log("clicked", data)
-        // this.props.MessageToggle(data.id);
         if(this.state.seen === false){
-            addObjectToActionList('https://psopv.herokuapp.com/api/message/toggle-seen/' + data.id, null);
+            this.props.MessageToggle(data.id);
             this.setState({...this.state, seen: !this.state.seen});
         }
     }
@@ -88,7 +86,6 @@ class NotificationItem extends Component<any> {
 
     render(){   
         let title;
-        console.log(this.props)
         if(this.props.title == ""){
             title = "Geen titel"
         } else{

@@ -19,7 +19,7 @@ import { IonButton,
 import { bindActionCreators } from 'redux';
 import {fetchPosts} from './ListAction'
 import { connect } from 'react-redux';
-import { getDefaultSector } from '../../save/saveFunction';
+import { getDefaultSector, ConcatListToActionList } from '../../save/saveFunction';
 import CustomDropdown from './components/CustomDropdown';
 import { Plugins } from '@capacitor/core';
 
@@ -32,6 +32,23 @@ const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand", best_route: 
 class ListView extends Component<any> {
   constructor(props: any) {
     super(props);
+  }
+
+  addALotMessage(){
+    let function_list: any[] = [];
+    for( let i = 0; i < 10; i++){
+      let params = {
+          title: "double",
+          message: "message",
+          created_by_id: 1,
+          send_to_id: 2,
+          priority: 5,
+      }
+  
+      function_list = [...function_list, {url: 'https://psopv.herokuapp.com/api/message/add', params: params}]
+    }
+  ConcatListToActionList(function_list);
+
   }
   
   state={
@@ -47,8 +64,6 @@ class ListView extends Component<any> {
 
   async getCurrentLocation() {
     const position = await Geolocation.getCurrentPosition();
-    console.log(position.coords.latitude);
-    console.log(position.coords.longitude);
     return position;
   }
 
@@ -64,11 +79,8 @@ class ListView extends Component<any> {
         return element.sector_id === sector
       })     
     }else{
-      console.log(this.props.localStorage.posts_data)
       new_data = this.props.localStorage.posts_data
     }
-    // this.setState({selected_sector: sector, data_posts: new_data});
-    // // Correct
     this.setState((state, props) => ({
       selected_sector: sector, data_posts: new_data
     }));
@@ -107,10 +119,8 @@ class ListView extends Component<any> {
         selected_element = element;
       }
     }
-    console.log(distance)
     return selected_element;
   }
-
  
   async sortDataByBestRoute(){
     const position = await Geolocation.getCurrentPosition();
@@ -118,7 +128,7 @@ class ListView extends Component<any> {
 
     let new_data = this.state.data_posts
     let loop_data_length = this.state.data_posts.length;
-    let best_route = [];
+    let best_route: any[] = [];
 
 
     for(let i = 0; i < loop_data_length; i++){
@@ -129,31 +139,33 @@ class ListView extends Component<any> {
       best_route.push(new_shortest);
     }
 
-    console.log(best_route);
+    this.setState((state, props) => ({
+      selected_sort: sort_types.afstand, data_posts: best_route
+    }));
   }
 
   funcSortDataAlphabetical(a: any, b: any){
     if(a.sector_id < b.sector_id){
-      if(a.id < b.id){
+      if(a.post_id < b.post_id){
         return -1
-      } else if(a.id > b.id){
+      } else if(a.post_id > b.post_id){
         return 1
       } else{
         return 0
       }
     
     } else if(a.sector_id > b.sector_id){
-      if(a.id < b.id){
+      if(a.post_id < b.post_id){
         return -1
-      } else if(a.id > b.id){
+      } else if(a.post_id > b.post_id){
         return 1
       } else{
         return 0
       }
     } else{
-      if(a.id < b.id){
+      if(a.post_id < b.post_id){
         return -1
-      } else if(a.id > b.id){
+      } else if(a.post_id > b.post_id){
         return 1
       } else{
         return 0
@@ -163,8 +175,11 @@ class ListView extends Component<any> {
 
   sortDataAlphabetical(){
     let new_data = this.state.data_posts
-    new_data.sort(this.funcSortDataAlphabetical)  
-    this.setState({...this.state, selected_sort: sort_types.alfabetisch, data_posts: new_data});
+    new_data.sort(this.funcSortDataAlphabetical) 
+    console.log("alha",new_data) 
+    this.setState((state, props) => ({
+      selected_sort: sort_types.alfabetisch, data_posts: new_data
+    }));
   }
 
   funcSortDistance(currentUserLocation:any) {
@@ -186,11 +201,19 @@ class ListView extends Component<any> {
   async sortDataByDistance(){
     let new_data = this.state.data_posts
     let currentUserLocation = await this.getCurrentLocation();
-
-
     new_data.sort(this.funcSortDistance(currentUserLocation))
-    this.setState({...this.state, selected_sort: sort_types.afstand, data_posts: new_data});
+    this.setState((state, props) => ({
+      selected_sort: sort_types.afstand, data_posts: new_data
+    }));
   }
+
+  getSectorColor(sector_id: number){
+    console.log(sector_id, this.props)
+    let sector_info = this.props.localStorage.posts_sectors.find((element: any) =>{
+        return (element.sector_id == sector_id);
+    })
+    return sector_info.color
+}
 
   renderListOfItems(){
     if(this.state.data_posts.length <= 0){
@@ -200,13 +223,14 @@ class ListView extends Component<any> {
       this.setState({...this.state, data_posts: data_default, default_sector: this.props.localStorage.default_sector, selected_sector: this.props.localStorage.default_sector});
       return data_default.map((data: any, index: number) =>{
         return (
-          <ListViewItem {...data}/>
+          <ListViewItem {...data} color={this.getSectorColor(data.sector_id)}/>
         )
       })
     } else {
-      return this.state.data_posts.map((data: any, index: number) =>{
+      console.log(this.state)
+      return this.state.data_posts.map((data: any) =>{
         return (
-          <ListViewItem {... data}/>
+          <ListViewItem {... data} color={this.getSectorColor(data.sector_id)} />
         )
       })
     }  
@@ -218,9 +242,9 @@ class ListView extends Component<any> {
    renderButtons(){
     let list: { title: string; subinfo: string; }[] = [];
     this.props.localStorage.posts_sectors.map((element: any) => {
-        let item = {title: "Sector " + element, subinfo: ""}
+        let item = {title: "Sector " + element.sector_id, subinfo: ""}
         if(element == this.props.localStorage.default_sector){
-           item = {title: "Sector " + element, subinfo: "default"}
+           item = {title: "Sector " + element.sector_id, subinfo: "default"}
         } 
         list.push(item)
     })
@@ -244,18 +268,17 @@ class ListView extends Component<any> {
         <IonSelect
           interface="popover"  
           value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>
-            {this.props.localStorage.posts_sectors.map((sector: number) => {
+            {this.props.localStorage.posts_sectors.map((sector: any) => {
               if(this.state.default_sector === sector){
-                return <IonSelectOption  value={sector}>Sector {sector}</IonSelectOption>
+                return <IonSelectOption  value={sector.sector_id}>Sector {sector.sector_id}(D) </IonSelectOption>
               } else{
-                return <IonSelectOption value={sector}>Sector {sector}</IonSelectOption>
-
+                return <IonSelectOption value={sector.sector_id}>Sector {sector.sector_id}</IonSelectOption>
               }
             })}
             <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
+
           </IonSelect> 
           </IonButton>
-          {/* <CustomDropdown list={list} title="Sectors"></CustomDropdown> */}
         </IonCol>
       </IonRow>
       </IonGrid>
@@ -287,6 +310,10 @@ class ListView extends Component<any> {
           return <div>No interconnection found</div>
         }
         if(this.props.localStorage.posts_sectors.length > 0){
+          // return <div>
+          //   <IonButton onClick={() => this.addALotMessage()}></IonButton>
+          // </div>
+          
           return this.renderBasis();
         }
       } else{

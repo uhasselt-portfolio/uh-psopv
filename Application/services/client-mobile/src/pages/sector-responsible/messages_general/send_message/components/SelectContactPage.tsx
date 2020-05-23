@@ -29,7 +29,7 @@ class SelectContactWindow extends React.Component<any> {
     }
 
     state = {
-      showPopover: true,
+      showPopover: true
     }  
 
     componentDidMount(){

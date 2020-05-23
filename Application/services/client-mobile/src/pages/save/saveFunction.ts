@@ -120,8 +120,9 @@ export async function resetActionList() {
     } 
 
     return obj
-
   }
+
+
 
   export async function removeListLocalStorage(id: string) {
     return await Storage.remove({ key: id });

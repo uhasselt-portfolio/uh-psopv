@@ -19,7 +19,7 @@ import {
 } from '@ionic/react';
 import './InfoPage.css'
 import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/background-geolocation";
-import Map from '../../common_functions/Map';
+import Map from '../../sector-responsible/map/components/Map';
 
 class InfoPage extends React.Component<any, any> {
 
