@@ -3,6 +3,7 @@ import {Paper,Grid, ListItem} from '@material-ui/core';
 import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import {Redirect} from 'react-router-dom';
 import './ProblemPreview.css'
+import {formatDateTime} from '../../Components/date_formatter';
 
 const PaperStyle = {
     margin: '10px',
@@ -19,12 +20,18 @@ class ProblemPreview extends Component<ProblemDataInterface> {
         redirecting: false
     }
 
+    /**
+     * sets the state to go to the specific problem page
+     */
     handleLink = () => {
         this.setState({
             redirecting: true
         });
     }
 
+    /**
+     * renders the component
+     */
     render() {
 
         if (this.state.redirecting) {
@@ -37,7 +44,8 @@ class ProblemPreview extends Component<ProblemDataInterface> {
         }
 
         let date: Date = new Date(this.props.timeStamp);
-        let parsedDate: string = date.toLocaleString();
+        // let parsedDate: string = date.toLocaleString();
+        let parsedDate : string = formatDateTime(date.toString());
 
         return(
             <Paper style={PaperStyle}>

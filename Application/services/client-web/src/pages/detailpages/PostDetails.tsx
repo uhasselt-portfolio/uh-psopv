@@ -46,9 +46,15 @@ type Props = IProps & LinkStateProps & LinkDispatchToProps;
 
 class PostDetails extends Component<Props> {
 
+    /**
+     * gets called before the component is mounted
+     * gets the planning from the database
+     */
     componentWillMount = () => {
         this.props.fetchPlanning();
     }
+
+    //TODO show planning and problems on post
 
     organizePlanning = (ownshifts: ShiftDataInterface[]): ShiftProps[] => {
         let allShifts : ShiftDataInterface[] = ownshifts;
@@ -96,6 +102,9 @@ class PostDetails extends Component<Props> {
         return shiftUi;
     }
 
+    /**
+     * renders the component
+     */
     render() {
         return(
             <div>
@@ -124,7 +133,7 @@ class PostDetails extends Component<Props> {
                     </Grid>
 
                     <Grid item style={styleMap}>
-                        {this.props.isMapFetched && <MyMap problems={[]} users={[]} posts={[this.props.location.state]} isMarkerClickable={false}/>}  
+                        {this.props.isMapFetched && <MyMap height={80} problems={[]} users={[]} posts={[this.props.location.state]} isMarkerClickable={false}/>}  
                     </Grid>
                 </Grid>
             </div> 

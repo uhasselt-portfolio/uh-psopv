@@ -31,10 +31,16 @@ type props = LinkDispatchToProps & IProps;
 
 class ProblemDetails extends Component<props> {
 
+    /**
+     * updates the database that the problems has been solved
+     */
     handleSolvedButton = () => {
         this.props.problemSolved(this.props.location.state.id);
     }
 
+    /**
+     * renders the component
+     */
     render() {
 
         return(
@@ -80,7 +86,7 @@ class ProblemDetails extends Component<props> {
                         </Grid>
                     </Grid>
                     <Grid item style={styleMap}>
-                        {<MyMap problems={[[this.props.location.state]]} users={[]} posts={[]} isMarkerClickable={false}/>}
+                        {<MyMap problems={[[this.props.location.state]]} height={80} users={[]} posts={[]} isMarkerClickable={false}/>}
                     </Grid>
                 </Grid>
             </div> 

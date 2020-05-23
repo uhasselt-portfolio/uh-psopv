@@ -10,6 +10,10 @@ export enum MapActions {
     MAP_FETCH_FAIL = 'MAP_FETCH_FAIL'
 };
 
+/**
+ * gets all the necessary data from the database to show on the map
+ * all the problems, users, posts
+ */
 export const fetchMap = () => async (dispatch : Redux.Dispatch) => {
     console.log("in map fetch");
     try {
@@ -17,9 +21,11 @@ export const fetchMap = () => async (dispatch : Redux.Dispatch) => {
             type: MapActions.MAP_FETCH_START
         });
 
-        let problems: ProblemDataInterface[] = await new Database().fetchProblems();
-        let users: UserDataInterface[] = await new Database().fetchusers();
-        let posts = await new Database().fetchPosts();
+        let database : Database = new Database();
+
+        let problems: ProblemDataInterface[] = await database.fetchProblems();
+        let users: UserDataInterface[] = await database.fetchusers();
+        let posts = await database.fetchPosts();
 
         dispatch({
             type: MapActions.MAP_FETCH_SUCCES,

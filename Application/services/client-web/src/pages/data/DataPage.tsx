@@ -212,6 +212,9 @@ class Data extends Component<Props> {
         });
     }
 
+    /**
+     * renders the component
+     */
     render() {
         return(
             <Grid container direction="row">

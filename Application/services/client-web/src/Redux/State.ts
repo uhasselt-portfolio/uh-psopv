@@ -12,7 +12,8 @@ export default interface State {
     users: UserDataInterface[],
     planning: ShiftDataInterface[],
     items: ItemDataInterface[],
-    allProblems: ProblemDataInterface[]
+    allProblems: ProblemDataInterface[];
+    problemsSubset: ProblemDataInterface[],
 
     loading: boolean,
     errorMessage: string,
@@ -40,6 +41,7 @@ export const initialState : State = {
     planning: [],
     items: [],
     allProblems: [],
+    problemsSubset: [],
     isProblemFetched : false,
     loading: false,
     isMapFetched: false,

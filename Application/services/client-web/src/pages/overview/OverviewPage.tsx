@@ -13,7 +13,7 @@ import MyMap from '../map/Map';
 const stylePaper = {
     margin: '1vw',
     padding: '1vw',
-    height: '85vh',
+    height: '83vh',
     overflow: 'auto'
 } 
 
@@ -21,11 +21,20 @@ type Props = LinkStateProps & LinkDispatchToProps;
 
 class Overview extends Component<Props> {
 
+    /**
+     * gets called before the component is mounted
+     * gets all the data from the database
+     * and a installs a timer to check the database every 5 minutes to get updates
+     */
     componentWillMount = () => {
-        this.props.fetch();
+        this.props.fetch();         
+        setInterval(this.props.fetch(),300000);
+        // setInterval(this.props.fetchMap,100);
     }
 
-
+    /**
+     * renders the component
+     */
     render() {
         let sortedProblems : ProblemDataInterface[][] = [];
         for (let i = 0; i < this.props.problems.length; ++i) {
@@ -68,7 +77,7 @@ class Overview extends Component<Props> {
                 </Grid>
                 <Grid item xs={7}  >
                     <Paper style={stylePaper}>
-                        {this.props.isMapFetched && <MyMap problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
+                        {this.props.isMapFetched && <MyMap height={83} problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
                     </Paper>
                 </Grid>
 

@@ -4,7 +4,6 @@ import {Grid, Paper, Button, ListItem} from '@material-ui/core';
 import {connect} from 'react-redux'
 import {postMessageRead} from './OverviewAction'
 import {bindActionCreators} from 'redux';
-import { spacing } from '@material-ui/system';
 
 
 interface IState {
@@ -21,16 +20,6 @@ const ButtonStyle = {
     color: 'white',
     margin: '5px'
 }
-const LeftPartStyle = {
-    width: '70%'
-}
-const RightPartStyle = {
-    width: '30%'
-}
-const noPadding = {
-    padding: '0',
-    margin: '0'
-}
 
 type Props = LinkDispatchToProps & MessageInterface;
 
@@ -45,6 +34,10 @@ class Message extends Component<Props> {
         }
     }
 
+    /**
+     * gets called after the component is mounted
+     * updates the state of the component with the props
+     */
     componentDidMount() {
         this.setState({
             data: {
@@ -57,10 +50,16 @@ class Message extends Component<Props> {
         })
     }
 
+    /**
+     * updates the database that the message has been read
+     */
     handleButton = () => {
         this.props.postMessageRead(this.props.id);
     }
 
+    /**
+     * renders the component
+     */
     render() {
         return (
             <Paper style={PaperStyle}>

@@ -15,6 +15,9 @@ interface IProps {
 }
 
 class Notification extends Component<IProps> {
+    /**
+     * renders the component
+     */
     render() {
         return (
             <Paper style={paperStyle}>

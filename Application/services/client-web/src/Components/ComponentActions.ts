@@ -15,6 +15,10 @@ export enum ComponentActions {
     USER_POST_CONNECTION_CHANGED_FAIL = 'USER_POST_CONNECTION_CHANGED_FAIL'
 };
 
+/**
+ * lets the database update to indicate that the problem is solved
+ * @param Problemid the id of the solved problem
+ */
 export const problemSolved = (Problemid: Number) => async (dispatch : Redux.Dispatch) => {
     console.log("in problem solved post");
     try {
@@ -48,6 +52,9 @@ export const problemSolved = (Problemid: Number) => async (dispatch : Redux.Disp
     }
 }
 
+/**
+ * lets the database fetch all the users
+ */
 export const fetchuser = () => async (dispatch: Redux.Dispatch) => {
     console.log("in fetch user");
     try {
@@ -79,6 +86,11 @@ export const fetchuser = () => async (dispatch: Redux.Dispatch) => {
     }
 }
 
+/**
+ * lets the database update the connection of the user
+ * @param userid the id of the user to change the connection
+ * @param connection the new connection status
+ */
 export const changeConnection = (userid: Number, connection: boolean) => async (dispatch: Redux.Dispatch) => {
     console.log("in user connection changes post");
     try {

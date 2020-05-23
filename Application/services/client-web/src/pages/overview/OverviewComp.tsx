@@ -24,7 +24,7 @@ const styleFormElement = {
 
 const styleMarginTop = {
     margin: '2vh 0 0 0',
-    height: '50vh'
+
 }
 const newMessageStyle = {
     padding: '10px',
@@ -69,7 +69,10 @@ interface IState {
     specificReceiver: boolean,
     currentSelected: string,
     messageSend: boolean,
-    wrongUser: boolean
+    wrongUser: boolean,
+    templateSelected: string,
+    costumMessage: boolean,
+    template: string
 }
 
 type Props = LinkStateProps & LinkDispatchToProps;
@@ -80,16 +83,34 @@ class OverviewComp extends Component<Props> {
         specificReceiver: false,
         currentSelected: 'iedereen',
         messageSend: false,
-        wrongUser: false
+        wrongUser: false,
+        templateSelected: 'vrij bericht',
+        costumMessage: true,
+        template: ""
     }
 
+    /**
+     * gets called before the componend is mounted
+     * gets all the problems from the database
+     */
     componentWillMount() {
-        this.props.fetchProblems();
+        this.props.fetchProblems(5);
     }
 
+    fetchMoreProblems = () => {
+        this.props.fetchProblems(this.props.problems.length + 5);
+    }
+
+    /**
+     * gets the relevant data from the database when the user changes tabs
+     * fetches the problems
+     * fetches the post
+     * fetches the messages
+     */
     handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
+        console.log("ee");
         if (newValue === 0)
-            this.props.fetchProblems();
+            this.props.fetchProblems(this.props.problems.length);
         else if (newValue === 1)
             this.props.fetchPosts();
         else if (newValue === 2)
@@ -100,6 +121,10 @@ class OverviewComp extends Component<Props> {
         });
     };
 
+    /**
+     * checks if the message is valid
+     * sends the message to the database(server)
+     */
     handleMessage = () => {
         this.setState({
             ...this.state,
@@ -151,11 +176,18 @@ class OverviewComp extends Component<Props> {
             }
         }          
     }
+    /**
+     * handles the form submit of the message
+     * prevents the default page reload on html form submit
+     */
     handleMessageForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         this.handleMessage();
     }
 
+    /**
+     * updates the state the the new receiver of the message
+     */
     handleFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         if (event.target.value === 'specifiek')
             this.setState({
@@ -170,6 +202,9 @@ class OverviewComp extends Component<Props> {
                 currentSelected: event.target.value
             })
     }
+    /**
+     * sends a message to all users
+     */
     sendMessageToAll = (title: string, content: string) => {
         for (let i = 0; i < this.props.users.length; ++i) {
             this.props.postNewMessage(this.props.users[i].id,title,content,this.props.admin.id);
@@ -182,6 +217,9 @@ class OverviewComp extends Component<Props> {
         ((document.getElementById("messageTitle")) as HTMLInputElement).value = "";
         ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
     }
+    /**
+     * sends a message to only the volunteers
+     */
     sendMessageToVrijwilligers = (title: string, content: string) =>{
         for (let i = 0; i < this.props.users.length; ++i) {
             if (this.props.users[i].permission === 1)
@@ -195,6 +233,9 @@ class OverviewComp extends Component<Props> {
         ((document.getElementById("messageTitle")) as HTMLInputElement).value = "";
         ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
     }
+    /**
+     * sends a message to only the sector-responsible
+     */
     sendMessageToVerantwoordelijke = (title: string, content: string) => {
         for (let i = 0; i < this.props.users.length; ++i) {
             if (this.props.users[i].permission === 2)
@@ -209,14 +250,54 @@ class OverviewComp extends Component<Props> {
         ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
     } 
 
-    renderProblems(){
+    /**
+     * function to create an array of all the problems from props mapped to a problemViewComponent
+     */
+    renderProblems = () : Array<JSX.Element> => {
         return this.props.problems.filter(problem => ! problem.solved).map(x => (
             <ProblemPreview key={Math.random()} id={x.id} problemType={x.problemType} priority={x.priority} discription={x.discription} shiftName={x.shiftName} 
             timeStamp={x.timeStamp} post={x.post} postId={x.postId} user={x.user} sender={x.sender} latitude={x.latitude} longitude={x.longitude} solved={x.solved}/>
         ));
     }
 
-    renderMessages(){
+    /**
+     * changes the internal state corresponding to the user selection
+     * show the corresponding message to the user
+     */
+    handleTemplateChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+        console.log(event);
+        let value : string  = event.target.value;
+        if (value === "Geen pauze") {
+            this.setState({
+                ...this.state,
+                costumMessage: false,
+                template: "Uw pauze valt vandaag weg",
+                templateSelected: value
+            });
+        } else if(value === "vrij bericht") {
+            this.setState({
+                ...this.state,
+                costumMessage: true,
+                templateSelected: value
+            });
+        } else if (value === "Naar post") {
+            this.setState({
+                ...this.state,
+                costumMessage: false,
+                template: "Gelieve naar uw post te gaan",
+                templateSelected: value
+            });
+        } else if (value === "wat probleem") {
+            this.setState({
+                ...this.state,
+                costumMessage: false,
+                template: "Wat is uw probleem",
+                templateSelected: value
+            });
+        }
+    }
+
+    renderMessages = () : Array<JSX.Element> => {
         return this.props.messages.filter(message => ! message.read).map(x => (
             <Message key={Math.random()} id={x.id} title={x.title} sender={x.sender} content={x.content} read={false}/>
         ));
@@ -266,8 +347,15 @@ class OverviewComp extends Component<Props> {
                     <Tab icon={<SmsOutlinedIcon />} label="Nieuw bericht"/>
                 </Tabs>
             <TabPanel value={this.state.value} index={0}>
-                {Problems}
-                {/* {(Problems.length === 0) && <h5>Geen problemen</h5>} */}
+                <Grid container direction='row' justify='space-between'>
+                    <Grid item>
+                        {Problems}
+                        {/* {(Problems === 0) && <h5>Geen problemen</h5>} */}
+                    </Grid>
+                    <Grid container direction="column" justify="center">
+                        <Button variant="outlined" onClick={this.fetchMoreProblems}>Toon meer problemen</Button>
+                    </Grid>
+                </Grid>
             </TabPanel>
             <TabPanel value={this.state.value} index={1}>
                 {Posts}
@@ -305,9 +393,33 @@ class OverviewComp extends Component<Props> {
                         <Grid item xs={12}>
                             <TextField variant="outlined" type="text" placeholder="titel" id="messageTitle" style={styleFormElement}/>
                         </Grid>
-                        <Grid item  xs={12}>
+                        <Grid item>
+                            <TextField 
+                                id="templates"
+                                select
+                                label="bericht"
+                                value={this.state.templateSelected}
+                                onChange={this.handleTemplateChanged}
+                                helperText="Kies een template"
+                                variant="outlined"
+                                style={styleFormElement}
+                            >
+                                <MenuItem value={'vrij bericht'}>vrij bericht</MenuItem>
+                                <MenuItem value={'Geen pauze'}>Geen pauze</MenuItem>  {/*TODO meer templates*/}
+                                <MenuItem value={"Naar post"}>Ga naar post</MenuItem>
+                                <MenuItem value={"wat probleem"}>Wat is het probleem</MenuItem>
+                            </TextField>
+                        </Grid>
+                        { this.state.costumMessage && 
+                        <Grid item>
                             <TextField multiline variant="outlined" placeholder="type hier uw bericht"  id="messageContent" style={styleFormElement}/>
                         </Grid>
+                        }
+                        { ! this.state.costumMessage &&
+                        <Grid item>
+                            <TextField multiline variant="outlined" id="messageContent" value={this.state.template} disabled style={styleFormElement}/>
+                        </Grid>
+                        }
                         <Grid item>
                             <Button variant="outlined" onClick={this.handleMessage} style={ButtonStyle}>verstuur</Button>
                         </Grid>
@@ -353,7 +465,7 @@ interface LinkStateProps {
 const MapStateToProps = (state : AppState): LinkStateProps => {
     return {
         messages: state.OverviewReducer.messages,
-        problems: state.OverviewReducer.problems,
+        problems: state.OverviewReducer.problemsSubset,
         admin: state.OverviewReducer.loggedIn,
         posts: state.OverviewReducer.posts,
         users: state.OverviewReducer.users,
@@ -367,7 +479,7 @@ const MapStateToProps = (state : AppState): LinkStateProps => {
 interface LinkDispatchToProps {
     fetchMessages: () => any,
     postNewMessage: (receiverId: Number, title: string, content: string, adminId: Number) => any,
-    fetchProblems: () => any,
+    fetchProblems: (amount: number) => any,
     fetchPosts: () => any
 }
 const MapDispatchToProps = (dispatch: any) : LinkDispatchToProps => {

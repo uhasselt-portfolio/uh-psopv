@@ -36,6 +36,9 @@ class Post extends Component<PostInterface> {
         }
     }
 
+    /**
+     * sets the state to redirect to specific post
+     */
     handleRedirectButton = () => {
         this.setState({
             ...this.state,
@@ -43,6 +46,9 @@ class Post extends Component<PostInterface> {
         });
     }
 
+    /**
+     * renders the component
+     */
     render() {
         if (this.state.redirecting)
         return (

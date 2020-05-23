@@ -8,6 +8,8 @@ import MessageDataInterface from '../interfaces/MessageDataInterface';
 
 export default class Database {
 
+    ServerUrl : string = "https://psopv.herokuapp.com";
+
     getRestApiEndpoint() : string | undefined {
         // @ts-ignore
         if(process.env.NODE_ENV === 'debug')
@@ -16,7 +18,7 @@ export default class Database {
     }
 
     async fetchProblems() {
-        const response = await axios.get('https://psopv.herokuapp.com/api/problem/fetch/all/unsolved');
+        const response = await axios.get( this.ServerUrl + '/api/problem/fetch/all/unsolved');
         
         let problems: ProblemDataInterface[] = [];
 
@@ -41,7 +43,7 @@ export default class Database {
         return problems;
     }
     async fetchAllProblems() {
-        const response = await axios.get('https://psopv.herokuapp.com/api/problem/fetch/all');
+        const response = await axios.get(this.ServerUrl + '/api/problem/fetch/all');
         
         let problems: ProblemDataInterface[] = [];
 
@@ -65,13 +67,40 @@ export default class Database {
 
         return problems;
     }
+    async fetchProblemsSubset(Amount: number) {
+        const response = await axios.get( this.ServerUrl + '/api/problem/fetch/all/unsolved');
+        
+        let problems: ProblemDataInterface[] = [];
+
+        for (let i = 0; i < response.data.data.problems.length; ++i) {
+            if (i >= Amount)
+                break;
+            problems.push({
+                id: response.data.data.problems[i].id,
+                problemType: response.data.data.problems[i].problem_type.title,
+                priority: response.data.data.problems[i].problem_type.priority,
+                discription: response.data.data.problems[i].problem_type.description,
+                timeStamp: response.data.data.problems[i].created_at,
+                shiftName: response.data.data.problems[i].planning.shift.name,
+                post: response.data.data.problems[i].planning.post.title,
+                postId: response.data.data.problems[i].planning.post_id,
+                user: response.data.data.problems[i].planning.user.first_name + " " + response.data.data.problems[i].planning.user.last_name,
+                sender: response.data.data.problems[i].created_by.first_name + " " + response.data.data.problems[i].created_by.last_name,
+                latitude: response.data.data.problems[i].planning.post.latitude,
+                longitude: response.data.data.problems[i].planning.post.longitude,
+                solved: response.data.data.problems[i].solved
+            });
+        }
+
+        return problems;
+    }
 
     async fetchPosts() {
-        const responsePosts = await axios.get('https://psopv.herokuapp.com/api/post/fetch/all');
+        const responsePosts = await axios.get(this.ServerUrl + '/api/post/fetch/all');
 
         let posts: PostDataInterface[] = [];
         for (let i = 0; i < responsePosts.data.data.posts.length; ++i) {
-            const shiftsOfPost = await axios.get('https://psopv.herokuapp.com/api/planning/fetch/post/' + responsePosts.data.data.posts[i].id);
+            const shiftsOfPost = await axios.get(this.ServerUrl + '/api/planning/fetch/post/' + responsePosts.data.data.posts[i].id);
             let shifts: Number[] = [];
             let workingUsers: Number[][] = [];
 
@@ -82,7 +111,7 @@ export default class Database {
             }
 
             for (let j = 0; j < shifts.length; ++j) {
-                const tempusers = await axios.get('https://psopv.herokuapp.com/api/planning/fetch/users/' + responsePosts.data.data.posts[i].id
+                const tempusers = await axios.get(this.ServerUrl + '/api/planning/fetch/users/' + responsePosts.data.data.posts[i].id
                  + '/' + shifts[j]);
                  let tempusersid: Number[] = []
                 for (let k = 0; k < tempusers.data.data.plannings.length; ++k) {
@@ -110,7 +139,7 @@ export default class Database {
 
     async fetchmessages() {
         let adminId : string = '3';
-        const response = await axios.get('https://psopv.herokuapp.com/api/message//fetch/send-to/' + adminId);
+        const response = await axios.get(this.ServerUrl + '/api/message//fetch/send-to/' + adminId);
 
         let messages : MessageDataInterface[] = [];
         for (let i = 0; i < response.data.data.messages.length; ++i) {
@@ -127,7 +156,7 @@ export default class Database {
     }
 
     async fetchusers() {
-        const responeUsers = await axios.get('https://psopv.herokuapp.com/api/user/fetch/all');
+        const responeUsers = await axios.get(this.ServerUrl + '/api/user/fetch/all');
 
         let users: UserDataInterface[] = [];
         for (let i = 0; i < responeUsers.data.data.users.length; ++i) {
@@ -149,7 +178,7 @@ export default class Database {
     }
 
     async fetchPlanning() {
-        const responePlanning = await axios.get('https://psopv.herokuapp.com/api/planning/fetch/all');
+        const responePlanning = await axios.get(this.ServerUrl + '/api/planning/fetch/all');
 
         let shifts: ShiftDataInterface[] = [];
         for (let i = 0; i < responePlanning.data.data.plannings.length; ++i) {
@@ -171,7 +200,7 @@ export default class Database {
     }
 
     async fetchItems() {
-        const responseItems = await axios.get('https://psopv.herokuapp.com/api/item/fetch/all');
+        const responseItems = await axios.get(this.ServerUrl + '/api/item/fetch/all');
 
         let items: ItemDataInterface[] = [];
         for (let i = 0; i < responseItems.data.data.items.length; ++i) {
@@ -204,20 +233,20 @@ export default class Database {
     }
 
     async patchProblemSolved(problemId: Number) {
-        const response = await axios.patch('https://psopv.herokuapp.com/api/problem/toggle-solve/' + problemId);
+        const response = await axios.patch(this.ServerUrl + '/api/problem/toggle-solve/' + problemId);
 
         return response;
     }
 
     async patchUserConnection(userId: Number) {
-        const response = await axios.patch('https://psopv.herokuapp.com/api/user/toggle-connection/' + userId);
+        const response = await axios.patch(this.ServerUrl + '/api/user/toggle-connection/' + userId);
 
         return response; 
     }
 
     async postNewMessage(receiverId: Number, title: string, content: string, adminId: Number) {
 
-        const response = await axios.post('https://psopv.herokuapp.com/api/message/add', {
+        const response = await axios.post(this.ServerUrl + '/api/message/add', {
             title: title,
             message: content,
             created_by_id: 3,   //TODO admin id
@@ -228,7 +257,7 @@ export default class Database {
     }
 
     async patchMessageRead(messageId: Number) {
-        const respone = await axios.patch('https://psopv.herokuapp.com/api/message/toggle-seen/' + messageId);
+        const respone = await axios.patch(this.ServerUrl + '/api/message/toggle-seen/' + messageId);
         return respone;
     }
 

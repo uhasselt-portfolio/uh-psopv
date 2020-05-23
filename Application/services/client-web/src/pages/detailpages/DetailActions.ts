@@ -13,6 +13,9 @@ export enum DetailActions {
     PROBLEM_SOLVED_POST_FAIL = 'PROBLEM_SOLVED_POST_FAIL',
 };
 
+/**
+ * gets the current planning from the database
+ */
 export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
     console.log("in Detail fetch");
     try {
@@ -20,8 +23,10 @@ export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
             type: DetailActions.DETAIL_PLANNING_FETCH_START
         });
 
-        let shifts: ShiftDatainterface[] = await new Database().fetchPlanning();
-        let items: ItemDataInterface[] = await new Database().fetchItems();;
+        let database : Database = new Database();
+
+        let shifts: ShiftDatainterface[] = await database.fetchPlanning();
+        let items: ItemDataInterface[] = await database.fetchItems();
 
         dispatch({
             type: DetailActions.DETAIL_PLANNING_FETCH_SUCCES,
@@ -48,6 +53,10 @@ export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
     }
 }
 
+/**
+ * updates the database that the id has been solved
+ * @param Problemid the id of the problem that has been solved
+ */
 export const problemSolved = (Problemid: Number) => async (dispatch : Redux.Dispatch) => {
     console.log("in problem solved post");
     try {

@@ -12,11 +12,20 @@ type Props = LinkStateProps & LinkDispatchToProps;
 
 class PukkelpopMap extends Component<Props> {
 
+    /**
+     * gets called before the component is mounted
+     * gets all the data from the database
+     * and a installs a timer to check the database every 5 minutes to get updates
+     */
     componentWillMount = () => {
         this.props.fetchMap();          
         setInterval(this.props.fetchMap,300000);
+        // setInterval(this.props.fetchMap,100);
     }
 
+    /**
+     * renders the component
+     */
     render() {
 
         let sortedProblems : ProblemDataInterface[][] = [];
@@ -48,7 +57,7 @@ class PukkelpopMap extends Component<Props> {
 
         return(
             <div>
-                {this.props.isMapFetched && <MyMap problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
+                {this.props.isMapFetched && <MyMap height={90} problems={sortedProblems} users={this.props.users} posts={postsWithouProblems} isMarkerClickable={true}/>}  
             </div>
         );
     }
