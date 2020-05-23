@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch, bindActionCreators } from "redux";
 import {fetchMessagesOf, loadMessages} from './MessageAction'
+import {updateMessages} from '../../../save/saveAction'
 
 
 
@@ -22,12 +23,31 @@ import { IonButton,
 
 
 class Notifications extends Component<any> {
+  interval: NodeJS.Timeout | undefined;
+
   constructor(props: any) {
     super(props);
   }
 
+  state = {
+    state: 0
+  }
+
+
+  componentWillUnmount() {
+    if(this.interval != undefined){
+      clearInterval(this.interval);
+    }
+  }
+
+
   componentDidMount(){
     this.props.fetchMessagesOf(); // TODO USERID
+
+    this.interval = setInterval(() => {
+      console.log("interval MessagePage")
+      this.props.fetchMessagesOf(); // TODO USERID
+    }, 10000);
   }
 
   renderList(){
@@ -88,7 +108,8 @@ function mapStateToProps(state: any) {
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
     fetchMessagesOf,
-    loadMessages
+    loadMessages,
+    updateMessages
   }, dispatch);
 }
 

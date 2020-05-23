@@ -33,7 +33,6 @@ export const messageAddMessage = (title: string | undefined,
 
         ConcatListToActionList(function_list);
 
-        // const response = await new Database().addMessage(title, message, created_by_id, send_to_id, priority);
 
 
 

@@ -8,8 +8,6 @@ export const MESSAGE_FETCH_SUCCESS = 'MESSAGE_FETCH_SUCCESS'
 export const MESSAGE_FETCH_FAIL = 'MESSAGE_FETCH_FAIL'
 
 
-
-
 export const fetchMessagesOf = (id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         let loaded = false;

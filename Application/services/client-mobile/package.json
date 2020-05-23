@@ -31,6 +31,7 @@
     "cordova-plugin-dialogs": "^2.0.2",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-geolocation": "^4.0.2",
+    "fancy-notifications": "0.0.2",
     "google-map-react": "^1.1.7",
     "ionicons": "^5.0.0",
     "leaflet": "^1.6.0",

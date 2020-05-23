@@ -23,10 +23,10 @@ function sortMessagesByDate(a: any, b: any){
     var b_data = new Date(b.created_at)
 
     if(a_data < b_data){
-        return -1
+        return 1
     }
     else if(a_data > b_data){
-        return 1
+        return -1
     } else{
         return 0
     }
@@ -78,7 +78,7 @@ function sortMessagesByDate(a: any, b: any){
     return workers;
 }
  function getPostsData(responsePosts: any, responseUnsolvedProblems: any, responseItems: any,
-    responseProblems: any, responsePlannings: any, default_sector: number){
+    responseProblems: any, responsePlannings: any, default_sector: number, list_colors: string[]){
 
 
 
@@ -109,7 +109,6 @@ function sortMessagesByDate(a: any, b: any){
         // make list of sectors
         let colorindex = 0;
         let sectors: any[] = []
-        let list_colors = ["#696969", "#bada55", "#7fe5f0", "#ff80ed", "#0050EF", "#407294", "#cbcba9", "#5ac18e"]
         let sectors_number: number[] = [];
 
         posts_data.map((post: any, index: number) => {
@@ -282,8 +281,10 @@ function generateSectorColors(sectors: number[], sectorColors: any){
 
 export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'  
 
-export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch) => {
+export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
     try{
+        const todoCommands = await getActionList();
+
         todoCommands.forEach(async (element: any) => {
             if(element.params != null){
                     const result = await axios.post(element.url, element.params);
@@ -307,11 +308,13 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
         const current_user = await database.fetchUserById(user_id);
         const sectorColors = await getListLocalStorage('sector_colors');
 
+        let list_colors = ["#696969", "#bada55", "#7fe5f0", "#ff80ed", "#0050EF", "#407294", "#cbcba9", "#5ac18e"]
 
 
         let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
         let nonVolunteers = getNonVolunteers(responseUsers, user_id);
-        let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems, responsePlannings, default_sector);
+        let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems,
+            responsePlannings, default_sector,list_colors);
         let messages =  getMessages(responseMessages, responseProblems, user_id, volunteers);
         let user_info = getCurrentUserInfo(current_user);
         let sector_colors = generateSectorColors(postsData.posts_sectors, sectorColors);
@@ -336,6 +339,44 @@ export const doDatabase = (todoCommands: any) => async (dispatch: Redux.Dispatch
 
         resetActionList();
         dispatch({type: UNROLL_ACTIONS})
+
+    } catch(error){
+        console.log(error)
+    }
+}
+
+export const UPDATE_MESSAGES = 'UPDATE_MESSAGES'  
+
+export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
+    try{
+        const database = new Database();
+
+        // const responsePosts = await database.fetchPosts();
+        // const responseUnsolvedProblems = await database.fetchUnsolvedProblems();
+        // const responseItems = await database.fetchAllItems();
+        const responseProblems = await database.fetchAllProblems();
+        const responsePlannings = await database.fetchPlannings();
+        const user_id = await getUserId();
+        const responseMessages = await database.fetchMessagesFrom(user_id);
+        const default_sector = await getDefaultSector();
+        // let list_colors = ["#696969", "#bada55", "#7fe5f0", "#ff80ed", "#0050EF", "#407294", "#cbcba9", "#5ac18e"]
+
+        let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
+        // let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems,
+        //     responsePlannings, default_sector,list_colors);
+        let messages =  getMessages(responseMessages, responseProblems, user_id, volunteers);
+
+        let message = messages.messages;
+        let problems = messages.problems;
+        message.sort(sortMessagesByDate);
+        problems.sort(sortMessagesByDate);
+
+       
+        // setListLocalStorage('posts', postsData.posts_data);
+        setListLocalStorage('messages', message);
+        setListLocalStorage('problems', problems);
+
+        dispatch({type: UPDATE_MESSAGES})
 
     } catch(error){
         console.log(error)

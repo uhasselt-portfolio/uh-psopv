@@ -10,6 +10,7 @@ import  SelectContactWindow  from './components/SelectContactPage';
 import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
 import './SendMessage.css'
 
+
 const select_types = {volunteers: "Alle Vrijwilligers", sectors: "Alle Sectorverantwoordelijken",
                       everybody: "Iedereen", nobody:"Niemand", specific: "Specifiek"}
 
@@ -93,7 +94,7 @@ class SendNotifications extends Component<any> {
   async selectEverybody(){
     let list: number[] =[]
 
-    if(this.props.localStorage != undefined){
+    if(this.props.localStorage != undefined && this.props.localStorage.checkboxList != undefined){
       this.props.localStorage.checkboxList.map((item: any)=> {
         list.push(item.value_id)
       })

@@ -10,7 +10,6 @@ export const PLANNING_FETCH_FAIL = 'PLANNING_FETCH_FAIL'
 
 export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
     try{
-
         const postsData = await getListLocalStorage('posts');
         const default_sector = await getListLocalStorage('default_sector');
         const posts_sectors = await getListLocalStorage('sectors');

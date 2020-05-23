@@ -25,8 +25,11 @@ import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import saveReducer from './pages/save/saveReducer'
 import ProblemsReducer from './pages/sector-responsible/messages_general/problems/ProblemsReducer';
+import TabBarReducer from './pages/common_functions/TabBarReducer';
 
 const rootReducer = combineReducers({
+    tabbar: TabBarReducer,
+    
     login: LoginReducer,
     list: ListReducer,
     map: ListReducer,
