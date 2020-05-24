@@ -12,58 +12,60 @@ import {
     IonTitle,
     IonToolbar
 } from "@ionic/react";
-import {Redirect} from "react-router";
-import MapPage from "../sector-responsible/map/MapPage";
-
 class LoginPage extends React.Component<any, any> {
-
-    componentDidMount(): void {
-        const phoneNumber = "0495812456";
-        this.props.checkUserExists(phoneNumber);
-    }
 
     render(): React.ReactNode {
 
         const doesUserExist = this.props.doesUserExist;
 
-        if (doesUserExist) {
-            return(
-                <div>
-                    <LoginComponent user={this.props.doesUserExist} />
-                </div>
-            )
-        } else if (!doesUserExist) {
+        if(doesUserExist == undefined) {
+            // TODO Implement sim reader
+            const phoneNumber = "0495812458";
+            this.props.checkUserExists(phoneNumber);
+
             return(
                 <IonPage>
-                    <IonHeader>
-                        <IonToolbar>
-                            <IonTitle>
-                                We kennen jouw niet?
-                            </IonTitle>
-                        </IonToolbar>
-                    </IonHeader>
                     <IonContent>
                         <IonHeader collapse="condense">
                             <IonToolbar>
-                                <IonTitle size="large">We kennen jouw niet?</IonTitle>
+                                <IonTitle size="large">Laden...</IonTitle>
                             </IonToolbar>
                         </IonHeader>
-                        <IonList>
-                            <IonItem>
-                                <IonText>
-                                    Uw telefoonnummer staat niet tussen onze lijst!
-                                </IonText>
-                            </IonItem>
-                        </IonList>
                     </IonContent>
                 </IonPage>
-            );
-        } else {
-            return(
-                <div>
-                    Loading...
-                </div>
             )
+        } else {
+            if(!doesUserExist) {
+                return(
+                    <IonPage>
+                        <IonHeader>
+                            <IonToolbar>
+                                <IonTitle>
+                                    We kennen jouw niet?
+                                </IonTitle>
+                            </IonToolbar>
+                        </IonHeader>
+                        <IonContent>
+                            <IonHeader collapse="condense">
+                                <IonToolbar>
+                                    <IonTitle size="large">We kennen jouw niet?</IonTitle>
+                                </IonToolbar>
+                            </IonHeader>
+                            <IonList>
+                                <IonItem>
+                                    <IonText>
+                                        Uw telefoonnummer staat niet tussen onze lijst!
+                                    </IonText>
+                                </IonItem>
+                            </IonList>
+                        </IonContent>
+                    </IonPage>
+                );
+            } else {
+                return(
+                    <LoginComponent user={this.props.doesUserExist} />
+                )
+            }
         }
     }
 }

@@ -22,6 +22,18 @@ export const loginUser = (email: string | undefined, password: string | undefine
     }
 }
 
+
+export const USER_LOGOUT_SUCCESS = 'USER_LOGIN_SUCCESS'
+export const logoutUser = () => async (dispatch: Redux.Dispatch) => {
+
+    localStorage.removeItem('token');
+
+    console.log("LOG OUT ACTION CALLED");
+
+    dispatch({type: USER_LOGOUT_SUCCESS})
+}
+
+
 export const USER_EXISTS_START = 'USER_EXISTS_START'
 export const USER_EXISTS_SUCCESS = 'USER_EXISTS_SUCCESS'
 export const USER_EXISTS_FAIL = 'USER_EXISTS_FAILED'

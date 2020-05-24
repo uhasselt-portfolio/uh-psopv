@@ -1,22 +1,22 @@
 import {IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from "@ionic/react";
-import {Redirect, Route} from "react-router-dom";
+import {Route} from "react-router-dom";
 import InfoPage from "./info/InfoPage";
 import VRMessage from "./message/VR_MessagePage";
 import VRSendMessagePage from "./send_message/VR_SendMessage";
 import {ellipse} from "ionicons/icons";
-import React, {Fragment} from "react";
+import React from "react";
+import RequireSignIn from "../../utils/RequireSignin";
 
 export default () => {
     return(
         <IonTabs>
             <IonRouterOutlet>
-                <Route path="/" component={InfoPage} exact={true}/>
-                <Route path="/VRMessage" component={VRMessage} exact={true}/>
-                <Route path="/VRSendMessagePage" component={VRSendMessagePage} exact={true}/>
-                <Route path="/" render={() => <Redirect to="/InfoPage"/>} exact={true}/>
+                <Route path="/" component={RequireSignIn(InfoPage)} />
+                <Route path="/VRMessage" component={RequireSignIn(VRMessage)} />
+                <Route path="/VRSendMessagePage" component={RequireSignIn(VRSendMessagePage)} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-                <IonTabButton tab="InfoPage" href="/InfoPage">
+                <IonTabButton tab="InfoPage" href="/">
                     <IonIcon icon={ellipse}/>
                     <IonLabel>Map</IonLabel>
                 </IonTabButton>

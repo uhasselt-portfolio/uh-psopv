@@ -21,19 +21,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
 
-const testMarker = (props: any) => {
-  const { color, name, id } = props;
-  return (
-    <div className="normal_marker"
-      style={{ backgroundColor: color, cursor: 'pointer'}}
-      title={name}
-    ></div>
-  );
-};
+class MapPage extends React.Component<any, any> {
 
-class MapPage extends Component<any> {
-
-  
   constructor(props:any) {
     super(props);
   }
@@ -52,6 +41,7 @@ class MapPage extends Component<any> {
   };
 
   componentDidMount(){
+    console.log("AT MAP PAGE")
     this.props.fetchPosts();
   }
 

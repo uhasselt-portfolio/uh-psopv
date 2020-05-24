@@ -11,6 +11,7 @@ COPY tsconfig.json ./
 # Connect with remote database
 ENV NODE_ENV 'production'
 ENV POSTGRES_URI 'postgres://olnamjxlnibleq:5980d54115bdc5ff60464c538f232f8030e21b46a17345900546c88e4ebabd5c@ec2-54-75-231-215.eu-west-1.compute.amazonaws.com:5432/d10ora4gmtgbjp'
+ENV TZ = 'Europe/Brussels'
 
 RUN npm install
 

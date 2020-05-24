@@ -1,5 +1,5 @@
 import {IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from "@ionic/react";
-import {Redirect, Route} from "react-router-dom";
+import {Route} from "react-router-dom";
 import ListView from "./list/ListPage";
 import MapPage from "./map/MapPage";
 import PostView from "./post/PostPage";
@@ -8,22 +8,20 @@ import Notifications from "./message/MessagePage";
 import SendNotifications from "./send_message/SendMessage";
 import Contacts from "./contact/ContactPage";
 import {listOutline, mapOutline, notificationsOutline, paperPlaneOutline, personOutline} from "ionicons/icons";
-import React, {Fragment} from "react";
+import React from "react";
+import RequireSignIn from "../../utils/RequireSignin";
 
 export default () => {
     return(
         <IonTabs>
             <IonRouterOutlet>
-                <Route path="/ListView" component={ListView} exact={true}/>
-                <Route path="/MapPage" component={MapPage} exact={true}/>
-                <Route path="/PostView/:post/:sector" component={PostView} exact={true}/>
-                <Route path="/PersonPage/:id/" component={PersonPage} exact={true}/>
-                <Route path="/Notifications" component={Notifications} exact={true}/>
-                <Route path="/SendNotifications" component={SendNotifications} exact={true}/>
-                <Route path="/Contacts" component={Contacts} exact={true}/>
-
-                <Route path="/Login" render={() => <Redirect to="/"/>} exact={true}/>
-                <Route path="/" render={() => <Redirect to="/MapPage"/>} exact={true}/>
+                <Route path="/MapPage" component={RequireSignIn(MapPage)} />
+                <Route path="/ListView" component={RequireSignIn(ListView)} />
+                <Route path="/PostView/:post/:sector" component={RequireSignIn(PostView)} />
+                <Route path="/PersonPage/:id/" component={RequireSignIn(PersonPage)} />
+                <Route path="/Notifications" component={RequireSignIn(Notifications)} />
+                <Route path="/SendNotifications" component={RequireSignIn(SendNotifications)} />
+                <Route path="/Contacts" component={RequireSignIn(Contacts)} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
                 <IonTabButton tab="MapPage" href="/MapPage">

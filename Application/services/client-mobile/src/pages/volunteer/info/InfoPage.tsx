@@ -182,7 +182,7 @@ class InfoPage extends React.Component<any, any> {
 function mapStateToProps(state: any) {
     return ({
         arePlanningsFromIdFetched: state.VRinfo.arePlanningsFromIdFetched,
-        isUserOnPost: state.start.isUserOnPost,
+        isUserOnPost: true, //TODO state.start.isUserOnPost gaf error
         isLocationUpdated: state.VRinfo.isLocationUpdated,
         errorMessage: state.VRinfo.errorMessage,
         loading: state.VRinfo.loading,
