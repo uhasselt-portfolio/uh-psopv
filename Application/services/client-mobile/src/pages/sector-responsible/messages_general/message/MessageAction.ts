@@ -19,15 +19,9 @@ export const fetchMessagesOf = (id: number) => async (dispatch: Redux.Dispatch) 
             loaded = true;
         }
 
-        console.log("first_msgs",first_msgs)
-
         dispatch({type: MESSAGE_FETCH_SUCCESS, payload: {messages: first_msgs, loaded: loaded}})
     } catch(error){
         console.log(error)
-        // let msg_messages = await getListLocalStorage('messages');
-        // let first_5_msg = msg_messages.slice(0, 5);
-        // await setListLocalStorage('msg_end_index', 5)
-        // dispatch({type: MESSAGE_FETCH_SUCCESS, payload: first_5_msg}) 
     }
 }
 
@@ -49,14 +43,6 @@ export const loadMessages = (current_list: any) => async (dispatch: Redux.Dispat
         dispatch({type: MESSAGE_FETCH_SUCCESS, payload: {messages: first_msgs, loaded: loaded}})
     } catch(error){
        console.log("error", error)
-    //    let msg_messages = await getListLocalStorage('messages');
-    //     let end_index = await getListLocalStorage('msg_end_index');
-    //     let new_end_index = Number(end_index) + 5;
-    //     console.log(new_end_index)
-    //     await setListLocalStorage('msg_end_index', new_end_index)
-
-    //     let first_msgs = msg_messages.slice(0, new_end_index);
-    //     dispatch({type: MESSAGE_FETCH_SUCCESS, payload: first_msgs})
     }
 }
 
@@ -69,7 +55,7 @@ export const MessageToggle = (message_id: number) => async (dispatch: Redux.Disp
     try{
         dispatch({type: MESSAGE_TOGGLE_SEEN_START})
 
-        const response = await new Database().MessageToggle(message_id); // TODO GETUSERID
+        const response = await new Database().MessageToggle(message_id);
         console.log("MESSAGE TOGGLEEDDD")
         dispatch({type: MESSAGE_TOGGLE_SEEN_SUCCESS})
     } catch(error){

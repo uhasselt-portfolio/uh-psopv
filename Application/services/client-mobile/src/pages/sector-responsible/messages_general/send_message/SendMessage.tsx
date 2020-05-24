@@ -9,6 +9,7 @@ import CustomDropdown from '../../list/components/CustomDropdown';
 import  SelectContactWindow  from './components/SelectContactPage';
 import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
 import './SendMessage.css'
+import Auth from '../../../../utils/Auth';
 
 
 const select_types = {volunteers: "Alle Vrijwilligers", sectors: "Alle Sectorverantwoordelijken",
@@ -123,7 +124,15 @@ class SendNotifications extends Component<any> {
   }
 
   renderListOfUser(){
-    return (
+     // 1 = vrijwilliger 
+    if(Auth.getAuthenticatedUser().permission_type_id == 1){
+      return(
+        <IonSelect interface="popover" value={this.state.selected_type} placeholder={this.state.selected_type} onIonChange={e => this.handleQuickBtnChange(e.detail.value)}>
+          <IonSelectOption value={select_types.everybody}>{select_types.everybody}</IonSelectOption>
+        </IonSelect>
+      )
+    } else{
+      return (
         <IonSelect interface="popover" value={this.state.selected_type} placeholder={this.state.selected_type} onIonChange={e => this.handleQuickBtnChange(e.detail.value)}>
           <IonSelectOption value={select_types.everybody}>{select_types.everybody}</IonSelectOption>
           <IonSelectOption value={select_types.sectors}>{select_types.sectors}</IonSelectOption>
@@ -132,6 +141,7 @@ class SendNotifications extends Component<any> {
           <IonSelectOption value={select_types.nobody}>{select_types.nobody}</IonSelectOption>
         </IonSelect>
       )
+    }
     }
       
   render(){

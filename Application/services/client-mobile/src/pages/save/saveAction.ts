@@ -1,8 +1,23 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../database/Database'
-import {resetActionList, getActionList, addObjectToActionList, getDefaultSector, getUserId, setListLocalStorage, getListLocalStorage} from './saveFunction'
+import {resetActionList, getActionList, addObjectToActionList, getDefaultSector, setListLocalStorage, getListLocalStorage} from './saveFunction'
 import { push } from "ionicons/icons";
+import Auth from "../../utils/Auth";
+
+function sortPlanningsByDate(a: any, b: any){
+    var a_data = new Date(a.shift.begin)
+    var b_data = new Date(b.shift.begin)
+
+    if(a_data < b_data){
+        return -1
+    }
+    else if(a_data > b_data){
+        return 1
+    } else{
+        return 0
+    }
+}
 
 function sortUserShifts(a: any, b: any){
     var shift_begin_a = new Date(a.shift_start)
@@ -17,7 +32,6 @@ function sortUserShifts(a: any, b: any){
         return 0
     }
 }
-
 function sortMessagesByDate(a: any, b: any){
     var a_data = new Date(a.created_at)
     var b_data = new Date(b.created_at)
@@ -31,7 +45,6 @@ function sortMessagesByDate(a: any, b: any){
         return 0
     }
 }
-
  function getVolunteersFromSector(responsePlannings: any, default_sector: number){
 
     let users = responsePlannings.data.data.plannings.filter((element: any) => {
@@ -216,8 +229,7 @@ function sortMessagesByDate(a: any, b: any){
         let all_data = {posts_data: posts_data, posts_sectors: sectors, default_sector: default_sector};
         return all_data;
 }
- function getMessages(responseMessages: any, responseProblems: any, user_id: number, volunteers: any){
-
+ function getMessages(responseMessages: any){
     let messages: any[] = []
     responseMessages.data.data.messages.forEach((message: any) => {
         messages.push({
@@ -232,6 +244,12 @@ function sortMessagesByDate(a: any, b: any){
         })
     })
 
+    messages.sort(sortMessagesByDate);
+
+    return messages
+}
+
+function getProblems(responseProblems: any, volunteers: any){
     let my_volunteers: Number[] = []
     volunteers.map((volunteer: any) => {
         my_volunteers.push(volunteer.user_id)
@@ -256,19 +274,13 @@ function sortMessagesByDate(a: any, b: any){
         }
     })
 
-    return {messages: messages, problems: problems}
-}
+    problems.sort(sortMessagesByDate);
 
-function getCurrentUserInfo(ResponseCurrentUser: any){
-    let userinfo = ResponseCurrentUser.data.data.user;
-    console.log(userinfo)
+    return problems
 
-    return{email: userinfo.email, phone_number: userinfo.phone_number, first_name: userinfo.first_name,
-        last_name: userinfo.last_name, permission_type: userinfo.permission_type.name, association: userinfo.association.name}
 }
 
 function generateSectorColors(sectors: number[], sectorColors: any){
-    console.log(sectorColors)
     let colors: { sector_id: number; color: string; }[] = []
     let list_colors = ["green", "blue", "purple", "red", "darkblue", "darkred", "orange", "black"]
     // if(sectorColors.length <= 0){
@@ -295,47 +307,52 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
 
         const database = new Database();
 
-        const responsePosts = await database.fetchPosts();
-        const responseUnsolvedProblems = await database.fetchUnsolvedProblems();
-        const responseItems = await database.fetchAllItems();
-        const responseProblems = await database.fetchAllProblems();
-        const responsePlannings = await database.fetchPlannings();
-        const responseUsers = await database.fetchUsers();
-        const user_id = await getUserId();
+        const user_id = Auth.getAuthenticatedUser().id;
         const responseMessages = await database.fetchMessagesFrom(user_id);
-        const default_sector = await getDefaultSector();
-        const problemTypes = await database.fetchAllProblemTypes();
-        const current_user = await database.fetchUserById(user_id);
-        const sectorColors = await getListLocalStorage('sector_colors');
+        let messages =  getMessages(responseMessages);
+        setListLocalStorage('messages', messages);
 
-        let list_colors = ["#696969", "#bada55", "#7fe5f0", "#ff80ed", "#0050EF", "#407294", "#cbcba9", "#5ac18e"]
-
-
-        let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
-        let nonVolunteers = getNonVolunteers(responseUsers, user_id);
-        let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems,
-            responsePlannings, default_sector,list_colors);
-        let messages =  getMessages(responseMessages, responseProblems, user_id, volunteers);
-        let user_info = getCurrentUserInfo(current_user);
-        let sector_colors = generateSectorColors(postsData.posts_sectors, sectorColors);
-
-        let message = messages.messages;
-        let problems = messages.problems;
-        message.sort(sortMessagesByDate);
-        problems.sort(sortMessagesByDate);
-
-        if(sector_colors.length > 0){
-            setListLocalStorage('sector_colors', sector_colors);
+                // 1 = sector_verantwoordelijke
+        if(Auth.getAuthenticatedUser().permission_type_id == 1){
+            const response =  await database.fetchPlanningsWithUserId(user_id);
+            let plannings = response.data.data.plannings;
+            plannings.sort(sortPlanningsByDate)
+            setListLocalStorage('plannings', plannings);
         }
-        setListLocalStorage('my_volunteers', volunteers);
-        setListLocalStorage('contacts', nonVolunteers);
-        setListLocalStorage('posts', postsData.posts_data);
-        setListLocalStorage('sectors', postsData.posts_sectors);
-        setListLocalStorage('messages', message);
-        setListLocalStorage('problems', problems);
-        setListLocalStorage('problem_types', problemTypes.data.data.problemTypes);
-        setListLocalStorage('user_info', user_info);
+        // 2 = sector_verantwoordelijke
+        if(Auth.getAuthenticatedUser().permission_type_id == 2){
+            const responsePosts = await database.fetchPosts();
+            const responseUnsolvedProblems = await database.fetchUnsolvedProblems();
+            const responseItems = await database.fetchAllItems();
+            const responseProblems = await database.fetchAllProblems();
+            const responsePlannings = await database.fetchPlannings();
+            const responseUsers = await database.fetchUsers();
+            const default_sector = await getDefaultSector();
+            const problemTypes = await database.fetchAllProblemTypes();
+            const sectorColors = await getListLocalStorage('sector_colors');
 
+            let list_colors = ["#696969", "#bada55", "#7fe5f0", "#ff80ed", "#0050EF", "#407294", "#cbcba9", "#5ac18e"]
+
+            let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
+            let nonVolunteers = getNonVolunteers(responseUsers, user_id);
+            let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems,
+                responsePlannings, default_sector,list_colors);
+            let problems =  getProblems(responseProblems, volunteers);
+            let sector_colors = generateSectorColors(postsData.posts_sectors, sectorColors);
+
+
+            if(sector_colors.length > 0){
+                setListLocalStorage('sector_colors', sector_colors);
+            }
+            setListLocalStorage('my_volunteers', volunteers);
+            setListLocalStorage('contacts', nonVolunteers);
+            setListLocalStorage('posts', postsData.posts_data);
+            setListLocalStorage('sectors', postsData.posts_sectors);
+            setListLocalStorage('problems', problems);
+            setListLocalStorage('problem_types', problemTypes.data.data.problemTypes);
+        }
+
+        
 
         resetActionList();
         dispatch({type: UNROLL_ACTIONS})
@@ -351,30 +368,10 @@ export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
     try{
         const database = new Database();
 
-        // const responsePosts = await database.fetchPosts();
-        // const responseUnsolvedProblems = await database.fetchUnsolvedProblems();
-        // const responseItems = await database.fetchAllItems();
-        const responseProblems = await database.fetchAllProblems();
-        const responsePlannings = await database.fetchPlannings();
-        const user_id = await getUserId();
+        const user_id = Auth.getAuthenticatedUser().id;
         const responseMessages = await database.fetchMessagesFrom(user_id);
-        const default_sector = await getDefaultSector();
-        // let list_colors = ["#696969", "#bada55", "#7fe5f0", "#ff80ed", "#0050EF", "#407294", "#cbcba9", "#5ac18e"]
-
-        let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
-        // let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems,
-        //     responsePlannings, default_sector,list_colors);
-        let messages =  getMessages(responseMessages, responseProblems, user_id, volunteers);
-
-        let message = messages.messages;
-        let problems = messages.problems;
-        message.sort(sortMessagesByDate);
-        problems.sort(sortMessagesByDate);
-
-       
-        // setListLocalStorage('posts', postsData.posts_data);
-        setListLocalStorage('messages', message);
-        setListLocalStorage('problems', problems);
+        let messages =  getMessages(responseMessages);
+        setListLocalStorage('messages', messages);
 
         dispatch({type: UPDATE_MESSAGES})
 

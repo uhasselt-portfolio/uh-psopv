@@ -5,6 +5,7 @@ import postIcon from './NormalMarker'
 import ProblemIcon from './ProblemMarker'
 
 import { Plugins } from '@capacitor/core';
+import Auth from '../../../../utils/Auth';
 const { Geolocation } = Plugins;
  
 interface IProps {
@@ -31,6 +32,11 @@ interface IState {
     markergroup: L.FeatureGroup
 }
 
+var userIcon = L.icon({
+    iconUrl: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
+    popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
+});
 
  
 class MyMap extends React.Component<any> {
@@ -93,11 +99,14 @@ class MyMap extends React.Component<any> {
     }
 
     getSectorColor(sector_id: number){
-        console.log(sector_id, this.props)
-        let sector_info = this.props.sectors.find((element: any) =>{
-            return (element.sector_id == sector_id);
-        })
-        return sector_info.color
+        // sector verantwoordelijke = 2
+        
+            let sector_info = this.props.sectors.find((element: any) =>{
+                return (element.sector_id == sector_id);
+            })
+            return sector_info.color
+        
+        
     }
     /**
      * adds all the posts the component got in its props to the map
@@ -106,11 +115,16 @@ class MyMap extends React.Component<any> {
     addPostMarkers = (posts: any[], map : L.Map) => {
         for (let i = 0; i < posts.length; ++i) {
             console.log(posts[i])
-            let icon = postIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
-            if(posts[i].problem){
-                icon = ProblemIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
+            let icon;
+            if(Auth.getAuthenticatedUser().permission_type_id == 2){
+                icon = postIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
+                if(posts[i].problem){
+                    icon = ProblemIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
+                }
+            } else{
+                icon = userIcon;
             }
-            let marker : L.Marker = L.marker([posts[i].loc_lat,posts[i].loc_lng], {icon: icon})
+            let marker : L.Marker = L.marker([posts[i].latitude,posts[i].longitude], {icon: icon})
 
 
             marker.bindTooltip(posts[i].loc_description, {

@@ -1,9 +1,10 @@
-import {IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from "@ionic/react";
+import {IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonBadge} from "@ionic/react";
 import {Route} from "react-router-dom";
 import InfoPage from "./info/InfoPage";
-import VRMessage from "./message/VR_MessagePage";
-import VRSendMessagePage from "./send_message/VR_SendMessage";
-import {ellipse} from "ionicons/icons";
+import Message from '../volunteer/messages/MessagePage'
+import SendMessage from '../volunteer/messages/SendMessagePage'
+
+import {ellipse, notificationsOutline, paperPlaneOutline, informationCircleOutline} from "ionicons/icons";
 import React from "react";
 import RequireSignIn from "../../utils/RequireSignin";
 
@@ -12,21 +13,22 @@ export default () => {
         <IonTabs>
             <IonRouterOutlet>
                 <Route path="/InfoPage" component={RequireSignIn(InfoPage)} />
-                <Route path="/VRMessage" component={RequireSignIn(VRMessage)} />
-                <Route path="/VRSendMessagePage" component={RequireSignIn(VRSendMessagePage)} />
+                <Route path="/Messages" component={RequireSignIn(Message)} />
+                <Route path="/SendMessage" component={RequireSignIn(SendMessage)} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
                 <IonTabButton tab="InfoPage" href="/InfoPage">
-                    <IonIcon icon={ellipse}/>
-                    <IonLabel>Map</IonLabel>
+                    <IonIcon icon={informationCircleOutline}/>
+                    <IonLabel>Info</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="VRMessage" href="/VRMessage">
-                    <IonIcon icon={ellipse}/>
-                    <IonLabel>Msg</IonLabel>
+                <IonTabButton tab="Messages" href="/Messages">
+                    <IonBadge color="primary">{0}</IonBadge>
+                    <IonIcon icon={notificationsOutline}/>
+                    <IonLabel>Berichten</IonLabel>
                 </IonTabButton>
-                <IonTabButton tab="VRSendMessagePage" href="/VRSendMessagePage">
-                    <IonIcon icon={ellipse}/>
-                    <IonLabel>Send</IonLabel>
+                <IonTabButton tab="SendMessage" href="/SendMessage">
+                    <IonIcon icon={paperPlaneOutline}/>
+                    <IonLabel>Verstuur bericht</IonLabel>
                 </IonTabButton>
             </IonTabBar>
         </IonTabs>

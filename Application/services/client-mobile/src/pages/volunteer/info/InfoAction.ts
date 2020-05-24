@@ -1,6 +1,7 @@
 import Redux from 'redux';
 import Database from "../../../database/Database";
 import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocation";
+import { getListLocalStorage } from '../../save/saveFunction';
 
 export const USER_UPDATE_GEOLOCATION_START = 'USER_UPDATE_GEOLOCATION_START'
 export const USER_UPDATE_GEOLOCATION_SUCCESS = 'USER_UPDATE_GEOLOCATION_SUCCESS'
@@ -10,9 +11,7 @@ export const updateGeolocation = (userLocation: BackgroundGeolocationResponse) =
     try {
         dispatch({type: USER_UPDATE_GEOLOCATION_START});
 
-        console.log("REQUESTING UPDATE GEOLCOATION USER")
         const response = await new Database().updateUserLocation(userLocation, 1);
-        console.log("UPDATED GEOLOCATION")
 
         const user = response.data.data.user;
         const coordinates = {latitude: user.current_latitude, longitude: user.current_longitude};
@@ -37,19 +36,7 @@ export const updateGeolocation = (userLocation: BackgroundGeolocationResponse) =
 }
 
 
-function sortPlanningsByDate(a: any, b: any){
-    var a_data = new Date(a.shift.begin)
-    var b_data = new Date(b.shift.begin)
 
-    if(a_data < b_data){
-        return -1
-    }
-    else if(a_data > b_data){
-        return 1
-    } else{
-        return 0
-    }
-}
 
 export const PLANNING_FROM_ID_FETCH_START = 'PLANNING_FROM_ID_FETCH_START'
 export const PLANNING_FROM_ID_FETCH_SUCCESS = 'PLANNING_FROM_ID_FETCH_SUCCESS'
@@ -57,12 +44,9 @@ export const PLANNING_FROM_ID_FETCH_FAIL = 'PLANNING_FROM_ID_FETCH_FAIL'
 
 export const fetchPlanningsFromId = (user_id: number)  => async (dispatch: Redux.Dispatch) => {
     try{
-        dispatch({type: PLANNING_FROM_ID_FETCH_START})
 
-        const response =  await new Database().fetchPlanningsWithUserId(user_id);
-        let plannings = response.data.data.plannings;
-        plannings.sort(sortPlanningsByDate)
-
+        let plannings = await getListLocalStorage('plannings');
+        
         dispatch({type: PLANNING_FROM_ID_FETCH_SUCCESS, payload: plannings})
     } catch(error){
         if (error.response) {

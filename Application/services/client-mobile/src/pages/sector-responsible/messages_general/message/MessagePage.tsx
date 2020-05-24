@@ -93,7 +93,6 @@ class Notifications extends Component<any> {
       return (<div>Berichten zijn aan het laden</div>)
     }
   }
-   
 };
 
 function mapStateToProps(state: any) {
