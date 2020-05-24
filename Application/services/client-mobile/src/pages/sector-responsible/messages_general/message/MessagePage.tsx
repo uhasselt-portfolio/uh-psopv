@@ -47,7 +47,7 @@ class Notifications extends Component<any> {
     this.interval = setInterval(() => {
       console.log("interval MessagePage")
       this.props.fetchMessagesOf(); // TODO USERID
-    }, 10000);
+    }, 5000);
   }
 
   renderList(){
@@ -83,7 +83,6 @@ class Notifications extends Component<any> {
       } else{
         button = <div></div>;
       }
-  
       return (
         <IonList>
           {this.renderList()}
@@ -91,7 +90,7 @@ class Notifications extends Component<any> {
         </IonList>
       );
     } else{
-      return (<div></div>)
+      return (<div>Berichten zijn aan het laden</div>)
     }
   }
    

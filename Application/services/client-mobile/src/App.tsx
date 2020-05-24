@@ -56,7 +56,7 @@ import './theme/variables.css';
 import { PersistGate } from 'redux-persist/integration/react';
 import Save from './pages/save/savePage'
 import { getListLocalStorage } from './pages/save/saveFunction';
-import TabBar from './pages/common_functions/TabBar';
+import TabBar from './pages/TabBar/TabBar';
 
 class App extends React.Component<any, any> {
   interval: NodeJS.Timeout | undefined;
@@ -68,88 +68,6 @@ class App extends React.Component<any, any> {
       amount_msg: 0,
     }
   } 
-
-  renderTabs(){
-    if(this.state.loggedin){ // TODO USERID
-      if(true){
-        return(
-          <IonTabs>
-            <IonRouterOutlet>
-              <Route path="/ListView" component={ListView} exact={true} />
-              <Route path="/MapPage" component={MapPage} exact={true} />
-              <Route path="/PostView/:sector/:post" component={PostView} exact={true} />
-              <Route path="/PersonPage/:id/" component={PersonPage} exact={true} />
-              <Route path="/Notifications" component={MessageGeneral} exact={true} />
-              <Route path="/Contacts" component={Contacts} exact={true} />
-              <Route path="/Login" component={LoginPage} exact={true} />
-              <Route path="/" render={() => <Redirect to="/MapPage" />} exact={true} />
-            </IonRouterOutlet>
-          <IonTabBar slot="bottom">
-            <IonTabButton tab="MapPage" href="/MapPage">
-              <IonIcon icon={mapOutline} />
-              <IonLabel>Post-Kaart</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="ListView" href="/ListView">
-              <IonIcon icon={listOutline} />
-              <IonLabel>Post-Lijst</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="Notifications" href="/Notifications">
-              <IonBadge color="primary">{0}</IonBadge>
-              <IonIcon icon={notificationsOutline} />
-              <IonLabel>Berichten</IonLabel>
-            </IonTabButton>
-            <IonTabButton tab="Contacts" href="/Contacts">
-              <IonIcon icon={personOutline} />
-              <IonLabel>Contacts</IonLabel>
-            </IonTabButton>
-          </IonTabBar>
-          </IonTabs>
-        )
-      } else{
-        return(
-          <IonTabs>
-            <IonRouterOutlet>
-              <Route path="/InfoPage" component={InfoPage} exact={true} />
-              <Route path="/Login" component={LoginPage} exact={true} />
-              <Route path="/VRMessage" component={VRMessage} exact={true} />
-              <Route path="/VRSendMessagePage" component={VRSendMessagePage} exact={true} />
-              <Route path="/" render={() => <Redirect to="/InfoPage" />} exact={true} />
-            </IonRouterOutlet>
-            <IonTabBar slot="bottom">
-              <IonTabButton tab="InfoPage" href="/InfoPage">
-                <IonIcon icon={ellipse} />
-                <IonLabel>Map</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="VRMessage" href="/VRMessage">
-                <IonIcon icon={ellipse} />
-                <IonLabel>Msg</IonLabel>
-              </IonTabButton>
-              <IonTabButton tab="VRSendMessagePage" href="/VRSendMessagePage">
-                <IonIcon icon={ellipse} />
-                <IonLabel>Send</IonLabel>
-              </IonTabButton>
-            </IonTabBar>
-          </IonTabs>
-          )
-      }
-      
-    } else {
-      return(
-      <IonTabs>
-        <IonRouterOutlet>
-          <Route path="/Login" component={LoginPage} exact={true} />
-          <Route path="/" render={() => <Redirect to="/Login" />} exact={true} />
-        </IonRouterOutlet>
-        <IonTabBar slot="bottom">
-        <IonTabButton tab="Login" href="/Login">
-          <IonIcon icon={square} />
-          <IonLabel>Login</IonLabel>
-        </IonTabButton>
-        </IonTabBar>
-      </IonTabs>
-      )
-    }
-  }
 
   render(){
     return (
