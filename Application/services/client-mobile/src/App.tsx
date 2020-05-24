@@ -1,6 +1,16 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import {IonApp, IonRouterOutlet} from '@ionic/react';
+import {
+    IonApp,
+    IonContent,
+    IonHeader,
+    IonItem, IonList,
+    IonPage,
+    IonRouterOutlet,
+    IonText,
+    IonTitle,
+    IonToolbar
+} from '@ionic/react';
 import {IonReactRouter} from '@ionic/react-router';
 import LoginPage from './pages/login/LoginPage';
 /* Core CSS required for Ionic components to work properly */
@@ -53,7 +63,6 @@ class App extends React.Component<any, any> {
             </div>
         )
     }
-
     
     renderApplication() : React.ReactNode {
         const loggedIn = Auth.isAuthenticated();

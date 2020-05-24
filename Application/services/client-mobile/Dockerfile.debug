@@ -12,6 +12,7 @@ COPY ionic.config.json ./
 RUN npm install
 
 ENV NODE_ENV "development"
+ENV PHONE_NUMBER "0495812456"
 
 # Fire up
 CMD ["npm", "start"]

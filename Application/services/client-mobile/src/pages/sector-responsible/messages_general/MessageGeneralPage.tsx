@@ -35,7 +35,7 @@ const init = async function (this: any) {
     swiper = await this.getSwiper();
 };
 
-class MessageGeneral extends React.Component {
+class MessageGeneral extends React.Component<any> {
 
     constructor(props: any) {
         super(props);
@@ -150,4 +150,4 @@ class MessageGeneral extends React.Component {
     }
 }
 
-export default connect()(MessageGeneral);
+export default connect(null, null)(MessageGeneral);

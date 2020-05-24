@@ -1,5 +1,4 @@
 import JWTUtil from "./JWTUtil";
-import {connect} from "react-redux";
 
 class Auth {
 
@@ -46,12 +45,6 @@ class Auth {
 
     getAuthenticatedUser() : any {
         return this.user;
-    }
-
-    hasUnverifiedToken() : boolean {
-        const token = localStorage.getItem('token');
-
-        return token != null;
     }
 
     isTokenExpired(token : any) : boolean {

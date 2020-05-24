@@ -12,16 +12,43 @@ import {
     IonTitle,
     IonToolbar
 } from "@ionic/react";
+
+import GetPhoneNumber from "../../utils/GetPhoneNumber";
+
 class LoginPage extends React.Component<any, any> {
+
+    constructor(props: any) {
+        super(props);
+        this.state = {phoneNumber: undefined};
+    }
+
+    componentDidMount(): void {
+        if(this.state.phoneNumber == undefined) {
+            GetPhoneNumber().then(phoneNumber => {
+                console.log("Phone Number", phoneNumber)
+                this.setState({phoneNumber: phoneNumber})
+            });
+        }
+    }
+
+    checkIfUserExists(phoneNumber: string) {
+        console.log("Checking if user exists..")
+        this.props.checkUserExists(phoneNumber);
+    }
+
 
     render(): React.ReactNode {
 
         const doesUserExist = this.props.doesUserExist;
+        console.log("Redux:", doesUserExist);
+        console.log("Phonenumber:", this.state.phoneNumber);
 
-        if(doesUserExist == undefined) {
+        if(doesUserExist === undefined) {
             // TODO Implement sim reader
-            const phoneNumber = "0495812458";
-            this.props.checkUserExists(phoneNumber);
+
+            if(this.state.phoneNumber != undefined) {
+                this.checkIfUserExists(this.state.phoneNumber);
+            }
 
             return(
                 <IonPage>
@@ -48,13 +75,13 @@ class LoginPage extends React.Component<any, any> {
                         <IonContent>
                             <IonHeader collapse="condense">
                                 <IonToolbar>
-                                    <IonTitle size="large">We kennen jouw niet?</IonTitle>
+                                    <IonTitle size="large">Login</IonTitle>
                                 </IonToolbar>
                             </IonHeader>
                             <IonList>
                                 <IonItem>
                                     <IonText>
-                                        Uw telefoonnummer staat niet tussen onze lijst!
+                                        Het lijkt erop dat jouw telefoonnummer niet in onze lijst staat!
                                     </IonText>
                                 </IonItem>
                             </IonList>
@@ -63,7 +90,7 @@ class LoginPage extends React.Component<any, any> {
                 );
             } else {
                 return(
-                    <LoginComponent user={this.props.doesUserExist} />
+                    <LoginComponent phoneNumber={this.state.phoneNumber} user={this.props.doesUserExist} />
                 )
             }
         }

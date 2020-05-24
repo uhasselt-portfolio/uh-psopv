@@ -21,7 +21,7 @@ class JWTUtil {
             // issuer: process.env.JWT_PROVIDER,
             // expiresIn: process.env.JWT_EXPIRATION,
             issuer: "localhost",
-            expiresIn: "10s",
+            expiresIn: "30s",
             algorithm: "RS256"
         };
     }
