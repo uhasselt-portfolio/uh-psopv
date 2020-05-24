@@ -114,7 +114,6 @@ class MyMap extends React.Component<any> {
      */
     addPostMarkers = (posts: any[], map : L.Map) => {
         for (let i = 0; i < posts.length; ++i) {
-            console.log(posts[i])
             let icon;
             if(Auth.getAuthenticatedUser().permission_type_id == 2){
                 icon = postIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
@@ -181,7 +180,6 @@ class MyMap extends React.Component<any> {
     }
  
   render () {    
-    console.log(this.props)
     return (
         <div id={this.props.containerId} style={{height: this.props.mapHeight.toString() + 'px'}}>
  

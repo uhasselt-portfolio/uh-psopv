@@ -13,14 +13,12 @@ import {
     IonToolbar
 } from "@ionic/react";
 class LoginPage extends React.Component<any, any> {
-
     render(): React.ReactNode {
-
         const doesUserExist = this.props.doesUserExist;
 
         if(doesUserExist == undefined) {
             // TODO Implement sim reader
-            const phoneNumber = "0495812456";
+            const phoneNumber = "0495812455";
             this.props.checkUserExists(phoneNumber);
 
             return(
