@@ -34,5 +34,15 @@ export default async () => {
         association_id: 1
     }).save();
 
+    await new UserModel({
+        first_name: 'Emu',
+        last_name: 'Lator',
+        password: '12345',
+        phone_number: '+1-555-521-5554',
+        email: 'emu.lator@android.com',
+        permission_type_id: 2,
+        association_id: 1
+    }).save();
+
     console.log("Successfully seeded the user table!")
 }
