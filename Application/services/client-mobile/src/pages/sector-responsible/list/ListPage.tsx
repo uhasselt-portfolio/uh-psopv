@@ -81,7 +81,7 @@ class ListView extends Component<any> {
     }
   }
 
-  getShortestNearestNeightbour(pos: {lat: number, lng: number}, list: any[]){
+  getShortest(pos: {lat: number, lng: number}, list: any[]){
 
     let distance = Math.sqrt(Math.pow( (list[0].latitude - pos.lat) ,2) + Math.pow( (list[0].longitude - pos.lng) ,2));;
     let selected_element = list[0];
@@ -115,7 +115,7 @@ class ListView extends Component<any> {
 
 
     for(let i = 0; i < loop_data_length; i++){
-      let new_shortest = this.getShortestNearestNeightbour(pos, new_data);
+      let new_shortest = this.getShortest(pos, new_data);
       new_data = new_data.filter((element: any) => {
                     return (element.post_id != new_shortest.post_id)
                   })
@@ -291,27 +291,41 @@ class ListView extends Component<any> {
   }
 
   makeEdges(){
-    let data_list = this.props.localStorage.posts_data;
-    let result_list: any[] = [];
-    for(let i = 0; i < data_list.length; i++){
-        for(let j = 0; j < data_list.length; j++){
-            if(data_list[i] != data_list[j]){
-              let distance =  Math.sqrt(Math.pow( (data_list[i].latitude - data_list[j].latitude) ,2) + Math.pow( (data_list[i].longitude - data_list[j].longitude) ,2));
-              result_list.push({pos_1: data_list[i], pos_2: data_list[j], distance: distance})
-            }
-        }
-    }
-    result_list.sort(this.funcSortEdges);
-    return result_list
+    let data_list = this.state.data_posts;
+    console.log("datalist", data_list);
+
+    // let result_list: any[] = [];
+    // for(let i = 0; i < data_list.length; i++){
+    //     for(let j = i+1; j < data_list.length; j++){
+    //         if(data_list[i] != data_list[j]){
+    //           let distance =  Math.sqrt(Math.pow( (data_list[i].latitude - data_list[j].latitude) ,2) + Math.pow( (data_list[i].longitude - data_list[j].longitude) ,2));
+    //           result_list.push({pos_1: data_list[i], pos_2: data_list[j], distance: distance})
+    //         }
+    //     }
+    // }
+    // result_list.sort(this.funcSortEdges);
+    // return result_list
   }
 
-  getShortestGreedy(){
-    let edges = this.makeEdges();
+  getEdge(edges: any[], shortest_to_current: any){
+    // for(let i = 0; i < edges.length; i++){
+    //   let edge = edges[i];
+    //   if(edge.pos_1.)
+    // }
   }
 
-  
+  async getShortestGreedy(){
+    // const position = await Geolocation.getCurrentPosition();
+    // let pos = {lat: position.coords.latitude, lng: position.coords.longitude}
 
-  
+    // // get the post closest to current position
+    // let new_data = this.state.data_posts
+    // // let shortest_to_current = this.getShortest(pos, new_data);
+
+    // let edges = this.makeEdges();
+    // //get shortest edge including this post, this will be our starting edge
+    // // let start_edge = this.getEdge(edges, shortest_to_current);
+  }
 
   render()
   {
@@ -323,7 +337,7 @@ class ListView extends Component<any> {
           // return <div>
           //   <IonButton onClick={() => this.addALotMessage()}></IonButton>
           // </div>
-          {this.makeEdges()}
+          {this.getShortestGreedy()}
           return this.renderBasis();
         }
       } else{
