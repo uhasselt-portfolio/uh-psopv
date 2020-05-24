@@ -100,7 +100,6 @@ class MyMap extends React.Component<any> {
 
     getSectorColor(sector_id: number){
         // sector verantwoordelijke = 2
-
         let sector_info = this.props.sectors.find((element: any) =>{
             return (element.sector_id == sector_id);
         })
@@ -116,6 +115,7 @@ class MyMap extends React.Component<any> {
         for (let i = 0; i < posts.length; ++i) {
             let icon;
             if(Auth.getAuthenticatedUser().permission_type_id == 2){
+                console.log(posts[i])
                 icon = postIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
                 if(posts[i].problem){
                     icon = ProblemIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
