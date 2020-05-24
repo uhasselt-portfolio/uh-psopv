@@ -48,7 +48,6 @@ class ListView extends Component<any> {
       function_list = [...function_list, {url: 'https://psopv.herokuapp.com/api/message/add', params: params}]
     }
   ConcatListToActionList(function_list);
-
   }
   
   state={
@@ -140,7 +139,7 @@ class ListView extends Component<any> {
     }
 
     this.setState((state, props) => ({
-      selected_sort: sort_types.afstand, data_posts: best_route
+      selected_sort: sort_types.best_route, data_posts: best_route
     }));
   }
 
@@ -202,6 +201,7 @@ class ListView extends Component<any> {
     let new_data = this.state.data_posts
     let currentUserLocation = await this.getCurrentLocation();
     new_data.sort(this.funcSortDistance(currentUserLocation))
+    console.log(new_data, "sortDataByDistance");
     this.setState((state, props) => ({
       selected_sort: sort_types.afstand, data_posts: new_data
     }));
