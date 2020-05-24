@@ -7,7 +7,7 @@ import ProblemIcon from './ProblemMarker'
 import { Plugins } from '@capacitor/core';
 import Auth from '../../../../utils/Auth';
 const { Geolocation } = Plugins;
- 
+
 interface IProps {
     problems : any[][],
     users: any[],
@@ -18,7 +18,7 @@ interface IProps {
     centerLong: number,
     mapHeight: number
 }
- 
+
 interface IState {
     problemClicked: boolean,
     problem: any | null,
@@ -38,7 +38,7 @@ var userIcon = L.icon({
     popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
 });
 
- 
+
 class MyMap extends React.Component<any> {
     state: IState = {
         problemClicked: false,
@@ -52,7 +52,7 @@ class MyMap extends React.Component<any> {
         updating: false,
         markergroup: new L.FeatureGroup(),
     }
- 
+
     /**
      * function to redirect the user to the detailspage of the problem on a click
      */
@@ -62,18 +62,18 @@ class MyMap extends React.Component<any> {
             problemClicked: true
         })
     }
- 
+
     /**
      * function to show all the problems on a specific post on a click
      */
     onMultipleProblemsClicked = (problems: any[],map : L.Map,marker: L.Marker) => { //TODO
         let popup : string = "";
-       for (let i = 0; i < problems.length; ++i) {
-           popup = popup + '<div>' + problems[i].problemType + '</div></br>';
-       }
+        for (let i = 0; i < problems.length; ++i) {
+            popup = popup + '<div>' + problems[i].problemType + '</div></br>';
+        }
         marker.bindPopup(popup);
     }
- 
+
     /**
      * function to redirect the user to the defailspage of the post on a click
      */
@@ -87,7 +87,7 @@ class MyMap extends React.Component<any> {
     getPost(): string {
         return '/PostView/'+ this.props.sector_id + '/' + this.props.post_id;
     }
- 
+
     /**
      * function to redirect the user to the detailspage of the user on a click
      */
@@ -100,13 +100,13 @@ class MyMap extends React.Component<any> {
 
     getSectorColor(sector_id: number){
         // sector verantwoordelijke = 2
-        
-            let sector_info = this.props.sectors.find((element: any) =>{
-                return (element.sector_id == sector_id);
-            })
-            return sector_info.color
-        
-        
+
+        let sector_info = this.props.sectors.find((element: any) =>{
+            return (element.sector_id == sector_id);
+        })
+        return sector_info.color
+
+
     }
     /**
      * adds all the posts the component got in its props to the map
@@ -114,7 +114,6 @@ class MyMap extends React.Component<any> {
      */
     addPostMarkers = (posts: any[], map : L.Map) => {
         for (let i = 0; i < posts.length; ++i) {
-            console.log(posts[i])
             let icon;
             if(Auth.getAuthenticatedUser().permission_type_id == 2){
                 icon = postIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
@@ -133,18 +132,17 @@ class MyMap extends React.Component<any> {
                 offset: new Point(0, -40)
 
             })
-            .on('click',() => {this.onPostClicked(posts[i])});
+                .on('click',() => {this.onPostClicked(posts[i])});
             marker.addTo(this.state.markergroup);
         }
     }
- 
     /**
      * creates the map and attatches all the problems, posts, users as markers
      */
     componentDidMount = () => {
         var latlng1 = L.latLng(this.props.centerLat, this.props.centerLong);
         var mymap : L.Map = L.map(this.props.containerId).setView(latlng1, 12);
- 
+
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 25,
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -154,7 +152,7 @@ class MyMap extends React.Component<any> {
             tileSize: 512,
             zoomOffset: -1
         }).addTo(mymap);
- 
+
         // this.addproblemMarkers(this.props.problems,mymap);
         this.addPostMarkers(this.props.posts,mymap);
         mymap.addLayer(this.state.markergroup);
@@ -164,8 +162,8 @@ class MyMap extends React.Component<any> {
         });
         setTimeout(function(){ mymap.invalidateSize()}, 1000);
     }
- 
- 
+
+
     /**
      * function will update the markers when the redux props change
      */
@@ -181,7 +179,6 @@ class MyMap extends React.Component<any> {
     }
  
   render () {    
-    console.log(this.props)
     return (
         <div id={this.props.containerId} style={{height: this.props.mapHeight.toString() + 'px'}}>
  
@@ -189,5 +186,5 @@ class MyMap extends React.Component<any> {
       )
   }
 }
- 
+
 export default MyMap

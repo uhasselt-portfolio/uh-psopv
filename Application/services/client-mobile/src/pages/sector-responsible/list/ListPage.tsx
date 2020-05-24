@@ -33,22 +33,6 @@ class ListView extends Component<any> {
   constructor(props: any) {
     super(props);
   }
-
-  addALotMessage(){
-    let function_list: any[] = [];
-    for( let i = 0; i < 10; i++){
-      let params = {
-          title: "double",
-          message: "message",
-          created_by_id: 1,
-          send_to_id: 2,
-          priority: 5,
-      }
-  
-      function_list = [...function_list, {url: 'https://psopv.herokuapp.com/api/message/add', params: params}]
-    }
-  ConcatListToActionList(function_list);
-  }
   
   state={
     selected_sector: -1, //if -1 = selected all sectors
@@ -97,7 +81,7 @@ class ListView extends Component<any> {
     }
   }
 
-  getShortest(pos: {lat: number, lng: number}, list: any[]){
+  getShortestNearestNeightbour(pos: {lat: number, lng: number}, list: any[]){
 
     let distance = Math.sqrt(Math.pow( (list[0].latitude - pos.lat) ,2) + Math.pow( (list[0].longitude - pos.lng) ,2));;
     let selected_element = list[0];
@@ -131,7 +115,7 @@ class ListView extends Component<any> {
 
 
     for(let i = 0; i < loop_data_length; i++){
-      let new_shortest = this.getShortest(pos, new_data);
+      let new_shortest = this.getShortestNearestNeightbour(pos, new_data);
       new_data = new_data.filter((element: any) => {
                     return (element.post_id != new_shortest.post_id)
                   })
@@ -175,7 +159,6 @@ class ListView extends Component<any> {
   sortDataAlphabetical(){
     let new_data = this.state.data_posts
     new_data.sort(this.funcSortDataAlphabetical) 
-    console.log("alha",new_data) 
     this.setState((state, props) => ({
       selected_sort: sort_types.alfabetisch, data_posts: new_data
     }));
@@ -187,7 +170,6 @@ class ListView extends Component<any> {
       Math.pow( (o1.longitude - currentUserLocation.coords.longitude) ,2));
       let distance2 = Math.sqrt(Math.pow( (o2.latitude - currentUserLocation.coords.latitude) ,2) +
       Math.pow( (o2.longitude - currentUserLocation.coords.longitude) ,2));
-      console.log("distance1", distance1, "distance2", distance2)
   
       if (distance1 < distance2)
           return -1;
@@ -201,14 +183,12 @@ class ListView extends Component<any> {
     let new_data = this.state.data_posts
     let currentUserLocation = await this.getCurrentLocation();
     new_data.sort(this.funcSortDistance(currentUserLocation))
-    console.log(new_data, "sortDataByDistance");
     this.setState((state, props) => ({
       selected_sort: sort_types.afstand, data_posts: new_data
     }));
   }
 
   getSectorColor(sector_id: number){
-    console.log(sector_id, this.props)
     let sector_info = this.props.localStorage.posts_sectors.find((element: any) =>{
         return (element.sector_id == sector_id);
     })
@@ -227,7 +207,6 @@ class ListView extends Component<any> {
         )
       })
     } else {
-      console.log(this.state)
       return this.state.data_posts.map((data: any) =>{
         return (
           <ListViewItem {... data} color={this.getSectorColor(data.sector_id)} />
@@ -303,6 +282,37 @@ class ListView extends Component<any> {
     );   
   }
 
+  funcSortEdges(a: any, b: any){
+    if (a.distance < b.distance)
+        return -1;
+    if (b.distance < a.distance)
+        return 1;
+    return 0;
+  }
+
+  makeEdges(){
+    let data_list = this.props.localStorage.posts_data;
+    let result_list: any[] = [];
+    for(let i = 0; i < data_list.length; i++){
+        for(let j = 0; j < data_list.length; j++){
+            if(data_list[i] != data_list[j]){
+              let distance =  Math.sqrt(Math.pow( (data_list[i].latitude - data_list[j].latitude) ,2) + Math.pow( (data_list[i].longitude - data_list[j].longitude) ,2));
+              result_list.push({pos_1: data_list[i], pos_2: data_list[j], distance: distance})
+            }
+        }
+    }
+    result_list.sort(this.funcSortEdges);
+    return result_list
+  }
+
+  getShortestGreedy(){
+    let edges = this.makeEdges();
+  }
+
+  
+
+  
+
   render()
   {
       if(this.props.localStorage != undefined){
@@ -313,7 +323,7 @@ class ListView extends Component<any> {
           // return <div>
           //   <IonButton onClick={() => this.addALotMessage()}></IonButton>
           // </div>
-          
+          {this.makeEdges()}
           return this.renderBasis();
         }
       } else{

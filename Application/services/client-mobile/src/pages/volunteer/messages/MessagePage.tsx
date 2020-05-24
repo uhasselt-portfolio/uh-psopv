@@ -27,7 +27,7 @@ import '../../sector-responsible/messages_general/MessageGeneralPage.css'
 import {getListLocalStorage} from "../../save/saveFunction";
 import {connect} from 'react-redux';
 
-class Message extends React.Component {
+class Message extends React.Component<any, any> {
 
     constructor(props: any) {
         super(props);
