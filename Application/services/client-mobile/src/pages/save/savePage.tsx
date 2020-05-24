@@ -4,7 +4,8 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {doDatabase} from './saveAction'
 import { IonButton } from '@ionic/react';
-import {resetActionList, getActionList, addObjectToActionList, setDefaultSector, getDefaultSector, setUserId, getUserId} from './saveFunction'
+import {resetActionList, getActionList, addObjectToActionList, setDefaultSector, getDefaultSector} from './saveFunction'
+import Auth from '../../utils/Auth';
 
 class Save  extends Component<any> {
   interval: NodeJS.Timeout | undefined;
@@ -12,8 +13,11 @@ class Save  extends Component<any> {
     constructor(props: any, storage: Storage) {
         super(props);
         this.handleActions();
-        setDefaultSector(1); //TODO USERID
-        setUserId(2); //TODO USERID
+
+        // 2 = sector-verantwoordelijke
+        if(Auth.getAuthenticatedUser().permission_type_id == 2){
+          setDefaultSector(Auth.getAuthenticatedUser().id);
+        }
     }
 
 

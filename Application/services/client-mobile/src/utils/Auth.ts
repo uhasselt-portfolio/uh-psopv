@@ -55,8 +55,6 @@ class Auth {
     }
 
     isTokenExpired(token : any) : boolean {
-        console.log("EXPIRES AT", token.exp);
-        console.log("CURRENT DATE", Math.round(Date.now() / 1000));
         return token.exp <= Math.round(Date.now() / 1000);
     }
 }

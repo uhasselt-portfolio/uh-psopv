@@ -17,7 +17,6 @@ import PostReducer from './pages/sector-responsible/post/PostReducer'
 // volunteer
 import InfoReducer from './pages/volunteer/info/InfoReducer';
 import StartReducer from "./pages/volunteer/start/StartReducer";
-import VR_SendMessageReducer from './pages/volunteer/send_message/VR_SendMessageReducer'
 
 
 import {persistStore} from 'redux-persist';
@@ -25,11 +24,8 @@ import {persistReducer} from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import saveReducer from './pages/save/saveReducer'
 import ProblemsReducer from './pages/sector-responsible/messages_general/problems/ProblemsReducer';
-import TabBarReducer from './pages/TabBar/TabBarReducer';
 
-const rootReducer = combineReducers({
-    tabbar: TabBarReducer,
-    
+const rootReducer = combineReducers({    
     login: LoginReducer,
     list: ListReducer,
     map: ListReducer,
@@ -42,7 +38,6 @@ const rootReducer = combineReducers({
     
     // start: StartReducer,
     VRinfo: InfoReducer,
-    vrSendMessage: VR_SendMessageReducer,
 
     // save
     save: saveReducer
