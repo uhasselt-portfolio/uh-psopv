@@ -16,7 +16,6 @@ import Map from './components/Map';
 
 class MapPage extends Component<any> {
 
-  
   constructor(props:any) {
     super(props);
   }
@@ -35,6 +34,7 @@ class MapPage extends Component<any> {
   };
 
   componentDidMount(){
+    console.log("AT MAP PAGE")
     this.props.fetchPosts();
   }
 

@@ -96,15 +96,15 @@ class InfoPage extends React.Component<any, any> {
                         </IonRow>
                     </IonGrid>
 
-                    {/* <div className="GoogleMapsInfo">
-                        <Map problems={[]} users={[]} posts={[{
-                            latitude: shift_data.post.latitude, 
-                            longitude: shift_data.post.longitude,
-                            title: shift_data.post.title}]} isMarkerClickable={false} containerId={"map" + shift_data.id} 
-                            centerLat={shift_data.post.latitude}
-                            centerLong={ shift_data.post.longitude}
-                            mapHeight={200}/>
-                    </div> */}
+                    {/*<div className="GoogleMapsInfo">*/}
+                    {/*    <Map problems={[]} users={[]} posts={[{*/}
+                    {/*        latitude: shift_data.post.latitude, */}
+                    {/*        longitude: shift_data.post.longitude,*/}
+                    {/*        title: shift_data.post.title}]} isMarkerClickable={false} containerId={"map" + shift_data.id} */}
+                    {/*        centerLat={shift_data.post.latitude}*/}
+                    {/*        centerLong={ shift_data.post.longitude}*/}
+                    {/*        mapHeight={200}/>*/}
+                    {/*</div>*/}
                 </IonCardContent>
             </IonCard>
         )

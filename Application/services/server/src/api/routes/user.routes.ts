@@ -1,5 +1,5 @@
 import * as express from 'express';
-import {fetchAll, add, authenticate, modify, remove, fetch, isUserOnPost, toggleUserConnection} from '../controllers/user.controller';
+import {fetchAll, add, authenticate, modify, remove, fetch, isUserOnPost, toggleUserConnection, fetchByPhoneNumber} from '../controllers/user.controller';
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 import {verify} from "../middleware/jwt.middleware";
 
@@ -8,6 +8,8 @@ const router = express.Router();
 router.get('/fetch/all', fetchAll);
 
 router.get('/fetch/:id', fetch);
+
+router.get('/fetch/phone/:phone_number', fetchByPhoneNumber);
 
 router.get('/on-post/:id', isUserOnPost);
 

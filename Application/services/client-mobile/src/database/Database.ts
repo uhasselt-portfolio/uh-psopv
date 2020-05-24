@@ -55,7 +55,11 @@ export default class Database {
         return await axios.delete(url)
     }
 
+    async fetchUserByPhoneNumber(phoneNumber: string) {
+        const url = this.getRestApiEndpoint() + '/api/user/fetch/phone/' + phoneNumber;
 
+        return await axios.get(url)
+    }
     
 
     async fetchPosts() {
