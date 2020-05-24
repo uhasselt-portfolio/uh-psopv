@@ -99,12 +99,12 @@ class ListView extends Component<any> {
 
   getShortest(pos: {lat: number, lng: number}, list: any[]){
 
-    let distance = Math.sqrt(Math.pow( (list[0].loc_lat - pos.lat) ,2) + Math.pow( (list[0].loc_lng - pos.lng) ,2));;
+    let distance = Math.sqrt(Math.pow( (list[0].latitude - pos.lat) ,2) + Math.pow( (list[0].longitude - pos.lng) ,2));;
     let selected_element = list[0];
     for(let i = 0; i<list.length; i++){
       let element = list[i];
-      let lat = element.loc_lat;
-      let lng = element.loc_lng;
+      let lat = element.latitude;
+      let lng = element.longitude;
 
       let new_distance = Math.sqrt(Math.pow( (lat - pos.lat) ,2) + 
                                         Math.pow( (lng - pos.lng) ,2));
@@ -183,10 +183,10 @@ class ListView extends Component<any> {
 
   funcSortDistance(currentUserLocation:any) {
     return function(o1: any, o2: any){
-      let distance1 = Math.sqrt(Math.pow( (o1.loc_lat - currentUserLocation.coords.latitude) ,2) +
-      Math.pow( (o1.loc_lng - currentUserLocation.coords.longitude) ,2));
-      let distance2 = Math.sqrt(Math.pow( (o2.loc_lat - currentUserLocation.coords.latitude) ,2) +
-      Math.pow( (o2.loc_lng - currentUserLocation.coords.longitude) ,2));
+      let distance1 = Math.sqrt(Math.pow( (o1.latitude - currentUserLocation.coords.latitude) ,2) +
+      Math.pow( (o1.longitude - currentUserLocation.coords.longitude) ,2));
+      let distance2 = Math.sqrt(Math.pow( (o2.latitude - currentUserLocation.coords.latitude) ,2) +
+      Math.pow( (o2.longitude - currentUserLocation.coords.longitude) ,2));
       console.log("distance1", distance1, "distance2", distance2)
   
       if (distance1 < distance2)

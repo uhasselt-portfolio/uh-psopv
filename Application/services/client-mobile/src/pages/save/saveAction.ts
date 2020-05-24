@@ -104,8 +104,8 @@ function sortMessagesByDate(a: any, b: any){
                 post_description: post.general_post.description,
                 loc_description: post.title,
                 loc_address: post.address,
-                loc_lat: post.latitude,
-                loc_lng: post.longitude,
+                latitude: post.latitude,
+                longitude: post.longitude,
                 loc_radius: post.radius,
             })
         })

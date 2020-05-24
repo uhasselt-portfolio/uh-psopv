@@ -20,7 +20,7 @@ class LoginPage extends React.Component<any, any> {
 
         if(doesUserExist == undefined) {
             // TODO Implement sim reader
-            const phoneNumber = "0495812456";
+            const phoneNumber = "0495812455";
             this.props.checkUserExists(phoneNumber);
 
             return(
