@@ -9,7 +9,8 @@ import {
     IonPage,
     IonText,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    IonRow
 } from "@ionic/react";
 import React from "react";
 import {bindActionCreators} from "redux";
@@ -53,35 +54,29 @@ class LoginComponent extends React.Component<any, IState> {
             <IonPage>
                 <IonHeader>
                     <IonToolbar>
-                        <IonTitle>
+                        <IonTitle color="primary">
                             Welkom {this.props.user.first_name}
                         </IonTitle>
-                        <IonText>
-                            Gelieve de uw wachtwoord in te geven.
+                        <IonText class="ion-padding">
+                            Gelieve u aan te melden!
                         </IonText>
                     </IonToolbar>
                 </IonHeader>
                 <IonContent>
-                    <IonHeader collapse="condense">
-                        <IonToolbar>
-                            <IonTitle size="large">Login</IonTitle>
-                        </IonToolbar>
-                    </IonHeader>
                     <IonList>
                         <IonItem>
-                            <IonLabel position="stacked">Status:
-                                <IonText color={this.props.isUserLoggedIn ? 'success' : 'secondary'}>
-                                    {this.props.isUserLoggedIn ? ' Aangemeld!' : ''}
-                                    {this.props.process ? ' Aanmelden...' : ''}
-                                </IonText>
+                            <IonLabel position="stacked">Telefoonnummer
+                                <IonText color="primary"> (Automatisch)</IonText>
                             </IonLabel>
-                            <IonLabel position="stacked">
-                                <IonText color="danger">{this.props.errorMessage}</IonText>
-                            </IonLabel>
+                            <IonInput
+                                value={this.props.phoneNumber}
+                                type="text"
+                                readonly={true}
+                            />
                         </IonItem>
                         <IonItem>
                             <IonLabel position="stacked">Wachtwoord
-                                <IonText color="danger">*</IonText>
+                                <IonText color="danger"> {this.props.errorMessage}</IonText>
                             </IonLabel>
                             <IonInput
                                 required
@@ -90,11 +85,12 @@ class LoginComponent extends React.Component<any, IState> {
                                 type="password"
                                 placeholder="Geef je wachtwoord in" />
                         </IonItem>
-                        <IonItem>
+
+                        <IonRow class="ion-padding">
                             <IonButton size="default" onClick={this.handleFormSubmit.bind(this)}>
-                                Aanmelden
+                                {this.props.process ? ' Aanmelden...' : 'Aanmelden'}
                             </IonButton>
-                        </IonItem>
+                        </IonRow>
                     </IonList>
                 </IonContent>
             </IonPage>

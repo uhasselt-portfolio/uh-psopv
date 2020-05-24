@@ -16,7 +16,7 @@ export default function (state = {}, action : AnyAction) {
         case USER_EXISTS_SUCCESS:
             return {...state, process: false, doesUserExist: action.payload, errorMessage: ""}
         case USER_EXISTS_FAIL:
-            return {...state, process: false, doesUserExist: undefined, errorMessage: action.payload}
+            return {...state, process: false, doesUserExist: null, errorMessage: action.payload}
         case USER_LOGOUT_SUCCESS:
             return {... state, process: false, isUserLoggedIn: false, errorMessage: ""}
         default:

@@ -24,7 +24,7 @@ class JWTUtil {
     private static getOptions() : SignOptions {
         return {
             issuer: process.env.JWT_PROVIDER,
-            expiresIn: '10s',
+            expiresIn: '30s',
             algorithm: "RS256"
         };
     }
