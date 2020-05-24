@@ -17,7 +17,7 @@ import Contacts from '../sector-responsible/contact/ContactPage';
 import LoginPage from '../login/LoginPage';
 import PersonPage from '../sector-responsible/person/PersonPage';
 import MapPage from '../sector-responsible/map/MapPage';
-import MessageGeneral from '../sector-responsible/messages_general/messageGeneralPage'
+import MessageGeneral from '../sector-responsible/messages_general/MessageGeneralPage'
 
 import InfoPage from '../volunteer/info/InfoPage';
 import StartPage from '../volunteer/start/StartPage';

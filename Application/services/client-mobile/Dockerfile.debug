@@ -11,5 +11,7 @@ COPY ionic.config.json ./
 # Prepare the container for building react
 RUN npm install
 
+ENV NODE_ENV "development"
+
 # Fire up
 CMD ["npm", "start"]

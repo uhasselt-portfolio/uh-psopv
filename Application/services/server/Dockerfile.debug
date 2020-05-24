@@ -13,6 +13,7 @@ ENV POSTGRES_USER root
 ENV POSTGRES_PASSWORD 12345
 ENV POSTGRES_DB postgres
 ENV POSTGRES_URI 'postgres://postgres:12345@database-debug:5432/postgres'
+ENV TZ = 'Europe/Brussels'
 
 # Connect with nginx
 ENV PORT 3001

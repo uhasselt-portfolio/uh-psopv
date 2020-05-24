@@ -60,6 +60,30 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+export const fetchByPhoneNumber = async (req: Request, res: Response) => {
+    const phoneNumber = req.params.phone_number;
+
+    try {
+        const user = await UserModel.findOne({where: {phone_number: phoneNumber}, include: [{all: true}]});
+        const statusCode = user == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                user: user
+            },
+            message: null
+        });
+    } catch(error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
 export const isUserOnPost = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
