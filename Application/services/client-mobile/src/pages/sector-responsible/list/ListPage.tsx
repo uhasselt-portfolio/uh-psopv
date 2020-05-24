@@ -291,40 +291,118 @@ class ListView extends Component<any> {
   }
 
   makeEdges(){
-    let data_list = this.state.data_posts;
+    let data_list:any[] = this.state.data_posts;
     console.log("datalist", data_list);
 
-    // let result_list: any[] = [];
-    // for(let i = 0; i < data_list.length; i++){
-    //     for(let j = i+1; j < data_list.length; j++){
-    //         if(data_list[i] != data_list[j]){
-    //           let distance =  Math.sqrt(Math.pow( (data_list[i].latitude - data_list[j].latitude) ,2) + Math.pow( (data_list[i].longitude - data_list[j].longitude) ,2));
-    //           result_list.push({pos_1: data_list[i], pos_2: data_list[j], distance: distance})
-    //         }
-    //     }
-    // }
-    // result_list.sort(this.funcSortEdges);
-    // return result_list
+    let result_list: any[] = [];
+      for(let i = 0; i < data_list.length; i++){
+        for(let j = i+1; j < data_list.length; j++){
+            if(data_list[i] != data_list[j]){
+              let distance =  Math.sqrt(Math.pow( (data_list[i].latitude - data_list[j].latitude) ,2) + Math.pow( (data_list[i].longitude - data_list[j].longitude) ,2));
+              result_list.push({pos_1: data_list[i], pos_2: data_list[j], distance: distance})
+            }
+        }
+    }
+    
+    console.log("result_list", result_list);
+
+    result_list.sort(this.funcSortEdges);
+    return result_list
   }
 
   getEdge(edges: any[], shortest_to_current: any){
-    // for(let i = 0; i < edges.length; i++){
-    //   let edge = edges[i];
-    //   if(edge.pos_1.)
-    // }
+    for(let i = 0; i < edges.length; i++){
+      let edge = edges[i];
+      console.log(edge)
+      if(edge.pos_1.post_id == shortest_to_current.post_id){
+        return edge;
+      } else if(edge.pos_2.post_id == shortest_to_current.post_id){
+        return edge;
+      }
+    }
+    return []
   }
 
+  addFirstEdgeToRoute(start_post: any, best_route: any[], new_edge: any){
+    let post1 = new_edge.pos_1;
+    let post2 = new_edge.pos_2;
+
+    if(post1.post_id != start_post.post_id){
+      best_route.push(post1)
+    }
+    if(post2.post_id != start_post.post_id){
+      best_route.push(post2)
+    }
+
+    return best_route;
+  }
+
+  addEdgeToRoute(best_route: any[], new_edge: any){
+    let start_post = best_route[0];
+    let post1 = new_edge.pos_1;
+    let post2 = new_edge.pos_2;
+
+    console.log("post 1 adn 2",post1, post2)
+
+    // to not make a circle: post can't be the first post
+    // it also can't be a post already enclosed by two other posts
+    if(post1.post_id != start_post.post_id && post2.post_id != start_post.post_id){
+      for(let i = 1; i < best_route.length-1; i++){ // check if the post is already enclosed.
+        if(post1.post_id == best_route[i].post_id || post2.post_id == best_route[i].post_id){
+          return best_route // return without adding it
+        }
+      }
+      // if it's not already enclosed, check if one of the posts is the last one, else you can add them both
+      if(post1.post_id == best_route[best_route.length-1].post_id){
+        best_route.push(post2)
+      } else if(post2.post_id == best_route[best_route.length-1].post_id){
+        best_route.push(post1)
+      } else{
+        best_route.push(post1)
+        best_route.push(post2)
+      }
+    }
+
+    return best_route;
+  }
+
+
+
   async getShortestGreedy(){
-    // const position = await Geolocation.getCurrentPosition();
-    // let pos = {lat: position.coords.latitude, lng: position.coords.longitude}
+    try{
+      let new_data = this.state.data_posts
 
-    // // get the post closest to current position
-    // let new_data = this.state.data_posts
-    // // let shortest_to_current = this.getShortest(pos, new_data);
+      // sorting an array below 1 is useless
+      if(new_data.length > 1){ 
+        let edges: any[] = this.makeEdges();
+        let best_route: any[] = [];
 
-    // let edges = this.makeEdges();
-    // //get shortest edge including this post, this will be our starting edge
-    // // let start_edge = this.getEdge(edges, shortest_to_current);
+        //  get the post closest to current position
+        const position = await Geolocation.getCurrentPosition();
+        let pos = {lat: position.coords.latitude, lng: position.coords.longitude}
+        let shortest_to_current = this.getShortest(pos, new_data);
+        best_route.push(shortest_to_current);
+
+        //get shortest edge including this post, this will be our starting edge
+        let start_edge = this.getEdge(edges, shortest_to_current);
+        this.addFirstEdgeToRoute(shortest_to_current, best_route, start_edge);
+        edges = edges.filter((element: any) =>{return (element.pos_1 != start_edge.pos_1 || element.pos_2 != start_edge.pos_2)}); // remove the edge
+        let edges_length: number = edges.length;
+
+        console.log(edges)
+
+        //loop over all the edges, add them one by one, beginning from the shortest
+        for(let i = 0; i < edges_length; i++){
+          console.log(edges[i])
+          this.addEdgeToRoute(best_route, edges[i]) // add the shortest route (if it doesnt make a circle, else it just gets ignored)
+          // edges = edges.filter((element: any) =>{return (element.pos_1 == edges[i].pos_1)}); // remove the edge
+        }
+
+        console.log("best_route", best_route)
+      }
+    } catch(error){
+      console.log(error)
+    }
   }
 
   render()
