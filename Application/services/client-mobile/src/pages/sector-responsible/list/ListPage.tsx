@@ -448,9 +448,6 @@ class ListView extends Component<any> {
           return <div>No interconnection found</div>
         }
         if(this.props.localStorage.posts_sectors.length > 0){
-          // return <div>
-          //   <IonButton onClick={() => this.addALotMessage()}></IonButton>
-          // </div>
           return this.renderBasis();
         }
       } else{
