@@ -1,7 +1,8 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../database/Database'
-import { getListLocalStorage, getUserId, addObjectToActionList, setListLocalStorage, getUserInfo } from "../../save/saveFunction";
+import { getListLocalStorage, addObjectToActionList, setListLocalStorage } from "../../save/saveFunction";
+import Auth from "../../../utils/Auth";
 
 export const POST_FETCH_PLANNING_START = 'POST_FETCH_PLANNING_START'
 export const POST_FETCH_PLANNING_SUCCESS = 'POST_FETCH_PLANNING_SUCCESS'
@@ -15,7 +16,7 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
         
         let posts = await getListLocalStorage('posts');
         let problemTypes = await getListLocalStorage('problem_types');
-        let my_user_id = await getUserId();
+        let my_user_id = Auth.getAuthenticatedUser().id;
 
         let postData = posts.find((element: any) => {
             return (post_id == element.post_id)
@@ -23,15 +24,7 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
 
         dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: {... postData, problemTypes: problemTypes, my_user_id: my_user_id}})
     } catch(error){
-        let posts = await getListLocalStorage('posts');
-        let problemTypes = await getListLocalStorage('problem_types');
-        let my_user_id = await getUserId();
-
-        let postData = posts.find((element: any) => {
-            return (post_id == element.post_id)
-        })
-
-        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: {... postData, problemTypes: problemTypes, my_user_id: my_user_id}})
+        console.log(error)
     }
 }
 
@@ -39,7 +32,7 @@ export const ITEM_TOGGLE_SUCCESS = 'ITEM_TOGGLE_SUCCESS'
 
 export const itemToggle = (item_id: number, shift_id: number, post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        const response = await new Database().ItemToggle(item_id); // TODO GETUSERID
+        const response = await new Database().ItemToggle(item_id);
 
         let result = await toggleItem(item_id, shift_id, post_id);
         
@@ -76,7 +69,7 @@ export const problemToggle = (probem_id: number, shift_id: number, post_id: numb
 async function toggleItem(item_id: number, shift_id: number, post_id: number){
     let posts = await getListLocalStorage('posts');
     let problemTypes = await getListLocalStorage('problem_types');
-    let my_user_id = await getUserId();
+    let my_user_id = Auth.getAuthenticatedUser().id;
 
     let post_index = 0;
     let postData = posts.find((element: any, index: number) => {
@@ -126,8 +119,7 @@ async function toggleItem(item_id: number, shift_id: number, post_id: number){
 async function toggleProblem(probem_id: number, shift_id: number, post_id: number){
     let posts = await getListLocalStorage('posts');
     let problemTypes = await getListLocalStorage('problem_types');
-    let my_user_id = await getUserId();
-
+    let my_user_id = Auth.getAuthenticatedUser().id;
     let post_index = 0;
     let postData = posts.find((element: any, index: number) => {
         post_index = index;
@@ -178,8 +170,8 @@ export const ADD_PROBLEM_SUCCESS = 'ADD_PROBLEM_SUCCESS'
 
 export const addProblem = (shift_id: number, post_id: number, params: any) => async (dispatch: Redux.Dispatch) => {
     try{
-        const responseAddProblem = await new Database().addProblem(params); // TODO GETUSERID
-        const responseToggleProblem = await new Database().ProblemToggle(responseAddProblem.data.data.problem.id); // TODO GETUSERID
+        const responseAddProblem = await new Database().addProblem(params);
+        const responseToggleProblem = await new Database().ProblemToggle(responseAddProblem.data.data.problem.id);
 
 
         let result = await addProblemToLocalStorage(shift_id, post_id, params, responseAddProblem.data.data.problem);
@@ -197,8 +189,7 @@ export const addProblem = (shift_id: number, post_id: number, params: any) => as
 async function addProblemToLocalStorage(shift_id: number, post_id: number, params: any, problem: any){
     let posts = await getListLocalStorage('posts');
     let problemTypes = await getListLocalStorage('problem_types');
-    let my_user_id = await getUserId();
-    let user_info = await getUserInfo();
+    let user_info = Auth.getAuthenticatedUser();
 
     let response_post_details = await new Database().getProblemType(params.problem_type_id);
     let post_details = response_post_details.data.data.problemType;
@@ -244,7 +235,7 @@ async function addProblemToLocalStorage(shift_id: number, post_id: number, param
 
     await setListLocalStorage('posts', otherPostData);
 
-    return {... postData, problemTypes: problemTypes, my_user_id: my_user_id};
+    return {... postData, problemTypes: problemTypes, my_user_id: user_info.id};
 
 }
 
@@ -273,7 +264,8 @@ export const removeProblem = (shift_id: number, post_id: number, problem_id: any
 async function removeProblemToLocalStorage(shift_id: number, post_id: number, problem_id: any){
     let posts = await getListLocalStorage('posts');
     let problemTypes = await getListLocalStorage('problem_types');
-    let my_user_id = await getUserId();
+    let my_user_id = Auth.getAuthenticatedUser().id;
+
 
     let post_index = 0;
     let postData = posts.find((element: any, index: number) => {

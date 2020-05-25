@@ -6,21 +6,34 @@ export default async () => {
 
     await new ShiftModel({
         name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: DateTime.local(2020, 5, 1, 8),
-        end: DateTime.local(2020, 5, 1, 23)
+        begin: new Date(2020, 4,25, 4, 30),
+        end: new Date(2020, 4,25, 14, 30),
     }).save();
 
     await new ShiftModel({
         name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: DateTime.local(2020, 5, 2, 6),
-        end: DateTime.local(2020, 5, 2, 19)
+        begin: Date.UTC(2020, 4,25, 6, 30),
+        end: Date.UTC(2020, 4,25, 16, 30)
     }).save();
 
     await new ShiftModel({
         name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: DateTime.local(2020, 5, 3, 6),
-        end: DateTime.local(2020, 5, 3, 22)
+        begin: Date.UTC(2020, 4,25, 8, 30),
+        end: Date.UTC(2020, 4,25, 18, 30)
     }).save();
+
+    await new ShiftModel({
+        name: 'Waarde wordt niet gebruikt op dit moment',
+        begin: Date.UTC(2020, 4,25, 10, 30),
+        end: Date.UTC(2020, 4,25, 20, 30)
+    }).save();
+
+    await new ShiftModel({
+        name: 'Waarde wordt niet gebruikt op dit moment',
+        begin: Date.UTC(2020, 4,25, 12, 30),
+        end: Date.UTC(2020, 4,25, 22, 30)
+    }).save();
+
 
     console.log("Successfully seeded the shift table!")
 }

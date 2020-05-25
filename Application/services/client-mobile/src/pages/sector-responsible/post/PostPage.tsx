@@ -122,7 +122,6 @@ class PostView extends Component<any, any> {
   setShiftActive(shift_id: number){
     // this.getActiveIndex()
       this.handleShiftSwitch(shift_id)
-    
   }
   
 

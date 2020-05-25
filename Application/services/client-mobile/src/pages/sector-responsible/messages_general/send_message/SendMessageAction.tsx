@@ -1,20 +1,21 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../../../database/Database'
-import { getListLocalStorage, getUserId, addObjectToActionList, ConcatListToActionList } from "../../../save/saveFunction";
+import { getListLocalStorage, addObjectToActionList, ConcatListToActionList } from "../../../save/saveFunction";
 import { promises } from "fs";
 import { list } from "ionicons/icons";
+import Auth from "../../../../utils/Auth";
 
 export const MESSAGE_ADD_START = 'MESSAGE_ADD_START'
 export const MESSAGE_ADD_SUCCESS = 'MESSAGE_ADD_SUCCESS'
 export const MESSAGE_ADD_FAIL = 'MESSAGE_ADD_FAIL'
 
-export const messageAddMessage = (title: string | undefined,
-     message: string | undefined,
-     priority: number) => async (dispatch: Redux.Dispatch) => {
+export const messageAddMessage = (
+    title: string | undefined,
+    message: string | undefined,
+    priority: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        let next = true;
-        let created_by_id = await getUserId()
+        let created_by_id = Auth.getAuthenticatedUser().id
         let send_to_list = await getListLocalStorage('send_msg')
 
         let function_list:  any[] = [];
@@ -34,26 +35,9 @@ export const messageAddMessage = (title: string | undefined,
 
         ConcatListToActionList(function_list);
 
-        // const response = await new Database().addMessage(title, message, created_by_id, send_to_id, priority);
-
-
-
         dispatch({type: MESSAGE_ADD_SUCCESS})
     } catch(error){
-        let created_by_id = await getUserId()
-        let send_to_list = await getListLocalStorage('send_msg')
-
-        send_to_list.forEach( async (send_to_id: string) => {
-            let params = {
-                title: title,
-                message: message,
-                created_by_id: created_by_id,
-                send_to_id: Number(send_to_id),
-                priority: priority,
-            }
-
-            await addObjectToActionList('https://psopv.herokuapp.com/api/message/add', params)
-        });
+        console.log(error)
     }
 }
 

@@ -83,46 +83,6 @@ export async function resetActionList() {
     return obj
   }
 
-
-  export async function setUserId(user_id: Number) {
-    const x = 
-    
-    await Storage.set(
-      {
-      key: 'user_id',
-      value: JSON.stringify(user_id) // TODO USERID
-    });
-  }
-
-  export async function getUserId() {
-    const items = await Storage.get({key: 'user_id'})
-
-    let obj: number = -1;
-    if(items.value != null){
-        obj = JSON.parse(items.value);
-        return obj;
-    } 
-
-    return obj
-  }
-
-  export async function getUserInfo(){
-    let x: {email: string, phone_number: string, first_name: string, last_name: string, permission_type: string, association: string};
-
-    const items = await Storage.get({key: 'user_info'})
-
-    let obj: {email: string, phone_number: string, first_name: string, last_name: string, permission_type: string, association: string} =
-    {email: "", phone_number: "", first_name: "", last_name: "", permission_type: "", association: ""};
-
-    if(items.value != null){
-        obj = JSON.parse(items.value);
-        return obj;
-    } 
-
-    return obj
-
-  }
-
   export async function removeListLocalStorage(id: string) {
     return await Storage.remove({ key: id });
   }

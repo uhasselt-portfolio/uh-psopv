@@ -22,9 +22,9 @@ class ListViewItem  extends Component<any> {
         super(props);
     }
 
-    state = {
-        colors: ["colorRed", "colorBlue", "colorGreen", "colorOrange"]
 
+    state = {
+        color: this.props.color
     }
     
     getPost(): string {
@@ -39,7 +39,7 @@ class ListViewItem  extends Component<any> {
         
 
     render() {
-        let color = this.state.colors[this.props.sector_id - 1]
+        console.log(this.state.color)
         return (   
             <a href={this.getPost()} > 
             <IonItem  detail button>
@@ -51,7 +51,7 @@ class ListViewItem  extends Component<any> {
 
                 </IonLabel>
                 <IonLabel class="right_text" >
-                    <h2 className={color}>Sector {this.props.sector_id}</h2>
+                    <h2 ref="colorSector" style={{color:this.state.color}} >Sector {this.props.sector_id}</h2>
                     {this.renderProblemIcon()}
                 </IonLabel>
             </IonItem>
@@ -59,7 +59,8 @@ class ListViewItem  extends Component<any> {
         );
     }
 }
- 
+
+
   
   export default (ListViewItem);
   

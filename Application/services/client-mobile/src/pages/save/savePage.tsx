@@ -4,22 +4,49 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {doDatabase} from './saveAction'
 import { IonButton } from '@ionic/react';
-import {resetActionList, getActionList, addObjectToActionList, setDefaultSector, getDefaultSector, setUserId, getUserId} from './saveFunction'
+import {resetActionList, getActionList, addObjectToActionList, setDefaultSector, getDefaultSector} from './saveFunction'
+import Auth from '../../utils/Auth';
 
 class Save  extends Component<any> {
+  interval: NodeJS.Timeout | undefined;
+
     constructor(props: any, storage: Storage) {
         super(props);
         this.handleActions();
-        setDefaultSector(1); //TODO USERID
-        setUserId(2); //TODO USERID
+
+        // 2 = sector-verantwoordelijke
+        if(Auth.getAuthenticatedUser().permission_type_id == 2){
+          setDefaultSector(Auth.getAuthenticatedUser().id);
+        }
     }
+
+
+    tick() {
+      this.setState((state: { seconds: number; }) => ({
+        seconds: state.seconds + 1
+      }));
+    }
+
+      componentWillUnmount() {
+        if(this.interval != undefined){
+          clearInterval(this.interval);
+        }
+      }
+
+
+      componentDidMount(){
+        this.interval = setInterval(() => {
+          console.log("test")
+          this.handleActions();
+        }, 10000);
+      }
+
 
 
     async handleActions(){
       if(navigator.onLine){
-        const list = await getActionList();
-        console.log("Handle actions, because we are online", list)
-        this.props.doDatabase(list)
+        console.log("Handle actions, because we are online")
+        this.props.doDatabase()
       } else{
         console.log("we are offline, so we do nothing")
       }

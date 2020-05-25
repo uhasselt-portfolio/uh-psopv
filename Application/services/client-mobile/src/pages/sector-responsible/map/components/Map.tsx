@@ -1,23 +1,13 @@
 import React from 'react'
-import L from 'leaflet';
+import L, { Point } from 'leaflet';
 import { Redirect } from 'react-router-dom';
- 
-var problemIcon = L.icon({
-    iconUrl: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png',
-    iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
-    popupAnchor:  [-500, -56] // point from which the popup should open relative to the iconAnchor
-});
-var postIcon = L.icon({
-    iconUrl: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
-    iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
-    popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
-});
-var userIcon = L.icon({
-    iconUrl: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png',
-    iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
-    popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
-}) 
- 
+import postIcon from './NormalMarker'
+import ProblemIcon from './ProblemMarker'
+
+import { Plugins } from '@capacitor/core';
+import Auth from '../../../../utils/Auth';
+const { Geolocation } = Plugins;
+
 interface IProps {
     problems : any[][],
     users: any[],
@@ -28,7 +18,7 @@ interface IProps {
     centerLong: number,
     mapHeight: number
 }
- 
+
 interface IState {
     problemClicked: boolean,
     problem: any | null,
@@ -41,9 +31,16 @@ interface IState {
     updating: boolean,
     markergroup: L.FeatureGroup
 }
- 
-class MyMap extends React.Component<IProps> {
-    state : IState = {
+
+var userIcon = L.icon({
+    iconUrl: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    iconAnchor:   [13, 0], // point of the icon which will correspond to marker's location
+    popupAnchor:  [5, -76] // point from which the popup should open relative to the iconAnchor
+});
+
+
+class MyMap extends React.Component<any> {
+    state: IState = {
         problemClicked: false,
         problem: null,
         postClicked: false,
@@ -53,9 +50,9 @@ class MyMap extends React.Component<IProps> {
         map: null,
         markers: [],
         updating: false,
-        markergroup: new L.FeatureGroup()
+        markergroup: new L.FeatureGroup(),
     }
- 
+
     /**
      * function to redirect the user to the detailspage of the problem on a click
      */
@@ -65,18 +62,18 @@ class MyMap extends React.Component<IProps> {
             problemClicked: true
         })
     }
- 
+
     /**
      * function to show all the problems on a specific post on a click
      */
     onMultipleProblemsClicked = (problems: any[],map : L.Map,marker: L.Marker) => { //TODO
         let popup : string = "";
-       for (let i = 0; i < problems.length; ++i) {
-           popup = popup + '<div>' + problems[i].problemType + '</div></br>';
-       }
+        for (let i = 0; i < problems.length; ++i) {
+            popup = popup + '<div>' + problems[i].problemType + '</div></br>';
+        }
         marker.bindPopup(popup);
     }
- 
+
     /**
      * function to redirect the user to the defailspage of the post on a click
      */
@@ -86,7 +83,11 @@ class MyMap extends React.Component<IProps> {
             postClicked: true
         })
     }
- 
+
+    getPost(): string {
+        return '/PostView/'+ this.props.sector_id + '/' + this.props.post_id;
+    }
+
     /**
      * function to redirect the user to the detailspage of the user on a click
      */
@@ -96,73 +97,52 @@ class MyMap extends React.Component<IProps> {
             userClicked: true
         })
     }
- 
-    /**
-     * adds all the problems the component got in its props to the map
-     * if mulitple porblems are on the same post, puts them together
-     */
-    addproblemMarkers = (problems: any[][] ,map : L.Map) => {
-        console.log("prob",problems);
-        for (let i = 0; i < problems.length; ++i) {
-            if (problems[i].length === 1) {
-                let marker : L.Marker = L.marker([problems[i][0].latitude, problems[i][0].longitude], {icon: problemIcon})
-                    .bindTooltip(problems[i][0].problemType, {
-                        permanent: true,
-                        direction: 'top'
-                    })
-                    .on('click',() => {this.onProblemClicked(problems[i][0])});
-                marker.addTo(this.state.markergroup);
-            } else {
-                console.log("multiple");
-                let marker : L.Marker = L.marker([problems[i][0].latitude, problems[i][0].longitude], {icon: problemIcon})
-                    .bindTooltip("Problemen", {
-                        permanent: true,
-                        direction: 'top'
-                    })
-                marker.on('click',() => {this.onMultipleProblemsClicked(problems[i],map,marker)});
-                marker.addTo(this.state.markergroup);
-            }
-        }
+
+    getSectorColor(sector_id: number){
+        // sector verantwoordelijke = 2
+        let sector_info = this.props.sectors.find((element: any) =>{
+            return (element.sector_id == sector_id);
+        })
+        return sector_info.color
+
+
     }
- 
     /**
      * adds all the posts the component got in its props to the map
      * these are all the posts without a problem, to prevent overlap
      */
     addPostMarkers = (posts: any[], map : L.Map) => {
         for (let i = 0; i < posts.length; ++i) {
-            let marker : L.Marker = L.marker([posts[i].latitude,posts[i].longitude], {icon: postIcon})
-            .bindTooltip(posts[i].title, {
-                permanent: true,
-                direction: 'top'
+            let icon;
+            if(Auth.getAuthenticatedUser().permission_type_id == 2){
+                console.log(posts[i])
+                icon = postIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
+                if(posts[i].problem){
+                    icon = ProblemIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
+                }
+            } else{
+                icon = userIcon;
+            }
+            let marker : L.Marker = L.marker([posts[i].latitude,posts[i].longitude], {icon: icon})
+
+
+            marker.bindTooltip(posts[i].loc_description, {
+                permanent: false,
+                direction: 'top',
+                offset: new Point(0, -40)
+
             })
-            .on('click',() => {this.onPostClicked(posts[i])});
+                .on('click',() => {this.onPostClicked(posts[i])});
             marker.addTo(this.state.markergroup);
         }
     }
- 
-    /**
-     * adds all the users the component got int its props to the map
-     */
-    addUserMarkers = (users: any[],map: L.Map) => {
-        for (let i = 0; i < users.length; ++i) {
-            let marker : L.Marker = L.marker([users[i].latitude,users[i].longitude], {icon: userIcon})
-            .bindTooltip(users[i].name, {
-                permanent: true,
-                direction: 'top'
-            })
-            .on('click',() => {this.onUserClicked(users[i])});
-            marker.addTo(this.state.markergroup);
-        }
-    }
- 
     /**
      * creates the map and attatches all the problems, posts, users as markers
      */
     componentDidMount = () => {
         var latlng1 = L.latLng(this.props.centerLat, this.props.centerLong);
-        var mymap : L.Map = L.map(this.props.containerId, {zoomControl: false}).setView(latlng1, 13);
- 
+        var mymap : L.Map = L.map(this.props.containerId).setView(latlng1, 12);
+
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw', {
             maxZoom: 25,
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, ' +
@@ -172,10 +152,9 @@ class MyMap extends React.Component<IProps> {
             tileSize: 512,
             zoomOffset: -1
         }).addTo(mymap);
- 
-        this.addproblemMarkers(this.props.problems,mymap);
+
+        // this.addproblemMarkers(this.props.problems,mymap);
         this.addPostMarkers(this.props.posts,mymap);
-        this.addUserMarkers(this.props.users,mymap);
         mymap.addLayer(this.state.markergroup);
         this.setState({
             ...this.state,
@@ -183,20 +162,18 @@ class MyMap extends React.Component<IProps> {
         });
         setTimeout(function(){ mymap.invalidateSize()}, 1000);
     }
- 
- 
+
+
     /**
      * function will update the markers when the redux props change
      */
     componentWillReceiveProps = (nextProps : IProps) => {
         if (this.props !== nextProps) {
-            if (this.state.map !== null) {
+            if (this.state.map != null) {
                 this.state.map.removeLayer(this.state.markergroup);
                 this.state.markergroup = new L.FeatureGroup();
                 this.state.markergroup.addTo(this.state.map);
-                this.addproblemMarkers(nextProps.problems,this.state.map);
                 this.addPostMarkers(nextProps.posts,this.state.map);
-                this.addUserMarkers(nextProps.users,this.state.map);
             }
         }
     }
@@ -209,5 +186,5 @@ class MyMap extends React.Component<IProps> {
       )
   }
 }
- 
+
 export default MyMap

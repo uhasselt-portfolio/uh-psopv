@@ -8,3 +8,9 @@
     align-content: center;
     text-align: center;
 }
+
+.absolute{
+    right: 2px;
+    padding: 0;
+    position: absolute;
+}

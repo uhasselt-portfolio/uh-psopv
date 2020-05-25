@@ -12,28 +12,40 @@ export const loginUser = (email: string | undefined, password: string | undefine
         dispatch({type: USER_LOGIN_START})
 
         const response = await new Database().loginUser(email, password);
-        console.log(response)
 
         const token = response.data.data.jwt;
         localStorage.setItem('token', token);
 
-        dispatch({type: USER_LOGIN_SUCCESS})
+        dispatch({type: USER_LOGIN_SUCCESS, payload: response.data.data})
     } catch (error) {
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+        dispatch({type: USER_LOGIN_FAIL, payload: error.response.data.message})
+    }
+}
 
-            dispatch({type: USER_LOGIN_FAIL, payload: error.response.data.message})
-        } else if (error.request) {
-            // No response was received from the server
-            dispatch({type: USER_LOGIN_FAIL, payload: error.response.data.message})
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            dispatch({type: USER_LOGIN_FAIL, payload: error.response.data.message})
-            console.log('Error', error.message);
-        }
+
+export const USER_LOGOUT_SUCCESS = 'USER_LOGIN_SUCCESS'
+export const logoutUser = () => async (dispatch: Redux.Dispatch) => {
+
+    localStorage.removeItem('token');
+
+    console.log("LOG OUT ACTION CALLED");
+
+    dispatch({type: USER_LOGOUT_SUCCESS})
+}
+
+
+export const USER_EXISTS_START = 'USER_EXISTS_START'
+export const USER_EXISTS_SUCCESS = 'USER_EXISTS_SUCCESS'
+export const USER_EXISTS_FAIL = 'USER_EXISTS_FAILED'
+
+export const checkUserExists = (phoneNumber: string) => async (dispatch: Redux.Dispatch) => {
+    try {
+        dispatch({type: USER_EXISTS_START});
+
+        const response = await new Database().fetchUserByPhoneNumber(phoneNumber);
+
+        dispatch({type: USER_EXISTS_SUCCESS, payload: response.data.data.user});
+    } catch (error) {
+        dispatch({type: USER_EXISTS_FAIL})
     }
 }

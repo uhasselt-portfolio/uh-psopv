@@ -4,7 +4,7 @@ import ProblemItem from './component/Problem_Item'
 import { connect } from "react-redux";
 import { ThunkDispatch } from "redux-thunk";
 import { Dispatch, bindActionCreators } from "redux";
-import {fetchProblemsOf} from './ProblemsAction'
+import {fetchProblemsOf, loadProblem} from './ProblemsAction'
 
 
 
@@ -30,30 +30,45 @@ class ProblemsPage extends Component<any> {
     this.props.fetchProblemsOf(); // TODO USERID
   }
 
+  loadMoreProblems(){
+    this.props.loadProblem();
+  }
+
   renderList(){
-    if(this.props.localStorage != undefined){
-      if(this.props.localStorage.length <= 0){
-          return <div> No messages found. </div>
-      } else{
-        return this.props.localStorage.map((data: any, index: number) =>{
+    
+        return this.props.localStorage.problems.map((data: any, index: number) =>{
           return (
           <ProblemItem {... data}/>
           )
         })
-        }
-      } else{
-        return <div> No internet connection ... </div>
-    }
+        
   }
 
 
   render(){
-    console.log(this.props)
-    return (
-          <IonList>
-            {this.renderList()}
-          </IonList>
-    );
+    if(this.props.localStorage != undefined){
+      if(this.props.localStorage.problems.length <= 0){
+          return <div> No messages found. </div>
+      } else{
+        console.log(this.props)
+        let button;
+        if(!this.props.localStorage.loaded){
+          button = <IonButton className="marginBottom" onClick={() => this.loadMoreProblems()}> Meer berichten laden ... </IonButton>
+        } else{
+          button = <div></div>;
+        }
+        return (
+              <IonList>
+                {this.renderList()}
+                {button}
+              </IonList>
+        );
+      }
+      } else{
+        return <div> No internet connection ... </div>
+    }
+    
+    
     }
 };
 
@@ -67,7 +82,8 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
-    fetchProblemsOf
+    fetchProblemsOf,
+    loadProblem
   }, dispatch);
 }
 

@@ -2,16 +2,21 @@
 import React from 'react';
 import './NormalMarker.css';
 import { IonIcon } from '@ionic/react';
+import L, { Point } from 'leaflet';
+import {marker} from 'leaflet';
+import {MapLayer} from 'react-leaflet';
 
-const NormalMarker = (props: any) => {
-    const { color, name, id } = props;
-    return (
-      <a href={'/PostView/'+props.post_id+"/"+props.sector_id}>
-      <div className="normal_marker"
-        style={{ backgroundColor: color, cursor: 'pointer'}}
-        title={name}
-      ></div></a>
-    );
-  };
+    
+const postIcon = (props: any)  => L.divIcon({
+    className: 'custom-div-icon',
+    html: `<div style="background-color: ${props.sector_color};" class='marker-pin'></div><i class='material-icons'>${props.sector_id}</i>`,
+    iconSize: [30, 42],
+    iconAnchor: [15, 42]
+});
 
-  export default NormalMarker;
+export default postIcon;
+
+
+
+
+
