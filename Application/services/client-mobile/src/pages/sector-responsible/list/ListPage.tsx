@@ -323,47 +323,81 @@ class ListView extends Component<any> {
     return []
   }
 
-  addFirstEdgeToRoute(start_post: any, best_route: any[], new_edge: any){
-    let post1 = new_edge.pos_1;
-    let post2 = new_edge.pos_2;
+  addPostToBestRest(post: any, new_edge: any, best_route: any[], best_route_edges: any[]){
+    let link: any;
 
-    if(post1.post_id != start_post.post_id){
-      best_route.push(post1)
-    }
-    if(post2.post_id != start_post.post_id){
-      best_route.push(post2)
+    if(post.post_id == new_edge.pos_1.post_id){
+      link = new_edge.pos_2;
+    } else{
+      link = new_edge.pos_1;
     }
 
-    return best_route;
+    for(let i = 0; i < best_route.length; i++){
+      if(best_route[i].post_id == link.post_id){
+        // check if it must be added before or after -> i->i+1 exists -> before, else after
+        let result;
+        if(i != best_route.length - 1){
+           result = best_route_edges.find((element: any) => {
+            return (
+              (element.pos_1.post_id == link.post_id && element.pos_2.post_id == best_route[i+1].post_id)
+              ||  (element.pos_2.post_id == link.post_id && element.pos_1.post_id == best_route[i+1].post_id)
+            )
+          })
+        }
+        
+        // if the link after exists, add before, if it doesnt exist, add after
+        if(result == undefined){
+          best_route.splice(i+1, 0, post);
+        } else{
+          best_route.splice(i, 0, post);
+        }
+        return best_route
+      }
+    }
+
+    console.log("adding at end", post, new_edge)
+    best_route.push(post)
+    return best_route
   }
 
-  addEdgeToRoute(best_route: any[], new_edge: any){
-    let start_post = best_route[0];
+  addEdgeToRoute(best_route: any[], new_edge: any, forbidden: any[], to_be_aligned: any[], best_route_edges: any[]){
     let post1 = new_edge.pos_1;
     let post2 = new_edge.pos_2;
+    console.log("START ADD EDGE HERE")
 
-    console.log("post 1 adn 2",post1, post2)
+      // check if the post is already enclosed: if it's in forbidden, it's enclosed, if it is in to_bo_aligned, it is a corner
+      // existing in the current route
+      let forbidden1 = forbidden.find((element: any) => {return (element.post_id == post1.post_id)})
+      let forbidden2 = forbidden.find((element: any) => {return (element.post_id == post2.post_id)})
+      let to_be_aligned1 = to_be_aligned.find((element: any) => {return (element.post_id == post1.post_id)})
+      let to_be_aligned2 = to_be_aligned.find((element: any) => {return (element.post_id == post2.post_id)})
 
-    // to not make a circle: post can't be the first post
-    // it also can't be a post already enclosed by two other posts
-    if(post1.post_id != start_post.post_id && post2.post_id != start_post.post_id){
-      for(let i = 1; i < best_route.length-1; i++){ // check if the post is already enclosed.
-        if(post1.post_id == best_route[i].post_id || post2.post_id == best_route[i].post_id){
-          return best_route // return without adding it
+      // if not in forbidden, search if there is a link already, else just add them both
+      console.log({forbidden1: forbidden1, forbidden2: forbidden2, to_be_aligned1: to_be_aligned1, to_be_aligned2: to_be_aligned2})
+      if((forbidden1 == undefined ) && (forbidden2 == undefined)){
+        if(to_be_aligned1 != undefined){
+          forbidden.push(post1)
+          to_be_aligned = to_be_aligned.filter((element: any) => {
+           return (element.post_id != post1.post_id)});
+        } else{
+          to_be_aligned.push(post1);
+          best_route = this.addPostToBestRest(post1, new_edge, best_route, best_route_edges)
         }
-      }
-      // if it's not already enclosed, check if one of the posts is the last one, else you can add them both
-      if(post1.post_id == best_route[best_route.length-1].post_id){
-        best_route.push(post2)
-      } else if(post2.post_id == best_route[best_route.length-1].post_id){
-        best_route.push(post1)
-      } else{
-        best_route.push(post1)
-        best_route.push(post2)
-      }
+        if(to_be_aligned2 != undefined){
+          forbidden.push(post2)
+          to_be_aligned = to_be_aligned.filter((element: any) => {
+           return (element.post_id != post2.post_id)});
+        } else{
+          to_be_aligned.push(post2);
+          best_route = this.addPostToBestRest(post2, new_edge, best_route, best_route_edges)
+        }
+        best_route_edges.push(new_edge) // add so we know the used edges
+    } else{
+      // do nothing, cause one in forbidden
     }
 
-    return best_route;
+    console.log({best_route: best_route, forbidden: forbidden, to_be_aligned: to_be_aligned})
+    return {best_route, forbidden, to_be_aligned, best_route_edges} ;
   }
 
 
@@ -376,26 +410,26 @@ class ListView extends Component<any> {
       if(new_data.length > 1){ 
         let edges: any[] = this.makeEdges();
         let best_route: any[] = [];
+        let best_route_edges: any[] = [];
+        let forbidden: any[] = [];
+        let to_be_aligned: any[] = [];
 
-        //  get the post closest to current position
+        //  get the post closest to current position and at it as first element to the best_route
         const position = await Geolocation.getCurrentPosition();
         let pos = {lat: position.coords.latitude, lng: position.coords.longitude}
-        let shortest_to_current = this.getShortest(pos, new_data);
-        best_route.push(shortest_to_current);
+        let shortest_post_to_current = this.getShortest(pos, new_data);
+        best_route.push(shortest_post_to_current);
+        to_be_aligned.push(shortest_post_to_current)
 
-        //get shortest edge including this post, this will be our starting edge
-        let start_edge = this.getEdge(edges, shortest_to_current);
-        this.addFirstEdgeToRoute(shortest_to_current, best_route, start_edge);
-        edges = edges.filter((element: any) =>{return (element.pos_1 != start_edge.pos_1 || element.pos_2 != start_edge.pos_2)}); // remove the edge
+        // loop over all the edges, add them one by one, beginning from the shortest
+        // keep an array with: to_be_aligned and forbidden --> to prevent making a circle
         let edges_length: number = edges.length;
-
-        console.log(edges)
-
-        //loop over all the edges, add them one by one, beginning from the shortest
         for(let i = 0; i < edges_length; i++){
-          console.log(edges[i])
-          this.addEdgeToRoute(best_route, edges[i]) // add the shortest route (if it doesnt make a circle, else it just gets ignored)
-          // edges = edges.filter((element: any) =>{return (element.pos_1 == edges[i].pos_1)}); // remove the edge
+          let x = this.addEdgeToRoute(best_route, edges[i], forbidden, to_be_aligned, best_route_edges) // add the shortest route (if it doesnt make a circle, else it just gets ignored)
+          best_route = x.best_route
+          forbidden = x.forbidden;
+          to_be_aligned = x.to_be_aligned
+          best_route_edges = x.best_route_edges          
         }
 
         console.log("best_route", best_route)
