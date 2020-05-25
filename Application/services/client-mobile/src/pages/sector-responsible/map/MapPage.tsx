@@ -5,7 +5,7 @@ import { IonButton,
     IonPage, 
     IonTitle, 
     IonToolbar, 
-    IonContent, IonSelect, IonSelectOption } from '@ionic/react';
+    IonContent, IonSelect, IonSelectOption, IonLoading } from '@ionic/react';
 
 import './MapPage.css';
 import { bindActionCreators } from 'redux';
@@ -23,6 +23,7 @@ class MapPage extends Component<any> {
   state={
     selected_sector: -1, //if -1 = selected all sectors
     data_posts: [],
+    loaded: false
   }
 
   static defaultProps = {
@@ -102,7 +103,7 @@ class MapPage extends Component<any> {
   renderContent(){
       if(this.props.localStorage !== undefined){
         if(this.props.localStorage.posts_data.length <= 0){
-          return <div> No Posts found or still loading. </div>
+          return <div> No Posts found. </div>
         } else{
           return (
             <div className="GoogleMaps">
@@ -115,19 +116,39 @@ class MapPage extends Component<any> {
        }
   }
 
+  
   render(){
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Kaart met posten</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          {this.renderContent()}
-        </IonContent>
-      </IonPage>
-    )
+    let TIME_IN_MS = 2000;
+    let hideFooterTimeout = setTimeout( () => {
+        this.setState({...this.state, loaded: true})
+        this.props.fetchPosts();
+    }, TIME_IN_MS);
+
+    if(this.state.loaded){
+      return (
+        <IonPage>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Kaart met posten</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            {this.renderContent()}
+          </IonContent>
+        </IonPage>
+      )
+    } else{
+      return(
+          <IonLoading
+          cssClass='my-custom-class'
+          isOpen={!this.state.loaded}
+          onDidDismiss={() => this.setState({...this.state, loaded: true})}
+          message={'Initializeren...'}
+          duration={TIME_IN_MS}
+        />
+      )
+    }
+    
   }
 
 };
