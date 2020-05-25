@@ -1,39 +1,36 @@
 import ShiftModel from "../models/shift.model";
 import {DateTime} from "luxon";
 
+const dateFormat : string = "dd/MM/yyyy HH:mm";
+
+const createDate = (localDate : string) : string => {
+    return DateTime.fromFormat(localDate, dateFormat, {zone: 'Europe/Brussels'}).toUTC().toISO()
+}
+
 export default async () => {
     console.log("Started seeding the shift table...")
 
-    await new ShiftModel({
-        name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: new Date(2020, 4,25, 4, 30),
-        end: new Date(2020, 4,25, 14, 30),
-    }).save();
+    try {
+        await new ShiftModel({
+            name: 'Waarde wordt niet gebruikt op dit moment',
+            begin: createDate("25/05/2020 23:30"),
+            end: createDate("26/05/2020 01:45")
+        }).save();
 
-    await new ShiftModel({
-        name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: Date.UTC(2020, 4,25, 6, 30),
-        end: Date.UTC(2020, 4,25, 16, 30)
-    }).save();
+        await new ShiftModel({
+            name: 'Waarde wordt niet gebruikt op dit moment',
+            begin: createDate("25/05/2020 10:45"),
+            end: createDate("25/05/2020 16:45")
+        }).save();
 
-    await new ShiftModel({
-        name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: Date.UTC(2020, 4,25, 8, 30),
-        end: Date.UTC(2020, 4,25, 18, 30)
-    }).save();
-
-    await new ShiftModel({
-        name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: Date.UTC(2020, 4,25, 10, 30),
-        end: Date.UTC(2020, 4,25, 20, 30)
-    }).save();
-
-    await new ShiftModel({
-        name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: Date.UTC(2020, 4,25, 12, 30),
-        end: Date.UTC(2020, 4,25, 22, 30)
-    }).save();
-
+        await new ShiftModel({
+            name: 'Waarde wordt niet gebruikt op dit moment',
+            begin: createDate("25/05/2020 12:45"),
+            end: createDate("25/05/2020 19:00"),
+        }).save();
+    } catch(e) {
+        console.log("ERROR", e);
+    }
 
     console.log("Successfully seeded the shift table!")
 }

@@ -9,7 +9,7 @@ import {connect} from 'react-redux';
 import userDataInterface from '../../interfaces/UserDataInterface';
 import ShiftDataInterface from '../../interfaces/ShiftDataInterface';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
-import {formatTime, formatDate} from '../../Components/date_formatter'; 
+import {formatTime, formatDate} from '../../Components/date_formatter';
 
 import './ProblemPreview.css'
 
