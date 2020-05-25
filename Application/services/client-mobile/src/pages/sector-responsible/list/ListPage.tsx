@@ -33,22 +33,6 @@ class ListView extends Component<any> {
   constructor(props: any) {
     super(props);
   }
-
-  addALotMessage(){
-    let function_list: any[] = [];
-    for( let i = 0; i < 10; i++){
-      let params = {
-          title: "double",
-          message: "message",
-          created_by_id: 1,
-          send_to_id: 2,
-          priority: 5,
-      }
-  
-      function_list = [...function_list, {url: 'https://psopv.herokuapp.com/api/message/add', params: params}]
-    }
-  ConcatListToActionList(function_list);
-  }
   
   state={
     selected_sector: -1, //if -1 = selected all sectors
@@ -175,7 +159,6 @@ class ListView extends Component<any> {
   sortDataAlphabetical(){
     let new_data = this.state.data_posts
     new_data.sort(this.funcSortDataAlphabetical) 
-    console.log("alha",new_data) 
     this.setState((state, props) => ({
       selected_sort: sort_types.alfabetisch, data_posts: new_data
     }));
@@ -187,7 +170,6 @@ class ListView extends Component<any> {
       Math.pow( (o1.longitude - currentUserLocation.coords.longitude) ,2));
       let distance2 = Math.sqrt(Math.pow( (o2.latitude - currentUserLocation.coords.latitude) ,2) +
       Math.pow( (o2.longitude - currentUserLocation.coords.longitude) ,2));
-      console.log("distance1", distance1, "distance2", distance2)
   
       if (distance1 < distance2)
           return -1;
@@ -201,14 +183,12 @@ class ListView extends Component<any> {
     let new_data = this.state.data_posts
     let currentUserLocation = await this.getCurrentLocation();
     new_data.sort(this.funcSortDistance(currentUserLocation))
-    console.log(new_data, "sortDataByDistance");
     this.setState((state, props) => ({
       selected_sort: sort_types.afstand, data_posts: new_data
     }));
   }
 
   getSectorColor(sector_id: number){
-    console.log(sector_id, this.props)
     let sector_info = this.props.localStorage.posts_sectors.find((element: any) =>{
         return (element.sector_id == sector_id);
     })
@@ -227,7 +207,6 @@ class ListView extends Component<any> {
         )
       })
     } else {
-      console.log(this.state)
       return this.state.data_posts.map((data: any) =>{
         return (
           <ListViewItem {... data} color={this.getSectorColor(data.sector_id)} />
@@ -303,6 +282,51 @@ class ListView extends Component<any> {
     );   
   }
 
+  funcSortEdges(a: any, b: any){
+    if (a.distance < b.distance)
+        return -1;
+    if (b.distance < a.distance)
+        return 1;
+    return 0;
+  }
+
+  makeEdges(){
+    let data_list = this.state.data_posts;
+    console.log("datalist", data_list);
+
+    // let result_list: any[] = [];
+    // for(let i = 0; i < data_list.length; i++){
+    //     for(let j = i+1; j < data_list.length; j++){
+    //         if(data_list[i] != data_list[j]){
+    //           let distance =  Math.sqrt(Math.pow( (data_list[i].latitude - data_list[j].latitude) ,2) + Math.pow( (data_list[i].longitude - data_list[j].longitude) ,2));
+    //           result_list.push({pos_1: data_list[i], pos_2: data_list[j], distance: distance})
+    //         }
+    //     }
+    // }
+    // result_list.sort(this.funcSortEdges);
+    // return result_list
+  }
+
+  getEdge(edges: any[], shortest_to_current: any){
+    // for(let i = 0; i < edges.length; i++){
+    //   let edge = edges[i];
+    //   if(edge.pos_1.)
+    // }
+  }
+
+  async getShortestGreedy(){
+    // const position = await Geolocation.getCurrentPosition();
+    // let pos = {lat: position.coords.latitude, lng: position.coords.longitude}
+
+    // // get the post closest to current position
+    // let new_data = this.state.data_posts
+    // // let shortest_to_current = this.getShortest(pos, new_data);
+
+    // let edges = this.makeEdges();
+    // //get shortest edge including this post, this will be our starting edge
+    // // let start_edge = this.getEdge(edges, shortest_to_current);
+  }
+
   render()
   {
       if(this.props.localStorage != undefined){
@@ -313,7 +337,7 @@ class ListView extends Component<any> {
           // return <div>
           //   <IonButton onClick={() => this.addALotMessage()}></IonButton>
           // </div>
-          
+          {this.getShortestGreedy()}
           return this.renderBasis();
         }
       } else{
