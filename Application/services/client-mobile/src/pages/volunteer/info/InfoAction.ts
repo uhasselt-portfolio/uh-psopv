@@ -46,6 +46,8 @@ export const fetchPlanningsFromId = (user_id: number)  => async (dispatch: Redux
     try{
 
         let plannings = await getListLocalStorage('plannings');
+
+        console.log("PLANNING", plannings)
         
         dispatch({type: PLANNING_FROM_ID_FETCH_SUCCESS, payload: plannings})
     } catch(error){

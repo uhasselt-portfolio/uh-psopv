@@ -138,7 +138,7 @@ function sortMessagesByDate(a: any, b: any){
                 post["problem"] = false;
               }
         })
-        
+
         // get shifts
         posts_data.forEach((plannings: any) => {
             let plannings_post = responsePlannings.data.data.plannings.filter((planning: any) => {
@@ -153,7 +153,7 @@ function sortMessagesByDate(a: any, b: any){
                 }
             });
 
-            const userShifts: any[] = []; 
+            const userShifts: any[] = [];
             shifts.forEach((shift_id: number) => {
                 let sameShift = plannings_post.filter((element: any) => {
                     return element.shift_id === shift_id
@@ -165,23 +165,23 @@ function sortMessagesByDate(a: any, b: any){
                     shift_begin: sameShift[0].shift.begin,
                     shift_end: sameShift[0].shift.end,
                 }
-                
-                
+
+
 
                 /* Add User Names */
-                let userNames: any[] = []; 
+                let userNames: any[] = [];
                 sameShift.forEach((element: any) => {
                     const name = element.user.first_name + " " + element.user.last_name
                     userNames.push({name: name, user_id: element.user.id, phone_number: element.phone_number, email: element.email, planning_id: element.id})
                 })
 
                 /* Add items */
-                let items: any[] = []; 
+                let items: any[] = [];
                 sameShift.forEach((planning: any) => {
                     let new_items = responseItems.data.data.items.filter((item: any) => {
                         return item.planning_id === planning.id
                     });
-                    
+
                     new_items.forEach((element: any, index: number) => {
                         items.push({
                             item_id: element.id,
@@ -193,7 +193,7 @@ function sortMessagesByDate(a: any, b: any){
                 })
 
                 /* Add problems */
-                let problems: any[] = []; 
+                let problems: any[] = [];
                 sameShift.forEach((planning: any) => {
                     let new_problems = responseProblems.data.data.problems.filter((problem: any) => {
                         return problem.planning_id === planning.id
@@ -213,9 +213,9 @@ function sortMessagesByDate(a: any, b: any){
                         })
                     });
                 })
-                
+
                 userShifts.push({
-                    shift_id: shift_id, 
+                    shift_id: shift_id,
                     shift_start: shifts_data.shift_begin,
                     shift_end: shifts_data.shift_end,
                     shift_users: userNames,shift_items: items, shift_problems: problems});
@@ -291,7 +291,7 @@ function generateSectorColors(sectors: number[], sectorColors: any){
     return colors;
 }
 
-export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'  
+export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'
 
 export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
     try{
@@ -317,6 +317,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             const response =  await database.fetchPlanningsWithUserId(user_id);
             let plannings = response.data.data.plannings;
             plannings.sort(sortPlanningsByDate)
+            console.log("SAVE ACTION PLANNING", plannings);
             setListLocalStorage('plannings', plannings);
         }
         // 2 = sector_verantwoordelijke
@@ -352,7 +353,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             setListLocalStorage('problem_types', problemTypes.data.data.problemTypes);
         }
 
-        
+
 
         resetActionList();
         dispatch({type: UNROLL_ACTIONS})
@@ -362,7 +363,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
     }
 }
 
-export const UPDATE_MESSAGES = 'UPDATE_MESSAGES'  
+export const UPDATE_MESSAGES = 'UPDATE_MESSAGES'
 
 export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
     try{
