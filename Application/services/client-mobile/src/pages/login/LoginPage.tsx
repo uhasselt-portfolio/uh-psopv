@@ -25,14 +25,12 @@ class LoginPage extends React.Component<any, any> {
     componentDidMount(): void {
         if(this.state.phoneNumber == undefined) {
             GetPhoneNumber().then(phoneNumber => {
-                console.log("phoneNumber, ", phoneNumber)
                 this.setState({phoneNumber: phoneNumber})
             });
         }
     }
 
     checkIfUserExists(phoneNumber: string) {
-        console.log("checkIfUserExists, ", phoneNumber)
         this.props.checkUserExists(phoneNumber);
     }
 
