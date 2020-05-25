@@ -6,7 +6,7 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPlanningsFromPost} from './PostAction'
 import { caretDown, arrowBack, arrowForward, constructOutline } from 'ionicons/icons';
-import { formatDateTime } from '../../common_functions/date_formatter';
+import { formatDateTime } from '../../../utils/DateUtil';
 import { Switch } from 'react-router';
 import SelectShiftWindow from './components/SelectShiftWindow';
 

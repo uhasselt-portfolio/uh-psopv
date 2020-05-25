@@ -5,7 +5,7 @@ export default class Database {
 
     getRestApiEndpoint(): string | undefined {
         // @ts-ignore
-        if (process.env.NODE_ENV === 'debug' || 'development')
+        if (process.env.NODE_ENV == ('debug' || 'development'))
             return "http://localhost";
         return "https://psopv.herokuapp.com";
     }

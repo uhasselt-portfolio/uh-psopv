@@ -49,9 +49,16 @@ class LoginPage extends React.Component<any, any> {
                     <IonContent>
                         <IonHeader collapse="condense">
                             <IonToolbar>
-                                <IonTitle size="large">Laden...</IonTitle>
+                                <IonTitle size="large">Login</IonTitle>
                             </IonToolbar>
                         </IonHeader>
+                        <IonList>
+                            <IonItem>
+                                <IonText>
+                                    Gelieve de permissie te accepteren...
+                                </IonText>
+                            </IonItem>
+                        </IonList>
                     </IonContent>
                 </IonPage>
             )
@@ -75,7 +82,7 @@ class LoginPage extends React.Component<any, any> {
                             <IonList>
                                 <IonItem>
                                     <IonText>
-                                        Het lijkt erop dat jouw telefoonnummer niet in onze lijst staat!
+                                        Het lijkt erop dat jouw telefoonnummer ({this.state.phoneNumber}) niet in onze lijst staat!
                                     </IonText>
                                 </IonItem>
                             </IonList>

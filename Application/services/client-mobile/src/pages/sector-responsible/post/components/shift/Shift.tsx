@@ -8,7 +8,7 @@ import { IonButton,
     IonCard, IonIcon, IonSlide, IonRow, IonCol, IonGrid, IonItem, IonLabel, IonCheckbox, IonInput, IonTextarea, IonList, IonPopover, IonToast } from '@ionic/react';
 import './Shift.css';
 import { arrowBack, arrowForward, caretDown } from 'ionicons/icons';
-import {formatDateTime} from '../../../../common_functions/date_formatter';
+import {formatDateTime} from '../../../../../utils/DateUtil';
 import {itemToggle, problemToggle, addProblem} from '../../PostAction' 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';

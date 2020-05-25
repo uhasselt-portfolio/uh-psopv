@@ -41,9 +41,9 @@ export const USER_EXISTS_FAIL = 'USER_EXISTS_FAILED'
 export const checkUserExists = (phoneNumber: string) => async (dispatch: Redux.Dispatch) => {
     try {
         dispatch({type: USER_EXISTS_START});
-
+        console.log("Checking if user exists...", phoneNumber)
         const response = await new Database().fetchUserByPhoneNumber(phoneNumber);
-
+        console.log("RESPONSE", response);
         dispatch({type: USER_EXISTS_SUCCESS, payload: response.data.data.user});
     } catch (error) {
         dispatch({type: USER_EXISTS_FAIL})

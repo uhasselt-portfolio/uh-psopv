@@ -38,7 +38,7 @@ export default async () => {
         first_name: 'Emu',
         last_name: 'Lator',
         password: '12345',
-        phone_number: '+1-555-521-5554',
+        phone_number: '+15555215556',
         email: 'emu.lator@android.com',
         permission_type_id: 2,
         association_id: 1

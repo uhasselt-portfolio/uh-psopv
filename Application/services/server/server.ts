@@ -19,9 +19,9 @@ const startServer = async () => {
     await seedDatabase();
 
     if(process.env.NODE_ENV == 'production') {
-        console.log('Production back-end server started successfully');
+        console.log('Production back-end server started successfully!!');
     } else {
-        console.log('Debug back-end server started successfully');
+        console.log('Debug back-end server started successfully!!');
     }
 }
 

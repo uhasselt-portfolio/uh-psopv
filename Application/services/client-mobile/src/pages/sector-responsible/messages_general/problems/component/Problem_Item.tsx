@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 import './Notification_Item.css';
 import { connect } from "react-redux";
 import {MessageToggle} from '../ProblemsAction'
-import {formatDateTime} from '../../../../common_functions/date_formatter'
+import {formatDateTime} from '../../../../../utils/DateUtil'
 
 
 class ProblemItem extends Component<any> {

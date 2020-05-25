@@ -20,7 +20,7 @@ import {
 import './InfoPage.css'
 import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/background-geolocation";
 import Map from '../../sector-responsible/map/components/Map';
-import { formatDateTime } from '../../common_functions/date_formatter';
+import { formatDateTime } from '../../../utils/DateUtil';
 
 class InfoPage extends React.Component<any, any> {
 
