@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Grid, Button} from '@material-ui/core';
+import {Grid, Button, TextField} from '@material-ui/core';
 import ProblemInterface from '../../interfaces/ProblemDataInterface';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
@@ -27,15 +27,34 @@ interface IProps {
     }
 }
 
+interface IState {
+    editing: boolean
+}
+
 type props = LinkDispatchToProps & IProps;
 
 class ProblemDetails extends Component<props> {
+    state : IState = {
+        editing: false
+    }
 
     /**
      * updates the database that the problems has been solved
      */
     handleSolvedButton = () => {
         this.props.problemSolved(this.props.location.state.id);
+    }
+
+    DisplauEditingField = () =>{
+        this.setState({
+            editing: true
+        });
+    }
+
+    handleEditSave = () => { //TODO
+        this.setState({
+            editing: false
+        });
     }
 
     /**
@@ -79,6 +98,23 @@ class ProblemDetails extends Component<props> {
                                 <p>melder: {this.props.location.state.sender}</p>
                             </Grid>
                         </Grid>
+                        {
+                            ! this.state.editing && 
+                            <Grid container justify="center">
+                                <Button variant="outlined" style={ButtonStyle} onClick={this.DisplauEditingField}>Voeg een notitie toe</Button>
+                            </Grid>
+                        }
+                        { 
+                            this.state.editing &&
+                            <Grid container justify="center">
+                                <Grid item>
+                                    <TextField variant="outlined" placeholder="notitie" id="receiver"/>
+                                </Grid>
+                                <Grid item>
+                                    <Button variant="outlined" style={ButtonStyle} onClick={this.handleEditSave}>Voeg toe</Button>
+                                </Grid>
+                            </Grid>
+                        }
                         <Grid container justify="center">
                             <Grid item>
                                 <Button variant="outlined" onClick={this.handleSolvedButton} style={ButtonStyle}>Solved</Button>

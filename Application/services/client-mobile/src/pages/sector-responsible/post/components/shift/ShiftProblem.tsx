@@ -15,7 +15,7 @@ import { call, checkbox, pencilOutline, checkmarkDone, checkmark, remove, remove
 import { render } from '@testing-library/react';
 import { radioButtonOff } from 'ionicons/icons';
 import { getListLocalStorage, setListLocalStorage, removeListLocalStorage, addObjectToActionList } from '../../../../save/saveFunction';
-import { formatDateTime } from '../../../../common_functions/date_formatter';
+import { formatDateTime } from '../../../../../utils/DateUtil';
 import './Shift.css'
 import {problemToggle, removeProblem} from '../../PostAction'
 

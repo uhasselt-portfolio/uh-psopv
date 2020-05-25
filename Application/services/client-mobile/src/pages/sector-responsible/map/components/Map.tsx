@@ -99,13 +99,16 @@ class MyMap extends React.Component<any> {
     }
 
     getSectorColor(sector_id: number){
-        // sector verantwoordelijke = 2
-        let sector_info = this.props.sectors.find((element: any) =>{
-            return (element.sector_id == sector_id);
-        })
-        return sector_info.color
-
-
+        if(this.props.sectors != undefined){
+            // sector verantwoordelijke = 2
+            let sector_info = this.props.sectors.find((element: any) =>{
+                return (element.sector_id == sector_id);
+            })
+            return sector_info.color
+        } else{
+            return "black"
+        }
+       
     }
     /**
      * adds all the posts the component got in its props to the map

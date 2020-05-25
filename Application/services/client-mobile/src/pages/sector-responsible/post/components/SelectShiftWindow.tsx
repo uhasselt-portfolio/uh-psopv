@@ -15,7 +15,7 @@ import { call, checkbox } from 'ionicons/icons';
 import { render } from '@testing-library/react';
 import { radioButtonOff } from 'ionicons/icons';
 import { getListLocalStorage, setListLocalStorage, removeListLocalStorage } from '../../../save/saveFunction';
-import { formatDateTime } from '../../../common_functions/date_formatter';
+import { formatDateTime } from '../../../../utils/DateUtil';
 
 
 

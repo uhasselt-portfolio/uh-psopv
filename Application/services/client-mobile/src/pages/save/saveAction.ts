@@ -327,7 +327,6 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             const responseUsers = await database.fetchUsers();
             const responseSector = await database.fetchSectorOfUser(user_id);
             const default_sector = responseSector.data.data.sector.sector_type
-            console.log("default_sector",default_sector)
 
             const problemTypes = await database.fetchAllProblemTypes();
             const sectorColors = await getListLocalStorage('sector_colors');
