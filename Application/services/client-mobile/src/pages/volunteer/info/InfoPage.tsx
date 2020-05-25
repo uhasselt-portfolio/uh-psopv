@@ -15,7 +15,8 @@ import {
     IonContent,
     IonHeader,
     IonToolbar,
-    IonTitle
+    IonTitle,
+    IonLoading
 } from '@ionic/react';
 import './InfoPage.css'
 import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/background-geolocation";
@@ -23,6 +24,10 @@ import Map from '../../sector-responsible/map/components/Map';
 import { formatDateTime } from '../../../utils/DateUtil';
 
 class InfoPage extends React.Component<any, any> {
+
+    state = {
+        loaded: false
+    }
 
     componentDidMount() {
         let HIGH = 10;
@@ -121,21 +126,37 @@ class InfoPage extends React.Component<any, any> {
     }
 
     render() {
-        console.log(this.props)
+        let TIME_IN_MS = 2000;
+        let hideFooterTimeout = setTimeout( () => {
+            this.setState({...this.state, loaded: true})
+            this.props.fetchPlanningsFromId();
+        }, TIME_IN_MS);
 
-        return (
-            <IonPage>
-                <IonHeader>
-                    <IonToolbar>
-                        <IonTitle>Shift info</IonTitle>
-                    </IonToolbar>
-                </IonHeader>
-                <IonContent>
-                    {this.renderShiftList()}
-                </IonContent>
+        if(this.state.loaded){
+            return (
+                <IonPage>
+                    <IonHeader>
+                        <IonToolbar>
+                            <IonTitle>Shift info</IonTitle>
+                        </IonToolbar>
+                    </IonHeader>
+                    <IonContent>
+                        {this.renderShiftList()}
+                    </IonContent>
 
-            </IonPage>
-        )
+                </IonPage>
+                )
+            } else{
+            return(
+                <IonLoading
+                cssClass='my-custom-class'
+                isOpen={!this.state.loaded}
+                onDidDismiss={() => this.setState({...this.state, loaded: true})}
+                message={'Initializeren...'}
+                duration={TIME_IN_MS}
+              />
+            )
+          }
     }
 }
 
