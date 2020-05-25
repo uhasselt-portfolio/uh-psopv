@@ -77,12 +77,11 @@ class ListView extends Component<any> {
       this.sortDataByDistance();
     }
     if (sort === sort_types.best_route){
-      this.sortDataByBestRoute();
+      this.sortDataByBestRouteGreedy();
     }
   }
 
   getShortest(pos: {lat: number, lng: number}, list: any[]){
-
     let distance = Math.sqrt(Math.pow( (list[0].latitude - pos.lat) ,2) + Math.pow( (list[0].longitude - pos.lng) ,2));;
     let selected_element = list[0];
     for(let i = 0; i<list.length; i++){
@@ -402,7 +401,7 @@ class ListView extends Component<any> {
 
 
 
-  async getShortestGreedy(){
+  async sortDataByBestRouteGreedy(){
     try{
       let new_data = this.state.data_posts
 
@@ -432,6 +431,9 @@ class ListView extends Component<any> {
           best_route_edges = x.best_route_edges          
         }
 
+        this.setState((state, props) => ({
+          selected_sort: sort_types.best_route, data_posts: best_route
+        }));
         console.log("best_route", best_route)
       }
     } catch(error){
@@ -449,7 +451,6 @@ class ListView extends Component<any> {
           // return <div>
           //   <IonButton onClick={() => this.addALotMessage()}></IonButton>
           // </div>
-          {this.getShortestGreedy()}
           return this.renderBasis();
         }
       } else{
