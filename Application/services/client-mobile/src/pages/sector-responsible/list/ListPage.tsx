@@ -31,28 +31,38 @@ const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand", best_route: 
 
 class ListView extends Component<any> {
   constructor(props: any) {
-    super(props);
+    super(props);  
   }
   
   state={
     selected_sector: -1, //if -1 = selected all sectors
     selected_sort: sort_types.alfabetisch,
-    data_posts: [],
-    default_sector: -1, // -1 = none
+    data_posts: this.props.localStorage.posts_data,
+    default_sector: this.props.localStorage.default_sector, // -1 = none
+  }
+
+
+  interval: NodeJS.Timeout | undefined;
+
+  componentWillUnmount() {
+    if(this.interval != undefined){
+      clearInterval(this.interval);
+    }
   }
 
   async componentDidMount(){
     this.props.fetchPosts();
+    this.handleSectorChange(this.props.localStorage.default_sector)
+
+    this.interval = setInterval(() => {
+      console.log("interval MessagePage")
+      this.props.fetchPosts(); // TODO interval
+    }, 5000);
   }
 
   async getCurrentLocation() {
     const position = await Geolocation.getCurrentPosition();
     return position;
-  }
-
-  watchPosition() {
-    const wait = Geolocation.watchPosition({}, (position, err) => {
-    })
   }
 
   handleSectorChange(sector: number){
@@ -196,15 +206,18 @@ class ListView extends Component<any> {
 
   renderListOfItems(){
     if(this.state.data_posts.length <= 0){
-      let data_default = this.props.localStorage.posts_data.filter((data: any) =>{
-        return (data.sector_id == this.props.localStorage.default_sector)
-      })
-      this.setState({...this.state, data_posts: data_default, default_sector: this.props.localStorage.default_sector, selected_sector: this.props.localStorage.default_sector});
-      return data_default.map((data: any, index: number) =>{
-        return (
-          <ListViewItem {...data} color={this.getSectorColor(data.sector_id)}/>
-        )
-      })
+      if(this.props.localStorage.default_sector !== -1){
+        let new_data = this.props.localStorage.posts_data.filter((element: any) => {
+          return element.sector_id === this.props.localStorage.default_sector
+        })  
+
+        return new_data.map((data: any) =>{
+          return (
+            <ListViewItem {... data} color={this.getSectorColor(data.sector_id)} />
+          )
+        })   
+      }
+      
     } else {
       return this.state.data_posts.map((data: any) =>{
         return (
@@ -213,9 +226,6 @@ class ListView extends Component<any> {
       })
     }  
   }
-
-  
-  
 
    renderButtons(){
     let list: { title: string; subinfo: string; }[] = [];
@@ -399,8 +409,6 @@ class ListView extends Component<any> {
     return {best_route, forbidden, to_be_aligned, best_route_edges} ;
   }
 
-
-
   async sortDataByBestRouteGreedy(){
     try{
       let new_data = this.state.data_posts
@@ -443,17 +451,17 @@ class ListView extends Component<any> {
 
   render()
   {
+    console.log(this.state)
       if(this.props.localStorage != undefined){
         if(this.props.localStorage.posts_sectors <= 0){
-          return <div>No interconnection found</div>
+          return <div> No posts found </div>
         }
         if(this.props.localStorage.posts_sectors.length > 0){
           return this.renderBasis();
         }
       } else{
-        return <div>loading</div>
+        return <div>loading...</div>
       }
-      
   }
   
 };

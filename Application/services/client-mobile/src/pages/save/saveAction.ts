@@ -92,9 +92,6 @@ function sortMessagesByDate(a: any, b: any){
 }
  function getPostsData(responsePosts: any, responseUnsolvedProblems: any, responseItems: any,
     responseProblems: any, responsePlannings: any, default_sector: number, list_colors: string[]){
-
-
-
         let posts_data: {}[] = []
 
         responsePosts.data.data.posts.map((post: any) => {
@@ -328,7 +325,10 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             const responseProblems = await database.fetchAllProblems();
             const responsePlannings = await database.fetchPlannings();
             const responseUsers = await database.fetchUsers();
-            const default_sector = await getDefaultSector();
+            const responseSector = await database.fetchSectorOfUser(user_id);
+            const default_sector = responseSector.data.data.sector.sector_type
+            console.log("default_sector",default_sector)
+
             const problemTypes = await database.fetchAllProblemTypes();
             const sectorColors = await getListLocalStorage('sector_colors');
 
@@ -346,6 +346,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
                 setListLocalStorage('sector_colors', sector_colors);
             }
             setListLocalStorage('my_volunteers', volunteers);
+            setListLocalStorage('default_sector', default_sector);
             setListLocalStorage('contacts', nonVolunteers);
             setListLocalStorage('posts', postsData.posts_data);
             setListLocalStorage('sectors', postsData.posts_sectors);

@@ -35,7 +35,6 @@ import SectorManagerApplication from "./pages/sector-responsible/SectorManagerAp
 import VolunteerApplication from "./pages/volunteer/VolunteerApplication";
 import Auth from "./utils/Auth";
 
-
 class App extends React.Component<any, any> {
 
     renderLoginPage() : React.ReactNode {
