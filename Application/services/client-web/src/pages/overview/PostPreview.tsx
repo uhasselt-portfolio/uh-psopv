@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Paper, Grid, Button, IconButton, ListItem} from '@material-ui/core';
+import {Paper, Grid, Button, IconButton} from '@material-ui/core';
 import PostDataInterface from '../../interfaces/PostDataInterface';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
