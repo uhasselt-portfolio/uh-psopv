@@ -6,6 +6,9 @@ export default function (state = {}, action : AnyAction) {
     switch(action.type) {
         case PLANNING_FETCH_SUCCESS:
             return {...state, loading: false, localStorage: action.payload, errorMessage: ""}
+        case PLANNING_FETCH_FAIL:
+            return {...state, loading: true, localStorage: action.payload, errorMessage: ""}
+
         default:
             return state
     }

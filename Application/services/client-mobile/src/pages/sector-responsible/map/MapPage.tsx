@@ -102,7 +102,7 @@ class MapPage extends Component<any> {
   renderContent(){
       if(this.props.localStorage !== undefined){
         if(this.props.localStorage.posts_data.length <= 0){
-          return <div> No Posts found. </div>
+          return <div> No Posts found or still loading. </div>
         } else{
           return (
             <div className="GoogleMaps">
@@ -110,7 +110,6 @@ class MapPage extends Component<any> {
             {this.renderPosts()}
           </div>
           )
-          
         }
       } else {
        }

@@ -13,11 +13,6 @@ class Save  extends Component<any> {
     constructor(props: any, storage: Storage) {
         super(props);
         this.handleActions();
-
-        // 2 = sector-verantwoordelijke
-        if(Auth.getAuthenticatedUser().permission_type_id == 2){
-          setDefaultSector(Auth.getAuthenticatedUser().id);
-        }
     }
 
 
