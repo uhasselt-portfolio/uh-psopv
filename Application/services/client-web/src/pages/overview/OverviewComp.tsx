@@ -68,6 +68,7 @@ interface IState {
     value: number,
     specificReceiver: boolean,
     currentSelected: string,
+    currentPost: string,
     messageSend: boolean,
     wrongUser: boolean,
     templateSelected: string,
@@ -86,7 +87,8 @@ class OverviewComp extends Component<Props> {
         wrongUser: false,
         templateSelected: 'vrij bericht',
         costumMessage: true,
-        template: ""
+        template: "",
+        currentPost: ""
     }
 
     /**
@@ -174,6 +176,10 @@ class OverviewComp extends Component<Props> {
                 this.sendMessageToAll(messageTitle,messageContent);
                 break;
             }
+            case "post": {
+                this.sendMessageToPost(messageTitle,messageContent);
+                break;
+            }
         }          
     }
     /**
@@ -205,7 +211,7 @@ class OverviewComp extends Component<Props> {
     /**
      * sends a message to all users
      */
-    sendMessageToAll = (title: string, content: string) => {
+    sendMessageToAll = (title: string, content: string) => { //TODO niet in loop
         for (let i = 0; i < this.props.users.length; ++i) {
             this.props.postNewMessage(this.props.users[i].id,title,content,this.props.admin.id);
         }
@@ -249,6 +255,11 @@ class OverviewComp extends Component<Props> {
         ((document.getElementById("messageTitle")) as HTMLInputElement).value = "";
         ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
     } 
+
+    sendMessageToPost = (title: string, content: string) => { //TODO
+        console.log(this.state.currentPost);
+        let postId : number = parseInt(this.state.currentPost.split(" ")[0]);
+    }
 
     /**
      * function to create an array of all the problems from props mapped to a problemViewComponent
@@ -303,11 +314,23 @@ class OverviewComp extends Component<Props> {
         ));
     }
 
-    renderPosts(){
-        return this.props.posts.map(x => (
-            <PostPreview key={Math.random()} id={x.id} title={x.title} addres={x.addres} general={x.general} sector={x.sector} 
+    handleMessagePostChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
+        this.setState({
+            ...this.state,
+            currentPost: event.target.value
+        });
+    }
+
+    renderPosts(postChoices : Array<JSX.Element>){
+        return this.props.posts.map(x => {
+            postChoices.push(<MenuItem value={x.id + " " + x.title}>{x.title}</MenuItem>)
+            return <PostPreview key={Math.random()} id={x.id} title={x.title} addres={x.addres} general={x.general} sector={x.sector} 
                 latitude={x.latitude} longitude={x.longitude} shifts={x.shifts} users={x.users} activeProblem={x.activeProblem}/>
-        ));
+        });
+        // return this.props.posts.map(x => (
+        //     <PostPreview key={Math.random()} id={x.id} title={x.title} addres={x.addres} general={x.general} sector={x.sector} 
+        //         latitude={x.latitude} longitude={x.longitude} shifts={x.shifts} users={x.users} activeProblem={x.activeProblem}/>
+        // ));
     }
 
     render() {
@@ -315,7 +338,8 @@ class OverviewComp extends Component<Props> {
 
         let Problems = <List style={styleMarginTop}>{this.renderProblems()}</List> 
         
-        let Posts = <List style={styleMarginTop}>{this.renderPosts()}</List> 
+        let postChoices : Array<JSX.Element> = [];
+        let Posts = <List style={styleMarginTop}>{this.renderPosts(postChoices)}</List> 
 
         let LocalTime : Date = new Date();
         let LocalHourString : string = LocalTime.toLocaleTimeString();
@@ -383,13 +407,31 @@ class OverviewComp extends Component<Props> {
                                 <MenuItem value={'iedereen'}>iedereen</MenuItem>
                                 <MenuItem value={'vrijwilligers'}>Alle vrijwilligers</MenuItem>
                                 <MenuItem value={'verantwoordelijken'}>Alle verantwoordelijken</MenuItem>
+                                <MenuItem value={'post'}>Specifieke post</MenuItem>
                                 <MenuItem value={'specifiek'}>specifiek</MenuItem>
                                 </TextField>
                         </Grid>
                         {this.state.specificReceiver && 
                         <Grid item>
                             <TextField variant="outlined" placeholder="ontvanger" id="receiver" style={styleFormElement}/>
-                        </Grid>}
+                        </Grid>
+                        }
+                        {this.state.currentSelected === 'post' &&
+                        <Grid item>
+                            <TextField
+                                id="postSelector"
+                                select
+                                label="Post"
+                                helperText="Selecteer de ontvanger/ontvangers"
+                                variant="outlined"
+                                style={styleFormElement}
+                                value={this.state.currentPost}
+                                onChange={this.handleMessagePostChanged}
+                            >
+                                {postChoices}
+                            </TextField>
+                        </Grid>
+                        }
                         <Grid item xs={12}>
                             <TextField variant="outlined" type="text" placeholder="titel" id="messageTitle" style={styleFormElement}/>
                         </Grid>
