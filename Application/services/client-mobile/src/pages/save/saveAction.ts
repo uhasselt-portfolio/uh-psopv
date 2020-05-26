@@ -288,6 +288,17 @@ function generateSectorColors(sectors: number[], sectorColors: any){
     return colors;
 }
 
+function getMyManagers(plannings: any, sectors: any, posts: any){
+    // let my_sectors:
+
+    // plannings.map((planning: any) => {
+    //     return posts.map((post: any) => {
+            
+    //     })
+    // })
+
+}
+
 export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'
 
 export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
@@ -303,23 +314,28 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         });
 
         const database = new Database();
-
         const user_id = Auth.getAuthenticatedUser().id;
+
         const responseMessages = await database.fetchMessagesFrom(user_id);
+        const responsePosts = await database.fetchPosts();
+
         let messages =  getMessages(responseMessages);
         setListLocalStorage('messages', messages);
 
-                // 1 = sector_verantwoordelijke
+        // 1 = vrijwilliger
         if(Auth.getAuthenticatedUser().permission_type_id == 1){
             const response =  await database.fetchPlanningsWithUserId(user_id);
+            const responseSectors =  await database.fetchSectors();
+
+            let my_managers = getMyManagers(response.data.data.plannings, responseSectors.data.data.sectors, responsePosts.data.data.posts);
+
             let plannings = response.data.data.plannings;
+            
             plannings.sort(sortPlanningsByDate)
-            console.log("SAVE ACTION PLANNING", plannings);
             setListLocalStorage('plannings', plannings);
         }
         // 2 = sector_verantwoordelijke
         if(Auth.getAuthenticatedUser().permission_type_id == 2){
-            const responsePosts = await database.fetchPosts();
             const responseUnsolvedProblems = await database.fetchUnsolvedProblems();
             const responseItems = await database.fetchAllItems();
             const responseProblems = await database.fetchAllProblems();

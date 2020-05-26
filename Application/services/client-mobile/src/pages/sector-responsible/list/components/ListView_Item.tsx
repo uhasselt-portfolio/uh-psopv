@@ -15,6 +15,7 @@ import { call } from 'ionicons/icons';
 import WarningSign from "../../../images/warning_sign"
 import '../ListPage.css'
 import { setListLocalStorage } from '../../../save/saveFunction';
+import { withRouter } from 'react-router';
 
   
 
@@ -38,14 +39,15 @@ class ListViewItem  extends Component<any> {
         }}
     }
         
-    async handleNavigation(){
-        await setListLocalStorage('ListView', this.props.post_id)
-    }
+    // async handleNavigation(){
+    //     await setListLocalStorage('ListView', this.props.post_id)
+    // }
 
     render() {
         console.log(this.state.color)
         return (   
-            <IonItem  detail button routerLink="/PostView" onClick={() => this.handleNavigation()}>
+            <IonItem  detail button onClick={() =>
+            this.props.history.push( "/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>
                 <IonLabel>
                     <h2>Post {this.props.post_id}</h2>
                     <h4>{this.props.loc_description}</h4>
@@ -64,5 +66,5 @@ class ListViewItem  extends Component<any> {
 
 
   
-  export default (ListViewItem);
+  export default withRouter(ListViewItem);
   

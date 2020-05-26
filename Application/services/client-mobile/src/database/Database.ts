@@ -15,11 +15,7 @@ class ServerRequest {
     public static get(endpoint: string, authorized: boolean = true) : Promise<any> | null {
         const url = this.getRestApiEndpoint() + endpoint;
 
-        console.log("Authenticating...")
-
         if(authorized && !Auth.isAuthenticated()) return null;
-
-        console.log("GET REQUEST TO...", url);
 
 
         return axios.get(url, {headers: {'Authorization': Auth.getToken()}});
@@ -85,7 +81,6 @@ export default class Database {
     }
 
     async fetchUserByPhoneNumber(phoneNumber: string) {
-        console.log("Started checking...")
         return ServerRequest.get('/user/fetch/phone/' + phoneNumber, false);
     }
 
@@ -154,6 +149,10 @@ export default class Database {
 
     async fetchSectorOfUser(userID: number) {
         return ServerRequest.get('/sector/fetch/user/' + userID);
+    }
+
+    async fetchSectors(){
+        return ServerRequest.get('/sector/fetch/all');
     }
 
     async fetchUnsolvedProblems() {
