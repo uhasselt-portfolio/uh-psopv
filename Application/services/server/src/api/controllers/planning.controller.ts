@@ -90,8 +90,8 @@ export const fetchActivePlaningViaUserID = async (req: Request, res: Response) =
 
     try{
         const where = {
-            begin: {[Op.lt]: Date.now()},
-            end: {[Op.gt]: Date.now()}
+            begin: {[Op.lt]: new Date().getTime()},
+            end: {[Op.gt]: new Date().getTime()},
         }
 
         const activePlanning = await PlanningModel.findOne({
@@ -178,10 +178,10 @@ export const fetchUsersInSameShiftAndPost = async (req: Request, res: Response) 
 export const fetchCurrentShift = async (req: Request, res: Response) => {
      try {
 
-        const where = {
-            begin: {[Op.lt]: Date.now()},
-            end: {[Op.gt]: Date.now()}
-        }
+         const where = {
+             begin: {[Op.lt]: new Date().getTime()},
+             end: {[Op.gt]: new Date().getTime()},
+         }
 
         const plannings = await PlanningModel.findAll({
             include: [{model: UserModel, all: true},{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
@@ -252,8 +252,8 @@ export const toggleCheckedIn = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
     const where = {
-        begin: {[Op.lt]: Date.now()},
-        end: {[Op.gt]: Date.now()}
+        begin: {[Op.lt]: new Date().getTime()},
+        end: {[Op.gt]: new Date().getTime()},
     }
 
     try {

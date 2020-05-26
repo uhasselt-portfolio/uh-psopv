@@ -99,8 +99,8 @@ export const isUserOnPost = async (req: Request, res: Response) => {
         }
 
         const where = {
-            begin: {[Op.lt]: Date.now()},
-            end: {[Op.gt]: Date.now()}
+            begin: {[Op.lt]: new Date().getTime()},
+            end: {[Op.gt]: new Date().getTime()},
         }
 
         const planning = await PlanningModel.findOne({where: {user_id: userID}, include: [{

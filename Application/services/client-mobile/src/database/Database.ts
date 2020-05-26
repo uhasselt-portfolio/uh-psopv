@@ -147,8 +147,8 @@ export default class Database {
     }
 
 
-    async fetchSectorOfUser(userID: number) {
-        return ServerRequest.get('/sector/fetch/user/' + userID);
+    async fetchSectorOfUser(user_id: number) {
+        return ServerRequest.get('/sector/fetch/user/' + user_id);
     }
 
     async fetchMyManager(user_id: number){

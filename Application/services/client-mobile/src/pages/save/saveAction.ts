@@ -288,34 +288,16 @@ function generateSectorColors(sectors: number[], sectorColors: any){
     return colors;
 }
 
-function getMyManagers(plannings: any, sectors: any, posts: any){
-    let my_sectors: any[] = [];
-
-    plannings.map((planning: any) => {
-        let post =  posts.find((post: any) => {
-            return post.id == planning.post_id
-        })
-        if(!my_sectors.includes(post.sector_id)){
-            my_sectors.push(post.sector_id)
-        }
-    })
-
-    console.log(my_sectors)
-
+function getMyManagers(managers: any){
     let my_managers: any[] = [];
-    sectors.map((sector: any) => {
-        if(my_sectors.includes(sector.sector_type)){
-            my_managers.push({
-                user_id: sector.user_id,
-                user_name: sector.user.first_name + " " + sector.user.last_name
-            })
-        }
+    managers.map((manager: any) => {
+        my_managers.push({
+            user_id: manager.user.id,
+            user_name: manager.user.first_name + " " + manager.user.last_name
+        })
     })
 
-    console.log(my_managers)
-
-    return my_managers;
-
+    return my_managers
 }
 
 export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'
@@ -336,7 +318,6 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         const user_id = Auth.getAuthenticatedUser().id;
 
         const responseMessages = await database.fetchMessagesFrom(user_id);
-        const responsePosts = await database.fetchPosts();
 
         let messages =  getMessages(responseMessages);
         setListLocalStorage('messages', messages);
@@ -345,14 +326,16 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         if(Auth.getAuthenticatedUser().permission_type_id == 1){
             const responsePlannings =  await database.fetchPlanningsWithUserId(user_id);
             const responseSectors =  await database.fetchMyManager(user_id);
-            let my_managers = responseSectors.data.data
+            let my_managers = getMyManagers(responseSectors.data.data.sectors);
             console.log(my_managers, "my_managers")
             let plannings = responsePlannings.data.data.plannings;
             plannings.sort(sortPlanningsByDate)
             setListLocalStorage('plannings', plannings);
+            setListLocalStorage('my_managers', my_managers);
         }
         // 2 = sector_verantwoordelijke
         if(Auth.getAuthenticatedUser().permission_type_id == 2){
+            const responsePosts = await database.fetchPosts();
             const responseUnsolvedProblems = await database.fetchUnsolvedProblems();
             const responseItems = await database.fetchAllItems();
             const responseProblems = await database.fetchAllProblems();
@@ -392,7 +375,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         dispatch({type: UNROLL_ACTIONS})
 
     } catch(error){
-        console.log(error)
+        console.log(error.message)
     }
 }
 
