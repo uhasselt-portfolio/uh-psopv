@@ -35,8 +35,37 @@ import SectorManagerApplication from "./pages/sector-responsible/SectorManagerAp
 import VolunteerApplication from "./pages/volunteer/VolunteerApplication";
 import Auth from "./utils/Auth";
 
-
 class App extends React.Component<any, any> {
+    interval: NodeJS.Timeout | undefined;
+
+    constructor(props: any, storage: Storage) {
+        super(props);
+    }
+
+    state = {
+      seconds: 0
+    }
+
+
+    tick() {
+      this.setState((state: { seconds: number; }) => ({
+        seconds: state.seconds + 1
+      }));
+    }
+
+      componentWillUnmount() {
+        if(this.interval != undefined){
+          clearInterval(this.interval);
+        }
+      }
+
+
+      componentDidMount(){
+        this.interval = setInterval(() => {
+          console.log("test", this.state.seconds)
+          this.setState({seconds: this.state.seconds++})
+        }, 5000);
+      }
 
     renderLoginPage() : React.ReactNode {
         return(

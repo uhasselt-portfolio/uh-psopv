@@ -5,7 +5,7 @@ import { IonButton,
     IonPage, 
     IonTitle, 
     IonToolbar, 
-    IonContent, IonSelect, IonSelectOption } from '@ionic/react';
+    IonContent, IonSelect, IonSelectOption, IonLoading } from '@ionic/react';
 
 import './MapPage.css';
 import { bindActionCreators } from 'redux';
@@ -23,6 +23,7 @@ class MapPage extends Component<any> {
   state={
     selected_sector: -1, //if -1 = selected all sectors
     data_posts: [],
+    loaded: false
   }
 
   static defaultProps = {
@@ -110,25 +111,44 @@ class MapPage extends Component<any> {
             {this.renderPosts()}
           </div>
           )
-          
         }
       } else {
        }
   }
 
+  
   render(){
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Kaart met posten</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          {this.renderContent()}
-        </IonContent>
-      </IonPage>
-    )
+    let TIME_IN_MS = 2000;
+    let hideFooterTimeout = setTimeout( () => {
+        this.setState({...this.state, loaded: true})
+        this.props.fetchPosts();
+    }, TIME_IN_MS);
+
+    if(this.state.loaded){
+      return (
+        <IonPage>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Kaart met posten</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            {this.renderContent()}
+          </IonContent>
+        </IonPage>
+      )
+    } else{
+      return(
+          <IonLoading
+          cssClass='my-custom-class'
+          isOpen={!this.state.loaded}
+          onDidDismiss={() => this.setState({...this.state, loaded: true})}
+          message={'Initializeren...'}
+          duration={TIME_IN_MS}
+        />
+      )
+    }
+    
   }
 
 };

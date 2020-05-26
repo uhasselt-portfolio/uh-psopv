@@ -7,15 +7,40 @@ import PersonPage from "./person/PersonPage";
 import MessageGeneral from './messages_general/MessageGeneralPage'
 import Contacts from "./contact/ContactPage";
 import {listOutline, mapOutline, notificationsOutline, paperPlaneOutline, personOutline} from "ionicons/icons";
-import React from "react";
+import React, { useState, Component }  from "react";
 import RequireSignIn from "../../utils/RequireSignin";
+import { IonLoading, IonButton, IonContent } from '@ionic/react';
+import { bindActionCreators } from "redux";
+import { doDatabase } from "../save/saveAction";
+import { connect } from "react-redux";
 
-export default () => {
+
+class SectorManagerApplication  extends Component<any> {
+    interval: NodeJS.Timeout | undefined;
+
+    constructor(props: any) {
+        super(props);
+    }
 
     // TODO: Add message count back
+    componentDidMount(){
+        this.props.doDatabase();
 
-    return(
-        <IonTabs>
+        this.interval = setInterval(() => {
+          this.props.doDatabase();
+        }, 5000); //TODO interval
+      }
+
+      componentWillUnmount() {
+        if(this.interval != undefined){
+          clearInterval(this.interval);
+        }
+      }
+
+
+    render(){
+        return(
+            <IonTabs>
             <IonRouterOutlet>
                 <Route path="/MapPage" component={RequireSignIn(MapPage)} />
                 <Route path="/ListView" component={RequireSignIn(ListView)} />
@@ -43,6 +68,22 @@ export default () => {
                     <IonLabel>Contacts</IonLabel>
                 </IonTabButton>
             </IonTabBar>
-        </IonTabs>
-    )
-}
+            </IonTabs>
+        )
+    }
+    }
+    
+
+function mapStateToProps(state: any) {
+    return({
+    })
+  }
+  
+  function mapDispatchToProps(dispatch: any) {
+    return bindActionCreators({
+      doDatabase
+    }, dispatch);
+  }
+  
+  
+  export default connect(mapStateToProps, mapDispatchToProps)(SectorManagerApplication);

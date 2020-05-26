@@ -193,7 +193,7 @@ export default class Database {
     }
 
     async fetchMessages() {
-        let adminId: string = '3';
+        let adminId: string = Auth.getAuthenticatedUser().id; // TODO Check if works, normally it was hardcoded
         const response = await ServerRequest.get('/message/fetch/send-to/' + adminId);
 
         let messages: MessageDataInterface[] = [];

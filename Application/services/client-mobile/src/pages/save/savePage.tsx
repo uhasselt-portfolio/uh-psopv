@@ -8,38 +8,37 @@ import {resetActionList, getActionList, addObjectToActionList, setDefaultSector,
 import Auth from '../../utils/Auth';
 
 class Save  extends Component<any> {
-  interval: NodeJS.Timeout | undefined;
+  // interval: NodeJS.Timeout | undefined;
 
-    constructor(props: any, storage: Storage) {
-        super(props);
-        this.handleActions();
+  //   constructor(props: any, storage: Storage) {
+  //       super(props);
+  //       this.handleActions();
+  //   }
 
-        // 2 = sector-verantwoordelijke
-        if(Auth.getAuthenticatedUser().permission_type_id == 2){
-          setDefaultSector(Auth.getAuthenticatedUser().id);
-        }
-    }
-
-
-    tick() {
-      this.setState((state: { seconds: number; }) => ({
-        seconds: state.seconds + 1
-      }));
-    }
-
-      componentWillUnmount() {
-        if(this.interval != undefined){
-          clearInterval(this.interval);
-        }
-      }
+  //   state = {
+  //     seconds: 0
+  //   }
 
 
-      componentDidMount(){
-        this.interval = setInterval(() => {
-          console.log("test")
-          this.handleActions();
-        }, 10000);
-      }
+  //   tick() {
+  //     this.setState((state: { seconds: number; }) => ({
+  //       seconds: state.seconds + 1
+  //     }));
+  //   }
+
+  //     componentWillUnmount() {
+  //       if(this.interval != undefined){
+  //         clearInterval(this.interval);
+  //       }
+  //     }
+
+
+  //     componentDidMount(){
+  //       this.interval = setInterval(() => {
+  //         console.log("test")
+  //         this.handleActions();
+  //       }, 1000);
+  //     }
 
 
 
