@@ -12,8 +12,8 @@ export default async () => {
 
     await new ShiftModel({
         name: 'Waarde wordt niet gebruikt op dit moment',
-        begin: createDate("27/05/2020 23:30"),
-        end: createDate("28/05/2020 01:45")
+        begin: createDate("26/05/2020 21:38"),
+        end: createDate("26/05/2020 21:40")
     }).save();
 
     await new ShiftModel({

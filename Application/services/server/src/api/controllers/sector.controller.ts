@@ -92,7 +92,7 @@ export const fetchSectorManagerWithUserID = async (req: Request, res: Response) 
         }
 
         const where = {
-            begin: {[Op.gt]: new Date().getTime()},
+            end: {[Op.gt]: new Date().getTime()},
         }
 
         console.log("WHERE", where);
