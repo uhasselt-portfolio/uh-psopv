@@ -1,41 +1,27 @@
 import * as React from 'react';
-import { Component } from 'react';
-import { IonButton, 
-    IonListHeader, 
-    IonHeader, 
-    IonPage, 
-    IonTitle, 
-    IonToolbar, 
-    IonList, 
-    IonItem, 
-    IonLabel,
-    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonIcon } from '@ionic/react';
-import { Link, Redirect } from 'react-router-dom';
-import { caretDown, call, mail } from 'ionicons/icons';
+import {Component} from 'react';
+import {IonButton, IonIcon, IonItem, IonLabel} from '@ionic/react';
+import {call, mail} from 'ionicons/icons';
+import {withRouter} from "react-router";
 
-import PersonPage from '../../person/PersonPage'
-  
-
-class ContactItem  extends Component<any> {
-    constructor(props: any){
+class ContactItem extends Component<any> {
+    constructor(props: any) {
         super(props)
     }
 
-    render() {        
-        function getPerson(props: any): string {
-            return '/PersonPage/'+props.user_id
-        }
-        
-        return (    
-            <IonItem  detail button href={getPerson(this.props)}>
+    render() {
+        return (
+            <IonItem detail button onClick={() => {
+                this.props.history.push('/PersonPage/' + this.props.user_id)
+            }}>
                 <IonLabel>
                     <h1>{this.props.name}</h1>
                     <p>{this.props.function_type}</p>
                 </IonLabel>
                 <IonLabel class="right_text">
-                    <IonButton  href={"tel:" + this.props.phone_number}>
+                    <IonButton href={"tel:" + this.props.phone_number}>
                         <IonIcon class="text_end" icon={call}/>
-                    </IonButton >
+                    </IonButton>
                     <IonButton href={"mailto:" + this.props.email}>
                         <IonIcon class="text_end" icon={mail}/>
                     </IonButton>
@@ -44,5 +30,5 @@ class ContactItem  extends Component<any> {
         );
     }
 }
- 
-export default ContactItem;
+
+export default withRouter(ContactItem);
