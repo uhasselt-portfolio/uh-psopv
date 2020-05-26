@@ -11,10 +11,9 @@ export const POST_FETCH_PLANNING_FAIL = 'POST_FETCH_PLANNING_FAIL'
 
 
 
-export const fetchPlanningsFromPost = () => async (dispatch: Redux.Dispatch) => {
+export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         
-        let post_id= await  getListLocalStorage('ListView')
         let posts = await getListLocalStorage('posts');
         let problemTypes = await getListLocalStorage('problem_types');
         let my_user_id = Auth.getAuthenticatedUser().id;

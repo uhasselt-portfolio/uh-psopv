@@ -44,7 +44,7 @@ class SectorManagerApplication extends Component<any> {
             <IonRouterOutlet>
                 <Route path="/MapPage" component={RequireSignIn(MapPage)} />
                 <Route path="/ListView" component={RequireSignIn(ListView)} />
-                <Route path="/PostView/:post/:sector" component={RequireSignIn(PostView)} />
+                <Route path="/PostView/:sector/:post" component={RequireSignIn(PostView)} />
                 <Route path="/PersonPage/:id/" component={RequireSignIn(PersonPage)} />
                 <Route path="/Notifications" component={RequireSignIn(MessageGeneral)} />
                 <Route path="/Contacts" component={RequireSignIn(Contacts)} />

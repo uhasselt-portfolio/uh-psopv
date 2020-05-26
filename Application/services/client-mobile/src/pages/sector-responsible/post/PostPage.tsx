@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 import {fetchPlanningsFromPost} from './PostAction'
 import { caretDown, arrowBack, arrowForward, constructOutline } from 'ionicons/icons';
 import { formatDateTime } from '../../../utils/DateUtil';
-import { Switch } from 'react-router';
+import { Switch, withRouter } from 'react-router';
 import SelectShiftWindow from './components/SelectShiftWindow';
 
 const slideOpts = {
@@ -99,7 +99,7 @@ class PostView extends Component<any, any> {
   }
 
   componentDidMount(){
-    this.props.fetchPlanningsFromPost();
+    this.props.fetchPlanningsFromPost(this.props.match.params.post);
   }
 
   renderPost(): any{
@@ -183,7 +183,7 @@ class PostView extends Component<any, any> {
         <IonHeader>
           <IonToolbar>
             <IonTitle className="align_center"> 
-              <div className="text_start">Sector: {this.props.localStorage.sector_id} - Post: {this.props.localStorage.post_id}</div>
+              <div className="text_start">Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</div>
               <IonButton className="text_end" onClick={() => this.showPopOver()}>Ga naar</IonButton>
             </IonTitle>
           </IonToolbar>
@@ -231,4 +231,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostView);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostView));
