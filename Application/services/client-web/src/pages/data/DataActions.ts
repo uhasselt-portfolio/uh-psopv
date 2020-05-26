@@ -1,6 +1,7 @@
 import Redux from 'redux';
 import Database from '../../Redux/Database';
 import XLSX from 'xlsx';
+import {GeneralPost, Post, User, Item, Shift, Planning, Association, Parser} from './Parser';
 
 
 
@@ -9,19 +10,10 @@ export enum DataActions {
     DATA_POST_SUCCES = 'DATA_POST_SUCCES',
     DATA_POST_FAIL = 'DATA_POST_FAIL'
 };
-interface GeneralPost {
-    name: string,
-    minimumAge: number,
-    discription: string
-}
 
-/**
- * lets the database use the file to update its content
- * @param file the file to be uploaded
- * @param isUpdateMode boolean toggle to indicate if the file should update the existing database or override it
- */
-export const uploadFile = (functiesfile : File, shiftenFile : File, hoofdFunctiesfile : File,  maxBezettingFile : File, 
-        bezettingFile : File, appellijstFile : File, isUpdateMode : boolean) => 
+
+export const uploadFile = (functiesfile : File, appellijstFile : File, 
+     shiftenFile : File, gebruikerFile : File, itemfile : File, isUpdateMode : boolean) => 
     async (dispatch : Redux.Dispatch) => {
     console.log("in file upload");
     try {
@@ -29,12 +21,26 @@ export const uploadFile = (functiesfile : File, shiftenFile : File, hoofdFunctie
             type: DataActions.Data_POST_START
         });
 
-        parseAppellijst(appellijstFile);
-        parseBezettingen(bezettingFile);
-        parseFuncties(functiesfile);
-        parseHoofdFuncties(hoofdFunctiesfile);
-        parseMaxBezettingen(maxBezettingFile);
-        parseShiften(shiftenFile);
+        let parser : Parser = new Parser();
+
+        parseAppellijst(appellijstFile,parser);
+        parseFuncties(functiesfile,parser);
+        parseShiften(shiftenFile,parser);
+        parseGebruikers(gebruikerFile,parser);
+        parseItems(itemfile,parser);
+        
+        if (parser.getError()) {
+            console.log("error\n\n\n") //TODO
+        }
+
+        console.log("users", parser.getUsers());
+        console.log("posten",parser.getPosts());
+        console.log("shiften",parser.getShifts());
+        console.log("verenegingen",parser.getAssociations());
+        console.log("planning",parser.getPlanning());
+        console.log("items",parser.getItems());
+        console.log("generalPosts",parser.getGeneralPosts());
+        console.log("sectors",parser.getSectors());
 
         // await new Database().postFile(file,isUpdateMode);
 
@@ -83,7 +89,7 @@ export const uploadFile = (functiesfile : File, shiftenFile : File, hoofdFunctie
 }
 
 
-const parseFuncties = (file: File) => {
+const parseFuncties = (file: File, parser : Parser) => {
     const reader = new FileReader();
     const rABS = !!reader.readAsBinaryString;
 
@@ -100,15 +106,16 @@ const parseFuncties = (file: File) => {
             /* Update state */
             // this.setState({ data: data, cols: make_cols(ws['!ref']) });
             console.log("functies");
-            console.log('wb',wb);
-            console.log("data",data);
-            console.log('length',data.length);
+            // console.log('wb',wb);
+            // console.log("data",data);
+            // console.log('length',data.length);
+            parser.createGeneralAndPosts(data);
         }
     };
     
     if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
 }
-const parseShiften = (file: File) => {
+const parseShiften = (file: File, parser : Parser) => {
     const reader = new FileReader();
     const rABS = !!reader.readAsBinaryString;
 
@@ -125,90 +132,91 @@ const parseShiften = (file: File) => {
             /* Update state */
             // this.setState({ data: data, cols: make_cols(ws['!ref']) });
             console.log("shiften");
-            console.log('wb',wb);
-            console.log("data",data);
-            console.log('length',data.length);
+            // console.log('wb',wb);
+            // console.log("data",data);
+            // console.log('length',data.length);
+            parser.createShift(data);
         }
     };
     
     if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
 }
-const parseHoofdFuncties = (file: File) => {
-    const reader = new FileReader();
-    const rABS = !!reader.readAsBinaryString;
+// const parseHoofdFuncties = (file: File, parser : Parser) => { //niet nodig
+//     const reader = new FileReader();
+//     const rABS = !!reader.readAsBinaryString;
 
-    reader.onload = (e) => {
-        if (e.target != null) {
-            /* Parse data */
-            const bstr = e.target.result;
-            const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
-            /* Get first worksheet */
-            const wsname = wb.SheetNames[0];
-            const ws = wb.Sheets[wsname];
-            /* Convert array of arrays */
-            const data = XLSX.utils.sheet_to_json(ws, {header:1});
-            /* Update state */
-            // this.setState({ data: data, cols: make_cols(ws['!ref']) });
-            console.log("hoofdfuncties");
-            console.log('wb',wb);
-            console.log("data",data);
-            console.log('length',data.length);
-        }
-    };
+//     reader.onload = (e) => {
+//         if (e.target != null) {
+//             /* Parse data */
+//             const bstr = e.target.result;
+//             const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
+//             /* Get first worksheet */
+//             const wsname = wb.SheetNames[0];
+//             const ws = wb.Sheets[wsname];
+//             /* Convert array of arrays */
+//             const data = XLSX.utils.sheet_to_json(ws, {header:1});
+//             /* Update state */
+//             // this.setState({ data: data, cols: make_cols(ws['!ref']) });
+//             // console.log("hoofdfuncties");
+//             // console.log('wb',wb);
+//             // console.log("data",data);
+//             // console.log('length',data.length);
+//         }
+//     };
     
-    if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
-}
-const parseMaxBezettingen = (file: File) => {
-    const reader = new FileReader();
-    const rABS = !!reader.readAsBinaryString;
+//     if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
+// }
+// const parseMaxBezettingen = (file: File, parser : Parser) => { //niet nodig
+//     const reader = new FileReader(); 
+//     const rABS = !!reader.readAsBinaryString;
 
-    reader.onload = (e) => {
-        if (e.target != null) {
-            /* Parse data */
-            const bstr = e.target.result;
-            const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
-            /* Get first worksheet */
-            const wsname = wb.SheetNames[0];
-            const ws = wb.Sheets[wsname];
-            /* Convert array of arrays */
-            const data = XLSX.utils.sheet_to_json(ws, {header:1});
-            /* Update state */
-            // this.setState({ data: data, cols: make_cols(ws['!ref']) });
-            console.log("maximum bezettingen");
-            console.log('wb',wb);
-            console.log("data",data);
-            console.log('length',data.length);
-        }
-    };
+//     reader.onload = (e) => {
+//         if (e.target != null) {
+//             /* Parse data */
+//             const bstr = e.target.result;
+//             const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
+//             /* Get first worksheet */
+//             const wsname = wb.SheetNames[0];
+//             const ws = wb.Sheets[wsname];
+//             /* Convert array of arrays */
+//             const data = XLSX.utils.sheet_to_json(ws, {header:1});
+//             /* Update state */
+//             // this.setState({ data: data, cols: make_cols(ws['!ref']) });
+//             // console.log("maximum bezettingen");
+//             // console.log('wb',wb);
+//             // console.log("data",data);
+//             // console.log('length',data.length);
+//         }
+//     };
     
-    if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
-}
-const parseBezettingen = (file: File) => {
-    const reader = new FileReader();
-    const rABS = !!reader.readAsBinaryString;
+//     if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
+// }
+// const parseBezettingen = (file: File, parser : Parser) => { // niet nodig
+//     const reader = new FileReader();
+//     const rABS = !!reader.readAsBinaryString;
 
-    reader.onload = (e) => {
-        if (e.target != null) {
-            /* Parse data */
-            const bstr = e.target.result;
-            const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
-            /* Get first worksheet */
-            const wsname = wb.SheetNames[0];
-            const ws = wb.Sheets[wsname];
-            /* Convert array of arrays */
-            const data = XLSX.utils.sheet_to_json(ws, {header:1});
-            /* Update state */
-            // this.setState({ data: data, cols: make_cols(ws['!ref']) });
-            console.log("bezettingen");
-            console.log('wb',wb);
-            console.log("data",data);
-            console.log('length',data.length);
-        }
-    };
+//     reader.onload = (e) => {
+//         if (e.target != null) {
+//             /* Parse data */
+//             const bstr = e.target.result;
+//             const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
+//             /* Get first worksheet */
+//             const wsname = wb.SheetNames[0];
+//             const ws = wb.Sheets[wsname];
+//             /* Convert array of arrays */
+//             const data = XLSX.utils.sheet_to_json(ws, {header:1});
+//             /* Update state */
+//             // this.setState({ data: data, cols: make_cols(ws['!ref']) });
+//             // console.log("bezettingen");
+//             // console.log('wb',wb);
+//             // console.log("data",data);
+//             // console.log('length',data.length);
+//         }
+//     };
     
-    if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
-}
-const parseAppellijst = (file: File) => {
+//     if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
+// }
+const parseAppellijst = (file: File, parser : Parser) => {
     const reader = new FileReader();
     const rABS = !!reader.readAsBinaryString;
 
@@ -225,11 +233,300 @@ const parseAppellijst = (file: File) => {
             /* Update state */
             // this.setState({ data: data, cols: make_cols(ws['!ref']) });
             console.log("appellijst");
-            console.log('wb',wb);
-            console.log("data",data);
-            console.log('length',data.length);
+            // console.log('wb',wb);
+            // console.log("data",data);
+            // console.log('length',data.length);
+            parser.createPlanning(data)
         }
     };
     
     if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
 }
+const parseGebruikers = (file: File, parser : Parser) => {
+    const reader = new FileReader();
+    const rABS = !!reader.readAsBinaryString;
+
+    reader.onload = (e) => {
+        if (e.target != null) {
+            /* Parse data */
+            const bstr = e.target.result;
+            const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
+            /* Get first worksheet */
+            const wsname = wb.SheetNames[0];
+            const ws = wb.Sheets[wsname];
+            /* Convert array of arrays */
+            const data = XLSX.utils.sheet_to_json(ws, {header:1});
+            /* Update state */
+            // this.setState({ data: data, cols: make_cols(ws['!ref']) });
+            console.log("gebruikers");
+            // console.log('wb',wb);
+            // console.log("data",data);
+            // console.log('length',data.length);
+            parser.createuser(data);
+            // console.log(users);
+            // console.log(createAssociation(users));
+        }
+    };
+    
+    if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
+}
+const parseItems = (file : File, parser : Parser) => {
+    const reader = new FileReader();
+    const rABS = !!reader.readAsBinaryString;
+
+    reader.onload = (e) => {
+        if (e.target != null) {
+            /* Parse data */
+            const bstr = e.target.result;
+            const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
+            /* Get first worksheet */
+            const wsname = wb.SheetNames[0];
+            const ws = wb.Sheets[wsname];
+            /* Convert array of arrays */
+            const data = XLSX.utils.sheet_to_json(ws, {header:1});
+            /* Update state */
+            // this.setState({ data: data, cols: make_cols(ws['!ref']) });
+            console.log("items");
+            // console.log('wb',wb);
+            // console.log("data",data);
+            // console.log('length',data.length);
+            parser.createItemtype(data);
+        }
+    };
+    
+    if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
+}
+
+// const createGeneralPosts = (data: any) : GeneralPost[] => {
+//     let headFunctieIndex : number = -1;
+//     let minAgeIndex : number = -1;
+//     let discriptionIndex : number = -1;
+//     for (let i = 0; i < data[2].length; ++i) {
+//         if (data[2][i] === 'HOOFDFUNCTIE')
+//             headFunctieIndex = i;
+//         else if (data[2][i] === 'MINIMUMLEEFTIJD')
+//             minAgeIndex = i;
+//         else if (data[2][i] === 'OPMERKING')
+//             discriptionIndex = i;
+//     }
+//     if (headFunctieIndex === -1 || minAgeIndex === -1 || discriptionIndex === -1)
+//         return [{
+//             name: 'error', minimumAge: -1, discription: ""
+//         }];
+
+//     let GeneralPosts : GeneralPost[] = [];
+
+//     for (let i = 3; i < data.length; ++i) {
+//         if (data[i][discriptionIndex] === undefined)
+//             GeneralPosts.push({
+//                 name: data[i][headFunctieIndex],
+//                 minimumAge: data[i][minAgeIndex],
+//                 discription: data[i][headFunctieIndex]
+//             });
+//         else
+//             GeneralPosts.push({
+//                 name: data[i][headFunctieIndex],
+//                 minimumAge: data[i][minAgeIndex],
+//                 discription: data[i][headFunctieIndex] + " " + data[i][discriptionIndex]
+//             });
+//     }
+
+//     return GeneralPosts;
+// }
+// const createPost = (data: any) : Post[] => {
+//     let headFunctieIndex : number = -1;
+//     let postIndex : number = -1;
+//     let sectorIndex : number = -1;
+//     let addressIndex : number = -1;
+//     for (let i = 0; i < data[2].length; ++i) {
+//         if (data[2][i] === 'HOOFDFUNCTIE')
+//             headFunctieIndex = i;
+//         else if (data[2][i] === 'SUBFUNCTIE')
+//             postIndex = i;
+//         else if (data[2][i] === 'SECTOR')
+//             sectorIndex = i;
+//         else if (data[2][i] === 'LOCATIE')
+//             addressIndex = i;
+//     }
+//     if (headFunctieIndex === -1 || postIndex === -1 || sectorIndex === -1 || addressIndex === -1)
+//         return [{
+//             title: 'error', sector: -1, latitude: -1, generalpost: "", longitude: -1, radius: -1, address: ""
+//         }];
+
+//     let posts : Post[] = [];
+
+//     for (let i = 3; i < data.length; ++i) {
+//         let generalpost : string = data[i][headFunctieIndex];
+//         let title : string = data[i][postIndex];
+//         let sector : number = data[i][sectorIndex];
+//         let address : string;
+//         if (data[i][addressIndex] === undefined)
+//             address  = "/"
+//         else
+//             address = data[i][addressIndex];
+//         let latitude : number = 5;
+//         let longitude : number = 5;
+//         let radius : number = 10;
+
+//         posts.push({
+//             title, generalpost, sector, address, latitude, longitude, radius
+//         });
+//     }
+
+//     return posts;
+// }
+// const createuser = (data : any) : User[] => {
+//     let first_nameIndex : number = -1;
+//     let last_nameIndex : number = -1;
+//     let phone_numberIndex : number = -1;
+//     let emailIndex : number = -1;
+//     let passwordIndex : number = -1;
+//     let permissionIndex : number = -1;
+//     let associationIndex : number = -1;
+//     for (let i = 0; i < data[1].length; ++i) {
+//         if (data[1][i] === 'voornaam')
+//             first_nameIndex = i;
+//         else if (data[1][i] === 'telefoon nummber')
+//             phone_numberIndex = i;
+//         else if (data[1][i] === 'email')
+//             emailIndex = i;
+//         else if (data[1][i] === 'vrijwilliger?')
+//             permissionIndex = i;
+//         else if (data[1][i] === 'vereneging')
+//             associationIndex = i;
+//         else if (data[1][i] === 'achternaam')
+//             last_nameIndex = i;
+//         else if (data[1][i] === 'wachtwoord')
+//             passwordIndex = i;
+//     }
+//     if (first_nameIndex === -1 || last_nameIndex === -1 || phone_numberIndex === -1 || emailIndex === -1 || 
+//         passwordIndex === -1 || permissionIndex === -1 || associationIndex === -1)
+//         return [{
+//             first_name : "error", last_name: '', password :  "", email : '', phone_number: "",current_lat : 0,current_long : 0,
+//                 is_connected: true, association: '', permission: '' 
+//         }];
+
+//     let users : User[] = [];
+
+//     for (let i = 3; i < data.length; ++i) {
+//         let first_name : string = data[i][first_nameIndex];
+//         let last_name : string = data[i][last_nameIndex];
+//         let phone_number : string = data[i][phone_numberIndex];
+//         let password : string = data[i][passwordIndex];
+//         let email : string = "";
+//         if (data[i][emailIndex] !== undefined)
+//             email = data[i][emailIndex];
+//         let permission : string = "";
+//         if (data[i][permissionIndex] !== undefined)
+//             permission = data[i][permissionIndex];
+//         let association : string = data[i][associationIndex];
+//         let current_lat : number = 0;
+//         let current_long : number = 0;
+//         let is_connected : boolean = true;
+
+//         users.push({
+//             first_name, last_name, phone_number, password, email, permission, association, current_long, current_lat, is_connected
+//         });
+//     }
+
+//     return users;
+// }
+// const createItemtype = (data : any) : Item[] => {
+//     let typeIndex : number = -1;
+//     let planningIndex : number = -1;
+//     for (let i = 0; i < data[2].length; ++i) {
+//         if (data[1][i] === 'itemType')
+//             typeIndex = i;
+//         else if (data[1][i] === 'planning')
+//             planningIndex = i;
+//     }
+//     if (planningIndex === -1 || typeIndex === -1)
+//         return [{
+//             name: 'error', planning: ""
+//         }];
+
+//     let items : Item[] = [];
+
+//     for (let i = 2; i < data.length; ++i) {
+//         items.push({
+//             name: data[i][typeIndex],
+//             planning: data[i][planningIndex]
+//         })
+//     }
+
+//     return items;
+// }
+// const createShift = (data: any) : Shift[] => {
+//     let ShiftIndex : number = -1;
+//     let StartIndex : number = -1;
+//     let endIndex : number = -1;
+//     for (let i = 0; i < data[2].length; ++i) {
+//         if (data[2][i] === 'SHIFT')
+//             ShiftIndex = i;
+//         else if (data[2][i] === 'STARTDTG')
+//             StartIndex = i;
+//         else if (data[2][i] === 'EINDEDTG')
+//             endIndex = i;
+//     }
+//     if (ShiftIndex === -1 || StartIndex === -1 || endIndex === -1)
+//         return [{
+//             name: 'error', begin: "", end: ""
+//         }];
+
+//     let shifts : Shift[] = [];
+
+//     for (let i = 3; i < data.length; ++i) {
+//         let name : string = data[i][ShiftIndex];
+//         let begin : string = data[i][StartIndex];
+//         let end : string = data[i][endIndex];
+
+//         shifts.push({
+//             name, begin, end
+//         });
+//     }
+
+//     return shifts;
+// }
+// const createPlanning = (data: any) : Planning[] => {
+//     let shiftIndex : number = 0;
+//     let postIndex : number = 2;
+//     let userIndex : number = 4;
+
+
+//     let planning : Planning[] = [];
+//     let shift : string = "";
+
+//     for (let i = 0; i < data.length; ++i) {
+//         if (data[i][shiftIndex] !== undefined)
+//             shift = data[i][shiftIndex];
+//         else if (data[i] !== " " && data[i][postIndex] !== "FUNCTIE") {
+//             planning.push({
+//                 user: data[i][userIndex],
+//                 shift: shift,
+//                 post: data[i][postIndex]
+//             });
+//         }
+    
+//     }
+
+//     return planning;
+// }
+// const createAssociation = (users: User[]) : Association[] => {
+//     let associations : Association[] = [];
+
+//     for (let i = 0; i < users.length; ++i) {
+//         let inside : boolean = false;
+//         for (let j = 0; j < associations.length; ++j) {
+//             if (associations[j].name === users[i].association) {
+//                 inside = true;
+//                 break;
+//             }
+//         }
+//         if ( ! inside)
+//             associations.push({
+//                 name: users[i].association
+//             });
+//     }
+
+//     return associations;
+// }
