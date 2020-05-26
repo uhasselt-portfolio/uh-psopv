@@ -18,7 +18,7 @@ export const loginUser = (email: string | undefined, password: string | undefine
 
         dispatch({type: USER_LOGIN_SUCCESS, payload: response.data.data})
     } catch (error) {
-        dispatch({type: USER_LOGIN_FAIL, payload: error.response.data.message})
+        dispatch({type: USER_LOGIN_FAIL, payload: error.message})
     }
 }
 
