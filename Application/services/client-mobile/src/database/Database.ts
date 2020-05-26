@@ -1,4 +1,4 @@
-import axios, {AxiosBasicCredentials} from 'axios'
+import axios from 'axios'
 import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocation";
 import Auth from "../utils/Auth";
 
@@ -7,7 +7,7 @@ class ServerRequest {
 
     static getRestApiEndpoint(): string | undefined {
         // @ts-ignore
-        if (process.env.NODE_ENV == ('debug' || 'development'))
+        if (process.env.NODE_ENV == 'development')
             return "http://localhost/api";
         return "https://psopv.herokuapp.com/api";
     }

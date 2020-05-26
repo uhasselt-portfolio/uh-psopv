@@ -6,7 +6,7 @@ import {connect, ConnectedComponent} from "react-redux";
 import {bindActionCreators} from 'redux';
 import {logoutUser} from "../pages/login/LoginAction";
 
-export default function (composed : FunctionComponent) : ConnectedComponent<any, any> {
+export default function (composed : FunctionComponent | React.ComponentClass) : ConnectedComponent<any, any> {
 
     class RequireSignIn extends React.Component<any, any> {
 

@@ -15,7 +15,7 @@ import { doDatabase } from "../save/saveAction";
 import { connect } from "react-redux";
 
 
-class SectorManagerApplication  extends Component<any> {
+class SectorManagerApplication extends Component<any> {
     interval: NodeJS.Timeout | undefined;
 
     constructor(props: any) {
