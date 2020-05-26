@@ -23,7 +23,16 @@ import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/
 import Map from '../../sector-responsible/map/components/Map';
 import { formatDateTime } from '../../../utils/DateUtil';
 
+const TIME_IN_MS: number = 2000;
 class InfoPage extends React.Component<any, any> {
+    constructor(props: any){
+        super(props)
+
+        let hideFooterTimeout = setTimeout( () => {
+            this.setState({...this.state, loaded: true})
+            this.props.fetchPlanningsFromId();
+        }, TIME_IN_MS);
+    }
 
     state = {
         loaded: false
@@ -126,12 +135,6 @@ class InfoPage extends React.Component<any, any> {
     }
 
     render() {
-        let TIME_IN_MS = 2000;
-        let hideFooterTimeout = setTimeout( () => {
-            this.setState({...this.state, loaded: true})
-            this.props.fetchPlanningsFromId();
-        }, TIME_IN_MS);
-
         if(this.state.loaded){
             return (
                 <IonPage>

@@ -14,6 +14,7 @@ import { call } from 'ionicons/icons';
 
 import WarningSign from "../../../images/warning_sign"
 import '../ListPage.css'
+import { setListLocalStorage } from '../../../save/saveFunction';
 
   
 
@@ -37,12 +38,14 @@ class ListViewItem  extends Component<any> {
         }}
     }
         
+    async handleNavigation(){
+        await setListLocalStorage('ListView', this.props.post_id)
+    }
 
     render() {
         console.log(this.state.color)
         return (   
-            <a href={this.getPost()} > 
-            <IonItem  detail button>
+            <IonItem  detail button routerLink="/PostView" onClick={() => this.handleNavigation()}>
                 <IonLabel>
                     <h2>Post {this.props.post_id}</h2>
                     <h4>{this.props.loc_description}</h4>
@@ -55,7 +58,6 @@ class ListViewItem  extends Component<any> {
                     {this.renderProblemIcon()}
                 </IonLabel>
             </IonItem>
-            </a>
         );
     }
 }
