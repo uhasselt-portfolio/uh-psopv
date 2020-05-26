@@ -9,7 +9,7 @@ COPY package.json ./
 COPY tsconfig.json ./
 
 # Connect with remote database
-ENV POSTGRES_URI 'postgres://olnamjxlnibleq:5980d54115bdc5ff60464c538f232f8030e21b46a17345900546c88e4ebabd5c@ec2-54-75-231-215.eu-west-1.compute.amazonaws.com:5432/d10ora4gmtgbjp'
+ENV POSTGRES_URI 'postgres://rezxbigrwzzblk:a52e3c719233b8923ebbe871efa653faa497725a23aec3a813aefb96d6406dac@ec2-54-247-94-127.eu-west-1.compute.amazonaws.com:5432/d7vifc4lf4qkfg'
 ENV TZ = 'Europe/Brussels'
 
 RUN npm install

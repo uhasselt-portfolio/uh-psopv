@@ -131,7 +131,7 @@ class ProblemDetails extends Component<props> {
 }
 
 interface LinkDispatchToProps {
-    problemSolved: (ProblemId: Number) => any
+    problemSolved: (ProblemId: number) => any
 }
 const MapDispatchToProps = (dispatch: any) : LinkDispatchToProps => {
     return bindActionCreators({

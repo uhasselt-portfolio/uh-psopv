@@ -185,7 +185,7 @@ const MapStateToProps = (state : AppState): LinkStateToProps => {
 }
 
 interface LinkDispatchToProps {
-    problemSolved: (problemId: Number) => any
+    problemSolved: (problemID: number) => any
 }
 const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
     return bindActionCreators({

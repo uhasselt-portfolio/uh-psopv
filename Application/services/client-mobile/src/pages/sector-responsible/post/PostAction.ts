@@ -32,7 +32,7 @@ export const ITEM_TOGGLE_SUCCESS = 'ITEM_TOGGLE_SUCCESS'
 
 export const itemToggle = (item_id: number, shift_id: number, post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        const response = await new Database().ItemToggle(item_id);
+        const response = await new Database().toggleItemLostStatus(item_id);
 
         let result = await toggleItem(item_id, shift_id, post_id);
         
@@ -50,7 +50,7 @@ export const PROBLEM_TOGGLE_SUCCESS = 'PROBLEM_TOGGLE_SUCCESS'
 
 export const problemToggle = (probem_id: number, shift_id: number, post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
+        const response = await new Database().toggleProblemSolvedStatus(probem_id); // TODO GETUSERID
 
         let result = await toggleProblem(probem_id, shift_id, post_id);
 
@@ -171,7 +171,7 @@ export const ADD_PROBLEM_SUCCESS = 'ADD_PROBLEM_SUCCESS'
 export const addProblem = (shift_id: number, post_id: number, params: any) => async (dispatch: Redux.Dispatch) => {
     try{
         const responseAddProblem = await new Database().addProblem(params);
-        const responseToggleProblem = await new Database().ProblemToggle(responseAddProblem.data.data.problem.id);
+        const responseToggleProblem = await new Database().toggleProblemSolvedStatus(responseAddProblem.data.data.problem.id);
 
 
         let result = await addProblemToLocalStorage(shift_id, post_id, params, responseAddProblem.data.data.problem);

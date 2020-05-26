@@ -1,12 +1,12 @@
 // TODO: Wouter permission changed
 interface UserInterface {
-    id: Number,
+    id: number,
     name: string,
     lastname: string,
     has_internet: boolean,
     gsmNumber: string,
     email: string,
-    permission: Number,
+    permission: number,
     association?: string
     latitude: number,
     longitude: number
