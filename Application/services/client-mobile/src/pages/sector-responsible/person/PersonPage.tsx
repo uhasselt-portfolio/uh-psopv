@@ -87,58 +87,6 @@ class PersonPage extends Component<any> {
         )
     }
 
-    // renderPukkelpopInfo(user: any){
-    //   if(user.plannings.length > 0){
-    //     return(
-    //       <IonCard>
-    //           <IonCardHeader>
-    //               <IonCardTitle>
-    //                   Pukkelpop
-    //               </IonCardTitle>
-    //           </IonCardHeader>
-    //           <IonCardContent>
-    //             <IonGrid>
-    //               <IonRow>
-    //                   <IonCol size="3">Rol:</IonCol>
-    //                   <IonCol>{user.userInfo.permission_type.name}</IonCol>
-    //               </IonRow>
-    //               <IonRow>
-    //                   <IonCol size="3">Shift:</IonCol>
-    //                   <IonCol>{}</IonCol>
-    //               </IonRow>
-    //               <IonRow>
-    //                   <IonCol size="3">Sector:</IonCol>
-    //                   <IonCol>todo...</IonCol>
-    //               </IonRow>
-    //               <IonRow>
-    //                   <IonCol size="3">Post:</IonCol>
-    //                   <IonCol>todo...</IonCol>
-    //               </IonRow>
-    //             </IonGrid>
-    //           </IonCardContent>
-    //           </IonCard>
-    //     )
-    //   }
-    // }
-    // renderProblemenInfo(user: any){
-    //   return(
-    //     <IonCard>
-    //     <IonCardHeader>
-    //         <IonCardTitle>
-    //             Pukkelpop
-    //         </IonCardTitle>
-    //     </IonCardHeader>
-    //     <IonCardContent>
-    //       <IonGrid>
-    //         <IonRow>
-    //             <IonCol>probleem 1 todo...</IonCol>
-    //         </IonRow>
-    //       </IonGrid>
-    //     </IonCardContent>
-    //     </IonCard>
-    //   )
-    // }     
-
     renderUserInfo(user: any) {
         return (<IonPage>
                 <IonHeader>
