@@ -11,7 +11,15 @@ export enum DataActions {
     DATA_POST_FAIL = 'DATA_POST_FAIL'
 };
 
-
+/**
+ * Acepts all the excel files, parses them and sends them to the server to create the database
+ * @param functiesfile de file detailing the functies/posts
+ * @param appellijstFile de file detailing witch user works when on witch post
+ * @param shiftenFile  the file detailing the shifts
+ * @param gebruikerFile the file detailing the users
+ * @param itemfile the file detailing the items used on differents shifts
+ * @param isUpdateMode determends if the new file's override the existing data or add to it
+ */
 export const uploadFile = (functiesfile : File, appellijstFile : File, 
      shiftenFile : File, gebruikerFile : File, itemfile : File, isUpdateMode : boolean) => 
     async (dispatch : Redux.Dispatch) => {
@@ -33,14 +41,22 @@ export const uploadFile = (functiesfile : File, appellijstFile : File,
             console.log("error\n\n\n") //TODO
         }
 
-        console.log("users", parser.getUsers());
-        console.log("posten",parser.getPosts());
-        console.log("shiften",parser.getShifts());
-        console.log("verenegingen",parser.getAssociations());
-        console.log("planning",parser.getPlanning());
-        console.log("items",parser.getItems());
-        console.log("generalPosts",parser.getGeneralPosts());
-        console.log("sectors",parser.getSectors());
+        // console.log("users", parser.getUsers());
+        // console.log("posten",parser.getPosts());
+        // console.log("shiften",parser.getShifts());
+        // console.log("verenegingen",parser.getAssociations());
+        // console.log("planning",parser.getPlanning());
+        // console.log("items",parser.getItems());
+        // console.log("generalPosts",parser.getGeneralPosts());
+        // console.log("sectors",parser.getSectors());
+
+        const response = await new Database().postNewData(
+            parser.getUsers(), parser.getPosts(), parser.getShifts(), parser.getAssociations(),
+            parser.getPlanning(), parser.getItems(), parser.getGeneralPosts(), parser.getSectors(), parser
+        );
+        //const response2 = await new Database().postFile(gebruikerFile,"",true);
+
+        console.log(response);
 
         // await new Database().postFile(file,isUpdateMode);
 
@@ -89,6 +105,11 @@ export const uploadFile = (functiesfile : File, appellijstFile : File,
 }
 
 
+/**
+ * functies that read a specific file and call a parser function to parse that data
+ * @param file the file to read
+ * @param parser the parser object that contains the parsed data
+ */
 const parseFuncties = (file: File, parser : Parser) => {
     const reader = new FileReader();
     const rABS = !!reader.readAsBinaryString;

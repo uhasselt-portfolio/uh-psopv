@@ -87,6 +87,18 @@ export const validateBodyParameters = (method: string): any => {
                 body("post_id", "You must specify a post_id for the planning").exists().isNumeric(),
             ]
         }
+        case 'import/all': {
+            return [
+                body("users",'you must add the users').exists(),
+                body("posts", 'you must add posts').exists(),
+                body('shifts','you must add shfits').exists(),
+                body('associations','you must add associations').exists(),
+                body('planning','you must add planning').exists(),
+                body('items','you must add items').exists(),
+                body('generalPosts','').exists(),
+                body('secotrs','').exists()
+            ]
+        }
     }
 };
 

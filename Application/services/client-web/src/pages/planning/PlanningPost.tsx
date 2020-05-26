@@ -38,12 +38,20 @@ class Post extends Component<IProps> {
         dropdownItems: false
     }
 
+    /**
+     * updates the state to hide or show the users working on this post 
+     * hides the items
+     */
     handleDropdownUsers = () => {
         this.setState({
             dropdownItems: false,
             dropdownUsers: ! this.state.dropdownUsers
         });
     }
+    /**
+     * updates the state to hide or show the items
+     * hides the users
+     */
     handleDropdownItems = () => {
         this.setState({
             dropdownItems: ! this.state.dropdownItems,

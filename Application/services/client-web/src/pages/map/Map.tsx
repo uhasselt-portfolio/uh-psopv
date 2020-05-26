@@ -170,10 +170,7 @@ class MyMap extends React.Component<IProps> {
         return markers;
     }
 
-    /**
-     * renders the component
-     */
-  render () {
+    render () {
       if (this.props.isMarkerClickable) {
         if (this.state.postClicked) {
             return (

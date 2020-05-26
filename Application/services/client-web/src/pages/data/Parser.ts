@@ -1,3 +1,4 @@
+import axios from 'axios';
 
 export interface GeneralPost {
     name: string,
@@ -47,6 +48,9 @@ export interface Sector {
     type : number
 }
 
+/**
+ * class that parses all the data from the input excel files
+ */
 export class Parser {
     generalposts : GeneralPost[];
     posts : Post[];
@@ -71,7 +75,8 @@ export class Parser {
     }
 
 
-    createGeneralAndPosts = (data: any) => {
+
+    createGeneralAndPosts = async (data: any) => {
         let headFunctieIndex : number = -1;
         let minAgeIndex : number = -1;
         let discriptionIndex : number = -1;
@@ -141,8 +146,14 @@ export class Parser {
                     type: sector
                 });
         }
+        // const response = await axios.post('http://localhost/api/import/createGeneralAndPost', {
+        //     sector : this.sectors,
+        //     post: this.posts,
+        //     generalpost: this.generalposts
+        // });
     }
-    createuser = (data : any)=> {
+
+    createuser = async (data : any)=> {
         let first_nameIndex : number = -1;
         let last_nameIndex : number = -1;
         let phone_numberIndex : number = -1;
@@ -206,8 +217,14 @@ export class Parser {
                     name: association
                 });
         }
+
+        const response = await axios.post('http://localhost/api/import/createUser', {
+            users : this.users,
+            association: this.associations
+        });
     }
-    createPlanning = (data: any) => {
+
+    createPlanning = async (data: any) => {
         let shiftIndex : number = 0;
         let postIndex : number = 2;
         let userIndex : number = 4;
@@ -226,8 +243,13 @@ export class Parser {
             }
         
         }
+
+        // const response = await axios.post('http://localhost/api/import/createPlanning', {
+        //     planning : this.planning
+        // });
     }
-    createShift = (data: any) => {
+
+    createShift = async (data: any) => {
         let ShiftIndex : number = -1;
         let StartIndex : number = -1;
         let endIndex : number = -1;
@@ -253,8 +275,12 @@ export class Parser {
                 name, begin, end
             });
         }
+        // const response = await axios.post('http://localhost/api/import/createShift', {
+        //     shifts : this.shifts
+        // });
     }
-    createItemtype = (data : any) => {
+    
+    createItemtype = async (data : any) => {
         let typeIndex : number = -1;
         let planningIndex : number = -1;
         for (let i = 0; i < data[2].length; ++i) {
@@ -274,6 +300,10 @@ export class Parser {
                 planning: data[i][planningIndex]
             })
         }
+
+        // const response = await axios.post('http://localhost/api/import/createItemType', {
+        //     items : this.items
+        // });
     }
 
     getGeneralPosts = () : GeneralPost[] => {return this.generalposts;}

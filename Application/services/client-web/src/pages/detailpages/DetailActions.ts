@@ -14,7 +14,7 @@ export enum DetailActions {
 };
 
 /**
- * gets the current planning from the database
+ * gets the current planning from the database and updates the redux database
  */
 export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
     console.log("in Detail fetch");

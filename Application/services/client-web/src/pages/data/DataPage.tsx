@@ -110,17 +110,17 @@ class Data extends Component<Props> {
     uploadFile = () => {
         let isUpdateMode : boolean = ! this.state.isCreating;
 
-        if (this.state.functiesFile === null || 
-            this.state.appellijstFile === null ||
-            this.state.shiftenFile === null ||
-            this.state.gebruikersFile === null ||
-            this.state.itemFile === null) {
-            this.setState({
-                ...this.state,
-                noFile : true
-            });
-            return;
-        } 
+        // if (this.state.functiesFile === null || 
+        //     this.state.appellijstFile === null ||
+        //     this.state.shiftenFile === null ||
+        //     this.state.gebruikersFile === null ||
+        //     this.state.itemFile === null) {
+        //     this.setState({
+        //         ...this.state,
+        //         noFile : true
+        //     });
+        //     return;
+        // } //TODO terug aanzetten
 
         this.props.uploadFile(this.state.functiesFile, this.state.appellijstFile,
                 this.state.shiftenFile, this.state.gebruikersFile, this.state.itemFile,isUpdateMode);
@@ -225,9 +225,6 @@ class Data extends Component<Props> {
         });
     }
 
-    /**
-     * renders the component
-     */
     render() {
         return(
             <Grid container direction="row">
@@ -337,7 +334,7 @@ class Data extends Component<Props> {
                         gescheiden door een spatie. De shift, functie en gebruikers naam en telefoonnummber moeten verwijzen naar andere voorkomens
                         in hun gespecifieerde files.
                     </div>
-                    <h5 style={explanationStyle}>Gebruikers: </h5>
+                    <h5 style={explanationStyle}>Gebruikers: </h5> //TODO uitleggen dat enkel vrijwilliger en verantwoordelijke mag zijn in kolom
                     <div style={explanationStyle}>
                         Dit bestand bevat een opsomming van al de gebruikers, zowel vrijwilligers en verantwoordelijken. Gelieve 
                         de volgende regels te volgen bij het maken van dit bestand. De 2de rij bevat de titels van de kolommen. Deze bevatten
