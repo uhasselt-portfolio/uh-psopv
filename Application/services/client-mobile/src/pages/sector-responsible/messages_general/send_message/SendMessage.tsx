@@ -10,6 +10,7 @@ import  SelectContactWindow  from './components/SelectContactPage';
 import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
 import './SendMessage.css'
 import Auth from '../../../../utils/Auth';
+import TemplateMessage from './components/TemplateMessage';
 
 
 const select_types = {volunteers: "Alle Vrijwilligers", sectors: "Alle Sectorverantwoordelijken",
@@ -20,10 +21,17 @@ let content_value: string = "";
 
 
 class SendNotifications extends Component<any> {
+  constructor(props: any) {
+    super(props);
+    this.getTemplateText = this.getTemplateText.bind(this);
+
+  }
+
   state = {
     priority: 1,
     selected_type: "Ontvangers",
     showPopover: false,
+    showPopoverTemplate: false,
     showToast: false
   }
 
@@ -35,10 +43,15 @@ class SendNotifications extends Component<any> {
       this.setState({...this.state, showPopover: true});
       this.props.fetchUsers();
   }
-
-  constructor(props: any) {
-    super(props);
+  hidePopoverTemplate(){
+    this.setState({...this.state, showPopoverTemplate: false});
   }
+
+  showPopOverTemplate(){
+      this.setState({...this.state, showPopoverTemplate: true});
+  }
+
+
 
   componentDidMount(){
     this.props.fetchUsers();
@@ -72,7 +85,6 @@ class SendNotifications extends Component<any> {
    })
 
     await setListLocalStorage('send_msg', list)
-    // await this.props.fetchUsers();
   }
 
 
@@ -84,12 +96,10 @@ class SendNotifications extends Component<any> {
     })
 
     await setListLocalStorage('send_msg', list)
-    // await this.props.fetchUsers();
   }
 
   async selectNobody(){
     let x = await setListLocalStorage('send_msg', []).finally();
-    // await this.props.fetchUsers();
   }
 
   async selectEverybody(){
@@ -144,13 +154,18 @@ class SendNotifications extends Component<any> {
     }
     }
       
+  getTemplateText(title: string, description: string){
+    this.handleTitleChange(title);
+    this.handleContentChange(description);
+    this.hidePopoverTemplate();
+  }
+
   render(){
+  
     let offlineMessage = "";
     if(!navigator.onLine){
       offlineMessage = "U bent offline, berichten worden pas verstuurd eens u terug online gaat."
     } 
-
-
     if(this.props.localStorage != undefined){
         return (
         <div>
@@ -175,6 +190,17 @@ class SendNotifications extends Component<any> {
             <IonItem>
                 <IonTextarea className="textArea" value={content_value} placeholder="Bericht..." onIonChange={e => this.handleContentChange(e.detail.value)}></IonTextarea>
             </IonItem>
+
+
+            <IonButton className="templateBtn" onClick={() => this.showPopOverTemplate()}> Template bericht</IonButton>
+              <>
+                <IonPopover
+                  isOpen={this.state.showPopoverTemplate}
+                  onDidDismiss={() => this.hidePopoverTemplate()}
+                >
+                <TemplateMessage sendData={this.getTemplateText}/>
+                </IonPopover>
+              </>
 
             <IonButton className="sendBtn" onClick={() => this.handleSendMessage()}>Verstuur</IonButton>
 

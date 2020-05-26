@@ -27,7 +27,11 @@ class SectorManagerApplication extends Component<any> {
         this.props.doDatabase();
 
         this.interval = setInterval(() => {
-          this.props.doDatabase();
+          if(navigator.onLine){
+            this.props.doDatabase();
+          } else{
+            // do nothing
+          }
         }, 5000); //TODO interval
       }
 

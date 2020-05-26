@@ -289,13 +289,32 @@ function generateSectorColors(sectors: number[], sectorColors: any){
 }
 
 function getMyManagers(plannings: any, sectors: any, posts: any){
-    // let my_sectors:
+    let my_sectors: any[] = [];
 
-    // plannings.map((planning: any) => {
-    //     return posts.map((post: any) => {
-            
-    //     })
-    // })
+    plannings.map((planning: any) => {
+        let post =  posts.find((post: any) => {
+            return post.id == planning.post_id
+        })
+        if(!my_sectors.includes(post.sector_id)){
+            my_sectors.push(post.sector_id)
+        }
+    })
+
+    console.log(my_sectors)
+
+    let my_managers: any[] = [];
+    sectors.map((sector: any) => {
+        if(my_sectors.includes(sector.sector_type)){
+            my_managers.push({
+                user_id: sector.user_id,
+                user_name: sector.user.first_name + " " + sector.user.last_name
+            })
+        }
+    })
+
+    console.log(my_managers)
+
+    return my_managers;
 
 }
 
@@ -324,13 +343,11 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
 
         // 1 = vrijwilliger
         if(Auth.getAuthenticatedUser().permission_type_id == 1){
-            const response =  await database.fetchPlanningsWithUserId(user_id);
-            const responseSectors =  await database.fetchSectors();
-
-            let my_managers = getMyManagers(response.data.data.plannings, responseSectors.data.data.sectors, responsePosts.data.data.posts);
-
-            let plannings = response.data.data.plannings;
-            
+            const responsePlannings =  await database.fetchPlanningsWithUserId(user_id);
+            const responseSectors =  await database.fetchMyManager(user_id);
+            let my_managers = responseSectors.data.data
+            console.log(my_managers, "my_managers")
+            let plannings = responsePlannings.data.data.plannings;
             plannings.sort(sortPlanningsByDate)
             setListLocalStorage('plannings', plannings);
         }
@@ -352,7 +369,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
             let nonVolunteers = getNonVolunteers(responseUsers, user_id);
             let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems,
-                responsePlannings, default_sector,list_colors);
+                responsePlannings, default_sector, list_colors);
             let problems =  getProblems(responseProblems, volunteers);
             let sector_colors = generateSectorColors(postsData.posts_sectors, sectorColors);
 
