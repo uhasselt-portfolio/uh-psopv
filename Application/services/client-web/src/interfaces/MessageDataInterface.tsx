@@ -1,5 +1,5 @@
 interface MessageInterface {
-    id: Number,
+    id: number,
     title: string,
     sender: string,
     content: string,

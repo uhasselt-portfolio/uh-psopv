@@ -14,7 +14,7 @@ export const fetchUsers = () => async (dispatch : Redux.Dispatch) => {
     try {
         dispatch({type: UsersActions.USERS_FETCH_START});
 
-        let users: UserDataInterface[] = await new Database().fetchusers();
+        let users: UserDataInterface[] = await new Database().fetchUsers();
 
         dispatch({
             type: UsersActions.USERS_FETCH_SUCCES,

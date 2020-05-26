@@ -5,23 +5,23 @@ import {verify} from "../middleware/jwt.middleware";
 
 const router = express.Router();
 
-router.get('/fetch/all', fetchAll);
+router.get('/fetch/all', verify, fetchAll);
 
-router.get('/fetch/:id', fetch);
+router.get('/fetch/:id', verify, fetch);
 
-router.get('/fetch/planning/:id', fetchProblemsViaPlanningID);
+router.get('/fetch/planning/:id', verify, fetchProblemsViaPlanningID);
 
-router.get('/fetch/user/:id', fetchProblemsViaUserID);
+router.get('/fetch/user/:id', verify, fetchProblemsViaUserID);
 
-router.get('/fetch/all/unsolved', fetchUnsolvedProblems);
+router.get('/fetch/all/unsolved', verify, fetchUnsolvedProblems);
 
-router.post('/add', validateBodyParameters('problem/add'), add);
+router.post('/add', verify, validateBodyParameters('problem/add'), add);
 
-router.post('/add/report-user/:id', reportUser);
+router.post('/add/report-user/:id', verify, reportUser);
 
-router.patch('/modify/:id', modify);
+router.patch('/modify/:id', verify, modify);
 
-router.patch('/toggle-solve/:id', toggleProblemSolve);
+router.patch('/toggle-solve/:id', verify, toggleProblemSolve);
 
 router.delete('/delete/:id', verify, remove);
 

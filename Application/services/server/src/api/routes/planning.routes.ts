@@ -6,30 +6,30 @@ import {verify} from "../middleware/jwt.middleware";
 
 const router = express.Router();
 
-router.get('/fetch/all', fetchAll);
+router.get('/fetch/all', verify, fetchAll);
 
-router.get('/fetch/:id', fetch);
+router.get('/fetch/:id', verify, fetch);
 
 // Find all the plannings with that contains user with id ...
-router.get('/fetch/user/:id', fetchUser);
+router.get('/fetch/user/:id', verify, fetchUser);
 
 // Find a planning for a specific in case it's active
-router.get('/fetch/user/active/:id', fetchActivePlaningViaUserID)
+router.get('/fetch/user/active/:id', verify, fetchActivePlaningViaUserID)
 
 // Find all the plannings with that contains post with id ...
-router.get('/fetch/post/:id', fetchPosts);
+router.get('/fetch/post/:id', verify, fetchPosts);
 
 // Find all the plannings that are currently active
-router.get('/fetch/shift/active', fetchCurrentShift);
+router.get('/fetch/shift/active', verify, fetchCurrentShift);
 
 // Find all the users that are currently working in shift ...
-router.get('/fetch/users/:post_id/:shift_id', fetchUsersInSameShiftAndPost);
+router.get('/fetch/users/:post_id/:shift_id', verify, fetchUsersInSameShiftAndPost);
 
-router.post('/add', validateBodyParameters('planning/add'), add);
+router.post('/add', verify, validateBodyParameters('planning/add'), add);
 
-router.patch('/modify/:id', modify);
+router.patch('/modify/:id', verify, modify);
 
-router.patch('/toggle-checkin/:id', toggleCheckedIn)
+router.patch('/toggle-checkin/:id', verify, toggleCheckedIn)
 
 router.delete('/delete/:id', verify, remove);
 

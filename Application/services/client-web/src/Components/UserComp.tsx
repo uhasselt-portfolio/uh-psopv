@@ -7,7 +7,7 @@ import { AppState } from '../Redux/store';
 import {changeConnection, fetchuser} from './ComponentActions';
 
 interface IProps {
-    userId: Number
+    userId: number
 }
 const paperStyle = {
     background: 'rgb(242,242,250)',
@@ -234,7 +234,7 @@ const MapStateToProps = (state: AppState, ownProps: IProps) : LinkStateToProps =
 }
 
 interface LinkDispatchToProps {
-    changeConnection: (userid: Number, connection: boolean) => any,
+    changeConnection: (userid: number, connection: boolean) => any,
     fetchuser: () => any
 }
 

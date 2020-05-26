@@ -1,5 +1,5 @@
 interface ProblemInterface {
-    id: Number,
+    id: number,
     problemType: string,
     priority: Number,
     discription: string,

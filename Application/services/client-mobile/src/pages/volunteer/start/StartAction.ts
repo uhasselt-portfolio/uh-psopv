@@ -25,7 +25,7 @@ export const updateUserCheckInStatus = (id: number) => async (dispatch: Redux.Di
     try{
         dispatch({type: START_UPDATE_CHECK_IN_STATUS_START})
 
-        const result = await new Database().updateUserCheckInStatus(id);
+        const result = await new Database().toggleUserCheckInStatus(id);
 
         dispatch({type: START_UPDATE_CHECK_IN_STATUS_SUCCESS, payload: result.data.data.planning});
     } catch(error){
@@ -41,7 +41,7 @@ export const checkIfUserInPost = (id: number) => async (dispatch: Redux.Dispatch
     try{
         dispatch({type: START_CHECK_USER_IN_POST_START})
 
-        const result = await new Database().updateUserCheckInStatus(id);
+        const result = await new Database().toggleUserCheckInStatus(id);
 
         dispatch({type: START_CHECK_USER_IN_POST_SUCCESS, payload: result.data.data.isUserOnPost});
     } catch(error){
