@@ -139,7 +139,7 @@ export default class Database {
 
     async fetchmessages() {
         let adminId : string = '3';
-        const response = await axios.get(this.ServerUrl + '/api/message//fetch/send-to/' + adminId);
+        const response = await axios.get(this.ServerUrl + '/api/message/fetch/send-to/' + adminId);
 
         let messages : MessageDataInterface[] = [];
         for (let i = 0; i < response.data.data.messages.length; ++i) {
