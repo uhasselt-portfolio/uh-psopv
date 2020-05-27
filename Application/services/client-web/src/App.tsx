@@ -15,43 +15,43 @@ import Overview from './pages/overview/OverviewPage';
 
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
-import { Grid } from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 
 const appStyle = {
-  background: '#eee',
-  minheight: '100vh',
-  height: '100%',
-  paddingBottom: '5px'
+    background: '#eee',
+    minheight: '100vh',
+    height: '100%',
+    paddingBottom: '5px'
 }
 
 //TODO op veel plekken nog loading and failed messages maken
 
 function App() {
-  return (
-    <Provider store={store}>
-      <BrowserRouter>
-        <Grid className="App" style={appStyle}>
-          <Grid>
-          <NavBar />
-          </Grid>
-          <Grid>
-          <Switch>
-            <Route exact path='/' component={Overview} />
-            <Route exact path='/Data' component={Data} /> 
-            <Route path="/Data/Users" component={Users} />
-            <Route path="/Data/Posts" component={Posts} />  
-            <Route path="/Data/Problems" component={Problems} />  
-            <Route path="/Map" component={PukkelpopMap} />
-            <Route path="/Data/Problem" component={ProblemDetails} />
-            <Route path="/Data/Post" component={PostDetails} />
-            <Route path="/Data/Shifts" component={Planning} />
-            <Route path="/Settings" component={Settings} />
-          </Switch>
-          </Grid>
-        </Grid>
-      </BrowserRouter>
-    </Provider>
-  );
+    return (
+        <Provider store={store}>
+            <BrowserRouter>
+                <Grid className="App" style={appStyle}>
+                    <Grid>
+                        <NavBar/>
+                    </Grid>
+                    <Grid>
+                        <Switch>
+                            <Route exact path='/' component={Overview}/>
+                            <Route exact path='/Data' component={Data}/>
+                            <Route path="/Data/Users" component={Users}/>
+                            <Route path="/Data/Posts" component={Posts}/>
+                            <Route path="/Data/Problems" component={Problems}/>
+                            <Route path="/Map" component={PukkelpopMap}/>
+                            <Route path="/Data/Problem" component={ProblemDetails}/>
+                            <Route path="/Data/Post" component={PostDetails}/>
+                            <Route path="/Data/Shifts" component={Planning}/>
+                            <Route path="/Settings" component={Settings}/>
+                        </Switch>
+                    </Grid>
+                </Grid>
+            </BrowserRouter>
+        </Provider>
+    );
 }
 
 export default App;

@@ -10,7 +10,6 @@ import Auth from "../utils/Auth";
 class ServerRequest {
 
     static getRestApiEndpoint(): string | undefined {
-        console.log("PROCESS", process.env);
         // @ts-ignore
         if (process.env.NODE_ENV == "development")
             return "http://localhost/api";
@@ -20,12 +19,7 @@ class ServerRequest {
     public static get(endpoint: string, authorized: boolean = true): Promise<any> | null {
         const url = this.getRestApiEndpoint() + endpoint;
 
-        console.log("Authenticating...")
-
         if (authorized && !Auth.isAuthenticated()) return null;
-
-        console.log("GET REQUEST TO...", url);
-
 
         return axios.get(url, {headers: {'Authorization': Auth.getToken()}});
     }
@@ -59,14 +53,16 @@ class ServerRequest {
 
 export default class Database {
 
-    async authenticate() {
+    async authenticate() : Promise<string> {
         const response = await ServerRequest.post('/user/authenticate', {
             email: 'michiel.swaanen@student.uhasselt.be',
             password: '12345'
         })
 
-        const token = response.data.data.jwt;
+        const token : string = response.data.data.jwt;
         localStorage.setItem('token', token);
+
+        return token;
     }
 
     async fetchProblems() {

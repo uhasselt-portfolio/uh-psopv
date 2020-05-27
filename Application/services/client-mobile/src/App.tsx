@@ -1,17 +1,6 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {Redirect, Route, Switch} from 'react-router-dom';
-import {
-    IonApp,
-    IonContent,
-    IonHeader,
-    IonItem, IonList,
-    IonPage,
-    IonRouterOutlet,
-    IonText,
-    IonTitle,
-    IonToolbar,
-    withIonLifeCycle
-} from '@ionic/react';
+import {IonApp, IonRouterOutlet} from '@ionic/react';
 import {IonReactRouter} from '@ionic/react-router';
 import LoginPage from './pages/login/LoginPage';
 /* Core CSS required for Ionic components to work properly */
@@ -30,14 +19,12 @@ import '@ionic/react/css/display.css';
 import {connect} from 'react-redux';
 /* Theme variables */
 import './theme/variables.css';
-import Save from './pages/save/savePage'
 
 import SectorManagerApplication from "./pages/sector-responsible/SectorManagerApplication";
 import VolunteerApplication from "./pages/volunteer/VolunteerApplication";
 import Auth from "./utils/Auth";
 import StartPage from "./pages/volunteer/start/StartPage";
 import {bindActionCreators} from "redux";
-import {checkUserExists} from "./pages/login/LoginAction";
 
 class App extends React.Component<any, any> {
     constructor(props: any) {
@@ -74,17 +61,18 @@ class App extends React.Component<any, any> {
 
     renderManagerApplication(): React.ReactNode {
         return (
-            <>
+            <div>
                 <Redirect from="/" to="/MapPage" />
                 <SectorManagerApplication />
-            </>
+            </div>
         )
     }
 
     renderApplication(): React.ReactNode {
         const loggedIn = Auth.isAuthenticated();
+        console.log("LOGGED IN ?", loggedIn);
 
-        if (loggedIn && this.props.isUserLoggedIn) {
+        if (loggedIn || this.props.isUserLoggedIn) {
 
             const user = Auth.getAuthenticatedUser();
 

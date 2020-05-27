@@ -5,14 +5,12 @@ const warning = "Create .env file with your database credentials.";
 function getConnectionCredentials(): Sequelize {
     const sslMode: boolean = process.env.NODE_ENV == 'production';
 
-    console.log("CONNECTING WITH...", process.env.POSTGRES_URI)
-    console.log("ENV..", process.env);
-
     return new Sequelize(
         process.env.POSTGRES_URI || warning, {
             dialectOptions: {
                 ssl: sslMode
             },
+            logging: false,
             dialect: 'postgres',
             pool: {
                 max: 5,
