@@ -1,6 +1,7 @@
 import {
     AllowNull,
-    AutoIncrement, BelongsTo,
+    AutoIncrement,
+    BelongsTo,
     Column,
     CreatedAt,
     ForeignKey,
@@ -9,7 +10,6 @@ import {
     Table,
     UpdatedAt
 } from "sequelize-typescript";
-import PermissionTypeModel from "./permission_type.model";
 import UserModel from "./user.model";
 
 @Table({tableName: "sector"})

@@ -63,7 +63,7 @@ export const fetchMessages = () => async (dispatch : Redux.Dispatch) => {
             type: OverviewActions.OVERVIEW_FETCH_START
         });
 
-        const messages : MessageDataInterface[] = await new Database().fetchmessages();
+        const messages : MessageDataInterface[] = await new Database().fetchMessages();
 
 
         dispatch({
@@ -176,7 +176,7 @@ export const postNewMessage = (receiver: Number,title: string, content: string, 
  * updatest the database that the message has been read
  * @param messageId the id of the message
  */
-export const postMessageRead = (messageId: Number) => async (dispatch: Redux.Dispatch) => {
+export const postMessageRead = (messageId: number) => async (dispatch: Redux.Dispatch) => {
     console.log("message read");
     try {
         dispatch({

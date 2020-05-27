@@ -1,7 +1,7 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../database/Database'
-import {resetActionList, getActionList, addObjectToActionList, getDefaultSector, setListLocalStorage, getListLocalStorage} from './saveFunction'
+import {resetActionList, getActionList, setListLocalStorage, getListLocalStorage} from './saveFunction'
 import { push } from "ionicons/icons";
 import Auth from "../../utils/Auth";
 
@@ -92,9 +92,6 @@ function sortMessagesByDate(a: any, b: any){
 }
  function getPostsData(responsePosts: any, responseUnsolvedProblems: any, responseItems: any,
     responseProblems: any, responsePlannings: any, default_sector: number, list_colors: string[]){
-
-
-
         let posts_data: {}[] = []
 
         responsePosts.data.data.posts.map((post: any) => {
@@ -291,34 +288,64 @@ function generateSectorColors(sectors: number[], sectorColors: any){
     return colors;
 }
 
+function getMyManagers(managers: any){
+    let my_managers: any[] = [];
+    managers.map((manager: any) => {
+        my_managers.push({
+            user_id: manager.user.id,
+            user_name: manager.user.first_name + " " + manager.user.last_name
+        })
+    })
+
+    return my_managers
+}
+
+function getTotalUnreadMessages(problems: any, messages: any){
+    problems = problems.filter((problem: any) => {
+        console.log(problem)
+        return(problem.solved == false)
+    })
+
+    messages = messages.filter((message: any) => {
+        console.log(message)
+        return(message.solved == false)
+    })
+
+    return problems.length + messages.length
+}
+
 export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'
 
 export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
     try{
+        const database = new Database();
         const todoCommands = await getActionList();
 
         todoCommands.forEach(async (element: any) => {
-            if(element.params != null){
-                    const result = await axios.post(element.url, element.params);
+            if(element.id == undefined){
+                const result = await database.postRequest(element.url, element.params);
             } else{
-                    const result = await axios.patch(element.url);
+                const result = await database.patchRequest(element.url, element.id, element.params);
+
             }
         });
 
-        const database = new Database();
-
         const user_id = Auth.getAuthenticatedUser().id;
+
         const responseMessages = await database.fetchMessagesFrom(user_id);
+
         let messages =  getMessages(responseMessages);
         setListLocalStorage('messages', messages);
 
-                // 1 = sector_verantwoordelijke
+        // 1 = vrijwilliger
         if(Auth.getAuthenticatedUser().permission_type_id == 1){
-            const response =  await database.fetchPlanningsWithUserId(user_id);
-            let plannings = response.data.data.plannings;
+            const responsePlannings =  await database.fetchPlanningsWithUserId(user_id);
+            const responseSectors =  await database.fetchMyManager(user_id);
+            let my_managers = getMyManagers(responseSectors.data.data.sectors);
+            let plannings = responsePlannings.data.data.plannings;
             plannings.sort(sortPlanningsByDate)
-            console.log("SAVE ACTION PLANNING", plannings);
             setListLocalStorage('plannings', plannings);
+            setListLocalStorage('my_managers', my_managers);
         }
         // 2 = sector_verantwoordelijke
         if(Auth.getAuthenticatedUser().permission_type_id == 2){
@@ -328,7 +355,9 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             const responseProblems = await database.fetchAllProblems();
             const responsePlannings = await database.fetchPlannings();
             const responseUsers = await database.fetchUsers();
-            const default_sector = await getDefaultSector();
+            const responseSector = await database.fetchSectorOfUser(user_id);
+            const default_sector = responseSector.data.data.sector.sector_type
+
             const problemTypes = await database.fetchAllProblemTypes();
             const sectorColors = await getListLocalStorage('sector_colors');
 
@@ -337,15 +366,17 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             let volunteers =  getVolunteersFromSector(responsePlannings, default_sector);
             let nonVolunteers = getNonVolunteers(responseUsers, user_id);
             let postsData =  getPostsData(responsePosts, responseUnsolvedProblems, responseItems, responseProblems,
-                responsePlannings, default_sector,list_colors);
+                responsePlannings, default_sector, list_colors);
             let problems =  getProblems(responseProblems, volunteers);
             let sector_colors = generateSectorColors(postsData.posts_sectors, sectorColors);
-
+            let total_msg = getTotalUnreadMessages(problems, messages)
 
             if(sector_colors.length > 0){
                 setListLocalStorage('sector_colors', sector_colors);
             }
+            setListLocalStorage('total_msg', total_msg);
             setListLocalStorage('my_volunteers', volunteers);
+            setListLocalStorage('default_sector', default_sector);
             setListLocalStorage('contacts', nonVolunteers);
             setListLocalStorage('posts', postsData.posts_data);
             setListLocalStorage('sectors', postsData.posts_sectors);
@@ -359,7 +390,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         dispatch({type: UNROLL_ACTIONS})
 
     } catch(error){
-        console.log(error)
+        console.log(error.message)
     }
 }
 

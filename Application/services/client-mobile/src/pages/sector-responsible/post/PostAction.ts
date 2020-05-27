@@ -32,13 +32,13 @@ export const ITEM_TOGGLE_SUCCESS = 'ITEM_TOGGLE_SUCCESS'
 
 export const itemToggle = (item_id: number, shift_id: number, post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        const response = await new Database().ItemToggle(item_id);
+        const response = await new Database().toggleItemLostStatus(item_id);
 
         let result = await toggleItem(item_id, shift_id, post_id);
         
         dispatch({type: ITEM_TOGGLE_SUCCESS, payload: result})
     } catch(error){
-        addObjectToActionList('https://psopv.herokuapp.com/api/item/toggle-lost/' + item_id, null)
+        addObjectToActionList('/item/toggle-lost/', item_id, {})
         let result = toggleItem(item_id, shift_id, post_id);
 
         dispatch({type: ITEM_TOGGLE_SUCCESS, payload: result})
@@ -50,7 +50,7 @@ export const PROBLEM_TOGGLE_SUCCESS = 'PROBLEM_TOGGLE_SUCCESS'
 
 export const problemToggle = (probem_id: number, shift_id: number, post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
-        const response = await new Database().ProblemToggle(probem_id); // TODO GETUSERID
+        const response = await new Database().toggleProblemSolvedStatus(probem_id); // TODO GETUSERID
 
         let result = await toggleProblem(probem_id, shift_id, post_id);
 
@@ -58,7 +58,7 @@ export const problemToggle = (probem_id: number, shift_id: number, post_id: numb
 
         // dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: response})
     } catch(error){
-        addObjectToActionList('https://psopv.herokuapp.com/api/problem/toggle-solve/' + probem_id, null)
+        addObjectToActionList('/problem/toggle-solve/', probem_id, {})
 
         let result = toggleProblem(probem_id, shift_id, post_id);
         
@@ -171,14 +171,14 @@ export const ADD_PROBLEM_SUCCESS = 'ADD_PROBLEM_SUCCESS'
 export const addProblem = (shift_id: number, post_id: number, params: any) => async (dispatch: Redux.Dispatch) => {
     try{
         const responseAddProblem = await new Database().addProblem(params);
-        const responseToggleProblem = await new Database().ProblemToggle(responseAddProblem.data.data.problem.id);
+        const responseToggleProblem = await new Database().toggleProblemSolvedStatus(responseAddProblem.data.data.problem.id);
 
 
         let result = await addProblemToLocalStorage(shift_id, post_id, params, responseAddProblem.data.data.problem);
 
         dispatch({type: ADD_PROBLEM_SUCCESS, payload: result})
     } catch(error){
-        addObjectToActionList('https://psopv.herokuapp.com/api/problem/add', params)
+        addObjectToActionList('/problem/add', undefined, params)
 
         // let result = await addProblemToLocalStorage(shift_id, post_id, params);
 
@@ -253,7 +253,7 @@ export const removeProblem = (shift_id: number, post_id: number, problem_id: any
         dispatch({type: REMOVE_PROBLEM_SUCCESS, payload: result})
     } catch(error){
         console.log(error)
-        addObjectToActionList('https://psopv.herokuapp.com/api/problem/delete/' + problem_id, null)
+        addObjectToActionList('/problem/delete/', problem_id, {})
 
         let result = await removeProblemToLocalStorage(shift_id, post_id, problem_id);
 

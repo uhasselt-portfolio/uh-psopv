@@ -17,22 +17,22 @@ export enum ComponentActions {
 
 /**
  * lets the database update to indicate that the problem is solved
- * @param Problemid the id of the solved problem
+ * @param problemID
  */
-export const problemSolved = (Problemid: Number) => async (dispatch : Redux.Dispatch) => {
+export const problemSolved = (problemID: number) => async (dispatch : Redux.Dispatch) => {
     console.log("in problem solved post");
     try {
         dispatch({
             type: ComponentActions.PROBLEM_SOLVED_POST_START
         });
 
-        const response = await new DataBase().patchProblemSolved(Problemid);
+        const response = await new DataBase().patchProblemSolved(problemID);
 
         console.log(response);
 
         dispatch({
             type: ComponentActions.PROBLEM_SOLVED_POST_SUCCES,
-            payload: Problemid
+            payload: problemID
         });
     } catch(error) {
         if (error.response) {
@@ -63,7 +63,7 @@ export const fetchuser = () => async (dispatch: Redux.Dispatch) => {
             type: ComponentActions.USER_FETCH_START
         });
 
-        let users: UserDataInterface[] = await new DataBase().fetchusers();
+        let users: UserDataInterface[] = await new DataBase().fetchUsers();
 
         dispatch({
             type: ComponentActions.USER_FETCH_SUCCES,
@@ -92,7 +92,7 @@ export const fetchuser = () => async (dispatch: Redux.Dispatch) => {
  * @param userid the id of the user to change the connection
  * @param connection the new connection status
  */
-export const changeConnection = (userid: Number, connection: boolean) => async (dispatch: Redux.Dispatch) => {
+export const changeConnection = (userid: number, connection: boolean) => async (dispatch: Redux.Dispatch) => {
     console.log("in user connection changes post");
     try {
         dispatch({

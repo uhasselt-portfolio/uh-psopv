@@ -8,47 +8,10 @@ import {resetActionList, getActionList, addObjectToActionList, setDefaultSector,
 import Auth from '../../utils/Auth';
 
 class Save  extends Component<any> {
-  interval: NodeJS.Timeout | undefined;
-
-    constructor(props: any, storage: Storage) {
-        super(props);
-        this.handleActions();
-
-        // 2 = sector-verantwoordelijke
-        if(Auth.getAuthenticatedUser().permission_type_id == 2){
-          setDefaultSector(Auth.getAuthenticatedUser().id);
-        }
-    }
-
-
-    tick() {
-      this.setState((state: { seconds: number; }) => ({
-        seconds: state.seconds + 1
-      }));
-    }
-
-      componentWillUnmount() {
-        if(this.interval != undefined){
-          clearInterval(this.interval);
-        }
-      }
-
-
-      componentDidMount(){
-        this.interval = setInterval(() => {
-          console.log("test")
-          this.handleActions();
-        }, 10000);
-      }
-
-
-
     async handleActions(){
       if(navigator.onLine){
-        console.log("Handle actions, because we are online")
         this.props.doDatabase()
       } else{
-        console.log("we are offline, so we do nothing")
       }
     }
 

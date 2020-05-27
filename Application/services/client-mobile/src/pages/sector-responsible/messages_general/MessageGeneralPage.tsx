@@ -12,7 +12,8 @@ import {
     IonSlides,
     IonTabButton,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    withIonLifeCycle
 } from "@ionic/react";
 import {
     notifications,
@@ -36,10 +37,10 @@ const init = async function (this: any) {
 };
 
 class MessageGeneral extends React.Component<any> {
-
     constructor(props: any) {
         super(props);
-        this.setAmountMessage();
+        this.setAmountMessagesChanged = this.setAmountMessagesChanged.bind(this);
+
     }
 
     state = {
@@ -63,19 +64,24 @@ class MessageGeneral extends React.Component<any> {
 
     handleSlideChange() {
         this.setState({selected: swiper.activeIndex});
+        this.setAmountMessage();
     }
 
     setSlideIndex(i: number) {
         swiper.slideTo(i)
         this.setState({selected: i});
+        this.setAmountMessage();
     }
 
+    setAmountMessagesChanged(){
+        this.setState({...this.state, amount_msg: this.state.amount_msg - 1})
+    }
 
     renderSlides() {
         return (
             <IonSlides onIonSlidesDidLoad={init} pager={true} onIonSlideDidChange={() => this.handleSlideChange()}>
                 <IonSlide className="fullWidth">
-                    <Notifications/>
+                    <Notifications sendData={this.setAmountMessagesChanged}/>
                 </IonSlide>
                 <IonSlide className="fullWidth">
                     <ProblemsPage/>
@@ -134,6 +140,10 @@ class MessageGeneral extends React.Component<any> {
 
     }
 
+    ionViewWillEnter() {
+        this.setAmountMessage();
+      }
+
     render() {
         return (
             <IonPage>
@@ -150,4 +160,4 @@ class MessageGeneral extends React.Component<any> {
     }
 }
 
-export default connect(null, null)(MessageGeneral);
+export default withIonLifeCycle(MessageGeneral);

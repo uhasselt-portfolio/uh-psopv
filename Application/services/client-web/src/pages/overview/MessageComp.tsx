@@ -103,7 +103,7 @@ class Message extends Component<Props> {
 }
 
 interface LinkDispatchToProps {
-    postMessageRead: (messageId: Number) => any
+    postMessageRead: (messageId: number) => any
 }
 
 function MapDispatchToProps(dispatch: any) : LinkDispatchToProps {

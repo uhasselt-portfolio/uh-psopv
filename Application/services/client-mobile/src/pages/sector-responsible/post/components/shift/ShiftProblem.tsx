@@ -1,21 +1,9 @@
 import * as React from 'react';
-import { Component } from 'react';
 import { IonButton, 
-    IonListHeader, 
-    IonHeader, 
-    IonPage, 
-    IonTitle, 
-    IonToolbar, 
-    IonList, 
     IonItem, 
-    IonLabel,
-    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonIcon, IonRadioGroup, IonPopover, IonGrid, IonRow, IonCard, IonItemDivider, IonCol, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, IonToast } from '@ionic/react';
-import { call, checkbox, pencilOutline, checkmarkDone, checkmark, remove, removeOutline, trashBin, trashBinOutline } from 'ionicons/icons';
-
-import { render } from '@testing-library/react';
-import { radioButtonOff } from 'ionicons/icons';
-import { getListLocalStorage, setListLocalStorage, removeListLocalStorage, addObjectToActionList } from '../../../../save/saveFunction';
-import { formatDateTime } from '../../../../common_functions/date_formatter';
+     IonIcon, IonPopover, IonGrid, IonRow, IonCol, IonToast } from '@ionic/react';
+import { checkmark, trashBinOutline } from 'ionicons/icons';
+import { formatDateTime } from '../../../../../utils/DateUtil';
 import './Shift.css'
 import {problemToggle, removeProblem} from '../../PostAction'
 

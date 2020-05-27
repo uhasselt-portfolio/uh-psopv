@@ -17,6 +17,7 @@ import {bindActionCreators} from "redux";
 import {loginUser} from "../LoginAction";
 import {connect} from "react-redux";
 import {Redirect} from "react-router";
+import Auth from "../../../utils/Auth";
 
 interface IState {
     email?: string;
@@ -34,19 +35,6 @@ class LoginComponent extends React.Component<any, IState> {
     handleFormSubmit(event: any) : void {
         event.preventDefault();
         this.props.loginUser(this.props.user.email, this.state.password)
-    }
-
-    onSuccessfulLogin() : React.ReactNode {
-        const typeOfUser = this.props.isUserLoggedIn.user.permission_type_id;
-
-        switch (parseInt(typeOfUser)) {
-            case 1: // Vrijwilliger
-                return <Redirect to={"InfoPage"} />
-            case 2: // Sector verantwoordelijke
-                return <Redirect to={"MapPage"} />
-            case 3:
-            // TODO: What when an admin user logs into the mobile app?
-        }
     }
 
     showLoginComponent() : React.ReactNode {
@@ -103,7 +91,11 @@ class LoginComponent extends React.Component<any, IState> {
         const isUserLoggedIn = this.props.isUserLoggedIn;
 
         if (isUserLoggedIn) {
-            return this.onSuccessfulLogin();
+            return(
+                <div>
+                    Loading...
+                </div>
+            )
         } else {
             return this.showLoginComponent();
         }

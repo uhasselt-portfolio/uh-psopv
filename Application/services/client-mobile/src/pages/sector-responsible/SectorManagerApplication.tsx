@@ -1,4 +1,4 @@
-import {IonIcon, IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from "@ionic/react";
+import {IonIcon, IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, withIonLifeCycle} from "@ionic/react";
 import {Route} from "react-router-dom";
 import ListView from "./list/ListPage";
 import MapPage from "./map/MapPage";
@@ -7,25 +7,66 @@ import PersonPage from "./person/PersonPage";
 import MessageGeneral from './messages_general/MessageGeneralPage'
 import Contacts from "./contact/ContactPage";
 import {listOutline, mapOutline, notificationsOutline, paperPlaneOutline, personOutline} from "ionicons/icons";
-import React from "react";
+import React, {useState, Component} from "react";
 import RequireSignIn from "../../utils/RequireSignin";
+import {IonLoading, IonButton, IonContent} from '@ionic/react';
+import {bindActionCreators} from "redux";
+import {doDatabase} from "../save/saveAction";
+import {connect} from "react-redux";
+import { getListLocalStorage } from "../save/saveFunction";
 
-export default () => {
+
+class SectorManagerApplication extends Component<any> {
+    interval: NodeJS.Timeout | undefined;
+
+    constructor(props: any) {
+        super(props);
+        this.updateMessageCount();
+    }
+
+    state = {
+        msg_count: 0
+    }
+
+    async updateMessageCount(){
+        let amount = Number(await getListLocalStorage('total_msg'));
+        this.setState({msg_count: amount})
+    }
 
     // TODO: Add message count back
+    componentDidMount() {
+        this.props.doDatabase();
 
-    return(
-        <IonTabs>
+        this.interval = setInterval(() => {
+          if(navigator.onLine){
+            this.props.doDatabase();
+          } else{
+            // do nothing
+          }
+        }, 5000); //TODO interval
+    }
+
+    componentWillUnmount() {
+        if (this.interval != undefined) {
+            clearInterval(this.interval);
+        }
+    }
+
+
+    render() {
+        console.log(this.props)
+        return (
+            <IonTabs>
             <IonRouterOutlet>
                 <Route path="/MapPage" component={RequireSignIn(MapPage)} />
-                <Route path="/ListView" component={RequireSignIn(ListView)} />
-                <Route path="/PostView/:post/:sector" component={RequireSignIn(PostView)} />
+                <Route path="/ListView" component={RequireSignIn(ListView)}/>
+                <Route path="/PostView/:sector/:post" component={RequireSignIn(PostView)} />
                 <Route path="/PersonPage/:id/" component={RequireSignIn(PersonPage)} />
                 <Route path="/Notifications" component={RequireSignIn(MessageGeneral)} />
                 <Route path="/Contacts" component={RequireSignIn(Contacts)} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-                <IonTabButton tab="MapPage" href="/MapPage">
+                <IonTabButton tab="MapPage" href="/MapPage" >
                     <IonIcon icon={mapOutline}/>
                     <IonLabel>Post-Kaart</IonLabel>
                 </IonTabButton>
@@ -34,7 +75,7 @@ export default () => {
                     <IonLabel>Post-Lijst</IonLabel>
                 </IonTabButton>
                 <IonTabButton tab="Notifications" href="/Notifications">
-                    <IonBadge color="primary">{0}</IonBadge>
+                    <IonBadge color="primary">{this.state.msg_count}</IonBadge>
                     <IonIcon icon={notificationsOutline}/>
                     <IonLabel>Berichten</IonLabel>
                 </IonTabButton>
@@ -43,6 +84,23 @@ export default () => {
                     <IonLabel>Contacts</IonLabel>
                 </IonTabButton>
             </IonTabBar>
-        </IonTabs>
-    )
+            </IonTabs>
+        )
+    }
 }
+
+
+
+
+function mapStateToProps(state: any) {
+    return ({})
+}
+
+function mapDispatchToProps(dispatch: any) {
+    return bindActionCreators({
+        doDatabase
+    }, dispatch);
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(SectorManagerApplication);

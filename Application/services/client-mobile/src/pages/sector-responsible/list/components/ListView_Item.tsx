@@ -14,6 +14,8 @@ import { call } from 'ionicons/icons';
 
 import WarningSign from "../../../images/warning_sign"
 import '../ListPage.css'
+import { setListLocalStorage } from '../../../save/saveFunction';
+import { withRouter } from 'react-router';
 
   
 
@@ -26,23 +28,17 @@ class ListViewItem  extends Component<any> {
     state = {
         color: this.props.color
     }
-    
-    getPost(): string {
-        return '/PostView/'+ this.props.sector_id + '/' + this.props.post_id;
-    }
 
     renderProblemIcon(){
         {if(this.props.problem === true){
             return  <WarningSign />
         }}
     }
-        
 
     render() {
-        console.log(this.state.color)
         return (   
-            <a href={this.getPost()} > 
-            <IonItem  detail button>
+            <IonItem  detail button onClick={() =>
+            this.props.history.push( "/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>
                 <IonLabel>
                     <h2>Post {this.props.post_id}</h2>
                     <h4>{this.props.loc_description}</h4>
@@ -55,12 +51,11 @@ class ListViewItem  extends Component<any> {
                     {this.renderProblemIcon()}
                 </IonLabel>
             </IonItem>
-            </a>
-        );
+        )
     }
 }
 
 
   
-  export default (ListViewItem);
+  export default withRouter(ListViewItem);
   

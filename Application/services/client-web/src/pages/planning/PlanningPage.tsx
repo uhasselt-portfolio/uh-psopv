@@ -10,7 +10,7 @@ import {bindActionCreators} from 'redux';
 import {fetchPlanning} from './PlanningAction';
 import Post from './PlanningPost';
 import UserInterface from '../../interfaces/UserDataInterface';
-import {formatTime, formatDate} from '../../Components/date_formatter'; 
+import {formatTime, formatDate} from '../../Components/date_formatter';
 
 
 const styleFilter = {

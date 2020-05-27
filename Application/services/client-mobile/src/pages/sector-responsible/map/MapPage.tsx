@@ -5,7 +5,7 @@ import { IonButton,
     IonPage, 
     IonTitle, 
     IonToolbar, 
-    IonContent, IonSelect, IonSelectOption } from '@ionic/react';
+    IonContent, IonSelect, IonSelectOption, IonLoading } from '@ionic/react';
 
 import './MapPage.css';
 import { bindActionCreators } from 'redux';
@@ -13,16 +13,24 @@ import { connect } from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
 import Map from './components/Map';
  
+const TIME_IN_MS = 2000;
+
 
 class MapPage extends Component<any> {
 
   constructor(props:any) {
     super(props);
+
+    let hideFooterTimeout = setTimeout( () => {
+        this.setState({...this.state, loaded: true})
+        this.props.fetchPosts();
+    }, TIME_IN_MS);
   }
 
   state={
     selected_sector: -1, //if -1 = selected all sectors
     data_posts: [],
+    loaded: false
   }
 
   static defaultProps = {
@@ -34,7 +42,6 @@ class MapPage extends Component<any> {
   };
 
   componentDidMount(){
-    console.log("AT MAP PAGE")
     this.props.fetchPosts();
   }
 
@@ -110,25 +117,38 @@ class MapPage extends Component<any> {
             {this.renderPosts()}
           </div>
           )
-          
         }
       } else {
        }
   }
 
+  
   render(){
-    return (
-      <IonPage>
-        <IonHeader>
-          <IonToolbar>
-            <IonTitle>Kaart met posten</IonTitle>
-          </IonToolbar>
-        </IonHeader>
-        <IonContent>
-          {this.renderContent()}
-        </IonContent>
-      </IonPage>
-    )
+    if(this.state.loaded){
+      return (
+        <IonPage>
+          <IonHeader>
+            <IonToolbar>
+              <IonTitle>Kaart met posten</IonTitle>
+            </IonToolbar>
+          </IonHeader>
+          <IonContent>
+            {this.renderContent()}
+          </IonContent>
+        </IonPage>
+      )
+    } else{
+      return(
+          <IonLoading
+          cssClass='my-custom-class'
+          isOpen={!this.state.loaded}
+          onDidDismiss={() => this.setState({...this.state, loaded: true})}
+          message={'Initializeren...'}
+          duration={TIME_IN_MS}
+        />
+      )
+    }
+    
   }
 
 };

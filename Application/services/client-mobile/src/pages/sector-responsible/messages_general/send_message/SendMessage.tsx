@@ -10,6 +10,7 @@ import  SelectContactWindow  from './components/SelectContactPage';
 import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
 import './SendMessage.css'
 import Auth from '../../../../utils/Auth';
+import TemplateMessage from './components/TemplateMessage';
 
 
 const select_types = {volunteers: "Alle Vrijwilligers", sectors: "Alle Sectorverantwoordelijken",
@@ -20,11 +21,17 @@ let content_value: string = "";
 
 
 class SendNotifications extends Component<any> {
+  constructor(props: any) {
+    super(props);
+    this.getTemplateText = this.getTemplateText.bind(this);
+  }
+
   state = {
     priority: 1,
     selected_type: "Ontvangers",
     showPopover: false,
-    showToast: false
+    showPopoverTemplate: false,
+    showToast: false,
   }
 
   hidePopover(){
@@ -35,9 +42,12 @@ class SendNotifications extends Component<any> {
       this.setState({...this.state, showPopover: true});
       this.props.fetchUsers();
   }
+  hidePopoverTemplate(){
+    this.setState({...this.state, showPopoverTemplate: false});
+  }
 
-  constructor(props: any) {
-    super(props);
+  showPopOverTemplate(){
+      this.setState({...this.state, showPopoverTemplate: true});
   }
 
   componentDidMount(){
@@ -57,6 +67,9 @@ class SendNotifications extends Component<any> {
     } else if (value === select_types.specific){
       this.setState({...this.state, selected_type: select_types.specific});
       this.showPopOver();
+    } else{
+      this.setState({...this.state, selected_type: value});
+      await setListLocalStorage('send_msg', [value])
     }
   }
 
@@ -72,7 +85,6 @@ class SendNotifications extends Component<any> {
    })
 
     await setListLocalStorage('send_msg', list)
-    // await this.props.fetchUsers();
   }
 
 
@@ -84,12 +96,10 @@ class SendNotifications extends Component<any> {
     })
 
     await setListLocalStorage('send_msg', list)
-    // await this.props.fetchUsers();
   }
 
   async selectNobody(){
     let x = await setListLocalStorage('send_msg', []).finally();
-    // await this.props.fetchUsers();
   }
 
   async selectEverybody(){
@@ -102,8 +112,6 @@ class SendNotifications extends Component<any> {
     }
 
     await setListLocalStorage('send_msg', list)
-
-    // await this.props.fetchUsers();
   }
 
   setShowToast(state: boolean){
@@ -123,12 +131,25 @@ class SendNotifications extends Component<any> {
     content_value = String(new_message);
   }
 
+  renderManagersOfVolunteer(){
+    let my_managers = this.props.localStorage.managers;
+
+    return my_managers.map((manager: any) => {
+      return <IonSelectOption value={manager.user_id}>{manager.user_name}</IonSelectOption>
+    })
+  }
+
   renderListOfUser(){
      // 1 = vrijwilliger 
     if(Auth.getAuthenticatedUser().permission_type_id == 1){
+      let manager;
+      if(this.props.localStorage.managers.length > 0){
+        manager = this.props.localStorage.managers[0]
+      }
+
       return(
-        <IonSelect interface="popover" value={this.state.selected_type} placeholder={this.state.selected_type} onIonChange={e => this.handleQuickBtnChange(e.detail.value)}>
-          <IonSelectOption value={select_types.everybody}>{select_types.everybody}</IonSelectOption>
+        <IonSelect interface="popover" value={manager.user_id} placeholder={manager.user_name} onIonChange={e => this.handleQuickBtnChange(e.detail.value)}>
+          {this.renderManagersOfVolunteer()}
         </IonSelect>
       )
     } else{
@@ -144,13 +165,18 @@ class SendNotifications extends Component<any> {
     }
     }
       
+  getTemplateText(title: string, description: string){
+    this.handleTitleChange(title);
+    this.handleContentChange(description);
+    this.hidePopoverTemplate();
+  }
+
   render(){
+  
     let offlineMessage = "";
     if(!navigator.onLine){
       offlineMessage = "U bent offline, berichten worden pas verstuurd eens u terug online gaat."
     } 
-
-
     if(this.props.localStorage != undefined){
         return (
         <div>
@@ -175,6 +201,17 @@ class SendNotifications extends Component<any> {
             <IonItem>
                 <IonTextarea className="textArea" value={content_value} placeholder="Bericht..." onIonChange={e => this.handleContentChange(e.detail.value)}></IonTextarea>
             </IonItem>
+
+
+            <IonButton className="templateBtn" onClick={() => this.showPopOverTemplate()}> Template bericht</IonButton>
+              <>
+                <IonPopover
+                  isOpen={this.state.showPopoverTemplate}
+                  onDidDismiss={() => this.hidePopoverTemplate()}
+                >
+                <TemplateMessage sendData={this.getTemplateText}/>
+                </IonPopover>
+              </>
 
             <IonButton className="sendBtn" onClick={() => this.handleSendMessage()}>Verstuur</IonButton>
 

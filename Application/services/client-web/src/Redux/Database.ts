@@ -6,21 +6,74 @@ import PostDataInterface from '../interfaces/PostDataInterface';
 import ShiftDataInterface from '../interfaces/ShiftDataInterface';
 import MessageDataInterface from '../interfaces/MessageDataInterface';
 import {User, Parser} from '../pages/data/Parser';
+import Auth from "../utils/Auth";
+
+class ServerRequest {
+
+    static getRestApiEndpoint(): string | undefined {
+        console.log("PROCESS", process.env);
+        // @ts-ignore
+        if (process.env.NODE_ENV == "development")
+            return "http://localhost/api";
+        return "https://psopv.herokuapp.com/api";
+    }
+
+    public static get(endpoint: string, authorized: boolean = true): Promise<any> | null {
+        const url = this.getRestApiEndpoint() + endpoint;
+
+        console.log("Authenticating...")
+
+        if (authorized && !Auth.isAuthenticated()) return null;
+
+        console.log("GET REQUEST TO...", url);
+
+
+        return axios.get(url, {headers: {'Authorization': Auth.getToken()}});
+    }
+
+    public static post(endpoint: string, data: any, authorized: boolean = true): Promise<any> | null {
+        const url = this.getRestApiEndpoint() + endpoint;
+
+        if (authorized && !Auth.isAuthenticated()) return null;
+
+        return axios.post(url, data, {headers: {'Authorization': Auth.getToken()}});
+    }
+
+    public static delete(endpoint: string, id: number): Promise<any> | null {
+        const url = this.getRestApiEndpoint() + endpoint + "/" + id;
+
+        if (!Auth.isAuthenticated()) return null;
+
+        return axios.delete(url, {headers: {'Authorization': Auth.getToken()}});
+    }
+
+    public static patch(endpoint: string, id: number, data: any): Promise<any> | null {
+        const url = this.getRestApiEndpoint() + endpoint + "/" + id;
+
+        if (!Auth.isAuthenticated()) return null;
+
+        return axios.patch(url, data, {headers: {'Authorization': Auth.getToken()}});
+    }
+
+}
 
 export default class Database {
 
-    ServerUrl : string = "https://psopv.herokuapp.com";
+    async authenticate() {
+        const response = await ServerRequest.post('/user/authenticate', {
+            email: 'michiel.swaanen@student.uhasselt.be',
+            password: '12345'
+        })
 
-    getRestApiEndpoint() : string | undefined {
-        // @ts-ignore
-        if(process.env.NODE_ENV === 'debug')
-            return "http://localhost";
-        return "https://psopv.herokuapp.com";
+        const token = response.data.data.jwt;
+        localStorage.setItem('token', token);
     }
 
     async fetchProblems() {
-        const response = await axios.get( this.ServerUrl + '/api/problem/fetch/all/unsolved');
-        
+
+        const response = await ServerRequest.get('/problem/fetch/all/unsolved', true)
+
+
         let problems: ProblemDataInterface[] = [];
 
         for (let i = 0; i < response.data.data.problems.length; ++i) {
@@ -43,9 +96,9 @@ export default class Database {
 
         return problems;
     }
+
     async fetchAllProblems() {
-        const response = await axios.get(this.ServerUrl + '/api/problem/fetch/all');
-        
+        const response = await ServerRequest.get('/problem/fetch/all');
         let problems: ProblemDataInterface[] = [];
 
         for (let i = 0; i < response.data.data.problems.length; ++i) {
@@ -68,9 +121,10 @@ export default class Database {
 
         return problems;
     }
+
     async fetchProblemsSubset(Amount: number) {
-        const response = await axios.get( this.ServerUrl + '/api/problem/fetch/all/unsolved');
-        
+        const response = await ServerRequest.get('/problem/fetch/all/unsolved');
+
         let problems: ProblemDataInterface[] = [];
 
         for (let i = 0; i < response.data.data.problems.length; ++i) {
@@ -97,28 +151,28 @@ export default class Database {
     }
 
     async fetchPosts() {
-        const responsePosts = await axios.get(this.ServerUrl + '/api/post/fetch/all');
+
+        const responsePosts = await ServerRequest.get('/post/fetch/all');
 
         let posts: PostDataInterface[] = [];
         for (let i = 0; i < responsePosts.data.data.posts.length; ++i) {
-            const shiftsOfPost = await axios.get(this.ServerUrl + '/api/planning/fetch/post/' + responsePosts.data.data.posts[i].id);
+            const shiftsOfPost = await ServerRequest.get('/planning/fetch/post/' + responsePosts.data.data.posts[i].id);
             let shifts: Number[] = [];
             let workingUsers: Number[][] = [];
 
 
             for (let j = 0; j < shiftsOfPost.data.data.plannings.length; ++j) {
-                if  ( ! shifts.includes(shiftsOfPost.data.data.plannings[j].shift_id))
+                if (!shifts.includes(shiftsOfPost.data.data.plannings[j].shift_id))
                     shifts.push(shiftsOfPost.data.data.plannings[j].shift_id)
             }
 
             for (let j = 0; j < shifts.length; ++j) {
-                const tempusers = await axios.get(this.ServerUrl + '/api/planning/fetch/users/' + responsePosts.data.data.posts[i].id
-                 + '/' + shifts[j]);
-                 let tempusersid: Number[] = []
-                for (let k = 0; k < tempusers.data.data.plannings.length; ++k) {
-                    tempusersid.push( tempusers.data.data.plannings[k].user_id)
+                const tempUsers = await ServerRequest.get('/planning/fetch/users/' + responsePosts.data.data.posts[i].id + '/' + shifts[j]);
+                let tempUsersID: Number[] = []
+                for (let k = 0; k < tempUsers.data.data.plannings.length; ++k) {
+                    tempUsersID.push(tempUsers.data.data.plannings[k].user_id)
                 }
-                workingUsers.push(tempusersid);
+                workingUsers.push(tempUsersID);
             }
 
             posts.push({
@@ -129,35 +183,35 @@ export default class Database {
                 general: responsePosts.data.data.posts[i].general_post.name,
                 latitude: responsePosts.data.data.posts[i].latitude,
                 longitude: responsePosts.data.data.posts[i].longitude,
-                shifts: shifts, 
+                shifts: shifts,
                 users: workingUsers,
                 activeProblem: responsePosts.data.data.posts[i].activeProblem
             })
         }
-        
+
         return posts
     }
 
-    async fetchmessages() {
-        let adminId : string = '3';
-        const response = await axios.get(this.ServerUrl + '/api/message/fetch/send-to/' + adminId);
+    async fetchMessages() {
+        let adminId: string = Auth.getAuthenticatedUser().id; // TODO Check if works, normally it was hardcoded
+        const response = await ServerRequest.get('/message/fetch/send-to/' + adminId);
 
-        let messages : MessageDataInterface[] = [];
+        let messages: MessageDataInterface[] = [];
         for (let i = 0; i < response.data.data.messages.length; ++i) {
             messages.push({
-              id: response.data.data.messages[i].id,
-              title: response.data.data.messages[i].title,
-              sender: response.data.data.messages[i].created_by.first_name + " " + response.data.data.messages[i].created_by.last_name,
-              content: response.data.data.messages[i].message,
-              read: response.data.data.messages[i].seen
+                id: response.data.data.messages[i].id,
+                title: response.data.data.messages[i].title,
+                sender: response.data.data.messages[i].created_by.first_name + " " + response.data.data.messages[i].created_by.last_name,
+                content: response.data.data.messages[i].message,
+                read: response.data.data.messages[i].seen
             });
         }
 
         return messages;
     }
 
-    async fetchusers() {
-        const responeUsers = await axios.get(this.ServerUrl + '/api/user/fetch/all');
+    async fetchUsers() {
+        const responeUsers = await ServerRequest.get('/user/fetch/all');
 
         let users: UserDataInterface[] = [];
         for (let i = 0; i < responeUsers.data.data.users.length; ++i) {
@@ -179,7 +233,7 @@ export default class Database {
     }
 
     async fetchPlanning() {
-        const responePlanning = await axios.get(this.ServerUrl + '/api/planning/fetch/all');
+        const responePlanning = await ServerRequest.get('/planning/fetch/all');
 
         let shifts: ShiftDataInterface[] = [];
         for (let i = 0; i < responePlanning.data.data.plannings.length; ++i) {
@@ -201,7 +255,7 @@ export default class Database {
     }
 
     async fetchItems() {
-        const responseItems = await axios.get(this.ServerUrl + '/api/item/fetch/all');
+        const responseItems = await ServerRequest.get('/item/fetch/all');
 
         let items: ItemDataInterface[] = [];
         for (let i = 0; i < responseItems.data.data.items.length; ++i) {
@@ -214,12 +268,12 @@ export default class Database {
 
         return items;
     }
-    
+
     async fetchAll() {
-        let messages : MessageDataInterface[] = await this.fetchmessages();
-        let users : UserDataInterface[] = await this.fetchusers();
-        let planning : ShiftDataInterface[] = await this.fetchPlanning();
-        let items : ItemDataInterface[] = await this.fetchItems();
+        let messages: MessageDataInterface[] = await this.fetchMessages();
+        let users: UserDataInterface[] = await this.fetchUsers();
+        let planning: ShiftDataInterface[] = await this.fetchPlanning();
+        let items: ItemDataInterface[] = await this.fetchItems();
         let posts = await this.fetchPosts();
         let problems: ProblemDataInterface[] = await this.fetchProblems();
 
@@ -233,40 +287,34 @@ export default class Database {
         }
     }
 
-    async patchProblemSolved(problemId: Number) {
-        const response = await axios.patch(this.ServerUrl + '/api/problem/toggle-solve/' + problemId);
-
-        return response;
+    async patchProblemSolved(problemId: number) {
+        return ServerRequest.patch('/problem/toggle-solve', problemId, {})
     }
 
-    async patchUserConnection(userId: Number) {
-        const response = await axios.patch(this.ServerUrl + '/api/user/toggle-connection/' + userId);
-
-        return response; 
+    async patchUserConnection(userId: number) {
+        return ServerRequest.patch('/user/toggle-connection', userId, {})
     }
 
     async postNewMessage(receiverId: Number, title: string, content: string, adminId: Number) {
-
-        const response = await axios.post(this.ServerUrl + '/api/message/add', {
+        return ServerRequest.post('/message/add', {
             title: title,
             message: content,
             created_by_id: 3,   //TODO admin id
             send_to_id: receiverId,
             priority: 1,
-            });
-        return response;
+        })
+
     }
 
-    async patchMessageRead(messageId: Number) {
-        const respone = await axios.patch(this.ServerUrl + '/api/message/toggle-seen/' + messageId);
-        return respone;
+    async patchMessageRead(messageId: number) {
+        return ServerRequest.patch('/message/toggle-seen', messageId, {})
     }
 
     async postFile(file : File, fileKind : string, isupdateMode: boolean) {    //TODO
         if (isupdateMode) {
 
         } else {
-            
+
         }
         const res = await axios.get('http://localhost/api/user/fetch/all');
         console.log(res);
