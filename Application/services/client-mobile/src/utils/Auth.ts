@@ -1,4 +1,5 @@
 import JWTUtil from "./JWTUtil";
+import {DateTime} from "luxon";
 
 class Auth {
 
@@ -49,6 +50,16 @@ class Auth {
 
     isTokenExpired(token : any) : boolean {
         return token.exp <= Math.round(Date.now() / 1000);
+    }
+
+    getToken() : string | null {
+
+        const token : string | null = localStorage.getItem('token');
+
+        if(token == null)
+            this.isAuthenticated();
+
+        return token;
     }
 }
 

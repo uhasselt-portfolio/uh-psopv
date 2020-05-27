@@ -199,8 +199,8 @@ export const reportUser = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
     const where = {
-        begin: {[Op.lt]: Date.now()},
-        end: {[Op.gt]: Date.now()}
+        begin: {[Op.lt]: new Date().getTime()},
+        end: {[Op.gt]: new Date().getTime()},
     }
 
     try {

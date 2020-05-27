@@ -30,7 +30,7 @@ export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
 
         let shifts: ShiftDatainterface[] = await database.fetchPlanning();
         let items: ItemDataInterface[] = await database.fetchItems();
-        let users: UserDataInterface[] = await database.fetchusers();
+        let users: UserDataInterface[] = await database.fetchUsers();
         let posts: PostDataInterface[] = await database.fetchPosts();
 
         dispatch({

@@ -5,20 +5,19 @@ import {verify} from "../middleware/jwt.middleware";
 
 const router = express.Router();
 
-// TODO: Add middleware back
-router.get('/fetch/all', fetchAll);
+router.get('/fetch/all', verify, fetchAll);
 
-router.get('/fetch/:id', fetch);
+router.get('/fetch/:id', verify, fetch);
 
 // Fetch all the messages where send_to id is ...
-router.get('/fetch/send-to/:id', fetchMessagesSendTo);
+router.get('/fetch/send-to/:id', verify, fetchMessagesSendTo);
 
-router.post('/add', validateBodyParameters('message/add'), add);
+router.post('/add', verify, validateBodyParameters('message/add'), add);
 
-router.patch('/modify/:id', modify);
+router.patch('/modify/:id', verify, modify);
 
 // Toggle seen
-router.patch('/toggle-seen/:id', toggleSeen);
+router.patch('/toggle-seen/:id', verify, toggleSeen);
 
 router.delete('/delete/:id', verify, remove);
 

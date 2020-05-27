@@ -9,7 +9,8 @@ import {
     IonRouterOutlet,
     IonText,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    withIonLifeCycle
 } from '@ionic/react';
 import {IonReactRouter} from '@ionic/react-router';
 import LoginPage from './pages/login/LoginPage';
@@ -34,73 +35,60 @@ import Save from './pages/save/savePage'
 import SectorManagerApplication from "./pages/sector-responsible/SectorManagerApplication";
 import VolunteerApplication from "./pages/volunteer/VolunteerApplication";
 import Auth from "./utils/Auth";
+import StartPage from "./pages/volunteer/start/StartPage";
+import {bindActionCreators} from "redux";
+import {checkUserExists} from "./pages/login/LoginAction";
 
 class App extends React.Component<any, any> {
-    interval: NodeJS.Timeout | undefined;
-
-    constructor(props: any, storage: Storage) {
+    constructor(props: any) {
         super(props);
     }
 
-    state = {
-      seconds: 0
-    }
-
-
-    tick() {
-      this.setState((state: { seconds: number; }) => ({
-        seconds: state.seconds + 1
-      }));
-    }
-
-      componentWillUnmount() {
-        if(this.interval != undefined){
-          clearInterval(this.interval);
-        }
-      }
-
-
-      componentDidMount(){
-        this.interval = setInterval(() => {
-          console.log("test", this.state.seconds)
-          this.setState({seconds: this.state.seconds++})
-        }, 5000);
-      }
-
-    renderLoginPage() : React.ReactNode {
-        return(
+    renderLoginPage(): React.ReactNode {
+        return (
             <IonRouterOutlet>
-                <Route path="/" component={LoginPage} />
+                <Route path="/" component={LoginPage}/>
             </IonRouterOutlet>
         )
     }
 
-    renderVolunteerApplication() : React.ReactNode {
-        return (
-            <div>
-                <Redirect from="/" to="/InfoPage" />
-                <VolunteerApplication />
-            </div>
+    renderVolunteerApplication(): React.ReactNode {
+        const isActivePlanningFetched = this.props.isActivePlanningFetched;
+
+        if(this.props.isCheckInStatusUpdated || (isActivePlanningFetched != null && isActivePlanningFetched.checked_in))
+            return (
+                <div>
+                    <Redirect from="/StartPage" to="/InfoPage"/>
+                    <Redirect from="/" to="/InfoPage"/>
+                    <VolunteerApplication/>
+                </div>
+            )
+
+        return(
+            <IonRouterOutlet>
+                <Route path="/" component={StartPage} />
+            </IonRouterOutlet>
         )
+
     }
 
-    renderManagerApplication() : React.ReactNode {
+    renderManagerApplication(): React.ReactNode {
         return (
-            <div>
+            <>
                 <Redirect from="/" to="/MapPage" />
                 <SectorManagerApplication />
-            </div>
+            </>
         )
     }
-    
-    renderApplication() : React.ReactNode {
+
+    renderApplication(): React.ReactNode {
         const loggedIn = Auth.isAuthenticated();
 
-        if(loggedIn && this.props.isUserLoggedIn) {
+        if (loggedIn && this.props.isUserLoggedIn) {
 
             const user = Auth.getAuthenticatedUser();
 
-            if(user.permission_type_id == '1') {
+            if (user.permission_type_id == '1') {
                 return this.renderVolunteerApplication();
             } else {
                 return this.renderManagerApplication();
@@ -113,7 +101,6 @@ class App extends React.Component<any, any> {
     render() {
         return (
             <IonApp>
-                <Save/>
                 <IonReactRouter>
                     <Switch>
                         {this.renderApplication()}
@@ -124,10 +111,20 @@ class App extends React.Component<any, any> {
     }
 }
 
+
 function mapStateToProps(state: any) {
-    return({
+    return ({
         isUserLoggedIn: state.login.isUserLoggedIn,
+        isCheckInStatusUpdated: state.start.isCheckInStatusUpdated,
+        isActivePlanningFetched: state.start.isActivePlanningFetched
     })
 }
+
+function mapDispatchToProps(dispatch: any) {
+    return bindActionCreators({
+
+    }, dispatch);
+}
+
 
 export default connect(mapStateToProps)(App);

@@ -13,11 +13,18 @@ import { connect } from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
 import Map from './components/Map';
  
+const TIME_IN_MS = 2000;
+
 
 class MapPage extends Component<any> {
 
   constructor(props:any) {
     super(props);
+
+    let hideFooterTimeout = setTimeout( () => {
+        this.setState({...this.state, loaded: true})
+        this.props.fetchPosts();
+    }, TIME_IN_MS);
   }
 
   state={
@@ -35,7 +42,6 @@ class MapPage extends Component<any> {
   };
 
   componentDidMount(){
-    console.log("AT MAP PAGE")
     this.props.fetchPosts();
   }
 
@@ -118,12 +124,6 @@ class MapPage extends Component<any> {
 
   
   render(){
-    let TIME_IN_MS = 2000;
-    let hideFooterTimeout = setTimeout( () => {
-        this.setState({...this.state, loaded: true})
-        this.props.fetchPosts();
-    }, TIME_IN_MS);
-
     if(this.state.loaded){
       return (
         <IonPage>

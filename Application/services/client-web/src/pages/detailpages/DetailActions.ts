@@ -55,22 +55,22 @@ export const fetchPlanning = () => async (dispatch : Redux.Dispatch) => {
 
 /**
  * updates the database that the id has been solved
- * @param Problemid the id of the problem that has been solved
+ * @param problemID the id of the problem that has been solved
  */
-export const problemSolved = (Problemid: Number) => async (dispatch : Redux.Dispatch) => {
+export const problemSolved = (problemID: number) => async (dispatch : Redux.Dispatch) => {
     console.log("in problem solved post");
     try {
         dispatch({
             type: DetailActions.PROBLEM_SOLVED_POST_START
         });
 
-        const response = await new Database().patchProblemSolved(Problemid);
+        const response = await new Database().patchProblemSolved(problemID);
 
         console.log(response);
 
         dispatch({
             type: DetailActions.PROBLEM_SOLVED_POST_SUCCES,
-            payload: Problemid
+            payload: problemID
         });
     } catch(error) {
         if (error.response) {

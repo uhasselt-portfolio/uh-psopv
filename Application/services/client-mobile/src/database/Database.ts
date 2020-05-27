@@ -1,191 +1,185 @@
 import axios from 'axios'
 import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocation";
+import Auth from "../utils/Auth";
+
+
+class ServerRequest {
+
+    static getRestApiEndpoint(): string | undefined {
+        // @ts-ignore
+        if (process.env.NODE_ENV == 'development')
+            return "http://localhost/api";
+        return "https://psopv.herokuapp.com/api";
+    }
+
+    public static get(endpoint: string, authorized: boolean = true) : Promise<any> | null {
+        const url = this.getRestApiEndpoint() + endpoint;
+
+        if(authorized && !Auth.isAuthenticated()) return null;
+
+
+        return axios.get(url, {headers: {'Authorization': Auth.getToken()}});
+    }
+
+    public static post(endpoint: string, data: any, authorized: boolean = true) : Promise<any> | null {
+        const url = this.getRestApiEndpoint() + endpoint;
+
+        if(authorized && !Auth.isAuthenticated()) return null;
+
+        return axios.post(url, data, {headers: {'Authorization': Auth.getToken()}});
+    }
+
+    public static delete(endpoint: string, id: number) : Promise<any> | null {
+        const url = this.getRestApiEndpoint() + endpoint + "/" + id;
+
+        if(!Auth.isAuthenticated()) return null;
+
+        return axios.delete(url, {headers: {'Authorization': Auth.getToken()}});
+    }
+
+    public static patch(endpoint: string, id: number, data: any) : Promise<any> | null {
+        const url = this.getRestApiEndpoint() + endpoint + "/" + id;
+
+        if(!Auth.isAuthenticated()) return null;
+
+        return axios.patch(url, data, {headers: {'Authorization': Auth.getToken()}});
+    }
+
+}
 
 export default class Database {
+    async patchRequest(url: string, id: number, params: any) {
+        return ServerRequest.patch(url, id, params);
+    }
 
-    getRestApiEndpoint(): string | undefined {
-        // @ts-ignore
-        if (process.env.NODE_ENV == ('debug' || 'development'))
-            return "http://localhost";
-        return "https://psopv.herokuapp.com";
+    async postRequest(url: string, params: any){
+        return ServerRequest.post(url, params);
     }
 
     async loginUser(email: string | undefined, password: string | undefined) {
-        const url = this.getRestApiEndpoint() + '/api/user/authenticate';
-
-        return await axios.post(url, {
+        return ServerRequest.post('/user/authenticate', {
             email: email,
             password: password
-        })
+        }, false);
     }
 
     async fetchPlannings() {
-        const url = this.getRestApiEndpoint() + '/api/planning/fetch/all';
-
-        return await axios.get(url)
+        return ServerRequest.get('/planning/fetch/all');
     }
 
     async fetchMessages() {
-        const url = this.getRestApiEndpoint() + '/api/message/fetch/all';
-
-        return await axios.get(url)
+        return ServerRequest.get('/message/fetch/all');
     }
 
     async fetchMessagesFrom(id: number) {
-        const url = this.getRestApiEndpoint() + '/api/message/fetch/send-to/' + id;
-
-        return await axios.get(url)
+        return ServerRequest.get('/message/fetch/send-to/' + id);
     }
 
     async fetchUsers() {
-        const url = this.getRestApiEndpoint() + '/api/user/fetch/all';
-
-        return await axios.get(url)
+        return ServerRequest.get('/user/fetch/all');
     }
 
     async fetchUserById(user_id: number) {
-        const url = this.getRestApiEndpoint() + '/api/user/fetch/' + user_id;
-
-        return await axios.get(url)
+        return ServerRequest.get('/user/fetch/' + user_id);
     }
 
-    async removeProblem(problem_id: number){
-        const url = this.getRestApiEndpoint() + '/api/problem/delete/' + problem_id;
-
-        return await axios.delete(url)
+    async deleteProblem(problem_id: number){
+        return ServerRequest.delete('/problem/delete', problem_id);
     }
 
     async fetchUserByPhoneNumber(phoneNumber: string) {
-        const url = this.getRestApiEndpoint() + '/api/user/fetch/phone/' + phoneNumber;
-
-        return await axios.get(url)
+        return ServerRequest.get('/user/fetch/phone/' + phoneNumber, false);
     }
-    
 
     async fetchPosts() {
-        const url = this.getRestApiEndpoint() + '/api/post/fetch/all';
-
-        return await axios.get(url)
+        return ServerRequest.get('/post/fetch/all');
     }
 
     async fetchPlanningsWithPostId(id: number) {
-        const url = this.getRestApiEndpoint() + '/api/planning/fetch/post/' + id;
-
-        return await axios.get(url)
+        return ServerRequest.get('/planning/fetch/post/' + id);
     }
 
     async fetchPlanningsWithUserId(id: number) {
-        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user/' + id;
-        console.log("Endpoint: ", this.getRestApiEndpoint(), process.env.NODE_ENV)
-        return await axios.get(url)
+        return ServerRequest.get('/planning/fetch/user/' + id);
     }
 
     async fetchActivePlanning(userID: number) {
-        const url = this.getRestApiEndpoint() + '/api/planning/fetch/user/active/' + userID;
-
-        return await axios.get(url);
+        return ServerRequest.get('/planning/fetch/user/active/' + userID);
     }
 
-    async updateUserCheckInStatus(userID: number) {
-        const url = this.getRestApiEndpoint() + '/api/planning/toggle-checkin/' + userID;
-
-        return await axios.patch(url);
+    async toggleUserCheckInStatus(userID: number) {
+        return ServerRequest.patch('/planning/toggle-checkin', userID, {});
     }
 
     async fetchUsersFromShiftPost(post_id: number, shift_id: number) {
-        const url = this.getRestApiEndpoint() + '/api/planning/fetch/users/' + post_id + "/" + shift_id;
-
-        return await axios.get(url)
+        return ServerRequest.get('/planning/fetch/users/' + post_id + '/' + shift_id);
     }
 
     async addMessage(title: string | undefined, message: string | undefined, created_by_id: number, send_to_id: number, priority: number) {
-        const url = this.getRestApiEndpoint() + '/api/message/add'
-
-        return await axios.post(url, {
+        return ServerRequest.post('/message/add', {
             title: title,
             message: message,
             created_by_id: created_by_id,
             send_to_id: send_to_id,
             priority: priority,
-        })
+        });
     }
 
-    async MessageToggle(msg_id: number) {
-        const url = this.getRestApiEndpoint() + '/api/message/toggle-seen/' + msg_id;
-
-        return await axios.patch(url)
+    async toggleMessageSeenStatus(messageID: number) {
+        return ServerRequest.patch('/message/toggle-seen', messageID, {});
     }
 
     async fetchAllItems() {
-        const url = this.getRestApiEndpoint() + '/api/item/fetch/all';
-        return await axios.get(url)
+        return ServerRequest.get('/item/fetch/all');
     }
 
     async fetchAllProblems() {
-        const url = this.getRestApiEndpoint() + '/api/problem/fetch/all';
-        return await axios.get(url)
+        return ServerRequest.get('/problem/fetch/all');
     }
 
     async fetchItemsFromPlanning(planning_id: number) {
-        const url = this.getRestApiEndpoint() + '/api/item/fetch/planning/' + planning_id;
-
-        return await axios.get(url)
+        return ServerRequest.get('/item/fetch/planning/' + planning_id);
     }
 
     async fetchProblemsFromPlanning(planning_id: number) {
-        const url = this.getRestApiEndpoint() + '/api/problem/fetch/planning/' + planning_id;
-
-        return await axios.get(url)
+        return ServerRequest.get('/problem/fetch/planning/' + planning_id);
     }
 
     async fetchAllProblemTypes() {
-        const url = this.getRestApiEndpoint() + '/api/problem_type/fetch/all';
-
-        return await axios.get(url)
+        return ServerRequest.get('/problem_type/fetch/all');
     }
 
-    async addProblem(params: any){
-        const url = this.getRestApiEndpoint() + '/api/problem/add';
-        return await axios.post(url, params)
+    async addProblem(problem: any){
+        return ServerRequest.post('/problem/add', problem);
     }
 
 
     async fetchSectorOfUser(user_id: number) {
-        const url = this.getRestApiEndpoint() + '/api/sector/fetch/user/' + user_id;
+        return ServerRequest.get('/sector/fetch/user/' + user_id);
+    }
 
-        return await axios.get(url)
+    async fetchMyManager(user_id: number){
+        return ServerRequest.get('/sector/fetch/sector-manager/' + user_id);
     }
 
     async fetchUnsolvedProblems() {
-        const url = this.getRestApiEndpoint() + '/api/problem/fetch/all/unsolved';
-
-        return await axios.get(url)
+        return ServerRequest.get('/problem/fetch/all/unsolved');
     }
 
     async getProblemType(id: number){
-        const url = this.getRestApiEndpoint() + '/api/problem_type/fetch/' + id;
-
-        return await axios.get(url)
+        return ServerRequest.get('/problem_type/fetch/' + id);
     }
 
-
-
-    async ItemToggle(item_id: number) {
-        const url = this.getRestApiEndpoint() + '/api/item/toggle-lost/' + item_id;
-
-        return await axios.patch(url)
+    async toggleItemLostStatus(itemID: number) {
+        return ServerRequest.patch('/item/toggle-lost', itemID, {});
     }
 
-    async ProblemToggle(problem_id: number) {
-        const url = this.getRestApiEndpoint() + '/api/problem/toggle-solve/' + problem_id;
-
-        return await axios.patch(url)
+    async toggleProblemSolvedStatus(problemID: number) {
+        return ServerRequest.patch('/problem/toggle-solve', problemID, {});
     }
 
     async updateUserLocation(userLocation : BackgroundGeolocationResponse, userID : number) {
-        const url = this.getRestApiEndpoint() + '/api/user/modify/' + userID;
-
-        return await axios.patch(url, {
+        return ServerRequest.patch('/user/modify', userID, {
             user: {
                 current_latitude: userLocation.latitude,
                 current_longitude: userLocation.longitude
@@ -194,9 +188,7 @@ export default class Database {
     }
 
     async reportUser(userID: number) {
-        const url = this.getRestApiEndpoint() + '/api/problem/add/report-user/' + userID;
-
-        return await axios.post(url);
+        return ServerRequest.post('/problem/add/report-user/' + userID, {})
     }
 }
 

@@ -5,13 +5,13 @@ import {verify} from "../middleware/jwt.middleware";
 
 const router = express.Router();
 
-router.get('/fetch/all', fetchAll);
+router.get('/fetch/all', verify, fetchAll);
 
-router.get('/fetch/:id', fetch);
+router.get('/fetch/:id', verify, fetch);
 
-router.post('/add', validateBodyParameters('shift/add'), add);
+router.post('/add', verify, validateBodyParameters('shift/add'), add);
 
-router.patch('/modify/:id', modify);
+router.patch('/modify/:id', verify, modify);
 
 router.delete('/delete/:id', verify, remove);
 

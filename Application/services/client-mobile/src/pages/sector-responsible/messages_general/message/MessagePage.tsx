@@ -7,8 +7,6 @@ import { Dispatch, bindActionCreators } from "redux";
 import {fetchMessagesOf, loadMessages} from './MessageAction'
 import {updateMessages} from '../../../save/saveAction'
 
-
-
 import { IonButton, 
   IonListHeader, 
   IonHeader, 
@@ -18,7 +16,8 @@ import { IonButton,
   IonList, 
   IonItem, 
   IonLabel,
-  IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonTabBar, IonTabButton, IonIcon } from '@ionic/react';
+  IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonTabBar, IonTabButton, IonIcon, withIonLifeCycle } from '@ionic/react';
+import { setListLocalStorage } from '../../../save/saveFunction';
 
 
 
@@ -30,7 +29,7 @@ class Notifications extends Component<any> {
   }
 
   state = {
-    state: 0
+    amount_msg: 0
   }
 
 
@@ -40,14 +39,17 @@ class Notifications extends Component<any> {
     }
   }
 
-
   componentDidMount(){
     this.props.fetchMessagesOf(); // TODO USERID
 
     this.interval = setInterval(() => {
-      console.log("interval MessagePage")
       this.props.fetchMessagesOf(); // TODO USERID
     }, 5000);
+  }
+
+  async ionViewWillEnter() {
+    await setListLocalStorage('msg_end_index', 5)
+    console.log('fetchMessagesOf ionViewWillEnter event fired')
   }
 
   renderList(){
@@ -55,11 +57,9 @@ class Notifications extends Component<any> {
       if(this.props.localStorage.length <= 0){
           return <div> No messages found. </div>
       } else{
-        // let new_list = this.props.localStorage.slice(this.state.start_index, this.state.end_index);
-
         return this.props.localStorage.messages.map((data: any, index: number) =>{
           return (
-          <NotificationItem {... data}/>
+          <NotificationItem {... data} sendData={this.props.sendData}/>
           )
         })
         }
@@ -76,7 +76,6 @@ class Notifications extends Component<any> {
 
   render(){
     if(this.props.localStorage != undefined){
-      console.log(this.props)
       let button;
       if(!this.props.localStorage.loaded){
         button = <IonButton className="marginBottom" onClick={() => this.loadMoreMessage()}> Meer berichten laden ... </IonButton>
@@ -93,6 +92,8 @@ class Notifications extends Component<any> {
       return (<div>Berichten zijn aan het laden</div>)
     }
   }
+
+
 };
 
 function mapStateToProps(state: any) {
@@ -111,4 +112,4 @@ function mapDispatchToProps(dispatch: any) {
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Notifications);
+export default connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(Notifications));

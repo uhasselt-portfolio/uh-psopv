@@ -5,21 +5,21 @@ import {verify} from "../middleware/jwt.middleware";
 
 const router = express.Router();
 
-router.get('/fetch/all', fetchAll);
+router.get('/fetch/all', verify, fetchAll);
 
-router.get('/fetch/:id', fetch);
+router.get('/fetch/:id', verify, fetch);
 
 router.get('/fetch/phone/:phone_number', fetchByPhoneNumber);
 
-router.get('/on-post/:id', isUserOnPost);
+router.get('/on-post/:id', verify, isUserOnPost);
 
-router.post('/add', validateBodyParameters('user/add'), add);
+router.post('/add', verify, validateBodyParameters('user/add'), add);
 
 router.post('/authenticate', validateBodyParameters('user/authenticate'), authenticate);
 
-router.patch('/modify/:id', modify);
+router.patch('/modify/:id', verify, modify);
 
-router.patch('/toggle-connection/:id', toggleUserConnection);
+router.patch('/toggle-connection/:id', verify, toggleUserConnection);
 
 router.delete('/delete/:id', verify, remove);
 

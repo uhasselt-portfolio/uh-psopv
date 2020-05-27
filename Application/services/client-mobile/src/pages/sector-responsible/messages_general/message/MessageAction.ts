@@ -12,14 +12,18 @@ export const fetchMessagesOf = (id: number) => async (dispatch: Redux.Dispatch) 
     try{
         let loaded = false;
         let msg_messages = await getListLocalStorage('messages');
-        let first_msgs = msg_messages.slice(0, 5);
-        await setListLocalStorage('msg_end_index', 5)
+        let end_index = Number(await getListLocalStorage('msg_end_index'));
+        if(end_index == undefined || null){
+            await setListLocalStorage('msg_end_index', 5)
+            end_index = 5;
+        }
 
+        let first_msgs = msg_messages.slice(0, end_index);
         if(first_msgs.length >= msg_messages.length){
             loaded = true;
         }
 
-        dispatch({type: MESSAGE_FETCH_SUCCESS, payload: {messages: first_msgs, loaded: loaded}})
+        dispatch({type: MESSAGE_FETCH_SUCCESS, payload: {messages: first_msgs, loaded: loaded, total_amount: msg_messages.length}})
     } catch(error){
         console.log(error)
     }
@@ -55,11 +59,11 @@ export const MessageToggle = (message_id: number) => async (dispatch: Redux.Disp
     try{
         dispatch({type: MESSAGE_TOGGLE_SEEN_START})
 
-        const response = await new Database().MessageToggle(message_id);
+        const response = await new Database().toggleMessageSeenStatus(message_id);
         console.log("MESSAGE TOGGLEEDDD")
         dispatch({type: MESSAGE_TOGGLE_SEEN_SUCCESS})
     } catch(error){
-        addObjectToActionList('https://psopv.herokuapp.com/api/message/toggle-seen/' + message_id, null);
+        addObjectToActionList('/message/toggle-seen/', message_id, {});
 
         dispatch({type: MESSAGE_TOGGLE_SEEN_SUCCESS})
 

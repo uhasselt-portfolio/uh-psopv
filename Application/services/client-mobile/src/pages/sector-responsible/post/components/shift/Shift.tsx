@@ -12,7 +12,6 @@ import {formatDateTime} from '../../../../../utils/DateUtil';
 import {itemToggle, problemToggle, addProblem} from '../../PostAction' 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {resetActionList, getActionList, addObjectToActionList} from '../../../../save/saveFunction'
 import ShiftProblem from './ShiftProblem';
 import AddProblem from './AddProblem';
 
@@ -33,6 +32,7 @@ class Shift  extends Component<any> {
         problemContent: "",
         showAddProblem: false,
         showToast: false,
+        problem_end_index: 3,
     }
 
     getDataAddProblem(val: any){
@@ -192,12 +192,23 @@ class Shift  extends Component<any> {
         )
     }
 
+    loadMoreProblems(){
+        this.setState({...this.state, problem_end_index: this.state.problem_end_index+5})
+    }
 
     showProblemList() {
         let offlineMessage = "";
         if(!navigator.onLine){
             offlineMessage = "U bent offline, problemen worden pas doorgegeven aan derden eens u terug online gaat."
         } 
+
+        let loadMore;
+        if(this.props.shift.shift_problems.length > this.state.problem_end_index){
+            loadMore = <IonButton onClick={() => this.loadMoreProblems()}>Meer laden...</IonButton>
+        } else{
+            console.log("hey", this.props.shift.shift_problems, this.state.problem_end_index)
+            loadMore = <div></div>
+        }
 
         
         if(this.state.problemListActive){
@@ -209,6 +220,7 @@ class Shift  extends Component<any> {
                 </IonItem>
                 <IonList>
                     {this.renderProblems()}
+                    {loadMore}
                 </IonList>
             </IonCardContent>
         )
@@ -220,14 +232,24 @@ class Shift  extends Component<any> {
     renderProblems(){
         let shift_problems = this.props.shift.shift_problems
 
-        let shift_problems_not_solved = shift_problems.filter((problem: any) => {return problem.problem_solved == true})
-        let shift_problems_solved = shift_problems.filter((problem: any) => {return problem.problem_solved == false})
-        let problems = shift_problems_solved.concat(shift_problems_not_solved);
+        let shift_problems_solved = shift_problems.filter((problem: any) => {return problem.problem_solved == true})
+        let shift_problems_not_solved = shift_problems.filter((problem: any) => {return problem.problem_solved == false})
+        let problems = shift_problems_not_solved.concat(shift_problems_solved);
 
-        return problems.map((problem: any) => {
+        let problemsList: any[] = [];
+        let end_index = this.state.problem_end_index
+        if(problems.length < this.state.problem_end_index){
+            end_index = problems.length
+        }
+        for(let i = 0; i < end_index; i++){
+            let problem = problems[i];
+            problemsList.push(<ShiftProblem {...problem} shift_id={this.props.shift.shift_id} post_id={this.props.post.post_id}/>);
+        }
+
+        return problemsList.map((problem: any) => {
             return (
-                <ShiftProblem {...problem} shift_id={this.props.shift.shift_id} post_id={this.props.post.post_id}/>
-            )
+                problem
+            ) 
         })
     
     }

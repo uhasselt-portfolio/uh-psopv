@@ -1,24 +1,16 @@
 import * as React from 'react';
 import { Component } from 'react';
 // import 'bootstrap/dist/css/bootstrap.css';
-import {bindActionCreators, Dispatch} from "redux";
+import {bindActionCreators} from "redux";
 
-import { IonButton, 
-    IonListHeader, 
-    IonHeader, 
-    IonPage, 
-    IonTitle, 
-    IonToolbar, 
-    IonList, 
+import { 
     IonItem, 
     IonLabel,
-    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonRow, IonCol } from '@ionic/react';
-import { Link } from 'react-router-dom';
+    IonGrid, IonRow, IonCol } from '@ionic/react';
 import './Notification_Item.css';
 import { connect } from "react-redux";
 import {MessageToggle} from '../MessageAction'
 import {formatDateTime} from '../../../../../utils/DateUtil'
-import { addObjectToActionList } from '../../../../save/saveFunction';
 
 
 class NotificationItem extends Component<any> {
@@ -34,6 +26,7 @@ class NotificationItem extends Component<any> {
         if(this.state.seen === false){
             this.props.MessageToggle(data.id);
             this.setState({...this.state, seen: !this.state.seen});
+            this.props.sendData()
         }
     }
 
