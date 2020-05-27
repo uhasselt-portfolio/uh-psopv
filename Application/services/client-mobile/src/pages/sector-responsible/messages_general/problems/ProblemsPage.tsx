@@ -50,7 +50,6 @@ class ProblemsPage extends Component<any> {
       if(this.props.localStorage.problems.length <= 0){
           return <div> No messages found. </div>
       } else{
-        console.log(this.props)
         let button;
         if(!this.props.localStorage.loaded){
           button = <IonButton className="marginBottom" onClick={() => this.loadMoreProblems()}> Meer berichten laden ... </IonButton>

@@ -1,9 +1,5 @@
-import axios from "axios"
 import Redux from 'redux';
-import Database from '../../../../database/Database'
-import { getListLocalStorage, addObjectToActionList, ConcatListToActionList } from "../../../save/saveFunction";
-import { promises } from "fs";
-import { list } from "ionicons/icons";
+import { getListLocalStorage, ConcatListToActionList, setListLocalStorage } from "../../../save/saveFunction";
 import Auth from "../../../../utils/Auth";
 
 export const MESSAGE_ADD_START = 'MESSAGE_ADD_START'
@@ -30,7 +26,7 @@ export const messageAddMessage = (
                 priority: priority,
             }
 
-            function_list = [...function_list, {url: 'https://psopv.herokuapp.com/api/message/add', params: params}]
+            function_list = [...function_list, {url: '/message/add', id: undefined , params: params}]
         })
 
         ConcatListToActionList(function_list);
@@ -45,20 +41,23 @@ export const USERS_FETCH_SUCCESS = 'USERS_FETCH_SUCCESS'
 
 export const fetchUsers = () => async (dispatch: Redux.Dispatch) => {
     try{
-
-        let volunteers = await getListLocalStorage('my_volunteers');
-        let nonVolunteers = await getListLocalStorage('contacts');
-        let checkboxList = await initCheckboxList(volunteers, nonVolunteers);
-
-
-        dispatch({type: USERS_FETCH_SUCCESS, payload: {my_volunteers: volunteers, contacts: nonVolunteers, checkboxList: checkboxList}})
+        // 1 = vrijwilliger
+        if(Auth.getAuthenticatedUser().permission_type_id == 1){
+            let managers = await getListLocalStorage('my_managers');
+            if(managers.length > 0){
+                await setListLocalStorage('send_msg', [managers[0].user_id])
+            }
+            dispatch({type: USERS_FETCH_SUCCESS, payload: {managers: managers}})
+        } else{
+            let volunteers = await getListLocalStorage('my_volunteers');
+            let nonVolunteers = await getListLocalStorage('contacts');
+            let checkboxList = await initCheckboxList(volunteers, nonVolunteers);
+            dispatch({type: USERS_FETCH_SUCCESS, payload: {my_volunteers: volunteers, contacts: nonVolunteers, checkboxList: checkboxList}})
+        }
+    
     } catch(error){
-        let volunteers = await getListLocalStorage('my_volunteers');
-        let nonVolunteers = await getListLocalStorage('contacts');
-        let checkboxList = await initCheckboxList(volunteers, nonVolunteers);
-
-
-        dispatch({type: USERS_FETCH_SUCCESS, payload: {my_volunteers: volunteers, contacts: nonVolunteers, checkboxList: checkboxList}})
+        console.log(error)
+        dispatch({type: USERS_FETCH_SUCCESS, payload: {my_volunteers: [], contacts: [], checkboxList: []}})
     }
 }
 

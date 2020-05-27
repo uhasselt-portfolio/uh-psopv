@@ -9,7 +9,8 @@ import {
     IonRouterOutlet,
     IonText,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    withIonLifeCycle
 } from '@ionic/react';
 import {IonReactRouter} from '@ionic/react-router';
 import LoginPage from './pages/login/LoginPage';
@@ -39,35 +40,8 @@ import {bindActionCreators} from "redux";
 import {checkUserExists} from "./pages/login/LoginAction";
 
 class App extends React.Component<any, any> {
-    interval: NodeJS.Timeout | undefined;
-
-    constructor(props: any, storage: Storage) {
+    constructor(props: any) {
         super(props);
-    }
-
-    state = {
-        seconds: 0
-    }
-
-
-    tick() {
-        this.setState((state: { seconds: number; }) => ({
-            seconds: state.seconds + 1
-        }));
-    }
-
-    componentWillUnmount() {
-        if (this.interval != undefined) {
-            clearInterval(this.interval);
-        }
-    }
-
-
-    componentDidMount() {
-        this.interval = setInterval(() => {
-            console.log("test", this.state.seconds)
-            this.setState({seconds: this.state.seconds++})
-        }, 5000);
     }
 
     renderLoginPage(): React.ReactNode {
@@ -100,10 +74,10 @@ class App extends React.Component<any, any> {
 
     renderManagerApplication(): React.ReactNode {
         return (
-            <div>
-                <Redirect from="/" to="/MapPage"/>
-                <SectorManagerApplication/>
-            </div>
+            <>
+                <Redirect from="/" to="/MapPage" />
+                <SectorManagerApplication />
+            </>
         )
     }
 
@@ -127,7 +101,6 @@ class App extends React.Component<any, any> {
     render() {
         return (
             <IonApp>
-                <Save/>
                 <IonReactRouter>
                     <Switch>
                         {this.renderApplication()}

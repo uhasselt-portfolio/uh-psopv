@@ -10,7 +10,6 @@ export default function (state = {}, action : AnyAction) {
         case MESSAGE_TOGGLE_SEEN_START:
             return {...state, loading: true, toggleMessage: false, errorMessage: ""}
         case MESSAGE_TOGGLE_SEEN_SUCCESS:
-            console.log("action.payload", action.payload)
             return {...state, loading: false, toggleMessage: action.payload, errorMessage: ""}
         case MESSAGE_TOGGLE_SEEN_FAIL:
             return {...state, loading: false, toggleMessage: false, errorMessage: action.payload}

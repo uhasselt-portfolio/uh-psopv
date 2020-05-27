@@ -19,19 +19,24 @@ import { RefresherEventDetail } from '@ionic/core';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 
-import './Shift.css'
+import '../SendMessage.css'
+import Auth from '../../../../../utils/Auth';
 
+const templatesVolunteer = [{title: "Help", description: "Ongeval op mijn post"},
+{title: "Vergeten", description: "Ik ben wat spullen thuisvergeten, ik ben even op en af."},
+{title: "Slecht weer", description: "Het regent super hard en we hebbeng een bescherming."},
+{title: "Item verloren", description: "We zijn een item verloren van pukkelpop"}]
 
-class AddProblem extends React.Component<any> {
+const templatesManager = [{title: "We komen eraan", description: "We komen kijken of alles in orde is"},
+    {title: "Te veel op en af", description: "We merken dat jullie te veel naar op en af gaan"}]
+
+class TemplateMessage extends React.Component<any> {
     constructor(props: any) {
         super(props);
     }
 
     state = {
       showPopover: true,
-      selected_volunteer: "Selecteer",
-      selected_planning_id: -1,
-      activeProblemType: 1
     }  
 
 
@@ -41,69 +46,49 @@ class AddProblem extends React.Component<any> {
 
     showPopOver(){
         this.setState({...this.state, showPopover: true});
-        this.props.fetchUsers();
     }
 
-    handleProblemClick(problem_id: any){
-      this.setState({...this.state, activeProblemType: problem_id});
-    }
-
-    handleVolunteerChange(event: any){
-      this.setState({...this.state, selected_planning_id: event});
+    handleProblemClick(title: any){
+      this.setState({...this.state, title: title});
     }
   
 
 
-  handleClick(){
+  handleClick(title: String, description: String){
     let data = this.state
-    this.props.sendData({selected_planning_id: data.selected_planning_id, problem_id:data.activeProblemType});
+    this.props.sendData(title, description);
   }
 
 
 
   renderList(){
-      return this.props.problemTypes.map((problemType: any, index: number) => {
-        if(this.state.activeProblemType === problemType.id){
+    let templates: {title: string; description: string;}[]      // 1 = vrijwilliger = []
+    if(Auth.getAuthenticatedUser().permission_type_id == 1){
+        templates = templatesVolunteer
+    } else{
+        templates = templatesManager
+    }
+    
+      return templates.map((template: any, index: number) => {
           return (
-            <IonItem button color="medium">
-                <p> <strong>{problemType.title}</strong>, {problemType.description}</p>
+            <IonItem button onClick={() => this.handleClick(template.title, template.description)} >
+              <p> <strong>{template.title}</strong>, {template.description}</p>
             </IonItem>
           )
-        } else{
-          return (
-            <IonItem button color="light" onClick={() => this.handleProblemClick(problemType.id)} >
-              <p> <strong>{problemType.title}</strong>, {problemType.description}</p>
-            </IonItem>
-          )
-        }
-        
     });
-  }
-
   
+}
+
   
 
     renderWindow(){
-      let volunteers = this.props.users.map((user: any) => {
-        return <IonSelectOption value={user.planning_id}> {user.name}</IonSelectOption>
-      })
-
       return(
         <div className="generalPadding">
-          <IonHeader className="generalPadding">Kies vrijwilliger:</IonHeader>
-          <IonSelect className="whiteBackground" interface="popover" placeholder={this.state.selected_volunteer} onIonChange={e => this.handleVolunteerChange(e.detail.value)}>
-                {volunteers}
-          </IonSelect>
-
-          <IonHeader className="generalPadding">Kies probleem:</IonHeader>
+          <IonHeader className="generalPadding">Kies bericht:</IonHeader>
           <IonItemGroup  >
           {this.renderList()}
           </IonItemGroup>
-
-          <IonButton onClick={() => this.handleClick()}>Kies</IonButton>
         </div>
-        
-            
           );
     }
 
@@ -131,4 +116,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(AddProblem);
+export default connect(mapStateToProps, mapDispatchToProps)(TemplateMessage);

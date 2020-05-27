@@ -15,11 +15,7 @@ class ServerRequest {
     public static get(endpoint: string, authorized: boolean = true) : Promise<any> | null {
         const url = this.getRestApiEndpoint() + endpoint;
 
-        console.log("Authenticating...")
-
         if(authorized && !Auth.isAuthenticated()) return null;
-
-        console.log("GET REQUEST TO...", url);
 
 
         return axios.get(url, {headers: {'Authorization': Auth.getToken()}});
@@ -52,6 +48,13 @@ class ServerRequest {
 }
 
 export default class Database {
+    async patchRequest(url: string, id: number, params: any) {
+        return ServerRequest.patch(url, id, params);
+    }
+
+    async postRequest(url: string, params: any){
+        return ServerRequest.post(url, params);
+    }
 
     async loginUser(email: string | undefined, password: string | undefined) {
         return ServerRequest.post('/user/authenticate', {
@@ -151,8 +154,12 @@ export default class Database {
     }
 
 
-    async fetchSectorOfUser(userID: number) {
-        return ServerRequest.get('/sector/fetch/user/' + userID);
+    async fetchSectorOfUser(user_id: number) {
+        return ServerRequest.get('/sector/fetch/user/' + user_id);
+    }
+
+    async fetchMyManager(user_id: number){
+        return ServerRequest.get('/sector/fetch/sector-manager/' + user_id);
     }
 
     async fetchUnsolvedProblems() {

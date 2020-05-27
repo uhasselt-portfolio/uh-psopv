@@ -12,7 +12,6 @@ import {formatDateTime} from '../../../../../utils/DateUtil';
 import {itemToggle, problemToggle, addProblem} from '../../PostAction' 
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {resetActionList, getActionList, addObjectToActionList} from '../../../../save/saveFunction'
 import ShiftProblem from './ShiftProblem';
 import AddProblem from './AddProblem';
 

@@ -10,10 +10,8 @@ import Auth from '../../utils/Auth';
 class Save  extends Component<any> {
     async handleActions(){
       if(navigator.onLine){
-        console.log("Handle actions, because we are online")
         this.props.doDatabase()
       } else{
-        console.log("we are offline, so we do nothing")
       }
     }
 

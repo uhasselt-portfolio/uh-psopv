@@ -42,7 +42,6 @@ class MapPage extends Component<any> {
   };
 
   componentDidMount(){
-    console.log("AT MAP PAGE")
     this.props.fetchPosts();
   }
 

@@ -1,10 +1,15 @@
 .textArea{
-    height: 40vh;
+    height: 20vh;
 }
 
 .sendBtn{
     margin: 20px;
     float: right;
+}
+
+.templateBtn{
+    margin:20px;
+    float: left;
 }
 
 .offlineMsg{
