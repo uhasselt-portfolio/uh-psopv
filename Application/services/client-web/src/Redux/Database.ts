@@ -5,6 +5,7 @@ import UserDataInterface from '../interfaces/UserDataInterface';
 import PostDataInterface from '../interfaces/PostDataInterface';
 import ShiftDataInterface from '../interfaces/ShiftDataInterface';
 import MessageDataInterface from '../interfaces/MessageDataInterface';
+import {User, Parser} from '../pages/data/Parser';
 import Auth from "../utils/Auth";
 
 class ServerRequest {
@@ -55,7 +56,6 @@ class ServerRequest {
     }
 
 }
-
 
 export default class Database {
 
@@ -310,12 +310,53 @@ export default class Database {
         return ServerRequest.patch('/message/toggle-seen', messageId, {})
     }
 
-    async postFile(file: File, isupdateMode: boolean) {    //TODO
+    async postFile(file : File, fileKind : string, isupdateMode: boolean) {    //TODO
         if (isupdateMode) {
 
         } else {
 
         }
+        const res = await axios.get('http://localhost/api/user/fetch/all');
+        console.log(res);
+        console.log("in database");
+        var formData = new FormData();
+        formData.append('file',file);
+        const respone = await axios.post('http://localhost/api/import/user',
+        formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+        console.log(respone);
+    }
+
+    async postNewData(users : User[], posts: any, shifts : any, associations : any, planning : any, 
+        items : any, generalPosts : any, sectors : any, parser : Parser ) {
+        // console.log("users", parser.getUsers());
+        // console.log("posten",parser.getPosts());
+        // console.log("shiften",parser.getShifts());
+        // console.log("verenegingen",parser.getAssociations());
+        // console.log("planning",parser.getPlanning());
+        // console.log("items",parser.getItems());
+        // console.log("generalPosts",parser.getGeneralPosts());
+        // console.log("sectors",parser.getSectors());
+
+        let test : any[] = [{test: 'test', test2: 'test'},{test: 'test', test2: 'test'},{test: 'test', test2: 'test'}]
+
+
+        // const response = await axios.post('http://localhost/api/import/all', {
+        //     users :test,
+        //     posts :parser.getPosts(),
+        //     shifts :'bla',
+        //     associations :'bla',
+        //     planning :'bla',
+        //     items :'bla',
+        //     generalPosts :'bla',
+        //     sectors :'bla',
+        // });
+        console.log("users",parser.getPosts());
+        console.log("json",JSON.stringify(users[0]));
+
     }
 }
 

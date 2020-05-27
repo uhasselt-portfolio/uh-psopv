@@ -29,12 +29,8 @@ class Overview extends Component<Props> {
     componentWillMount = () => {
         this.props.fetch();         
         setInterval(this.props.fetch(),300000);
-        // setInterval(this.props.fetchMap,100);
     }
 
-    /**
-     * renders the component
-     */
     render() {
         let sortedProblems : ProblemDataInterface[][] = [];
         for (let i = 0; i < this.props.problems.length; ++i) {

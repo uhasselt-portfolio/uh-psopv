@@ -55,56 +55,57 @@ class PostDetails extends Component<Props> {
     }
 
     //TODO show planning and problems on post
+    // organizePlanning = (ownshifts: ShiftDataInterface[]): ShiftProps[] => {
+    //     let allShifts : ShiftDataInterface[] = ownshifts;
+    //     let shifts : ShiftProps[] = [];
 
-    organizePlanning = (ownshifts: ShiftDataInterface[]): ShiftProps[] => {
-        let allShifts : ShiftDataInterface[] = ownshifts;
-        let shifts : ShiftProps[] = [];
+    //     while (allShifts.length > 0) {
+    //         let temp : ShiftDataInterface[] = allShifts.filter(shift => shift.shiftId=== allShifts[0].shiftId);
+    //         let tempJobs : job[] = [];
+    //         for (let i : number = 0; i < temp.length; ++i) {
+    //             tempJobs = [...tempJobs, {
+    //                 postId: temp[i].post_id,
+    //                 post: temp[i].post,
+    //                 user: temp[i].user,
+    //                 userId: temp[i].User_id,
+    //                 shiftId: temp[i].id,
+    //                 items: this.getItems(temp[i].id)
+    //             }];
+    //         }
+    //         let tempProps : ShiftProps = {
+    //             shiftname: temp[0].shiftName,
+    //             begindate: temp[0].beginDate,
+    //             enddate: temp[0].endDate,
+    //             jobs: tempJobs
+    //         };
+    //         shifts = [...shifts, tempProps];
+    //         allShifts = allShifts.filter(shift => shift.shiftId !== temp[0].shiftId);
+    //     }
+    //     return shifts
+    // }
+    // getItems = (shiftId: Number) : ItemInterface[] => {
+    //     return this.props.items.filter(item => item.shiftId === shiftId);
+    // }
 
-        while (allShifts.length > 0) {
-            let temp : ShiftDataInterface[] = allShifts.filter(shift => shift.shiftId=== allShifts[0].shiftId);
-            let tempJobs : job[] = [];
-            for (let i : number = 0; i < temp.length; ++i) {
-                tempJobs = [...tempJobs, {
-                    postId: temp[i].post_id,
-                    post: temp[i].post,
-                    user: temp[i].user,
-                    userId: temp[i].User_id,
-                    shiftId: temp[i].id,
-                    items: this.getItems(temp[i].id)
-                }];
-            }
-            let tempProps : ShiftProps = {
-                shiftname: temp[0].shiftName,
-                begindate: temp[0].beginDate,
-                enddate: temp[0].endDate,
-                jobs: tempJobs
-            };
-            shifts = [...shifts, tempProps];
-            allShifts = allShifts.filter(shift => shift.shiftId !== temp[0].shiftId);
-        }
-        return shifts
-    }
-    getItems = (shiftId: Number) : ItemInterface[] => {
-        return this.props.items.filter(item => item.shiftId === shiftId);
-    }
+    //TODO gebruiken of niet
+    // /**
+    //  * filters the planning
+    //  * returns only the shifts that are on 
+    //  */
+    // filterPlanning = () : Array<JSX.Element> => {
+    //     let ownShifts : ShiftDataInterface[] = this.props.planning.filter(shift => shift.post_id === this.props.location.state.id);
+    //     let shifts: ShiftProps[] = this.organizePlanning(ownShifts).sort((x,y) => {
+    //         if (x.shiftname <= y.shiftname)
+    //             return -1;
+    //         else
+    //             return 1;
+    //     });
+    //     let shiftUi : Array<JSX.Element> = shifts.map(x => (
+    //         <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs}/>
+    //     ));
+    //     return shiftUi;
+    // }
 
-    filterPlanning = () : Array<JSX.Element> => {
-        let ownShifts : ShiftDataInterface[] = this.props.planning.filter(shift => shift.post_id === this.props.location.state.id);
-        let shifts: ShiftProps[] = this.organizePlanning(ownShifts).sort((x,y) => {
-            if (x.shiftname <= y.shiftname)
-                return -1;
-            else
-                return 1;
-        });
-        let shiftUi : Array<JSX.Element> = shifts.map(x => (
-            <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs}/>
-        ));
-        return shiftUi;
-    }
-
-    /**
-     * renders the component
-     */
     render() {
         return(
             <div>

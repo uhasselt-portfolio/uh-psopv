@@ -45,7 +45,7 @@ class ProblemDetails extends Component<props> {
         this.props.problemSolved(this.props.location.state.id);
     }
 
-    DisplauEditingField = () =>{
+    DisplauEditingField = () =>{ //TODO
         this.setState({
             editing: true
         });
@@ -57,9 +57,6 @@ class ProblemDetails extends Component<props> {
         });
     }
 
-    /**
-     * renders the component
-     */
     render() {
 
         return(

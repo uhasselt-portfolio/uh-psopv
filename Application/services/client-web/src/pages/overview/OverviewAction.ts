@@ -19,7 +19,7 @@ export enum OverviewActions {
 };
 
 /**
- * gets all the problems from the database
+ * gets all the problems from the database and updates the redux state
  */
 export const fetchProblems = (amount: number) => async (dispatch : Redux.Dispatch) => {
     console.log("overview problem fetc");
@@ -54,7 +54,7 @@ export const fetchProblems = (amount: number) => async (dispatch : Redux.Dispatc
 }
 
 /**
- * gets all the messages from the database
+ * gets all the messages from the database and updates the redux state
  */
 export const fetchMessages = () => async (dispatch : Redux.Dispatch) => {
     console.log("overview messagesfetc");
@@ -90,7 +90,7 @@ export const fetchMessages = () => async (dispatch : Redux.Dispatch) => {
 }
 
 /**
- * getss all the messages, users, items, posts, problems and the planning/shifts from the database
+ * getss all the messages, users, items, posts, problems and the planning/shifts from the database and updates the redux state
  */
 export const fetch = () => async (dispatch: Redux.Dispatch) => {
     console.log("overview fetch");
@@ -131,6 +131,13 @@ export const fetch = () => async (dispatch: Redux.Dispatch) => {
     }
 }
 
+/**
+ * inserts the new message into the database
+ * @param receiver the id of the receiver of the message
+ * @param title the title of the message
+ * @param content the content of the message
+ * @param adminId the id of the sender always the admin
+ */
 export const postNewMessage = (receiver: Number,title: string, content: string, adminId: Number) => async (dispatch: Redux.Dispatch) => {
     console.log("post new message");
     try {
@@ -165,6 +172,10 @@ export const postNewMessage = (receiver: Number,title: string, content: string, 
     }
 }
 
+/**
+ * updatest the database that the message has been read
+ * @param messageId the id of the message
+ */
 export const postMessageRead = (messageId: number) => async (dispatch: Redux.Dispatch) => {
     console.log("message read");
     try {
@@ -197,6 +208,9 @@ export const postMessageRead = (messageId: number) => async (dispatch: Redux.Dis
     }
 }
 
+/**
+ * gets all the posts from the database and updates the redux state
+ */
 export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
     console.log("in shift planning fetch");
     try {
