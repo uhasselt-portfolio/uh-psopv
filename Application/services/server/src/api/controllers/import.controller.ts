@@ -16,6 +16,9 @@ import ProblemModel from '../models/problem.model';
 import SectorModel from '../models/sector.model';
 import ShiftModel from '../models/shift.model';
 
+const eagerLoadingOptions = {
+    include: [{model: UserModel, all: true}]
+}
 
 
 export const importUsers = async (req: Request, res: Response) => {
@@ -56,7 +59,7 @@ export const importAll = async (req: Request, res: Response) => {
     res.status(200).send();
 }
 
-const deleteAll = async () => {
+export const deleteAll = async (req: Request, res: Response) => {
     await ProblemModel.destroy({
         truncate: true
     });
@@ -90,21 +93,11 @@ const deleteAll = async () => {
     await AssociationModel.truncate({
         cascade: true
     });
+    res.status(201).send();
     return true;
 }
 
 export const importUserAndAssociation = async (req: Request, res: Response) => {
-    // let deleted : Promise<boolean> = deleteAll();
-    // //console.log('userandassociation',req.body);
-
-    // deleted.then((val : boolean) => {
-    //     let correct : Promise<boolean> = insertAssoxiation(req.body.association,res);
-
-    //     correct.then((val : boolean) => {
-    //         if (val) res.status(200).send();} );
-    // });
-    let deleted : boolean = await deleteAll();
-    if (deleted) {
         let association = await insertAssoxiation(req.body.association,res);
 
         if (association) {
@@ -112,27 +105,65 @@ export const importUserAndAssociation = async (req: Request, res: Response) => {
 
             if (users) {
                 const users = await UserModel.findAll();
-                console.log('length',users.length);
                 res.status(201).send();
+            } else {
+                console.log('false users');
             }
         } else {
             console.log('false association');
         }
-    }
 }
 export const importGeneralPostAndPost = async (req: Request, res: Response) => {
     //console.log('post',req.body);
+    console.log('in generalPostandpost');
+    let generalPostResult : boolean = await insertGeneralPost(req.body.generalpost, res);
+    if (generalPostResult) {
+        console.log('general post succes');
+        let g = await GeneralPostModel.findAll();
+        console.log(g.length);
+
+        let sectorResult : boolean = await insertSector(req.body.sector,res);
+
+        if (sectorResult) {
+            console.log('sector succes');
+            
+            let postResult : boolean = await insertPost(req.body.post,res);
+
+            if (postResult) {
+                console.log('post succes');
+                res.status(200).send();
+            } else {
+                console.log('post fail');
+            }
+        } else {
+            console.log('sector fail');
+        }
+
+    } else {
+        console.log('genera post fail');
+    }
 }
 export const importShifts = async (req: Request, res: Response) => {
-    //console.log('shift',req.body);
+    console.log("in import shifts");
+    let shiftsresult = await insertShift(req.body.shifts,res);
+    if (shiftsresult)
+        res.status(200).send();
 }
 export const importPlanning = async (req: Request, res: Response) => {
-    //console.log('planningg',req.body);
+    console.log('in inport planning');
+    let PlanningResult = await insertPlanning(req.body.planning,res);
+    if (PlanningResult)
+        res.status(200).send();
 }
 export const importItems = async (req: Request, res: Response) => {
-    //console.log('items',req.body);
+    console.log('int import items');
+    let itemTypeResult = await insertItemTypes(req.body.itemType,res);
+    if (itemTypeResult) {
+        let itemReult = await insertItem(req.body.items,res);
+        if (itemReult)
+            res.status(200).send();
+    }
 }
-
 
 const insertAssoxiation = async (associations : any[], res: Response) => {
     try {
@@ -156,9 +187,6 @@ const insertAssoxiation = async (associations : any[], res: Response) => {
                 });
             }
         }
-        // const association = await AssociationModel.create({
-        //     name: 'CREW'
-        // });
     } catch (error) {
         console.log("error");
         res.status(500).send({
@@ -176,6 +204,8 @@ const insertAssoxiation = async (associations : any[], res: Response) => {
  * inserts all the user in the database
  * the permission_type must be initialized
  * the association must be initialized
+ * @param user the users to insert
+ * @param res 
  */
 const insertUser = async (user : any[], res: Response) => {
     try {
@@ -191,22 +221,15 @@ const insertUser = async (user : any[], res: Response) => {
         let responsibleId : number = ids[1];
         let adminId : number = ids[2];
 
-        console.log('ids checking', ids);
-
         if (volunteerId === -1 || responsibleId === -1 || adminId === -1) {
-            console.log('no ids');
             return res.status(404).send({
                 status: 'fail',
                 data: null,
                 message: 'internal server error'
             });
         } else {
-            console.log('ids ok',user.length);
             for (let i = 0; i < user.length; ++i) {
-                console.log(user[i]);
                 const userExists = await UserModel.findOne({where: {phone_number: user[i].phone_number}});
-
-                console.log('exsists checked');
     
                 let permission_id : number = -1;
                 if (user[i].permission === 'vrijwilliger') {
@@ -214,29 +237,23 @@ const insertUser = async (user : any[], res: Response) => {
                 } else if (user[i].permission === 'verantwoordelijke') {
                     permission_id = responsibleId;
                 } else {
-                    console.log('permissions fail');
                     return res.status(404).send({
                         status: 'fail',
                         data: null,
                         message: 'permission doesn\'t exist'
                     })
                 }
-
-                console.log('permissions checked');
     
                 const association_id = associationsMap.get(user[i].association);
                 if( association_id === undefined) {
-                    console.log('association failed');
                     return res.status(404).send({
                         status: 'fail',
                         data: null,
                         message: 'Association doesn\'t exist'
                     })
                 }
-                console.log('associations checked');
     
                 if (!userExists) {
-                    console.log('creating');
                     const newUser = await UserModel.create({
                         first_name: user[i].first_name,
                         last_name: user[i].last_name,
@@ -246,8 +263,6 @@ const insertUser = async (user : any[], res: Response) => {
                         permission_type_id: permission_id,
                         association_id: association_id
                     });
-                } else {
-                    console.log('not craeting');
                 }
             }
         }
@@ -263,7 +278,9 @@ const insertUser = async (user : any[], res: Response) => {
     }
     return true;
 }
-
+/**
+ * returns the permissions ids of the three possible types : volunteer, responsible and admin
+ */
 const getpermissionIds = async () : Promise<number[]> => {
     let permission_types = await PermissionTypeModel.findAll();
 
@@ -282,332 +299,397 @@ const getpermissionIds = async () : Promise<number[]> => {
     return [volunteerId, responsibleId, adminId];
 }
 
+const insertGeneralPost = async (posts : any[], res: Response) => {
+    try {
+        for (let i = 0; i < posts.length; ++i) {
+            const PostExists = await GeneralPostModel.findOne({where: {name: posts[i].name, description: posts[i].discription}});
 
-interface GeneralPost {
-    name: string,
-    minimumAge: number,
-    discription: string
+            if(PostExists) {
+                res.status(404).send({
+                    status: 'fail',
+                    data: null,
+                    message: 'Gpost allready exists'
+                });
+                return false;
+            } else {
+                const GPost = await GeneralPostModel.create({
+                    name: posts[i].name,
+                    minimum_age: posts[i].minimumAge,
+                    description: posts[i].discription
+                });
+            }
+        }
+        // const association = await AssociationModel.create({
+        //     name: 'CREW'
+        // });
+    } catch (error) {
+        console.log("error",error);
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+        return false;
+    }
+    console.log('done');
+    return true;
 }
-interface Post {
-    title: string,
-    address: string,
-    latitude : number,
-    longitude : number,
-    radius : number,
-    sector : number,
-    generalpost : string
-}
-interface User {
-    first_name : string,
-    last_name : string,
-    password : string,
-    phone_number : string,
-    email : string,
-    current_lat : number,
-    current_long : number,
-    is_connected : boolean,
-    association : string,
-    permission : string
-}
-interface Item {
-    name : string,
-    planning : string
-}
-interface Shift {
-    name : string,
-    begin : string,
-    end : string
-}
-interface Planning {
-    user : string,
-    shift : string,
-    post : string
-}
-interface Association {
-    name : string
-}
-interface Sector {
-    user: string,
-    type : number
+
+const insertSector = async (sectors: any[], res: Response) => {
+    console.log('inserting sector');
+    try {
+        for (let i = 0; i < sectors.length; ++i) {
+            const sectorsExists = await SectorModel.findOne({where: {sector_type: sectors[i].type}});
+
+            if(sectorsExists) {
+                res.status(404).send({
+                    status: 'fail',
+                    data: null,
+                    message: 'sector allready exists'
+                });
+                return false;
+            } else {
+
+                let Permission_ids = await getpermissionIds();
+
+                let User = await UserModel.findAll({where: {permission_type_id: Permission_ids[1]}});
+
+                if (User.length === 0) {
+                    console.log('No responsible');
+                    res.status(404).send({
+                        status: 'fail',
+                        data: null,
+                        message: 'no responsible exists'
+                    });
+                    return false;
+                }
+
+                const Sector = await SectorModel.create({
+                    user_id: User[0].id,
+                    sector_type: sectors[i].type
+                });
+            }
+        }
+    } catch (error) {
+        console.log("error",error);
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+        return false;
+    }
+    console.log('done');
+    return true;
 }
 
 /**
- * class that parses all the data from the input excel files
+ * inserts the posts in the database
+ * the generalpost must be initialized
+ * the sectors must be initialized
+ * @param posts the list of posts to insert
+ * @param res 
  */
- class Parser {
-    generalposts : GeneralPost[];
-    posts : Post[];
-    users : User[];
-    items : Item[];
-    shifts : Shift[];
-    planning : Planning[];
-    associations : Association[]
-    sectors : Sector[]
-    error : boolean;
-
-    test : any;
-
-    constructor() {
-        this.generalposts = [];
-        this.posts = [];
-        this.users = [];
-        this.items = [];
-        this.shifts = [];
-        this.planning = [];
-        this.associations = [];
-        this.sectors = [];
-        this.error = false;
-    }
-
-
-
-    createGeneralAndPosts = (data: any) => {
-        let headFunctieIndex : number = -1;
-        let minAgeIndex : number = -1;
-        let discriptionIndex : number = -1;
-        let postIndex : number = -1;
-        let sectorIndex : number = -1;
-        let addressIndex : number = -1;
-        for (let i = 0; i < data[2].length; ++i) {
-            if (data[2][i] === 'HOOFDFUNCTIE')
-                headFunctieIndex = i;
-            else if (data[2][i] === 'MINIMUMLEEFTIJD')
-                minAgeIndex = i;
-            else if (data[2][i] === 'OPMERKING')
-                discriptionIndex = i;
-            else if (data[2][i] === 'SUBFUNCTIE')
-                postIndex = i;
-            else if (data[2][i] === 'SECTOR')
-                sectorIndex = i;
-            else if (data[2][i] === 'LOCATIE')
-                addressIndex = i;
+const insertPost = async (posts: any[], res: Response) => {
+    try {
+        let general_posts = await GeneralPostModel.findAll();
+        let general_postmap : Map<string,number> = new Map();
+        for (let i = 0; i < general_posts.length; ++i) {
+            general_postmap.set(general_posts[i].description,general_posts[i].id);
         }
-        if (headFunctieIndex === -1 || minAgeIndex === -1 || discriptionIndex === -1 || postIndex === -1 
-            || sectorIndex === -1 || addressIndex === -1) {
-                this.error = true;
-                return ;
+
+        let sectos = await SectorModel.findAll();
+        let sectorMap : Map<string,number> = new Map();
+        for (let i = 0; i < sectos.length; ++i) {
+            let key : number = sectos[i].sector_type;
+            sectorMap.set(key.toString(), sectos[i].id);
+        }
+
+        for (let i = 0; i < posts.length; ++i) {
+            const postExists = await AssociationModel.findOne({where: {name: posts[i].title}});
+
+    
+            if(postExists) {
+                console.log('post exists');
+                res.status(404).send({
+                    status: 'fail',
+                    data: null,
+                    message: 'post allready exists'
+                });
+                return false;
+            } else {
+                let general_posts_id = general_postmap.get(posts[i].generalpost);
+                if (general_posts_id === undefined) {
+                    console.log('general post undifined', posts[i].generalpost);
+                    res.status(404).send({
+                        status: 'fail',
+                        data: null,
+                        message: 'general post doesn\'t exist'
+                    });
+                    return false;
+                }
+                
+                let sectorSearch : number = posts[i].sector;
+                let sector_id = sectorMap.get(sectorSearch.toString());
+                if (sector_id === undefined) {
+                    console.log('sector undifined');
+                    res.status(404).send({
+                        status: 'fail',
+                        data: null,
+                        message: 'sector doesn\'t exist'
+                    });
+                    return false;
+                }
+
+                const post = await PostModel.create({
+                    title: posts[i].title,
+                    address: posts[i].address,
+                    latitude: posts[i].latitude,    //TODO hoe latitude en longitude en radius
+                    longitude: posts[i].longitude,
+                    radius: posts[i].radius,
+                    sector_id: sector_id,
+                    general_post_id: general_posts_id
+                });
             }
-    
-        for (let i = 3; i < data.length; ++i) {
-            if (data[i][discriptionIndex] === undefined)
-                this.generalposts.push({
-                    name: data[i][headFunctieIndex],
-                    minimumAge: data[i][minAgeIndex],
-                    discription: data[i][headFunctieIndex]
-                });
-            else
-                this.generalposts.push({
-                    name: data[i][headFunctieIndex],
-                    minimumAge: data[i][minAgeIndex],
-                    discription: data[i][headFunctieIndex] + " " + data[i][discriptionIndex]
-                });
+        }
 
-            let generalpost : string = data[i][headFunctieIndex];
-            let title : string = data[i][postIndex];
-            let sector : number = data[i][sectorIndex];
-            let address : string;
-            if (data[i][addressIndex] === undefined)
-                address  = "/"
-            else
-                address = data[i][addressIndex];
-            let latitude : number = 5;
-            let longitude : number = 5;
-            let radius : number = 10;
-    
-            this.posts.push({
-                title, generalpost, sector, address, latitude, longitude, radius
-            });
+    } catch (error) {
+        console.log("error",error);
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+        return false;
+    }
+    console.log('done');
+    return true;
+}
 
-            let inside : boolean = false;
-            for (let j = 0; j < this.sectors.length ; ++j) {
-                if (this.sectors[j].type === sector) {
-                    inside = true;
-                    break;
+const insertShift = async (shifts: any[], res: Response) => {
+    try {
+        for (let i = 0; i < shifts.length; ++i) {
+            const shiftExists = await ShiftModel.findOne({where: {name: shifts[i].name}});
+
+    
+            if(shiftExists) {
+                console.log('Shift exists');
+                res.status(404).send({
+                    status: 'fail',
+                    data: null,
+                    message: 'Shift allready exists'
+                });
+                return false;
+            } else {
+                let beginArray : number[] = dateparser(shifts[i].begin);
+                let endArray : number[] = dateparser(shifts[i].end);
+                let beginDate : Date = new Date(beginArray[0],beginArray[1],beginArray[2],beginArray[3],beginArray[4]);
+                let endDate : Date = new Date(endArray[0],endArray[1],endArray[2],endArray[3],endArray[4]);
+                const Shift = await ShiftModel.create({
+                    name: shifts[i].name,
+                    begin: beginDate,
+                    end: endDate
+                });
+            }
+        }
+    } catch (error) {
+        console.log("error",error);
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+        return false;
+    }
+    console.log('done');
+    return true;
+}
+
+/**
+ * inserts the planning in the database
+ * posts, users and shifts need to be initialized
+ * @param planning the planning data from the client
+ * @param res 
+ */
+const insertPlanning = async (planning: any[], res: Response) => {
+    try {
+        let shifts = await ShiftModel.findAll();
+        let shiftMap : Map<string,number> = new Map();
+        for (let i = 0; i < shifts.length; ++i) 
+            shiftMap.set(shifts[i].name,shifts[i].id);
+
+        let users = await UserModel.findAll();
+        let usersMap : Map<string,number> = new Map();
+        for (let i = 0; i < users.length; ++i) 
+            usersMap.set(users[i].first_name + " " + users[i].last_name + " " + users[i].phone_number, users[i].id);
+        
+        let posts = await PostModel.findAll();
+        let postsMap : Map<string,number> = new Map();
+        for (let i = 0; i < posts.length; ++i)
+            postsMap.set(posts[i].title, posts[i].id);
+
+
+        for (let i = 0; i < planning.length; ++i) {
+
+            let userId = usersMap.get(planning[i].user);
+            let postsId = postsMap.get(planning[i].post);
+            let shiftId = shiftMap.get(planning[i].shift);
+
+
+            if (userId === undefined || postsId === undefined || shiftId === undefined) {
+                console.log('wrong data', planning[i]);
+                res.status(404).send({
+                    status: 'fail',
+                    data: null,
+                    message: 'wrong data'
+                });
+                return false;
+            } else {
+                const PlanningExists = await PlanningModel.findOne({
+                    where: {
+                        user_id: userId, 
+                        shift_id: shiftId, 
+                        post_id: postsId
+                    }
+                });
+        
+                if(PlanningExists) {
+                    console.log('planning exists', planning[i]);
+                    res.status(404).send({
+                        status: 'fail',
+                        data: null,
+                        message: 'planning allready exists'
+                    });
+                    return false;
+                } else {
+                    const planning = await PlanningModel.create({
+                        user_id: userId, shift_id: shiftId, post_id: postsId
+                    });
                 }
             }
-            if (! inside)
-                this.sectors.push({
-                    user: "", //TODO
-                    type: sector
+        }
+    } catch (error) {
+        console.log("error", error);
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+        return false;
+    }
+    return true;
+}
+
+/**
+ * convertes a date string from the input excel to a array : [ year, month, day, hour, time]
+ * @param date the date string to parse
+ */
+const dateparser = (date : string) : number[] => {
+    let parsed : number[] = [2020,1,1,12,0];
+    let split : string[] = date.split(" ");
+    let dateSplit : string[] = split[0].split("/");
+    parsed[0] = parseInt( dateSplit[2]);
+    parsed[1] = parseInt(dateSplit[1]);
+    parsed[2] = parseInt(dateSplit[0]);
+    let time : string[] = split[1].split(":");
+    parsed[4] = parseInt(time[0]);
+    parsed[5] = parseInt(time[1]);
+    return parsed;
+} 
+
+const insertItemTypes = async (itemTypes : any[], res: Response) => {
+    try {
+        for (let i = 0; i < itemTypes.length; ++i) {
+            const TypeExists = await ItemTypeModel.findOne({where: {name: itemTypes[i]}});
+
+            // const userExists = await UserModel.findOne({where: {phone_number: req.body.phone_number}});
+            // const associationExists = await AssociationModel.findByPk(req.body.association_id);
+    
+            if(TypeExists) {
+                console.log('type exists');
+                res.status(404).send({
+                    status: 'fail',
+                    data: null,
+                    message: 'item type allready exists'
                 });
-        }
-    }
-
-    parseGebruikers = (file: any) => {
-        const reader = new FileReader();
-        const rABS = !!reader.readAsBinaryString;
-    
-        reader.onload = (e) => {
-            if (e.target != null) {
-                /* Parse data */
-                const bstr = e.target.result;
-                const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
-                /* Get first worksheet */
-                const wsname = wb.SheetNames[0];
-                const ws = wb.Sheets[wsname];
-                /* Convert array of arrays */
-                const data = XLSX.utils.sheet_to_json(ws, {header:1});
-                /* Update state */
-                // this.setState({ data: data, cols: make_cols(ws['!ref']) });
-                console.log("gebruikers");
-                // console.log('wb',wb);
-                // console.log("data",data);
-                // console.log('length',data.length);
-
-                // this.createuser(data);
-                console.log(data);
-
-                // console.log(users);
-                // console.log(createAssociation(users));
-            }
-        };
-        
-        if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
-    }
-    createuser = (data : any)=> {
-        let first_nameIndex : number = -1;
-        let last_nameIndex : number = -1;
-        let phone_numberIndex : number = -1;
-        let emailIndex : number = -1;
-        let passwordIndex : number = -1;
-        let permissionIndex : number = -1;
-        let associationIndex : number = -1;
-        for (let i = 0; i < data[1].length; ++i) {
-            if (data[1][i] === 'voornaam')
-                first_nameIndex = i;
-            else if (data[1][i] === 'telefoon nummber')
-                phone_numberIndex = i;
-            else if (data[1][i] === 'email')
-                emailIndex = i;
-            else if (data[1][i] === 'vrijwilliger?')
-                permissionIndex = i;
-            else if (data[1][i] === 'vereneging')
-                associationIndex = i;
-            else if (data[1][i] === 'achternaam')
-                last_nameIndex = i;
-            else if (data[1][i] === 'wachtwoord')
-                passwordIndex = i;
-        }
-        if (first_nameIndex === -1 || last_nameIndex === -1 || phone_numberIndex === -1 || emailIndex === -1 || 
-            passwordIndex === -1 || permissionIndex === -1 || associationIndex === -1)
-            return [{
-                first_name : "error", last_name: '', password :  "", email : '', phone_number: "",current_lat : 0,current_long : 0,
-                    is_connected: true, association: '', permission: '' 
-            }];
-
-    
-        for (let i = 2; i < data.length; ++i) {
-            let first_name : string = data[i][first_nameIndex];
-            let last_name : string = data[i][last_nameIndex];
-            let phone_number : string = data[i][phone_numberIndex];
-            let password : string = data[i][passwordIndex];
-            let email : string = "";
-            if (data[i][emailIndex] !== undefined)
-                email = data[i][emailIndex];
-            let permission : string = "";
-            if (data[i][permissionIndex] !== undefined)
-                permission = data[i][permissionIndex];
-            let association : string = data[i][associationIndex];
-            let current_lat : number = 0;
-            let current_long : number = 0;
-            let is_connected : boolean = true;
-    
-            this.users.push({
-                first_name, last_name, phone_number, password, email, permission, association, current_long, current_lat, is_connected
-            });
-
-            let inside : boolean = false;
-            for (let j = 0; j < this.associations.length; ++j) {
-                if (this.associations[j].name === association) {
-                    inside = true;
-                    break;
-                }
-            }
-            if ( ! inside)
-            this.associations.push({
-                    name: association
-                });
-        }
-    }
-
-    createPlanning = (data: any) => {
-        let shiftIndex : number = 0;
-        let postIndex : number = 2;
-        let userIndex : number = 4;
-    
-        let shift : string = "";
-    
-        for (let i = 0; i < data.length; ++i) {
-            if (data[i][shiftIndex] !== undefined)
-                shift = data[i][shiftIndex];
-            else if (data[i] !== " " && data[i][postIndex] !== "FUNCTIE") {
-                this.planning.push({
-                    user: data[i][userIndex],
-                    shift: shift,
-                    post: data[i][postIndex]
+                return false;
+            } else {
+                const type = await ItemTypeModel.create({
+                    name: itemTypes[i]
                 });
             }
-        
         }
+    } catch (error) {
+        console.log("error",error);
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+        return false;
     }
+    return true;
+}
 
-    createShift = (data: any) => {
-        let ShiftIndex : number = -1;
-        let StartIndex : number = -1;
-        let endIndex : number = -1;
-        for (let i = 0; i < data[2].length; ++i) {
-            if (data[2][i] === 'SHIFT')
-                ShiftIndex = i;
-            else if (data[2][i] === 'STARTDTG')
-                StartIndex = i;
-            else if (data[2][i] === 'EINDEDTG')
-                endIndex = i;
-        }
-        if (ShiftIndex === -1 || StartIndex === -1 || endIndex === -1)
-            return [{
-                name: 'error', begin: "", end: ""
-            }];
-    
-        for (let i = 3; i < data.length; ++i) {
-            let name : string = data[i][ShiftIndex];
-            let begin : string = data[i][StartIndex];
-            let end : string = data[i][endIndex];
-    
-            this.shifts.push({
-                name, begin, end
-            });
-        }
-    }
-    
-    createItemtype = (data : any) => {
-        let typeIndex : number = -1;
-        let planningIndex : number = -1;
-        for (let i = 0; i < data[2].length; ++i) {
-            if (data[1][i] === 'itemType')
-                typeIndex = i;
-            else if (data[1][i] === 'shift')
-                planningIndex = i;
-        }
-        if (planningIndex === -1 || typeIndex === -1)
-            return [{
-                name: 'error', planning: ""
-            }];
-    
-        for (let i = 2; i < data.length; ++i) {
-            this.items.push({
-                name: data[i][typeIndex],
-                planning: data[i][planningIndex]
-            })
-        }
-    }
+const insertItem = async (item : any[], res: Response) => {
+    try {
 
-    getGeneralPosts = () : GeneralPost[] => {return this.generalposts;}
-    getPosts = () : Post[] => {return this.posts;}
-    getUsers = () : User[] => {return this.users;}
-    getItems = () : Item[] => {return this.items;}
-    getShifts = () : Shift[] => {return this.shifts;}
-    getPlanning = () : Planning[] => {return this.planning;}
-    getAssociations = () : Association[] => {return this.associations;}
-    getSectors = () : Sector[] => {return this.sectors;}
-    getError = () : boolean => {return this.error;}
+        let types = await ItemTypeModel.findAll();
+        let typeMap : Map<string,number> = new Map();
+        for (let i = 0; i <types.length; ++i) 
+            typeMap.set(types[i].name,types[i].id);
+
+        let planning = await PlanningModel.findAll(eagerLoadingOptions);
+        let planningMap : Map<string,number> = new Map();
+        for (let i = 0; i < planning.length; ++i) 
+            planningMap.set(planning[i].user.first_name + " " + planning[i].user.last_name + " " + planning[i].user.phone_number + " " +
+            planning[i].post.title + " " + planning[i].shift.name
+            ,planning[i].id);
+
+        for (let i = 0; i < item.length; ++i) {
+
+            let planningID = planningMap.get(item[i].naam + " " + item[i].functie + " " + item[i].planning);
+            let typeId = typeMap.get(item[i].name);
+
+            if (planningID === undefined)
+                console.log('1', planningMap)
+            if (typeId === undefined)
+                console.log("2");
+
+            if (planningID === undefined || typeId === undefined) {
+                console.log('wrong data', item[i]);
+                res.status(404).send({
+                    status: 'fail',
+                    data: null,
+                    message: 'wrong data'
+                });
+                return false;
+            } else {
+                const ItemExists = await ItemModel.findOne({where: {planning_id: planningID, item_type_id: typeId }});
+
+            if(ItemExists) {
+                console.log('item exists');
+                res.status(404).send({
+                    status: 'fail',
+                    data: null,
+                    message: 'item type allready exists'
+                });
+                return false;
+            } else {
+                const item = await ItemModel.create({
+                    planning_id: planningID, item_type_id: typeId
+                });
+            }
+            }
+        }
+    } catch (error) {
+        console.log("error",error);
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+        return false;
+    }
+    return true;
 }

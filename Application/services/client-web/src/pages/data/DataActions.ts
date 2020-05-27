@@ -31,11 +31,17 @@ export const uploadFile = (functiesfile : File, appellijstFile : File,
 
         let parser : Parser = new Parser();
 
-        parseAppellijst(appellijstFile,parser);
-        parseFuncties(functiesfile,parser);
-        parseShiften(shiftenFile,parser);
-        parseGebruikers(gebruikerFile,parser);
-        parseItems(itemfile,parser);
+        let deleted : Promise<any> =  parser.deleteAll();
+        deleted.then(async (val : any) => {
+            await parseGebruikers(gebruikerFile,parser);
+            console.log("after parse gebruikers");
+            await parseFuncties(functiesfile,parser);
+            console.log("afeter parse functies");
+            await parseShiften(shiftenFile,parser);
+            await parseAppellijst(appellijstFile,parser);
+            await parseItems(itemfile,parser);
+        });
+
         
         if (parser.getError()) {
             console.log("error\n\n\n") //TODO
@@ -50,13 +56,13 @@ export const uploadFile = (functiesfile : File, appellijstFile : File,
         // console.log("generalPosts",parser.getGeneralPosts());
         // console.log("sectors",parser.getSectors());
 
-        const response = await new Database().postNewData(
-            parser.getUsers(), parser.getPosts(), parser.getShifts(), parser.getAssociations(),
-            parser.getPlanning(), parser.getItems(), parser.getGeneralPosts(), parser.getSectors(), parser
-        );
+        // const response = await new Database().postNewData(
+        //     parser.getUsers(), parser.getPosts(), parser.getShifts(), parser.getAssociations(),
+        //     parser.getPlanning(), parser.getItems(), parser.getGeneralPosts(), parser.getSectors(), parser
+        // );
         //const response2 = await new Database().postFile(gebruikerFile,"",true);
 
-        console.log(response);
+       // console.log(response);
 
         // await new Database().postFile(file,isUpdateMode);
 
@@ -104,6 +110,219 @@ export const uploadFile = (functiesfile : File, appellijstFile : File,
     }
 }
 
+export const deleteDatabase = () => async (dispatch : Redux.Dispatch) => {
+    try {
+        dispatch({
+            type: DataActions.Data_POST_START
+        });
+
+        await new Parser().deleteAll();
+
+        dispatch({
+            type: DataActions.DATA_POST_SUCCES
+        });
+    } catch(error) {
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    }
+}
+
+export const uploadUsers = (file : File) => async (dispatch : Redux.Dispatch) => {
+    console.log("in file upload");
+    try {
+        dispatch({
+            type: DataActions.Data_POST_START
+        });
+
+        let parser : Parser = new Parser();
+
+        await parseGebruikers(file,parser);
+
+
+        
+        if (parser.getError()) {
+            console.log("error\n\n\n") //TODO
+        }
+
+        dispatch({
+            type: DataActions.DATA_POST_SUCCES
+        });
+    } catch(error) {
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    }
+}
+export const uploadFuncties = (file : File) => async (dispatch : Redux.Dispatch) => {
+    console.log("in file upload");
+    try {
+        dispatch({
+            type: DataActions.Data_POST_START
+        });
+
+        let parser : Parser = new Parser();
+
+        await parseFuncties(file,parser);
+
+
+        
+        if (parser.getError()) {
+            console.log("error\n\n\n") //TODO
+        }
+
+        dispatch({
+            type: DataActions.DATA_POST_SUCCES
+        });
+    } catch(error) {
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    } 
+}
+export const uploadAppellijst = (file : File) => async (dispatch : Redux.Dispatch) => {
+    console.log("in file upload");
+    try {
+        dispatch({
+            type: DataActions.Data_POST_START
+        });
+
+        let parser : Parser = new Parser();
+
+        await parseAppellijst(file,parser);
+
+
+        
+        if (parser.getError()) {
+            console.log("error\n\n\n") //TODO
+        }
+
+        dispatch({
+            type: DataActions.DATA_POST_SUCCES
+        });
+    } catch(error) {
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    }
+}
+export const uploadShifts = (file : File) => async (dispatch : Redux.Dispatch) => {
+    console.log("in file upload");
+    try {
+        dispatch({
+            type: DataActions.Data_POST_START
+        });
+
+        let parser : Parser = new Parser();
+
+        await parseShiften(file,parser);
+
+
+        
+        if (parser.getError()) {
+            console.log("error\n\n\n") //TODO
+        }
+
+        dispatch({
+            type: DataActions.DATA_POST_SUCCES
+        });
+    } catch(error) {
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    }
+}
+export const uploadItems = (file : File) => async (dispatch : Redux.Dispatch) => {
+    console.log("in file upload");
+    try {
+        dispatch({
+            type: DataActions.Data_POST_START
+        });
+
+        let parser : Parser = new Parser();
+
+        await parseItems(file,parser);
+
+        if (parser.getError()) {
+            console.log("error\n\n\n") //TODO
+        }
+
+        dispatch({
+            type: DataActions.DATA_POST_SUCCES
+        });
+    } catch(error) {
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    } 
+}
+
 
 /**
  * functies that read a specific file and call a parser function to parse that data
@@ -111,10 +330,12 @@ export const uploadFile = (functiesfile : File, appellijstFile : File,
  * @param parser the parser object that contains the parsed data
  */
 const parseFuncties = (file: File, parser : Parser) => {
+    console.log("in parse gebruikers");
     const reader = new FileReader();
     const rABS = !!reader.readAsBinaryString;
 
     reader.onload = (e) => {
+        console.log("in parse gebruikers onload");
         if (e.target != null) {
             /* Parse data */
             const bstr = e.target.result;
@@ -137,10 +358,12 @@ const parseFuncties = (file: File, parser : Parser) => {
     if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
 }
 const parseShiften = (file: File, parser : Parser) => {
+    console.log("in parse shiften");
     const reader = new FileReader();
     const rABS = !!reader.readAsBinaryString;
 
     reader.onload = (e) => {
+        console.log('in parse shiften onload');
         if (e.target != null) {
             /* Parse data */
             const bstr = e.target.result;

@@ -1,6 +1,6 @@
 import multer from "multer"
 import * as express from "express";
-import {importGeneralPostAndPost, importItems, importPlanning, importShifts, importUserAndAssociation} from "../controllers/import.controller";
+import {importGeneralPostAndPost, importItems, importPlanning, importShifts, importUserAndAssociation,deleteAll} from "../controllers/import.controller";
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 
 const router = express.Router();
@@ -15,5 +15,6 @@ router.post('/createGeneralAndPost',importGeneralPostAndPost);
 router.post('/createPlanning',importPlanning);
 router.post('/createShift',importShifts);
 router.post('/createItemType',importItems);
+router.post('/deleteAll', deleteAll);
 
 export default router;
