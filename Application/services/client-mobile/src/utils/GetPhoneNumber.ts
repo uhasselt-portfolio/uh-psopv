@@ -5,7 +5,7 @@ export default async () => {
     const sim : Sim = new Sim();
 
     if(process.env.NODE_ENV == 'development') {
-        return process.env.PHONE_NUMBER || "0495812455";
+        return process.env.PHONE_NUMBER || "0483209571";
     } else {
         const hasPermission : boolean = await sim.hasReadPermission();
         if(!hasPermission) {

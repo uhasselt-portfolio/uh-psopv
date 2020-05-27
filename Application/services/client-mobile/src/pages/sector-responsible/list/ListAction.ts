@@ -1,6 +1,4 @@
-import axios from "axios"
 import Redux from 'redux';
-import Database from '../../../database/Database'
 import { getDefaultSector, getListLocalStorage } from "../../save/saveFunction";
 
 
