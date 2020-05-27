@@ -89,13 +89,18 @@ export const fetchActivePlaningViaUserID = async (req: Request, res: Response) =
     const userID = req.params.id;
 
     try{
+
+        const tenMinutes = 10 * 60 * 1000
+
         const where = {
-            begin: {[Op.lt]: new Date().getTime()},
-            end: {[Op.gt]: new Date().getTime()},
+            begin: {[Op.lt]: new Date().getTime() + tenMinutes},
+            end: {[Op.gt]: new Date().getTime() + tenMinutes},
         }
 
+        console.log(where);
+
         const activePlanning = await PlanningModel.findOne({
-            where: {user_id: userID},include: [{model: UserModel, all: true},{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
+            where: {user_id: userID},include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}, {model: ShiftModel, all:true, where: where}]
         });
 
         const statusCode = activePlanning == null ? 404 : 200;
@@ -119,13 +124,17 @@ export const fetchActivePlaningViaUserID = async (req: Request, res: Response) =
 }
 
 
-export const fetchUser = async (req: Request, res: Response) => {
+export const fetchFuturePlanningsByUserID = async (req: Request, res: Response) => {
     const userID = req.params.id;
+
+    const where = {
+        begin: {[Op.gt]: new Date().getTime()},
+    }
 
     try {
         const plannings = await PlanningModel.findAll({where:
                 {user_id: userID},
-            include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}]
+            include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}, {model: ShiftModel, all:true, where: where}]
         });
 
         const statusCode = plannings == null ? 404 : 200;

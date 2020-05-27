@@ -8,6 +8,7 @@ export default function (state = {}, action : AnyAction) {
         case USER_LOGIN_START:
             return {...state, process: true, isUserLoggedIn: false, errorMessage: ""}
         case USER_LOGIN_SUCCESS:
+            console.log("LOGIN SUCCESS" , action.payload);
             return {...state, process: false, isUserLoggedIn: action.payload, errorMessage: ""}
         case USER_LOGIN_FAIL:
             return {...state, process: false, isUserLoggedIn: false, errorMessage: action.payload}

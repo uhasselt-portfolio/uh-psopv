@@ -146,18 +146,19 @@ class InfoPage extends React.Component<any, any> {
                     <IonContent>
                         {this.renderShiftList()}
                     </IonContent>
-
                 </IonPage>
                 )
             } else{
             return(
-                <IonLoading
-                cssClass='my-custom-class'
-                isOpen={!this.state.loaded}
-                onDidDismiss={() => this.setState({...this.state, loaded: true})}
-                message={'Initializeren...'}
-                duration={TIME_IN_MS}
-              />
+                <IonPage>
+                    <IonLoading
+                        cssClass='my-custom-class'
+                        isOpen={!this.state.loaded}
+                        onDidDismiss={() => this.setState({...this.state, loaded: true})}
+                        message={'Initializeren...'}
+                        duration={TIME_IN_MS}
+                    />
+                </IonPage>
             )
           }
     }
