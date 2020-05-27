@@ -229,7 +229,7 @@ const insertUser = async (user : any[], res: Response) => {
             });
         } else {
             for (let i = 0; i < user.length; ++i) {
-                const userExists = await UserModel.findOne({where: {phone_number: user[i].phone_number}});
+                const userExists = await UserModel.findOne({where: {phone_number: user[i].phone_number.toString()}});
     
                 let permission_id : number = -1;
                 if (user[i].permission === 'vrijwilliger') {
@@ -319,9 +319,6 @@ const insertGeneralPost = async (posts : any[], res: Response) => {
                 });
             }
         }
-        // const association = await AssociationModel.create({
-        //     name: 'CREW'
-        // });
     } catch (error) {
         console.log("error",error);
         res.status(500).send({
@@ -406,7 +403,7 @@ const insertPost = async (posts: any[], res: Response) => {
         }
 
         for (let i = 0; i < posts.length; ++i) {
-            const postExists = await AssociationModel.findOne({where: {name: posts[i].title}});
+            const postExists = await PostModel.findOne({where: {title: posts[i].title.toString()}});
 
     
             if(postExists) {
@@ -532,9 +529,8 @@ const insertPlanning = async (planning: any[], res: Response) => {
         for (let i = 0; i < planning.length; ++i) {
 
             let userId = usersMap.get(planning[i].user);
-            let postsId = postsMap.get(planning[i].post);
+            let postsId = postsMap.get(planning[i].post.toString());
             let shiftId = shiftMap.get(planning[i].shift);
-
 
             if (userId === undefined || postsId === undefined || shiftId === undefined) {
                 console.log('wrong data', planning[i]);

@@ -59,6 +59,9 @@ class ProblemDetails extends Component<props> {
 
     render() {
 
+
+        console.log('test',this.props);
+
         return(
             <div>
                 <Grid container>

@@ -2,6 +2,7 @@ import Redux from 'redux';
 import Database from '../../Redux/Database';
 import XLSX from 'xlsx';
 import {GeneralPost, Post, User, Item, Shift, Planning, Association, Parser} from './Parser';
+import Axios from 'axios';
 
 
 
@@ -11,104 +12,104 @@ export enum DataActions {
     DATA_POST_FAIL = 'DATA_POST_FAIL'
 };
 
-/**
- * Acepts all the excel files, parses them and sends them to the server to create the database
- * @param functiesfile de file detailing the functies/posts
- * @param appellijstFile de file detailing witch user works when on witch post
- * @param shiftenFile  the file detailing the shifts
- * @param gebruikerFile the file detailing the users
- * @param itemfile the file detailing the items used on differents shifts
- * @param isUpdateMode determends if the new file's override the existing data or add to it
- */
-export const uploadFile = (functiesfile : File, appellijstFile : File, 
-     shiftenFile : File, gebruikerFile : File, itemfile : File, isUpdateMode : boolean) => 
-    async (dispatch : Redux.Dispatch) => {
-    console.log("in file upload");
-    try {
-        dispatch({
-            type: DataActions.Data_POST_START
-        });
+// /**
+//  * Acepts all the excel files, parses them and sends them to the server to create the database
+//  * @param functiesfile de file detailing the functies/posts
+//  * @param appellijstFile de file detailing witch user works when on witch post
+//  * @param shiftenFile  the file detailing the shifts
+//  * @param gebruikerFile the file detailing the users
+//  * @param itemfile the file detailing the items used on differents shifts
+//  * @param isUpdateMode determends if the new file's override the existing data or add to it
+//  */
+// export const uploadFile = (functiesfile : File, appellijstFile : File, 
+//      shiftenFile : File, gebruikerFile : File, itemfile : File, isUpdateMode : boolean) => 
+//     async (dispatch : Redux.Dispatch) => {
+//     console.log("in file upload");
+//     try {
+//         dispatch({
+//             type: DataActions.Data_POST_START
+//         });
 
-        let parser : Parser = new Parser();
+//         let parser : Parser = new Parser();
 
-        let deleted : Promise<any> =  parser.deleteAll();
-        deleted.then(async (val : any) => {
-            await parseGebruikers(gebruikerFile,parser);
-            console.log("after parse gebruikers");
-            await parseFuncties(functiesfile,parser);
-            console.log("afeter parse functies");
-            await parseShiften(shiftenFile,parser);
-            await parseAppellijst(appellijstFile,parser);
-            await parseItems(itemfile,parser);
-        });
+//         let deleted : Promise<any> =  parser.deleteAll();
+//         deleted.then(async (val : any) => {
+//             await parseGebruikers(gebruikerFile,parser);
+//             console.log("after parse gebruikers");
+//             await parseFuncties(functiesfile,parser);
+//             console.log("afeter parse functies");
+//             await parseShiften(shiftenFile,parser);
+//             await parseAppellijst(appellijstFile,parser);
+//             await parseItems(itemfile,parser);
+//         });
 
         
-        if (parser.getError()) {
-            console.log("error\n\n\n") //TODO
-        }
+//         if (parser.getError()) {
+//             console.log("error\n\n\n") //TODO
+//         }
 
-        // console.log("users", parser.getUsers());
-        // console.log("posten",parser.getPosts());
-        // console.log("shiften",parser.getShifts());
-        // console.log("verenegingen",parser.getAssociations());
-        // console.log("planning",parser.getPlanning());
-        // console.log("items",parser.getItems());
-        // console.log("generalPosts",parser.getGeneralPosts());
-        // console.log("sectors",parser.getSectors());
+//         // console.log("users", parser.getUsers());
+//         // console.log("posten",parser.getPosts());
+//         // console.log("shiften",parser.getShifts());
+//         // console.log("verenegingen",parser.getAssociations());
+//         // console.log("planning",parser.getPlanning());
+//         // console.log("items",parser.getItems());
+//         // console.log("generalPosts",parser.getGeneralPosts());
+//         // console.log("sectors",parser.getSectors());
 
-        // const response = await new Database().postNewData(
-        //     parser.getUsers(), parser.getPosts(), parser.getShifts(), parser.getAssociations(),
-        //     parser.getPlanning(), parser.getItems(), parser.getGeneralPosts(), parser.getSectors(), parser
-        // );
-        //const response2 = await new Database().postFile(gebruikerFile,"",true);
+//         // const response = await new Database().postNewData(
+//         //     parser.getUsers(), parser.getPosts(), parser.getShifts(), parser.getAssociations(),
+//         //     parser.getPlanning(), parser.getItems(), parser.getGeneralPosts(), parser.getSectors(), parser
+//         // );
+//         //const response2 = await new Database().postFile(gebruikerFile,"",true);
 
-       // console.log(response);
+//        // console.log(response);
 
-        // await new Database().postFile(file,isUpdateMode);
+//         // await new Database().postFile(file,isUpdateMode);
 
-        // const reader = new FileReader();
-		// const rABS = !!reader.readAsBinaryString;
+//         // const reader = new FileReader();
+// 		// const rABS = !!reader.readAsBinaryString;
 
-        // reader.onload = (e) => {
-        //     if (e.target != null) {
-        //         /* Parse data */
-        //         const bstr = e.target.result;
-        //         const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
-        //         /* Get first worksheet */
-        //         const wsname = wb.SheetNames[0];
-        //         const ws = wb.Sheets[wsname];
-        //         /* Convert array of arrays */
-        //         const data = XLSX.utils.sheet_to_json(ws, {header:1});
-        //         /* Update state */
-        //         // this.setState({ data: data, cols: make_cols(ws['!ref']) });
-        //         console.log('wb',wb);
-        //         console.log("data",data);
-        //         console.log('length',data.length);
-        //     }
-        // };
+//         // reader.onload = (e) => {
+//         //     if (e.target != null) {
+//         //         /* Parse data */
+//         //         const bstr = e.target.result;
+//         //         const wb = XLSX.read(bstr, {type:rABS ? 'binary' : 'array'});
+//         //         /* Get first worksheet */
+//         //         const wsname = wb.SheetNames[0];
+//         //         const ws = wb.Sheets[wsname];
+//         //         /* Convert array of arrays */
+//         //         const data = XLSX.utils.sheet_to_json(ws, {header:1});
+//         //         /* Update state */
+//         //         // this.setState({ data: data, cols: make_cols(ws['!ref']) });
+//         //         console.log('wb',wb);
+//         //         console.log("data",data);
+//         //         console.log('length',data.length);
+//         //     }
+//         // };
         
-        // if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
+//         // if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
 
-        dispatch({
-            type: DataActions.DATA_POST_SUCCES
-        });
-    } catch(error) {
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
+//         dispatch({
+//             type: DataActions.DATA_POST_SUCCES
+//         });
+//     } catch(error) {
+//         if (error.response) {
+//             // Server responded with a code high than 2xx
+//             console.log(error.response.data);
+//             console.log(error.response.status);
+//             console.log(error.response.headers);
 
-            dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }   
-    }
-}
+//             dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
+//         } else if (error.request) {
+//             // No response was received from the server
+//             console.log(error.request);
+//         } else {
+//             // Request couldn't get send
+//             console.log('Error', error.message);
+//         }   
+//     }
+// }
 
 export const deleteDatabase = () => async (dispatch : Redux.Dispatch) => {
     try {
@@ -150,11 +151,19 @@ export const uploadUsers = (file : File) => async (dispatch : Redux.Dispatch) =>
 
         await parseGebruikers(file,parser);
 
+        const response  = await Axios.get("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&singleLine=3500 Hasselt, Kempische steenweg&outFields=Match_addr,Addr_type");
 
+        console.log("locatie",response);
         
         if (parser.getError()) {
             console.log("error\n\n\n") //TODO
+            dispatch({
+                type: DataActions.DATA_POST_FAIL,
+                payload: 'ParseError'
+            });
         }
+
+        console.log(parser.getResponse());
 
         dispatch({
             type: DataActions.DATA_POST_SUCCES

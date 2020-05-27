@@ -6,7 +6,6 @@ import PostDetails from './pages/detailpages/PostDetails';
 import Problems from './pages/problem/ProblemPage';
 
 import Planning from './pages/planning/PlanningPage';
-import Settings from './pages/settings/SettingsPage';
 import PukkelpopMap from './pages/map/MapPage';
 import Posts from './pages/post/PostPage';
 import Users from './pages/user/UserPage';
@@ -45,7 +44,6 @@ function App() {
             <Route path="/Data/Problem" component={ProblemDetails} />
             <Route path="/Data/Post" component={PostDetails} />
             <Route path="/Data/Shifts" component={Planning} />
-            <Route path="/Settings" component={Settings} />
           </Switch>
           </Grid>
         </Grid>
