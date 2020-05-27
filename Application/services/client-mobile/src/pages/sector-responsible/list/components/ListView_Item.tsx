@@ -1,20 +1,11 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { IonButton, 
-    IonListHeader, 
-    IonHeader, 
-    IonPage, 
-    IonTitle, 
-    IonToolbar, 
-    IonList, 
-    IonItem, 
-    IonLabel,
-    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonIcon } from '@ionic/react';
+import {IonItem, 
+    IonLabel,} from '@ionic/react';
 import { call } from 'ionicons/icons';
 
 import WarningSign from "../../../images/warning_sign"
 import '../ListPage.css'
-import { setListLocalStorage } from '../../../save/saveFunction';
 import { withRouter } from 'react-router';
 
   
