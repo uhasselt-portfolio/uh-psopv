@@ -29,9 +29,6 @@ class ProblemPreview extends Component<ProblemDataInterface> {
         });
     }
 
-    /**
-     * renders the component
-     */
     render() {
 
         if (this.state.redirecting) {

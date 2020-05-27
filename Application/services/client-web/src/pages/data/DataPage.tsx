@@ -4,7 +4,7 @@ import { Grid, Input } from '@material-ui/core';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {uploadFile} from './DataActions';
+import {uploadFile, uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers, deleteDatabase} from './DataActions';
 
 const ButtonStyle = {
     background: 'rgb(21,95,160)',
@@ -107,112 +107,69 @@ class Data extends Component<Props> {
     /**
      * sends the file to the server
      */
-    uploadFile = () => {
+    uploadFile = (fileName : string) => {
         let isUpdateMode : boolean = ! this.state.isCreating;
 
-        if (this.state.functiesFile === null || 
-            this.state.appellijstFile === null ||
-            this.state.shiftenFile === null ||
-            this.state.gebruikersFile === null ||
-            this.state.itemFile === null) {
-            this.setState({
-                ...this.state,
-                noFile : true
-            });
-            return;
-        } 
+        // this.props.uploadFile(this.state.functiesFile, this.state.appellijstFile,
+        //         this.state.shiftenFile, this.state.gebruikersFile, this.state.itemFile,isUpdateMode);
 
-        this.props.uploadFile(this.state.functiesFile, this.state.appellijstFile,
-                this.state.shiftenFile, this.state.gebruikersFile, this.state.itemFile,isUpdateMode);
-
-        // switch(fileName) {
-        //     case "functies" : {
-
-        //             this.props.uploadFile(this.state.functiesFile,isUpdateMode);
-        //         } else {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : true
-        //             });
-        //         }
-        //         break;
-        //     }
-        //     case "shiften" : {
-        //         if (this.state.shiftenFile !== null) {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : false
-        //             });
-        //             this.props.uploadFile(this.state.shiftenFile,isUpdateMode);
-        //         } else {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : true
-        //             });
-        //         }
-        //         break;
-        //     }
-        //     case "hoofdfuncties" : {
-        //         if (this.state.hoofdfunctiesFile !== null) {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : false
-        //             });
-        //             this.props.uploadFile(this.state.hoofdfunctiesFile,isUpdateMode);
-        //         } else {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : true
-        //             });
-        //         }
-        //         break;
-        //     }
-        //     case "maxBezettingen" : {
-        //         if (this.state.maxBezettingenFile !== null) {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : false
-        //             });
-        //             this.props.uploadFile(this.state.maxBezettingenFile,isUpdateMode);
-        //         } else {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : true
-        //             });
-        //         }
-        //         break;
-        //     }
-        //     case "bezettingen" : {
-        //         if (this.state.bezettingenFile !== null) {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : false
-        //             });
-        //             this.props.uploadFile(this.state.bezettingenFile,isUpdateMode);
-        //         } else {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : true
-        //             });
-        //         }
-        //         break;
-        //     }
-        //     case "appellijst" : {
-        //         if (this.state.appellijstFile !== null) {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : false
-        //             });
-        //             this.props.uploadFile(this.state.appellijstFile,isUpdateMode);
-        //         } else {
-        //             this.setState({
-        //                 ...this.state,
-        //                 noFile : true
-        //             });
-        //         }
-        //         break;
-        //     }
-        // }
+        switch(fileName) {
+            case 'functies' : {
+                if (this.state.functiesFile === null) {
+                    this.setState({
+                        ...this.state,
+                        noFile : true
+                    });
+                    return;
+                }
+                this.props.uploadFuncties(this.state.functiesFile);
+                break;
+            }
+            case 'shiften' : {
+                if (this.state.shiftenFile === null) {
+                    this.setState({
+                        ...this.state,
+                        noFile : true
+                    });
+                    return;
+                }
+                this.props.uploadShifts(this.state.shiftenFile);
+                break;
+            }
+            case 'appellijst' : {
+                if (this.state.appellijstFile === null) {
+                    this.setState({
+                        ...this.state,
+                        noFile : true
+                    });
+                    return;
+                }
+                this.props.uploadAppellijst(this.state.appellijstFile);
+                break;
+            }
+            case 'gebruikers' : {
+                if (this.state.gebruikersFile === null) {
+                    this.setState({
+                        ...this.state,
+                        noFile : true
+                    });
+                    return;
+                }
+                this.props.uploadUsers(this.state.gebruikersFile);
+                break;
+            }
+            case 'items': {
+                if (this.state.itemFile === null) {
+                    this.setState({
+                        ...this.state,
+                        noFile : true
+                    });
+                    return;
+                }
+                this.props.uploadItems(this.state.itemFile);
+                break;
+            }
+        }
     }
 
     /**
@@ -225,9 +182,6 @@ class Data extends Component<Props> {
         });
     }
 
-    /**
-     * renders the component
-     */
     render() {
         return(
             <Grid container direction="row">
@@ -267,6 +221,9 @@ class Data extends Component<Props> {
                         <Grid item style={itemStyle}>
                             <Input type="file" onChange={(e) => {this.updateFile(e,"functies")}}/>
                         </Grid>
+                        <Grid item style={itemStyle}>
+                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('functies')}}>Upload</Button>
+                        </Grid>
                     </Grid>
                     <Grid container direction="row" alignItems="center" style={uploadStyle}>
                         <Grid item>
@@ -274,6 +231,9 @@ class Data extends Component<Props> {
                         </Grid>
                         <Grid item style={itemStyle}>
                             <Input type="file" onChange={(e) => {this.updateFile(e,"shiften")}}/>
+                        </Grid>
+                        <Grid item style={itemStyle}>
+                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('shiften')}}>Upload</Button>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" alignItems="center" style={uploadStyle}>
@@ -283,6 +243,9 @@ class Data extends Component<Props> {
                         <Grid item style={itemStyle}>
                             <Input type="file" onChange={(e) => {this.updateFile(e,"appellijst")}}/>
                         </Grid>
+                        <Grid item style={itemStyle}>
+                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('appellijst')}}>Upload</Button>
+                        </Grid>
                     </Grid>
                     <Grid container direction="row" alignItems="center" style={uploadStyle}>
                         <Grid item>
@@ -290,6 +253,9 @@ class Data extends Component<Props> {
                         </Grid>
                         <Grid item style={itemStyle}>
                             <Input type="file" onChange={(e) => {this.updateFile(e,"gebruikers")}}/>
+                        </Grid>
+                        <Grid item style={itemStyle}>
+                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('gebruikers')}}>Upload</Button>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" alignItems="center" style={uploadStyle}>
@@ -299,10 +265,13 @@ class Data extends Component<Props> {
                         <Grid item style={itemStyle}>
                             <Input type="file" onChange={(e) => {this.updateFile(e,"items")}}/>
                         </Grid>
+                        <Grid item style={itemStyle}>
+                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('items')}}>Upload</Button>
+                        </Grid>
                     </Grid>
                     <Grid item style={itemStyle}>
-                        <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile()}}>Upload</Button>
-                </Grid>
+                        <Button variant="outlined" style={ButtonStyle} onClick={() => {this.props.deleteDatabase()}}>Verwijder huidige gegevens</Button>
+                    </Grid>
                 </Grid>
 
                 <Grid item style={styleRight}>
@@ -337,7 +306,7 @@ class Data extends Component<Props> {
                         gescheiden door een spatie. De shift, functie en gebruikers naam en telefoonnummber moeten verwijzen naar andere voorkomens
                         in hun gespecifieerde files.
                     </div>
-                    <h5 style={explanationStyle}>Gebruikers: </h5>
+                    <h5 style={explanationStyle}>Gebruikers: </h5> //TODO uitleggen dat enkel vrijwilliger en verantwoordelijke mag zijn in kolom
                     <div style={explanationStyle}>
                         Dit bestand bevat een opsomming van al de gebruikers, zowel vrijwilligers en verantwoordelijken. Gelieve 
                         de volgende regels te volgen bij het maken van dit bestand. De 2de rij bevat de titels van de kolommen. Deze bevatten
@@ -370,11 +339,17 @@ const MapStateToProps = (state : AppState): LinkStateProps => {
 }
 
 interface LinkDispatchToProps {
-    uploadFile: any
+    uploadFile: any,
+    uploadAppellijst : any, 
+    uploadFuncties : any, 
+    uploadItems : any, 
+    uploadShifts : any, 
+    uploadUsers : any,
+    deleteDatabase: any
 }
 const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
     return bindActionCreators({
-        uploadFile
+        uploadFile,uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers,deleteDatabase
     }, dispatch);
 }
 

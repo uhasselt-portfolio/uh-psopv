@@ -46,9 +46,6 @@ class Post extends Component<PostInterface> {
         });
     }
 
-    /**
-     * renders the component
-     */
     render() {
         if (this.state.redirecting)
         return (

@@ -20,12 +20,9 @@ class PukkelpopMap extends Component<Props> {
     componentWillMount = () => {
         this.props.fetchMap();          
         setInterval(this.props.fetchMap,300000);
-        // setInterval(this.props.fetchMap,100);
     }
 
-    /**
-     * renders the component
-     */
+
     render() {
 
         let sortedProblems : ProblemDataInterface[][] = [];

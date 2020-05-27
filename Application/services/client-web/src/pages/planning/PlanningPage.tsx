@@ -104,7 +104,7 @@ class Planning extends Component<Props> {
     }
 
     /**
-     * 
+     * updates the state with the shift the user wants to view
      */
     handleShiftFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
@@ -113,7 +113,7 @@ class Planning extends Component<Props> {
     }
 
     /**
-     * 
+     * filters all the shifts to user can view depending on the filter option he has chosen
      */
     organizePlanningFilter = () :ShiftProps[] => {
         let allShifts : ShiftInterface[] = this.props.planning;
@@ -151,10 +151,15 @@ class Planning extends Component<Props> {
         }
         return shifts
     }
+
     getItems = (shiftId: Number) : ItemInterface[] => {
         return this.props.items.filter(item => item.shiftId === shiftId);
     }
 
+    /**
+     * takes the shifts from this.props and returns a Shift component array with only the shifts the user 
+     * wants to see
+     */
     filter = () : Array<JSX.Element> => {
         let shifts: ShiftProps[] = this.organizePlanningFilter().sort((x,y) => {
             if (x.shiftname <= y.shiftname)
@@ -178,14 +183,6 @@ class Planning extends Component<Props> {
                 ));
         }
     } //TODO filter nakijken
-
-    filterShift = () : Array<JSX.Element> => {
-
-
-        return (
-            [<Post postName="post2" items={['item1','item2','item3']} users={[]} />]
-        )
-    }
 
     render () {      
         let filteredPosts : PostInterface[] = this.props.posts;

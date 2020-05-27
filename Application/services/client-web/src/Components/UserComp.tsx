@@ -38,9 +38,6 @@ class User extends Component<Props> {
         this.props.changeConnection(this.props.userData.id, ! this.props.userData.has_internet);
     }
 
-    /**
-     * renders the component
-     */
     render() {
         if (this.props.userData.id === -1) {
             return(

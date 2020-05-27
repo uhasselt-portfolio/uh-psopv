@@ -105,11 +105,6 @@ class Problem extends Component<Props> {
                     state: this.state.Data
                 }}/>
             );
-        // let dataSplit : string[] =  this.props.timeStamp.split("T");
-        // let yearSplit : string[] = dataSplit[0].split("-");
-        // let hourSplit : string[] = dataSplit[1].split(".");
-        // let parsedDate : string = yearSplit[2] + "/" + yearSplit[1] + "/" + yearSplit[0];
-        // parsedDate += " " + hourSplit[0];
         let parsedDate : string = formatDateTime(this.props.timeStamp);
 
         return(

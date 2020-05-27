@@ -95,9 +95,6 @@ class NavBar extends Component<IProps, IState> {
         });
     }
 
-    /**
-     * renders the component
-     */
     render() {
         if (this.state.redirecting) {
             this.setState({

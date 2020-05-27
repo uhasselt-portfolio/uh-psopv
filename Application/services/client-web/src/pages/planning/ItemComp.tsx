@@ -13,9 +13,7 @@ interface IProps {
 
 class Item extends Component<IProps> {
 
-    /**
-     * renders the component
-     */
+
         render() {
         return(
             <Grid container justify="space-evenly" style={style}>
