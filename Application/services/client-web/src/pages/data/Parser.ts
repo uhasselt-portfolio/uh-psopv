@@ -64,6 +64,7 @@ export class Parser {
     sectors : Sector[]
     itemTypes : string[]
     error : boolean;
+    serverResponse : any;
 
     constructor() {
         this.generalposts = [];
@@ -132,13 +133,26 @@ export class Parser {
                 generalpost = generalpost + " " + discription;
             let title : string = data[i][postIndex];
             let sector : number = data[i][sectorIndex];
+
+            let latitude : number = 5;
+            let longitude : number = 5;
             let address : string;
             if (data[i][addressIndex] === undefined)
                 address  = "/"
-            else
+            else {
                 address = data[i][addressIndex];
-            let latitude : number = 5;
-            let longitude : number = 5;
+                const response  = await axios.get("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&singleLine=" + address + "&outFields=Match_addr,Addr_type");
+
+                console.log("locatie",response.data.candidates);
+                console.log('address',data[i]);
+
+                if (response.data.candidates.length > 0) {
+                    latitude = response.data.candidates[0].location.x;
+                    longitude = response.data.candidates[0].location.y;
+                }
+            }
+                
+
             let radius : number = 10;
     
             this.posts.push({
@@ -158,8 +172,8 @@ export class Parser {
                     type: sector
                 });
         }
-        console.log(this.generalposts);
-        const response = await axios.post('http://localhost/api/import/createGeneralAndPost', {
+        console.log(this.posts);
+        this.serverResponse = await axios.post('http://localhost/api/import/createGeneralAndPost', {
             sector : this.sectors,
             post: this.posts,
             generalpost: this.generalposts
@@ -238,7 +252,7 @@ export class Parser {
                 });
         }
 
-        const response = await axios.post('http://localhost/api/import/createUser', {
+        this.serverResponse = await axios.post('http://localhost/api/import/createUser', {
             users : this.users,
             association: this.associations
         });
@@ -266,15 +280,14 @@ export class Parser {
         
         }
 
-        let response;
         let count = 0;
         while (count < this.planning.length) {
             if (count + 500 < this.planning.length)
-                response = await axios.post('http://localhost/api/import/createPlanning', {
+                this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
                     planning : this.planning.slice(count, count + 500)
                 });
             else
-                response = await axios.post('http://localhost/api/import/createPlanning', {
+                this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
                     planning : this.planning.slice(count)
                 });
             count += 500;
@@ -307,7 +320,7 @@ export class Parser {
                 name, begin, end
             });
         }
-        const response = await axios.post('http://localhost/api/import/createShift', {
+        this.serverResponse = await axios.post('http://localhost/api/import/createShift', {
             shifts : this.shifts
         });
     }
@@ -354,14 +367,14 @@ export class Parser {
 
         console.log("hey")
 
-        const response = await axios.post('http://localhost/api/import/createItemType', {
+        this.serverResponse = await axios.post('http://localhost/api/import/createItemType', {
             items : this.items,
             itemType: this.itemTypes
         });
     }
 
     deleteAll = async () => {
-        const response = await axios.post('http://localhost/api/import/deleteAll', {
+        this.serverResponse = await axios.post('http://localhost/api/import/deleteAll', {
             users : this.users,
             association: this.associations
         });
@@ -376,4 +389,5 @@ export class Parser {
     getAssociations = () : Association[] => {return this.associations;}
     getSectors = () : Sector[] => {return this.sectors;}
     getError = () : boolean => {return this.error;}
+    getResponse = () => {return this.serverResponse;}
 }

@@ -4,7 +4,7 @@ import { Grid, Input } from '@material-ui/core';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {uploadFile, uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers, deleteDatabase} from './DataActions';
+import {uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers, deleteDatabase} from './DataActions';
 
 const ButtonStyle = {
     background: 'rgb(21,95,160)',
@@ -34,7 +34,6 @@ const explanationStyle = {
 
 
 interface IState  {
-    isCreating : boolean,
     functiesFile : File | null,
     shiftenFile : File | null,
     appellijstFile : File | null,
@@ -47,7 +46,6 @@ type Props = LinkStateProps & LinkDispatchToProps;
 
 class Data extends Component<Props> {
     state : IState = {
-        isCreating: true,
         functiesFile : null,
         shiftenFile : null,
         appellijstFile : null,
@@ -108,10 +106,6 @@ class Data extends Component<Props> {
      * sends the file to the server
      */
     uploadFile = (fileName : string) => {
-        let isUpdateMode : boolean = ! this.state.isCreating;
-
-        // this.props.uploadFile(this.state.functiesFile, this.state.appellijstFile,
-        //         this.state.shiftenFile, this.state.gebruikersFile, this.state.itemFile,isUpdateMode);
 
         switch(fileName) {
             case 'functies' : {
@@ -172,28 +166,10 @@ class Data extends Component<Props> {
         }
     }
 
-    /**
-     * switches the state between updating and creating new data
-     */
-    switch = () => {
-        this.setState({
-            ...this.state,
-            isCreating : ! this.state.isCreating
-        });
-    }
-
     render() {
         return(
             <Grid container direction="row">
                 <Grid container direction="row" alignItems="flex-start" style={styleLeft}>
-                    <Grid container direction="row" alignItems="center" style={uploadStyle}>
-                        <Grid item> 
-                                <h4>mode: </h4>
-                        </Grid>
-                        <Grid item style={itemStyle}>
-                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.switch()}}>{this.state.isCreating ? "create" : "update" }</Button>
-                        </Grid>
-                    </Grid>
                 {this.state.noFile && 
                     <Grid item style={fullWidthStyle}>
                         <div> U moet een file selecteren</div>
@@ -216,13 +192,13 @@ class Data extends Component<Props> {
                 }
                     <Grid container direction="row" alignItems="center" style={uploadStyle}>
                         <Grid item>
-                            <h4>Functies</h4>
+                            <h4>Gebruikers</h4>
                         </Grid>
                         <Grid item style={itemStyle}>
-                            <Input type="file" onChange={(e) => {this.updateFile(e,"functies")}}/>
+                            <Input type="file" onChange={(e) => {this.updateFile(e,"gebruikers")}}/>
                         </Grid>
                         <Grid item style={itemStyle}>
-                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('functies')}}>Upload</Button>
+                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('gebruikers')}}>Upload</Button>
                         </Grid>
                     </Grid>
                     <Grid container direction="row" alignItems="center" style={uploadStyle}>
@@ -238,6 +214,17 @@ class Data extends Component<Props> {
                     </Grid>
                     <Grid container direction="row" alignItems="center" style={uploadStyle}>
                         <Grid item>
+                            <h4>Functies</h4>
+                        </Grid>
+                        <Grid item style={itemStyle}>
+                            <Input type="file" onChange={(e) => {this.updateFile(e,"functies")}}/>
+                        </Grid>
+                        <Grid item style={itemStyle}>
+                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('functies')}}>Upload</Button>
+                        </Grid>
+                    </Grid>            
+                    <Grid container direction="row" alignItems="center" style={uploadStyle}>
+                        <Grid item>
                             <h4>Appellijst</h4>
                         </Grid>
                         <Grid item style={itemStyle}>
@@ -246,18 +233,7 @@ class Data extends Component<Props> {
                         <Grid item style={itemStyle}>
                             <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('appellijst')}}>Upload</Button>
                         </Grid>
-                    </Grid>
-                    <Grid container direction="row" alignItems="center" style={uploadStyle}>
-                        <Grid item>
-                            <h4>Gebruikers</h4>
-                        </Grid>
-                        <Grid item style={itemStyle}>
-                            <Input type="file" onChange={(e) => {this.updateFile(e,"gebruikers")}}/>
-                        </Grid>
-                        <Grid item style={itemStyle}>
-                            <Button variant="outlined" style={ButtonStyle} onClick={() => {this.uploadFile('gebruikers')}}>Upload</Button>
-                        </Grid>
-                    </Grid>
+                    </Grid>           
                     <Grid container direction="row" alignItems="center" style={uploadStyle}>
                         <Grid item>
                             <h4>Items</h4>
@@ -279,20 +255,25 @@ class Data extends Component<Props> {
                     <div style={explanationStyle}>
                         Om bestanden up te loaden dient u op de knop 'Bestand kiezen' te klikken en het 
                          correcte bestand te selecteren. Hieronder volgt wat elk bestand moet bevatten.    
+                         Het is zeer belangrijk dat u de juiste volgorde aanhoud. Indien dit niet het geval is, kan het zijn dat u opnieuw moet
+                         beginnen.
                     </div>
-                    <h5 style={explanationStyle}>Mode:</h5>
+                    <h5 style={explanationStyle}>Gebruikers: </h5>
                     <div style={explanationStyle}>
-                        Wilt u bepaalde nieuwe gegevens invoegen of de oude gegevens overschrijven. Met create overschrijft u de al bestaande gegevens.
-                        Met update behoudt u de oude gegevens en voegt u nieuwe toe. Let hier wel op dat de nieuwe gegevens correct zijn. Als u ergens
-                        naar een gebruiker verwijst moet deze ook bestaan.
+                        Dit bestand bevat een opsomming van al de gebruikers, zowel vrijwilligers en verantwoordelijken. Gelieve 
+                        de volgende regels te volgen bij het maken van dit bestand. De 2de rij bevat de titels van de kolommen. Deze bevatten
+                        minstens 'voornaam', 'achternaam', 'telefoon nummber', 'vereneging', 'wachtwoord', 'email', 'vrijwilliger?'. De kolom 'vrijwilliger?'
+                        mag enkel de waarden 'vrijwilliger' of 'verantwoordelijke' bevatten.
                     </div>
                     <h5 style={explanationStyle}>Functies:</h5>
                     <div style={explanationStyle}>
                         Dit bestand bevat de functies die op het festival voorkomen. Gelieve de volgende regels te volgen 
                         bij het maken van dit bestand. In rij 3 van het bestand staan de titels van de kolommen, gelieve de. Deze bevatten minstens
-                        'HOOFDFUNCTIE', 'SUBFUNCTIE', 'SECTOR', 'LOCATIE', 'MINIMUMLEEFTIJD' en optioneel 'OPMERKING'
+                        'HOOFDFUNCTIE', 'SUBFUNCTIE', 'SECTOR', 'LOCATIE', 'MINIMUMLEEFTIJD' en optioneel 'OPMERKING'. Gelieve bij de locatie een correct address
+                        in te geven, bijvoorbeeld: 3500 Hasselt, Kempische Steenweg. Indien het address niet gevonden wordt, zal de locatie niet gebruikt kunnen worden.
+                        In dit geval zal het een standaard locatie krijgen.
                     </div>
-                    <h5 style={explanationStyle}>FunShiften:cties</h5>
+                    <h5 style={explanationStyle}>Shiften:</h5>
                     <div style={explanationStyle}>
                         Dit bestand bevat de verschillende shiften die tijdens het festival voorkomen. Gelieve de volgende regels 
                         te volgen bij het maken van dit bestand. In rij 3 van het bestand staan de titels van de kolommen. Deze bevatten minstens
@@ -302,22 +283,18 @@ class Data extends Component<Props> {
                     <div style={explanationStyle}>
                         Dit bestand bevat de verdeling van shiften en posten aan gebruikers. Gelieve de volgende regels 
                         te volgen bij het maken van dit bestand. In kolom A worden de shiften neergeschreven. Hierachter bevatten de volgende 
-                        regels de data van deze shift. Hier staat in kolom C de functie. In kolom E de gebruikers naam en telefoonnummber, dit
-                        gescheiden door een spatie. De shift, functie en gebruikers naam en telefoonnummber moeten verwijzen naar andere voorkomens
-                        in hun gespecifieerde files.
-                    </div>
-                    <h5 style={explanationStyle}>Gebruikers: </h5> //TODO uitleggen dat enkel vrijwilliger en verantwoordelijke mag zijn in kolom
-                    <div style={explanationStyle}>
-                        Dit bestand bevat een opsomming van al de gebruikers, zowel vrijwilligers en verantwoordelijken. Gelieve 
-                        de volgende regels te volgen bij het maken van dit bestand. De 2de rij bevat de titels van de kolommen. Deze bevatten
-                        minstens 'voornaam', 'achternaam', 'telefoon nummber', 'vereneging', 'wachtwoord', 'email', 'vrijwilliger?'.
+                        regels de data van deze shift. Hier staat in kolom C de functie. In kolom E de gebruikers naam en telefoon nummer, dit
+                        gescheiden door een spatie. De shift, functie en gebruikers naam en telefoon nummer moeten verwijzen naar andere voorkomens
+                        in hun gespecifieerde files. de naam & telefoon nummer bestaat uit de voornaam en achternaam en telefoon nummer van de werkende
+                        vrijwilliger, gescheiden door een spatie.
                     </div>
                     <h5 style={explanationStyle}>Items: </h5>
                     <div style={explanationStyle}>
                         Dit bestand bevat een opsomming van de verschillende voorwerpen gebruikt tijdens het festival. Gelieve 
                         de volgende regels te volgen bij het maken van dit bestand. de 2de rij bevat de titles van de kolommen. Deze zijn 
-                        'itemType' en 'shift'. Waarbij itemType het soort van item is, bijvoorbeeld een fluohesje en shift is de shift Waarbij
-                        het wordt gebruikt.
+                        'itemType', 'shift', 'functie' en 'naam'. Waarbij itemType het soort van item is, bijvoorbeeld een fluohesje, shift is de shift Waarbij
+                        het wordt gebruikt, functie is de subfunctie uit de functiesfile en de naam bestaat uit de voornaam, achternaam en telefoon nummer van de 
+                        gebruiker gescheiden door een spatie. De shift, functie en naam komen overeen met de shift, functie en naam uit de appellijst.
                     </div>
                 </Grid>
             </Grid>
@@ -339,7 +316,6 @@ const MapStateToProps = (state : AppState): LinkStateProps => {
 }
 
 interface LinkDispatchToProps {
-    uploadFile: any,
     uploadAppellijst : any, 
     uploadFuncties : any, 
     uploadItems : any, 
@@ -349,7 +325,7 @@ interface LinkDispatchToProps {
 }
 const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
     return bindActionCreators({
-        uploadFile,uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers,deleteDatabase
+        uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers,deleteDatabase
     }, dispatch);
 }
 
