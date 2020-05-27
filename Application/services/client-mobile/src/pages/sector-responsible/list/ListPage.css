@@ -24,6 +24,14 @@
     text-decoration:none;
 }
 
+.floatLeft{
+    float: left;
+}
+
+.floatRight{
+    float: right;
+}
+
 .subTitle{
     position: absolute;
     font-size: 0.8em;

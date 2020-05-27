@@ -300,6 +300,20 @@ function getMyManagers(managers: any){
     return my_managers
 }
 
+function getTotalUnreadMessages(problems: any, messages: any){
+    problems = problems.filter((problem: any) => {
+        console.log(problem)
+        return(problem.solved == false)
+    })
+
+    messages = messages.filter((message: any) => {
+        console.log(message)
+        return(message.solved == false)
+    })
+
+    return problems.length + messages.length
+}
+
 export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'
 
 export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
@@ -355,11 +369,12 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
                 responsePlannings, default_sector, list_colors);
             let problems =  getProblems(responseProblems, volunteers);
             let sector_colors = generateSectorColors(postsData.posts_sectors, sectorColors);
-
+            let total_msg = getTotalUnreadMessages(problems, messages)
 
             if(sector_colors.length > 0){
                 setListLocalStorage('sector_colors', sector_colors);
             }
+            setListLocalStorage('total_msg', total_msg);
             setListLocalStorage('my_volunteers', volunteers);
             setListLocalStorage('default_sector', default_sector);
             setListLocalStorage('contacts', nonVolunteers);

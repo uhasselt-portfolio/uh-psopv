@@ -42,22 +42,22 @@ class ListView extends Component<any> {
   }
  
  
-  interval: NodeJS.Timeout | undefined;
+  // interval: NodeJS.Timeout | undefined;
  
-  componentWillUnmount() {
-    if(this.interval != undefined){
-      clearInterval(this.interval);
-    }
-  }
+  // componentWillUnmount() {
+  //   if(this.interval != undefined){
+  //     clearInterval(this.interval);
+  //   }
+  // }
  
   async componentDidMount(){
     this.props.fetchPosts();
     this.handleSectorChange(this.props.localStorage.default_sector)
  
-    this.interval = setInterval(() => {
-      console.log("interval MessagePage")
-      this.props.fetchPosts(); // TODO interval
-    }, 5000);
+    // this.interval = setInterval(() => {
+    //   console.log("interval MessagePage")
+    //   this.props.fetchPosts(); // TODO interval
+    // }, 5000);
   }
  
   async getCurrentLocation() {
@@ -241,7 +241,7 @@ class ListView extends Component<any> {
       <IonGrid>
       <IonRow>
         <IonCol>
-          <IonButton>
+          <IonButton className="floatLeft">
             <IonSelect
               interface="popover"  
               value={this.state.selected_sort} placeholder={this.state.selected_sort} onIonChange={e => this.handleSortChange(e.detail.value)}>
@@ -252,7 +252,7 @@ class ListView extends Component<any> {
           </IonButton>
         </IonCol>
         <IonCol>
-        <IonButton>
+        <IonButton className="floatRight">
         <IonSelect
           interface="popover"  
           value={this.state.selected_sector} placeholder={"Sector " + this.state.selected_sector} onIonChange={e => this.handleSectorChange(e.detail.value)}>

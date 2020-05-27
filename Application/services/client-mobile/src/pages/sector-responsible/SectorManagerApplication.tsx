@@ -13,6 +13,7 @@ import {IonLoading, IonButton, IonContent} from '@ionic/react';
 import {bindActionCreators} from "redux";
 import {doDatabase} from "../save/saveAction";
 import {connect} from "react-redux";
+import { getListLocalStorage } from "../save/saveFunction";
 
 
 class SectorManagerApplication extends Component<any> {
@@ -20,6 +21,16 @@ class SectorManagerApplication extends Component<any> {
 
     constructor(props: any) {
         super(props);
+        this.updateMessageCount();
+    }
+
+    state = {
+        msg_count: 0
+    }
+
+    async updateMessageCount(){
+        let amount = Number(await getListLocalStorage('total_msg'));
+        this.setState({msg_count: amount})
     }
 
     // TODO: Add message count back
@@ -55,7 +66,7 @@ class SectorManagerApplication extends Component<any> {
                 <Route path="/Contacts" component={RequireSignIn(Contacts)} />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
-                <IonTabButton tab="MapPage" href="/MapPage">
+                <IonTabButton tab="MapPage" href="/MapPage" >
                     <IonIcon icon={mapOutline}/>
                     <IonLabel>Post-Kaart</IonLabel>
                 </IonTabButton>
@@ -64,7 +75,7 @@ class SectorManagerApplication extends Component<any> {
                     <IonLabel>Post-Lijst</IonLabel>
                 </IonTabButton>
                 <IonTabButton tab="Notifications" href="/Notifications">
-                    <IonBadge color="primary">{0}</IonBadge>
+                    <IonBadge color="primary">{this.state.msg_count}</IonBadge>
                     <IonIcon icon={notificationsOutline}/>
                     <IonLabel>Berichten</IonLabel>
                 </IonTabButton>
@@ -77,6 +88,8 @@ class SectorManagerApplication extends Component<any> {
         )
     }
 }
+
+
 
 
 function mapStateToProps(state: any) {
