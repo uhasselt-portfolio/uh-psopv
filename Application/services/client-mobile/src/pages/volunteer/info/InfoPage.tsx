@@ -75,7 +75,7 @@ class InfoPage extends React.Component<any, any> {
             <IonCard key={shift_data.id}>
                 <IonCardHeader>
                     <IonCardTitle>
-                        Shift info ({index+1})
+                        Shift info
                     </IonCardTitle>
                 </IonCardHeader>
                 <IonCardContent>

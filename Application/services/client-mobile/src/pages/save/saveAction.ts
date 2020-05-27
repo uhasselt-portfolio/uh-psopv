@@ -302,12 +302,10 @@ function getMyManagers(managers: any){
 
 function getTotalUnreadMessages(problems: any, messages: any){
     problems = problems.filter((problem: any) => {
-        console.log(problem)
         return(problem.solved == false)
     })
 
     messages = messages.filter((message: any) => {
-        console.log(message)
         return(message.solved == false)
     })
 

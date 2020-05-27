@@ -14,8 +14,6 @@ export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
         const sectorColors = await getListLocalStorage('sector_colors');
 
         let data = {posts_data: postsData, default_sector: default_sector, posts_sectors: posts_sectors, sector_colors: sectorColors}
-        console.log(data)
-
 
         dispatch({type: PLANNING_FETCH_SUCCESS, payload: data})
     } catch(error){

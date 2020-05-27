@@ -35,7 +35,8 @@ class PostView extends Component<any, any> {
     show_shift: -1, // niets
     current_shift: -1, 
     showPopover: false,
-    swiper: null
+    swiper: null,
+    first_render: true
   }
 
   hidePopover(){
@@ -98,14 +99,27 @@ class PostView extends Component<any, any> {
     })
   }
 
-  // componentDidMount(){
-  //   this.props.fetchPlanningsFromPost(this.props.match.params.post);
+  // interval: NodeJS.Timeout | undefined;
+
+  componentDidMount(){
+    this.props.fetchPlanningsFromPost(this.props.match.params.post);
+
+    // this.interval = setInterval(() => {
+    //   this.props.fetchPlanningsFromPost(this.props.match.params.post);
+    //   }, 5000);
+    }
+
+  // componentWillUnmount() {
+  //   if(this.interval != undefined){
+  //     clearInterval(this.interval);
+  //   }
   // }
 
-  ionViewWillEnter() {
-    this.props.fetchPlanningsFromPost(this.props.match.params.post);
-    console.log('fetchPlanningsFromPost ionViewWillEnter event fired')
-  }
+  // ionViewDidEnter() {
+  //   this.setState({...this.state, first_render: true})
+  //   // this.props.fetchPlanningsFromPost(this.props.match.params.post);
+  //   console.log('ionViewWillLeave', this.state)
+  // }
 
   renderPost(): any{
     if(this.state.show_shift === -1){

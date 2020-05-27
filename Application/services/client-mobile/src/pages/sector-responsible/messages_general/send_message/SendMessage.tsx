@@ -133,10 +133,14 @@ class SendNotifications extends Component<any> {
 
   renderManagersOfVolunteer(){
     let my_managers = this.props.localStorage.managers;
+    console.log(my_managers)
+    if(my_managers.length > 0){
+      return my_managers.map((manager: any) => {
+        console.log("manaer", manager)
+        return <IonSelectOption value={manager.user_id}>{manager.user_name}</IonSelectOption>
+      })
+    }
 
-    return my_managers.map((manager: any) => {
-      return <IonSelectOption value={manager.user_id}>{manager.user_name}</IonSelectOption>
-    })
   }
 
   renderListOfUser(){
@@ -145,13 +149,15 @@ class SendNotifications extends Component<any> {
       let manager;
       if(this.props.localStorage.managers.length > 0){
         manager = this.props.localStorage.managers[0]
-      }
-
+      
       return(
         <IonSelect interface="popover" value={manager.user_id} placeholder={manager.user_name} onIonChange={e => this.handleQuickBtnChange(e.detail.value)}>
           {this.renderManagersOfVolunteer()}
         </IonSelect>
       )
+      } else{
+        return <div>Niemand is beschikbaar</div>
+      }
     } else{
       return (
         <IonSelect interface="popover" value={this.state.selected_type} placeholder={this.state.selected_type} onIonChange={e => this.handleQuickBtnChange(e.detail.value)}>

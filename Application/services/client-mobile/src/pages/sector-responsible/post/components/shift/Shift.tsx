@@ -41,7 +41,6 @@ class Shift  extends Component<any> {
                     created_by: this.props.my_user_id,
                     created_by_id: this.props.my_user_id}
 
-        console.log(this.props, "PRROPSS")
         this.props.addProblem(this.props.shift.shift_id, this.props.post.post_id, params)
 
         // this.props.sendDataAddProblem(this.props.shift.shift_id, this.props.post.post_id, params);
@@ -206,7 +205,6 @@ class Shift  extends Component<any> {
         if(this.props.shift.shift_problems.length > this.state.problem_end_index){
             loadMore = <IonButton onClick={() => this.loadMoreProblems()}>Meer laden...</IonButton>
         } else{
-            console.log("hey", this.props.shift.shift_problems, this.state.problem_end_index)
             loadMore = <div></div>
         }
 
@@ -283,7 +281,6 @@ class Shift  extends Component<any> {
     }
 
     render() {
-        console.log("SHIFT", this.props)
         return (
             <div className="leftAlign">
                 {this.renderShiftInfo()}
