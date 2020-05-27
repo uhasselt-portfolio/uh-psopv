@@ -1,6 +1,4 @@
-import axios from "axios"
 import Redux from 'redux';
-import Database from '../../../database/Database'
 import { getListLocalStorage } from "../../save/saveFunction";
 
 export const USER_FETCH_START = 'USER_FETCH_START'

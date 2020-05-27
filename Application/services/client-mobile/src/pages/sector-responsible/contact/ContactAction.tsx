@@ -1,7 +1,5 @@
-import axios from "axios"
 import Redux from 'redux';
-import Database from '../../../database/Database'
-import {getDefaultSector, setListLocalStorage, getListLocalStorage } from "../../save/saveFunction";
+import {getListLocalStorage } from "../../save/saveFunction";
 
 export const USERS_FETCH_SUCCESS = 'USERS_FETCH_SUCCESS'
 

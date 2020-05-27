@@ -57,5 +57,17 @@ export default async () => {
         post_id: 2
     }).save();
 
+    await new PlanningModel({
+        user_id: 1,
+        shift_id: 3,
+        post_id: 2
+    }).save();
+
+    await new PlanningModel({
+        user_id: 1,
+        shift_id: 4,
+        post_id: 3
+    }).save();
+
     console.log("Successfully seeded the planning table!")
 }

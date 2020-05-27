@@ -11,19 +11,25 @@ export default async () => {
     console.log("Started seeding the shift table...")
 
     await new ShiftModel({
-        name: 'Waarde wordt niet gebruikt op dit moment',
+        name: 'Middag shift',
         begin: createDate("26/05/2020 21:38"),
         end: createDate("26/05/2020 21:40")
     }).save();
 
     await new ShiftModel({
-        name: 'Waarde wordt niet gebruikt op dit moment',
+        name: 'Late shift',
         begin: createDate("27/05/2020 10:45"),
         end: createDate("27/05/2020 16:45")
     }).save();
 
     await new ShiftModel({
-        name: 'Waarde wordt niet gebruikt op dit moment',
+        name: 'Vroege shift',
+        begin: createDate("27/05/2020 10:45"),
+        end: createDate("29/05/2020 16:45")
+    }).save();
+
+    await new ShiftModel({
+        name: 'Goede shift',
         begin: createDate("29/05/2020 12:45"),
         end: createDate("30/05/2020 19:00"),
     }).save();
