@@ -1,4 +1,4 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol, IonPopover } from '@ionic/react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol, IonPopover, withIonLifeCycle } from '@ionic/react';
 import React, { Fragment, useState, Component, ReactNode, useEffect, useRef } from 'react';
 import './PostPage.css';
 import Shift from './components/shift/Shift';
@@ -98,8 +98,13 @@ class PostView extends Component<any, any> {
     })
   }
 
-  componentDidMount(){
+  // componentDidMount(){
+  //   this.props.fetchPlanningsFromPost(this.props.match.params.post);
+  // }
+
+  ionViewWillEnter() {
     this.props.fetchPlanningsFromPost(this.props.match.params.post);
+    console.log('fetchPlanningsFromPost ionViewWillEnter event fired')
   }
 
   renderPost(): any{
@@ -206,10 +211,9 @@ class PostView extends Component<any, any> {
 
   render(){
     if(this.props.localStorage != undefined){
-      console.log("POST", this.props)
       return this.renderBasis();
     } else{
-      return <div> No internet connection </div>
+      return <IonPage> No internet connection </IonPage>
     }
   };
 }
@@ -231,4 +235,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostView));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(PostView)));

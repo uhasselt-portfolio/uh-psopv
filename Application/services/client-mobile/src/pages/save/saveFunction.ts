@@ -42,15 +42,15 @@ export async function resetActionList() {
   }
 
   // JSON "set" example
-  export async function addObjectToActionList(new_url: String, new_params: any) {
+  export async function addObjectToActionList(new_url: String, new_id: number | undefined, new_params: any) {
     const items = await Storage.get({key: 'action_list'})
 
     let obj: any[];
     if(items.value != null){
         obj = JSON.parse(items.value);
-       obj.push({url: new_url, params: new_params})
+       obj.push({url: new_url, id: new_id, params: new_params})
     } else{
-      obj = [{url: new_url, params: new_params}]
+      obj = [{url: new_url, id: new_id, params: new_params}]
     }
 
     await Storage.set(

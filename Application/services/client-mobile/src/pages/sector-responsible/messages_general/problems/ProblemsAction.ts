@@ -63,7 +63,6 @@ export const MessageToggle = (message_id: number) => async (dispatch: Redux.Disp
         dispatch({type: MESSAGE_TOGGLE_SEEN_START})
 
         const response = await new Database().toggleMessageSeenStatus(message_id);
-        console.log("MESSAGE TOGGLEEDDD")
         dispatch({type: MESSAGE_TOGGLE_SEEN_SUCCESS})
     } catch(error){
         if (error.response) {

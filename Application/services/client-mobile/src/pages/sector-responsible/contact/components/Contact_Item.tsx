@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {Component} from 'react';
-import {IonButton, IonIcon, IonItem, IonLabel} from '@ionic/react';
+import {IonButton, IonIcon, IonItem, IonLabel, withIonLifeCycle} from '@ionic/react';
 import {call, mail} from 'ionicons/icons';
 import {withRouter} from "react-router";
 
@@ -8,6 +8,10 @@ class ContactItem extends Component<any> {
     constructor(props: any) {
         super(props)
     }
+
+    ionViewDidEnter() {
+        console.log('ionViewDidEnter event fired')
+      }
 
     render() {
         return (
@@ -31,4 +35,4 @@ class ContactItem extends Component<any> {
     }
 }
 
-export default withRouter(ContactItem);
+export default withIonLifeCycle(withRouter(ContactItem));

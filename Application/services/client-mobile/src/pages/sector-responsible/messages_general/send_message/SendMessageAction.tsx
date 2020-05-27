@@ -1,9 +1,5 @@
-import axios from "axios"
 import Redux from 'redux';
-import Database from '../../../../database/Database'
-import { getListLocalStorage, addObjectToActionList, ConcatListToActionList, setListLocalStorage } from "../../../save/saveFunction";
-import { promises } from "fs";
-import { list } from "ionicons/icons";
+import { getListLocalStorage, ConcatListToActionList, setListLocalStorage } from "../../../save/saveFunction";
 import Auth from "../../../../utils/Auth";
 
 export const MESSAGE_ADD_START = 'MESSAGE_ADD_START'
@@ -30,7 +26,7 @@ export const messageAddMessage = (
                 priority: priority,
             }
 
-            function_list = [...function_list, {url: 'https://psopv.herokuapp.com/api/message/add', params: params}]
+            function_list = [...function_list, {url: '/message/add', id: undefined , params: params}]
         })
 
         ConcatListToActionList(function_list);

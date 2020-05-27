@@ -1,7 +1,7 @@
 import axios from "axios"
 import Redux from 'redux';
 import Database from '../../database/Database'
-import {resetActionList, getActionList, addObjectToActionList, getDefaultSector, setListLocalStorage, getListLocalStorage} from './saveFunction'
+import {resetActionList, getActionList, setListLocalStorage, getListLocalStorage} from './saveFunction'
 import { push } from "ionicons/icons";
 import Auth from "../../utils/Auth";
 
@@ -304,17 +304,18 @@ export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'
 
 export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
     try{
+        const database = new Database();
         const todoCommands = await getActionList();
 
         todoCommands.forEach(async (element: any) => {
-            if(element.params != null){
-                    const result = await axios.post(element.url, element.params);
+            if(element.id == undefined){
+                const result = await database.postRequest(element.url, element.params);
             } else{
-                    const result = await axios.patch(element.url);
+                const result = await database.patchRequest(element.url, element.id, element.params);
+
             }
         });
 
-        const database = new Database();
         const user_id = Auth.getAuthenticatedUser().id;
 
         const responseMessages = await database.fetchMessagesFrom(user_id);
@@ -327,7 +328,6 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             const responsePlannings =  await database.fetchPlanningsWithUserId(user_id);
             const responseSectors =  await database.fetchMyManager(user_id);
             let my_managers = getMyManagers(responseSectors.data.data.sectors);
-            console.log(my_managers, "my_managers")
             let plannings = responsePlannings.data.data.plannings;
             plannings.sort(sortPlanningsByDate)
             setListLocalStorage('plannings', plannings);

@@ -48,6 +48,13 @@ class ServerRequest {
 }
 
 export default class Database {
+    async patchRequest(url: string, id: number, params: any) {
+        return ServerRequest.patch(url, id, params);
+    }
+
+    async postRequest(url: string, params: any){
+        return ServerRequest.post(url, params);
+    }
 
     async loginUser(email: string | undefined, password: string | undefined) {
         return ServerRequest.post('/user/authenticate', {

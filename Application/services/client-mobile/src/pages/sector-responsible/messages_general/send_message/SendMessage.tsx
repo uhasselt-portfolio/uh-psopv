@@ -132,7 +132,6 @@ class SendNotifications extends Component<any> {
   }
 
   renderManagersOfVolunteer(){
-    console.log(this.props)
     let my_managers = this.props.localStorage.managers;
 
     return my_managers.map((manager: any) => {

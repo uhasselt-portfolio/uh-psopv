@@ -9,7 +9,8 @@ import {
     IonRouterOutlet,
     IonText,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    withIonLifeCycle
 } from '@ionic/react';
 import {IonReactRouter} from '@ionic/react-router';
 import LoginPage from './pages/login/LoginPage';
@@ -50,19 +51,19 @@ class App extends React.Component<any, any> {
 
     renderVolunteerApplication() : React.ReactNode {
         return (
-            <div>
+            <>
                 <Redirect from="/" to="/InfoPage" />
                 <VolunteerApplication />
-            </div>
+            </>
         )
     }
 
     renderManagerApplication() : React.ReactNode {
         return (
-            <div>
+            <>
                 <Redirect from="/" to="/MapPage" />
                 <SectorManagerApplication />
-            </div>
+            </>
         )
     }
     
@@ -86,7 +87,6 @@ class App extends React.Component<any, any> {
     render() {
         return (
             <IonApp>
-                <Save/>
                 <IonReactRouter>
                     <Switch>
                         {this.renderApplication()}

@@ -12,7 +12,8 @@ import {
     IonPage,
     IonRow,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    withIonLifeCycle
 } from '@ionic/react';
 import React, {Component} from 'react';
 import {call, mail} from 'ionicons/icons';
@@ -105,11 +106,11 @@ class PersonPage extends Component<any> {
 
     renderContact() {
         if (this.props.loading == true) {
-            return <div>Loading...</div>
+            return <IonPage>Loading...</IonPage>
         } else {
             if (this.props.isUserFetched !== undefined) {
                 if (this.props.isUserFetched.length <= 0) {
-                    return <div> No info found. </div>
+                    return <IonPage> No info found. </IonPage>
                 } else {
                     return this.renderUserInfo(this.props.isUserFetched)
                 }
@@ -122,6 +123,10 @@ class PersonPage extends Component<any> {
             <div>{this.renderContact()}</div>
         )
     }
+
+    ionViewDidEnter() {
+        console.log('ionViewDidEnter event fired')
+      }
 };
 
 
@@ -138,5 +143,5 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PersonPage));
+export default withIonLifeCycle(withRouter(connect(mapStateToProps, mapDispatchToProps)(PersonPage)));
   

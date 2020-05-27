@@ -15,7 +15,7 @@ import { IonButton,
   IonSelect,
   IonSelectOption,
   IonRow,
-  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol, IonCard, IonCardHeader } from '@ionic/react';
+  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol, IonCard, IonCardHeader, withIonLifeCycle } from '@ionic/react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 
@@ -95,4 +95,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(Contacts);
+export default withIonLifeCycle(connect(mapStateToProps, mapDispatchToProps)(Contacts));

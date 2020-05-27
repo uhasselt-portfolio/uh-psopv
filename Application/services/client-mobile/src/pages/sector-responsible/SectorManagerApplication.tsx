@@ -1,4 +1,4 @@
-import {IonIcon, IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from "@ionic/react";
+import {IonIcon, IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, withIonLifeCycle} from "@ionic/react";
 import {Route} from "react-router-dom";
 import ListView from "./list/ListPage";
 import MapPage from "./map/MapPage";
@@ -43,11 +43,12 @@ class SectorManagerApplication extends Component<any> {
 
 
     render() {
+        console.log(this.props)
         return (
             <IonTabs>
             <IonRouterOutlet>
                 <Route path="/MapPage" component={RequireSignIn(MapPage)} />
-                <Route path="/ListView" component={RequireSignIn(ListView)} />
+                <Route path="/ListView" component={RequireSignIn(ListView)}/>
                 <Route path="/PostView/:sector/:post" component={RequireSignIn(PostView)} />
                 <Route path="/PersonPage/:id/" component={RequireSignIn(PersonPage)} />
                 <Route path="/Notifications" component={RequireSignIn(MessageGeneral)} />

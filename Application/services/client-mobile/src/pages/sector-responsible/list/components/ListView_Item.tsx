@@ -28,23 +28,14 @@ class ListViewItem  extends Component<any> {
     state = {
         color: this.props.color
     }
-    
-    getPost(): string {
-        return '/PostView/'+ this.props.sector_id + '/' + this.props.post_id;
-    }
 
     renderProblemIcon(){
         {if(this.props.problem === true){
             return  <WarningSign />
         }}
     }
-        
-    // async handleNavigation(){
-    //     await setListLocalStorage('ListView', this.props.post_id)
-    // }
 
     render() {
-        console.log(this.state.color)
         return (   
             <IonItem  detail button onClick={() =>
             this.props.history.push( "/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>
@@ -60,7 +51,7 @@ class ListViewItem  extends Component<any> {
                     {this.renderProblemIcon()}
                 </IonLabel>
             </IonItem>
-        );
+        )
     }
 }
 
