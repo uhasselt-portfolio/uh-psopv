@@ -85,7 +85,6 @@ export default class Database {
     }
 
     async fetchUserByPhoneNumber(phoneNumber: string) {
-        console.log("Started checking...")
         return ServerRequest.get('/user/fetch/phone/' + phoneNumber, false);
     }
 

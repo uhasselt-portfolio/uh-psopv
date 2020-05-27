@@ -37,7 +37,7 @@ class ProblemPreview extends Component<ProblemDataInterface> {
         if (this.state.redirecting) {
             return (
                 <Redirect to={{
-                    pathname: '/Data/Problem',
+                    pathname: '/Data/Pr`oblem',
                     state: this.props
                 }}/>
             );

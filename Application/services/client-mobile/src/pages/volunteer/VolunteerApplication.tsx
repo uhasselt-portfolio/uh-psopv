@@ -1,18 +1,19 @@
-import {IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonBadge} from "@ionic/react";
+import {IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonBadge, IonPage} from "@ionic/react";
 import {Route} from "react-router-dom";
 import InfoPage from "./info/InfoPage";
 import Message from '../volunteer/messages/MessagePage'
 import SendMessage from '../volunteer/messages/SendMessagePage'
 
 import {ellipse, notificationsOutline, paperPlaneOutline, informationCircleOutline} from "ionicons/icons";
-import React, { Component } from "react";
+import React, {Component} from "react";
 import RequireSignIn from "../../utils/RequireSignin";
-import { bindActionCreators } from "redux";
-import { connect } from "react-redux";
-import { doDatabase } from "../save/saveAction";
+import {bindActionCreators} from "redux";
+import {connect} from "react-redux";
+import {doDatabase} from "../save/saveAction";
+import StartPage from "./start/StartPage";
 
 
-class VolunteerApplication  extends Component<any> {
+class VolunteerApplication extends Component<any> {
     interval: NodeJS.Timeout | undefined;
 
     constructor(props: any) {
@@ -20,59 +21,60 @@ class VolunteerApplication  extends Component<any> {
     }
 
     // TODO: Add message count back
-    componentDidMount(){
+    componentDidMount() {
         this.props.doDatabase();
 
         this.interval = setInterval(() => {
-          this.props.doDatabase();
+            this.props.doDatabase();
         }, 10000); //TODO interval
-      }
+    }
 
-      componentWillUnmount() {
-        if(this.interval != undefined){
-          clearInterval(this.interval);
+    componentWillUnmount() {
+        if (this.interval != undefined) {
+            clearInterval(this.interval);
         }
-      }
+    }
 
-    render(){
-        return(
-            <IonTabs>
-                <IonRouterOutlet>
-                    <Route path="/InfoPage" component={RequireSignIn(InfoPage)} />
-                    <Route path="/Messages" component={RequireSignIn(Message)} />
-                    <Route path="/SendMessage" component={RequireSignIn(SendMessage)} />
-                </IonRouterOutlet>
-                <IonTabBar slot="bottom">
-                    <IonTabButton tab="InfoPage" href="/InfoPage">
-                        <IonIcon icon={informationCircleOutline}/>
-                        <IonLabel>Info</IonLabel>
-                    </IonTabButton>
-                    <IonTabButton tab="Messages" href="/Messages">
-                        <IonBadge color="primary">{0}</IonBadge>
-                        <IonIcon icon={notificationsOutline}/>
-                        <IonLabel>Berichten</IonLabel>
-                    </IonTabButton>
-                    <IonTabButton tab="SendMessage" href="/SendMessage">
-                        <IonIcon icon={paperPlaneOutline}/>
-                        <IonLabel>Verstuur bericht</IonLabel>
-                    </IonTabButton>
-                </IonTabBar>
-            </IonTabs>
+    render() {
+        return (
+            <IonPage>
+                <IonTabs>
+                    <IonRouterOutlet>
+                        <Route path="/InfoPage" component={RequireSignIn(InfoPage)}/>
+                        <Route path="/Messages" component={RequireSignIn(Message)}/>
+                        <Route path="/SendMessage" component={RequireSignIn(SendMessage)}/>
+                    </IonRouterOutlet>
+                    <IonTabBar slot="bottom">
+                        <IonTabButton tab="InfoPage" href="/InfoPage">
+                            <IonIcon icon={informationCircleOutline}/>
+                            <IonLabel>Info</IonLabel>
+                        </IonTabButton>
+                        <IonTabButton tab="Messages" href="/Messages">
+                            <IonBadge color="primary">{0}</IonBadge>
+                            <IonIcon icon={notificationsOutline}/>
+                            <IonLabel>Berichten</IonLabel>
+                        </IonTabButton>
+                        <IonTabButton tab="SendMessage" href="/SendMessage">
+                            <IonIcon icon={paperPlaneOutline}/>
+                            <IonLabel>Verstuur bericht</IonLabel>
+                        </IonTabButton>
+                    </IonTabBar>
+                </IonTabs>
+            </IonPage>
         )
     }
 }
 
 
 function mapStateToProps(state: any) {
-    return({
-    })
-  }
-  
-  function mapDispatchToProps(dispatch: any) {
+    return ({})
+}
+
+function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-      doDatabase
+        doDatabase
     }, dispatch);
-  }
-  
-  
-  export default connect(mapStateToProps, mapDispatchToProps)(VolunteerApplication);
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(VolunteerApplication);

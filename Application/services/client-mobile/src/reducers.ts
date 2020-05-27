@@ -35,6 +35,7 @@ const rootReducer = combineReducers({
     person: PersonReducer,
     post: PostReducer,
     problems: ProblemsReducer,
+    start: StartReducer,
     
     // start: StartReducer,
     VRinfo: InfoReducer,
