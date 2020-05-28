@@ -17,7 +17,7 @@ class StartPage extends Component<any> {
     private handleUpdateUserCheckInStatus(event: any): void {
         console.log("Updating checkin status")
         event.preventDefault();
-        this.props.updateUserCheckInStatus(1);
+        this.props.updateUserCheckInStatus(Auth.getAuthenticatedUser().id);
         console.log("Updated checking status")
     }
 
@@ -87,7 +87,7 @@ class StartPage extends Component<any> {
 
         if (plannings == undefined) {
             const user = Auth.getAuthenticatedUser();
-            this.props.fetchPlannings(user.id);
+            this.props.fetchPlannings(Auth.getAuthenticatedUser().id);
             return (
                 <IonCard>
                     <IonCardContent>

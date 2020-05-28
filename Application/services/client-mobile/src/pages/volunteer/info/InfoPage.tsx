@@ -22,6 +22,7 @@ import './InfoPage.css'
 import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/background-geolocation";
 import Map from '../../sector-responsible/map/components/Map';
 import { formatDateTime } from '../../../utils/DateUtil';
+import Auth from '../../../utils/Auth';
 
 const TIME_IN_MS: number = 2000;
 class InfoPage extends React.Component<any, any> {
@@ -57,9 +58,9 @@ class InfoPage extends React.Component<any, any> {
                     console.log("location: ", location)
 
                     this.props.updateGeolocation(location);
-                    this.props.checkIfUserInPost(1);
+                    this.props.checkIfUserInPost(Auth.getAuthenticatedUser().id);
                     if(!this.props.isUserOnPost) {
-                        this.props.reportUserNotInPost(1);
+                        this.props.reportUserNotInPost(Auth.getAuthenticatedUser().id);
                     }
 
                     BackgroundGeolocation.finish(); // FOR IOS ONLY
@@ -67,7 +68,7 @@ class InfoPage extends React.Component<any, any> {
             });
         BackgroundGeolocation.start();
         BackgroundGeolocation.stop();
-        this.props.fetchPlanningsFromId(1);
+        this.props.fetchPlanningsFromId(Auth.getAuthenticatedUser().id);
     }
 
     private showShiftInfo(shift_data: any, index: number) {

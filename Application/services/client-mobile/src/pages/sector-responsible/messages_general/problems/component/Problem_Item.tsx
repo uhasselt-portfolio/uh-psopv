@@ -13,7 +13,7 @@ import { IonButton,
     IonItem, 
     IonLabel,
     IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonRow, IonCol } from '@ionic/react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import './Notification_Item.css';
 import { connect } from "react-redux";
 import {MessageToggle} from '../ProblemsAction'
@@ -54,7 +54,7 @@ class ProblemItem extends Component<any> {
                         <p className="grey">{this.props.title}: {this.props.message} </p>
                         </IonCol>
                         <IonCol size="3">
-                            <IonButton href={this.getPost()}>Ga naar</IonButton>
+                            <IonButton onClick={() => this.props.history.push( "/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>Ga naar</IonButton>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -79,7 +79,7 @@ class ProblemItem extends Component<any> {
                             <p className="grey">{this.props.title}: {this.props.message} </p>
                         </IonCol>
                         <IonCol size="3">
-                            <IonButton href={this.getPost()}>Ga naar</IonButton>
+                            <IonButton onClick={() => this.props.history.push({path: "/PostView/" + this.props.sector_id +"/" + this.props.post_id})}>Ga naar</IonButton>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -139,7 +139,7 @@ function mapStateToProps(state: any) {
     }, dispatch);
   }
   
-  export default connect(mapStateToProps, mapDispatchToProps)(ProblemItem);
+  export default (connect(mapStateToProps, mapDispatchToProps)(withRouter(ProblemItem)));
   
 
   
