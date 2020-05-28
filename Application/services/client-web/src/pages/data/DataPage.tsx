@@ -19,7 +19,8 @@ const itemStyle = {
 }
 const fullWidthStyle = {
     width: '100%',
-    margin: '5px'
+    margin: '5px',
+    marginTop: '20px'
 }
 const styleLeft = {
     width: '60%'
@@ -188,6 +189,7 @@ class Data extends Component<Props> {
                 { ! this.props.isFileUploaded && ! this.props.loading && this.props.errorMessage.localeCompare("") !== 0 && 
                     <Grid item style={fullWidthStyle}>
                         <div>Er liep iets fout tijdens het uploaden</div>
+                        <div>{this.props.errorMessage}</div>
                     </Grid>
                 }
                     <Grid container direction="row" alignItems="center" style={uploadStyle}>
