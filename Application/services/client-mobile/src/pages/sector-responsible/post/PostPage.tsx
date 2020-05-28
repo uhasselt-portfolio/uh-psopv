@@ -106,11 +106,6 @@ class PostView extends Component<any, any> {
     this.props.fetchPlanningsFromPost(this.props.match.params.post);
     }
 
-  ionViewWillEnter() {
-    console.log('ionViewWillEnter', this.state)
-    // this.props.fetchPlanningsFromPost(this.props.match.params.post);
-  }
-
   renderPost(): any{
     if(this.state.show_shift === -1){
       this.setCurrentlyActiveShift();
