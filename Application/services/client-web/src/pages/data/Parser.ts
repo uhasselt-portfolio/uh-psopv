@@ -172,12 +172,16 @@ export class Parser {
                     type: sector
                 });
         }
-        console.log(this.posts);
-        this.serverResponse = await axios.post('http://localhost/api/import/createGeneralAndPost', {
-            sector : this.sectors,
-            post: this.posts,
-            generalpost: this.generalposts
-        });
+        try {
+            this.serverResponse = await axios.post('http://localhost/api/import/createGeneralAndPost', {
+                sector : this.sectors,
+                post: this.posts,
+                generalpost: this.generalposts
+            });
+        } catch(error) {
+            this.serverResponse = error.response;
+        }
+
     }
     checkGeneralPostInside = (newpost : GeneralPost, array : GeneralPost[]) : boolean => {
         for (let i = 0; i < array.length; ++i) {
@@ -251,11 +255,14 @@ export class Parser {
                     name: association
                 });
         }
-
-        this.serverResponse = await axios.post('http://localhost/api/import/createUser', {
-            users : this.users,
-            association: this.associations
-        });
+        try {
+            this.serverResponse = await axios.post('http://localhost/api/import/createUser', {
+                users : this.users,
+                association: this.associations
+            });
+        } catch(error) {
+            this.serverResponse = error.response;
+        }
     }
 
     createPlanning = async (data: any) => {
@@ -280,17 +287,22 @@ export class Parser {
         
         }
 
-        let count = 0;
-        while (count < this.planning.length) {
-            if (count + 500 < this.planning.length)
-                this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
-                    planning : this.planning.slice(count, count + 500)
-                });
-            else
-                this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
-                    planning : this.planning.slice(count)
-                });
-            count += 500;
+        try {
+            let count = 0;
+            while (count < this.planning.length) {
+                if (count + 500 < this.planning.length)
+                    this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
+                        planning : this.planning.slice(count, count + 500)
+                    });
+                else
+                    this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
+                        planning : this.planning.slice(count)
+                    });
+                count += 500;
+            }
+        } catch(error) {
+            this.serverResponse = error.response;
+            
         }
     }
 
@@ -320,9 +332,13 @@ export class Parser {
                 name, begin, end
             });
         }
-        this.serverResponse = await axios.post('http://localhost/api/import/createShift', {
-            shifts : this.shifts
-        });
+        try {
+            this.serverResponse = await axios.post('http://localhost/api/import/createShift', {
+                shifts : this.shifts
+            });
+        } catch(error) {
+            this.serverResponse = error.response; 
+        }
     }
     
     createItemtype = async (data : any) => {
@@ -365,19 +381,28 @@ export class Parser {
                 this.itemTypes.push(data[i][typeIndex]);
         }
 
-        console.log("hey")
+        try {
 
-        this.serverResponse = await axios.post('http://localhost/api/import/createItemType', {
-            items : this.items,
-            itemType: this.itemTypes
-        });
+            this.serverResponse = await axios.post('http://localhost/api/import/createItemType', {
+                items : this.items,
+                itemType: this.itemTypes
+            });
+        } catch(error) {
+            this.serverResponse = error.response;
+            
+        }
     }
 
     deleteAll = async () => {
-        this.serverResponse = await axios.post('http://localhost/api/import/deleteAll', {
-            users : this.users,
-            association: this.associations
-        });
+        try {
+            this.serverResponse = await axios.post('http://localhost/api/import/deleteAll', {
+                users : this.users,
+                association: this.associations
+            });
+                    } catch(error) {
+            this.serverResponse = error.response;
+            
+        }
     }
 
     getGeneralPosts = () : GeneralPost[] => {return this.generalposts;}

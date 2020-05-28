@@ -20,45 +20,6 @@ const eagerLoadingOptions = {
     include: [{model: UserModel, all: true}]
 }
 
-
-export const importUsers = async (req: Request, res: Response) => {
-    console.log('Entering user import');
-    const excel = req.file;
-
-    //let parser : Parser = new Parser();
-    //parser.parseGebruikers(req.file);
-    //let users : User[] = parser.getUsers();
-
-    console.log(req);
-    console.log(req.body);
-    console.log("fjkslmqe");
-
-    // const workbook : XLSX.WorkBook = XLSX.read(excel.buffer, {type: "buffer"});
-    // console.log(workbook)
-    // const sheetName = workbook.SheetNames[0];
-    // const data = utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-    // // console.log((workbook.Sheets[sheetName]))
-    // console.log(data);
-
-    // console.log(workbook);
-    // console.log(JSON.stringify(workbook.Sheets.Sheet1.A1));
-
-    //res.status(200).send({data: workbook});
-    res.status(200).send();
-};
-
-export const importAll = async (req: Request, res: Response) => {
-    console.log('Entering all import');
-
-    //if (!checkRequiredParameters(req, res)) console.log("fout");
-
-    console.log(req.body);
-    // console.log('everything',req);
-
-    res.status(200).send();
-}
-
 export const deleteAll = async (req: Request, res: Response) => {
     await ProblemModel.destroy({
         truncate: true
@@ -111,6 +72,7 @@ export const importUserAndAssociation = async (req: Request, res: Response) => {
             }
         } else {
             console.log('false association');
+            res.send();
         }
 }
 export const importGeneralPostAndPost = async (req: Request, res: Response) => {
@@ -169,13 +131,10 @@ const insertAssoxiation = async (associations : any[], res: Response) => {
     try {
         for (let i = 0; i < associations.length; ++i) {
             const associationExists = await AssociationModel.findOne({where: {name: associations[i].name}});
-
-            // const userExists = await UserModel.findOne({where: {phone_number: req.body.phone_number}});
-            // const associationExists = await AssociationModel.findByPk(req.body.association_id);
     
             if(associationExists) {
                 console.log('association exists');
-                res.status(404).send({
+                res.status(500).send({
                     status: 'fail',
                     data: null,
                     message: 'Association allready exists'

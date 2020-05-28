@@ -5,7 +5,6 @@ import UserDataInterface from '../interfaces/UserDataInterface';
 import PostDataInterface from '../interfaces/PostDataInterface';
 import ShiftDataInterface from '../interfaces/ShiftDataInterface';
 import MessageDataInterface from '../interfaces/MessageDataInterface';
-import {User, Parser} from '../pages/data/Parser';
 import Auth from "../utils/Auth";
 
 class ServerRequest {
@@ -14,18 +13,16 @@ class ServerRequest {
         console.log("PROCESS", process.env);
         // @ts-ignore
         if (process.env.NODE_ENV == "development")
-            return "http://localhost/api";
+            return "https://psopv.herokuapp.com/api";
         return "https://psopv.herokuapp.com/api";
     }
 
     public static get(endpoint: string, authorized: boolean = true): Promise<any> | null {
         const url = this.getRestApiEndpoint() + endpoint;
 
-        console.log("Authenticating...")
 
         if (authorized && !Auth.isAuthenticated()) return null;
 
-        console.log("GET REQUEST TO...", url);
 
 
         return axios.get(url, {headers: {'Authorization': Auth.getToken()}});
