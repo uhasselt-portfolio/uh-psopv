@@ -105,13 +105,13 @@ class User extends Component<Props> {
                                 <form action="#">
                                         {this.props.userData.has_internet &&                             
                                             <label>
-                                                <input type="checkbox" checked={true} onChange={this.handleChangeInternet}/>
+                                                <input type="checkbox" checked={false} onChange={this.handleChangeInternet}/>
                                                 <span> heeft een internet verbinding </span>
                                             </label>
                                         }
                                         { ! this.props.userData.has_internet && 
                                             <label>
-                                                <input type="checkbox" checked={false}onChange={this.handleChangeInternet}/>
+                                                <input type="checkbox" checked={true}onChange={this.handleChangeInternet}/>
                                                 <span> heeft geen internet verbinding </span>
                                             </label>
                                         }
