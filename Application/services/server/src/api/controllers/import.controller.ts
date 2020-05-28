@@ -293,6 +293,20 @@ const insertGeneralPost = async (posts : any[], res: Response) => {
 
 const insertSector = async (sectors: any[], res: Response) => {
     console.log('inserting sector');
+
+    let Permission_ids = await getpermissionIds();
+
+    let Users = await UserModel.findAll({where: {permission_type_id: Permission_ids[1]}});
+
+    if (Users.length === 0) {
+        console.log('No responsible');
+        res.status(404).send({
+            status: 'fail',
+            data: null,
+            message: 'no responsible exists'
+        });
+        return false;
+    }
     try {
         for (let i = 0; i < sectors.length; ++i) {
             const sectorsExists = await SectorModel.findOne({where: {sector_type: sectors[i].type}});
@@ -306,22 +320,15 @@ const insertSector = async (sectors: any[], res: Response) => {
                 return false;
             } else {
 
-                let Permission_ids = await getpermissionIds();
+                let index = i;
+                if (i >= Users.length)
+                    index = 0;
 
-                let User = await UserModel.findAll({where: {permission_type_id: Permission_ids[1]}});
-
-                if (User.length === 0) {
-                    console.log('No responsible');
-                    res.status(404).send({
-                        status: 'fail',
-                        data: null,
-                        message: 'no responsible exists'
-                    });
-                    return false;
-                }
+                console.log('users',Users.length);
+                console.log(index);
 
                 const Sector = await SectorModel.create({
-                    user_id: User[0].id,
+                    user_id: Users[index].id,
                     sector_type: sectors[i].type
                 });
             }

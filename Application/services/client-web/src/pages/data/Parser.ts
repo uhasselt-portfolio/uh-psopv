@@ -88,6 +88,8 @@ export class Parser {
         let postIndex : number = -1;
         let sectorIndex : number = -1;
         let addressIndex : number = -1;
+        let latitudeIndex : number = -1;
+        let LongitudeIndex : number = -1;
         for (let i = 0; i < data[2].length; ++i) {
             if (data[2][i] === 'HOOFDFUNCTIE')
                 headFunctieIndex = i;
@@ -101,14 +103,19 @@ export class Parser {
                 sectorIndex = i;
             else if (data[2][i] === 'LOCATIE')
                 addressIndex = i;
+            else if (data[2][i] === 'LATITUDE')
+                latitudeIndex = i;
+            else if (data[2][i] === 'LONGITUDE')
+                LongitudeIndex = i;
         }
         if (headFunctieIndex === -1 || minAgeIndex === -1 || discriptionIndex === -1 || postIndex === -1 
-            || sectorIndex === -1 || addressIndex === -1) {
+            || sectorIndex === -1 || addressIndex === -1 || latitudeIndex === -1 || LongitudeIndex === -1) {
                 this.error = true;
                 return ;
             }
     
         for (let i = 3; i < data.length; ++i) {
+            console.log(i);
             if (data[i][discriptionIndex] === undefined) {
                 let temp : GeneralPost = {
                     name: data[i][headFunctieIndex],
@@ -137,14 +144,16 @@ export class Parser {
             let latitude : number = 5;
             let longitude : number = 5;
             let address : string;
-            if (data[i][addressIndex] === undefined)
+
+            if (data[i][addressIndex] === undefined || data[i][addressIndex] === "") {
                 address  = "/"
-            else {
+                if (data[i][latitudeIndex] !== undefined && data[i][LongitudeIndex] !== undefined) {
+                    latitude = data[i][latitudeIndex];
+                    longitude = data[i][LongitudeIndex];
+                }
+            } else {
                 address = data[i][addressIndex];
                 const response  = await axios.get("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&singleLine=" + address + "&outFields=Match_addr,Addr_type");
-
-                console.log("locatie",response.data.candidates);
-                console.log('address',data[i]);
 
                 if (response.data.candidates.length > 0) {
                     latitude = response.data.candidates[0].location.x;
