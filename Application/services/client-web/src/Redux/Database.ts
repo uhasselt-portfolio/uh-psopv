@@ -12,7 +12,7 @@ class ServerRequest {
     static getRestApiEndpoint(): string | undefined {
         console.log("PROCESS", process.env);
         // @ts-ignore
-        if (process.env.NODE_ENV == "development")
+        if (process.env.NODE_ENV === "development")
             return "https://psopv.herokuapp.com/api";
         return "https://psopv.herokuapp.com/api";
     }
