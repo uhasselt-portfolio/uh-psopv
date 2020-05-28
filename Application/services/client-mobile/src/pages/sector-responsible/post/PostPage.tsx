@@ -102,24 +102,14 @@ class PostView extends Component<any, any> {
   // interval: NodeJS.Timeout | undefined;
 
   componentDidMount(){
+    console.log("componentDidMount")
     this.props.fetchPlanningsFromPost(this.props.match.params.post);
-
-    // this.interval = setInterval(() => {
-    //   this.props.fetchPlanningsFromPost(this.props.match.params.post);
-    //   }, 5000);
     }
 
-  // componentWillUnmount() {
-  //   if(this.interval != undefined){
-  //     clearInterval(this.interval);
-  //   }
-  // }
-
-  // ionViewDidEnter() {
-  //   this.setState({...this.state, first_render: true})
-  //   // this.props.fetchPlanningsFromPost(this.props.match.params.post);
-  //   console.log('ionViewWillLeave', this.state)
-  // }
+  ionViewWillEnter() {
+    console.log('ionViewWillEnter', this.state)
+    // this.props.fetchPlanningsFromPost(this.props.match.params.post);
+  }
 
   renderPost(): any{
     if(this.state.show_shift === -1){
