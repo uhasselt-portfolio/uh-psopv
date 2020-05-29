@@ -22,7 +22,10 @@ const { Geolocation } = Plugins;
 const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand", best_route: "beste route"}
  
  
- 
+ /**
+  * Created by Maria Hendrikx
+  * It generates all the different posts
+  */
 class ListView extends Component<any> {
   constructor(props: any) {
     super(props);  
