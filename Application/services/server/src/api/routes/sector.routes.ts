@@ -3,7 +3,7 @@ import {
     fetchAll,
     fetchSectorManagerWithUserID,
     fetchUsersWithSectorID,
-    fetchUsersWithUserID
+    fetchSectorThatContainsUserID
 } from "../controllers/sector.controller";
 import {verify} from "../middleware/jwt.middleware";
 
@@ -29,7 +29,7 @@ router.get('/fetch/all', verify, fetchAll);
 
 router.get('/fetch/:id', verify, fetchUsersWithSectorID);
 
-router.get('/fetch/user/:id', verify, fetchUsersWithUserID);
+router.get('/fetch/user/:id', verify, fetchSectorThatContainsUserID);
 
 router.get('/fetch/sector-manager/:id', fetchSectorManagerWithUserID)
 

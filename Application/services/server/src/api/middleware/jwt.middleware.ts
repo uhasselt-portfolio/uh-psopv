@@ -1,6 +1,12 @@
 import {NextFunction, Request, Response} from "express";
 import JWTUtil from "../utils/jwt.util";
 
+/**
+ * JWT Middleware
+ *
+ * @author Michiel Swaanen
+ *
+ */
 function notAuthorized(res: Response) {
     res.status(401).send({
         status: 'fail',
@@ -21,6 +27,7 @@ export const verify = (req: Request, res: Response, next: NextFunction) => {
     if(token.startsWith('Bearer '))
         token = token.slice(7, token.length);
 
+    // Check if token is valid
     const tokenIsValid = new JWTUtil().verify(token);
 
     if(!tokenIsValid) {
@@ -28,5 +35,6 @@ export const verify = (req: Request, res: Response, next: NextFunction) => {
         return;
     }
 
+    // If valid go to next middleware or to the controller
     next();
 };
