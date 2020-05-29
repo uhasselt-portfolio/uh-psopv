@@ -188,8 +188,6 @@ export const postNewMessages = (receiverIds: number[],title: string, content: st
         });
 
         let adminId : number = Auth.getAuthenticatedUser().id;
-        console.log(adminId);
-        console.log('message',content);
 
         const response = await new Database().postNewMessageMulitple(receiverIds,title,content,adminId);
 

@@ -292,7 +292,7 @@ export default class Database {
         return ServerRequest.post('/message/add', {
             title: title,
             message: content,
-            created_by_id: 3,   //TODO admin id
+            created_by_id: adminId,
             send_to_id: receiverId,
             priority: 1,
         })
@@ -301,7 +301,7 @@ export default class Database {
         return ServerRequest.post('/message/add/bulk', {
             title: title,
             message: content,
-            created_by_id: adminId,   //TODO admin id
+            created_by_id: adminId,  
             send_to_ids: receiverIds,
             priority: 1,
         })
