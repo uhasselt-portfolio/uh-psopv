@@ -4,6 +4,16 @@ import {checkRequiredParameters} from "../middleware/parameter.middleware";
 
 import MessageModel from "../models/message.model";
 
+/**
+ * Message controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch/Load all the behind the foreign keys associated with this model
+ */
 const eagerLoadingOptions = {
     include: [{
         model: MessageModel, all: true,
@@ -11,6 +21,12 @@ const eagerLoadingOptions = {
     }]
 }
 
+/**
+ * Fetch all the messages from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const messages = await MessageModel.findAll(eagerLoadingOptions);
@@ -33,8 +49,13 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-
-export const fetchMessagesSendTo = async (req: Request, res: Response) => {
+/**
+ * Fetch all the messages that are/were sent to a specific user
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
+export const fetchMessagesSentTo = async (req: Request, res: Response) => {
     const userSendTo = req.params.id;
 
     try {
@@ -43,7 +64,11 @@ export const fetchMessagesSendTo = async (req: Request, res: Response) => {
                 model: MessageModel, all: true,
                 include: [{
                     model: MessageModel, all: true,
-                    include: [{model: UserModel, all: true, as: 'created_by'}, {model: UserModel, all: true, as: 'send_to'}]
+                    include: [{model: UserModel, all: true, as: 'created_by'}, {
+                        model: UserModel,
+                        all: true,
+                        as: 'send_to'
+                    }]
                 }]
             }]
         });
@@ -66,6 +91,12 @@ export const fetchMessagesSendTo = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Fetch a specific message from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const messageID = req.params.id;
 
@@ -90,7 +121,12 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Add an message to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -132,13 +168,19 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Add multiples messages to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const addBulk = async (req: Request, res: Response) => {
     if (!checkRequiredParameters(req, res)) return;
 
     try {
         const createdByUserExists: UserModel | null = await UserModel.findByPk(req.body.created_by_id);
 
-        if(!createdByUserExists) {
+        if (!createdByUserExists) {
             res.status(404).send({
                 status: 'fail',
                 data: {
@@ -148,16 +190,15 @@ export const addBulk = async (req: Request, res: Response) => {
             });
         }
 
-
         for (let send_to_id of req.body.send_to_ids) {
-            const sendToUserExists: UserModel | null = await UserModel.findByPk(req.body.send_to_id);
+            const sendToUserExists: UserModel | null = await UserModel.findByPk(send_to_id);
 
-            if(sendToUserExists) {
+            if (sendToUserExists) {
                 await MessageModel.create({
                     title: req.body.title,
                     message: req.body.message,
                     created_by_id: req.body.created_by_id,
-                    send_to_id: req.body.send_to_id,
+                    send_to_id: send_to_id,
                     priority: req.body.priority
                 });
             }
@@ -171,6 +212,7 @@ export const addBulk = async (req: Request, res: Response) => {
         })
 
     } catch (error) {
+        console.log(error)
         res.status(500).send({
             status: 'error',
             data: null,
@@ -179,6 +221,12 @@ export const addBulk = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Toggle the message seen column to true and false (Modification shortcut)
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const toggleSeen = async (req: Request, res: Response) => {
     const messageID = req.params.id
 
@@ -216,6 +264,12 @@ export const toggleSeen = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Modify a specific column for an item
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const messageID = req.params.id;
     const message = req.body.message;
@@ -252,6 +306,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Delete a specific message
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const messageID = req.params.id;
 

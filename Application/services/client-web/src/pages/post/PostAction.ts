@@ -2,6 +2,9 @@ import Redux from 'redux';
 import PostDataInterface from '../../interfaces/PostDataInterface';
 import Database from '../../Redux/Database';
 
+/**
+ * @author Wouter Grootjans
+ */
 export enum PostActions {
     POST_FETCH_START = 'POST_FETCH_STRART',
     POST_FETCH_SUCCES = 'POST_FETCH_SUCCES',

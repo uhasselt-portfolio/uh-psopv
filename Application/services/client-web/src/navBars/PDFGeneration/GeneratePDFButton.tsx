@@ -16,6 +16,9 @@ interface IProps {
 
 type Props = IProps & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class GeneratePdfButton extends Component<Props> {
 
     /**

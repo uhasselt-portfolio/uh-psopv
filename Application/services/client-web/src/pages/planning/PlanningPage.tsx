@@ -57,6 +57,9 @@ interface ShiftProps {
 
 type Props = LinkStateProps & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class Planning extends Component<Props> {
     state: IState = {
             filter: "",

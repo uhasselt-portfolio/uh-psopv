@@ -5,7 +5,9 @@ import UserDataInterface from '../../interfaces/UserDataInterface';
 import PostDataInterface from '../../interfaces/PostDataInterface';
 import Database from '../../Redux/Database';
 
-
+/**
+ * @author Wouter Grootjans
+ */
 export enum PlanningActions {
     PLANNING_FETCH_START = 'PLANNING_FETCH_STRART',
     PLANNING_FETCH_SUCCES = 'PLANNING_FETCH_SUCCES',

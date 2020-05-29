@@ -8,6 +8,7 @@ import MessageInterface from '../../interfaces/MessageDataInterface';
  *  and ProblemPreview
  * @param state the current state of the application
  * @param action the action that has been performed
+ * @author Wouter Grootjans
  */
 export default function (state: State = initialState, action : AnyAction): State {
     switch(action.type) {

@@ -3,7 +3,9 @@ import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import UserDataInterface from '../../interfaces/UserDataInterface';
 import Database from '../../Redux/Database';
 
-
+/**
+ * @author Wouter Grootjans
+ */
 export enum MapActions {
     MAP_FETCH_START = 'MAP_FETCH_STRART',
     MAP_FETCH_SUCCES = 'MAP_FETCH_SUCCES',

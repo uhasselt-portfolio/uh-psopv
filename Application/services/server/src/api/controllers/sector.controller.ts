@@ -6,6 +6,19 @@ import PlanningModel from "../models/planning.model";
 import PostModel from "../models/post.model";
 import ShiftModel from "../models/shift.model";
 
+/**
+ * Sector controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch all the sectors from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const sectors = await SectorModel.findAll({include: [{all: true}]});
@@ -28,7 +41,13 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-export const fetchUsersWithUserID = async (req: Request, res: Response) => {
+/**
+ * Fetch the sector that contains a specific user
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
+export const fetchSectorThatContainsUserID = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
     try {
@@ -52,6 +71,12 @@ export const fetchUsersWithUserID = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Fetch all the users within a specific sector
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchUsersWithSectorID = async (req: Request, res: Response) => {
     const sectorID = req.params.id;
 
@@ -76,6 +101,12 @@ export const fetchUsersWithSectorID = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Fetch the current sector manager for a user
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchSectorManagerWithUserID = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
@@ -83,7 +114,7 @@ export const fetchSectorManagerWithUserID = async (req: Request, res: Response) 
 
         const user = await UserModel.findByPk(userID);
 
-        if(!user) {
+        if (!user) {
             return res.status(404).send({
                 status: 'fail',
                 data: null,
@@ -95,13 +126,17 @@ export const fetchSectorManagerWithUserID = async (req: Request, res: Response) 
             end: {[Op.gt]: new Date().getTime()},
         }
 
-        console.log("WHERE", where);
 
         const activePlanning = await PlanningModel.findOne({
-            where: {user_id: userID},include: [{model: UserModel, all: true},{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
+            where: {user_id: userID},
+            include: [{model: UserModel, all: true}, {model: PostModel, all: true}, {
+                model: ShiftModel,
+                all: true,
+                where: where
+            }]
         });
 
-        if(!activePlanning) {
+        if (!activePlanning) {
             return res.status(404).send({
                 status: 'fail',
                 data: null,

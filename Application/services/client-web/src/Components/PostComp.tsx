@@ -22,6 +22,9 @@ const ButtonStyle = {
     color: 'white',
 }
 
+/**
+ * @author Wouter Grootjans
+ */
 class Post extends Component<PostInterface> {
     state: State ={
         data: {id: -1, title: "title", addres: "address", sector: -1, general: "general post", latitude: 0, longitude: 0, shifts: [], users: [], activeProblem: false},

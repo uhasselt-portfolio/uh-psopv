@@ -15,6 +15,9 @@ interface IState {
     redirecting: boolean
 }
 
+/**
+ * @author Wouter Grootjans
+ */
 class ProblemPreview extends Component<ProblemDataInterface> {
     state: IState = {
         redirecting: false

@@ -19,6 +19,9 @@ const stylePaper = {
 
 type Props = LinkStateProps & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class Overview extends Component<Props> {
 
     /**

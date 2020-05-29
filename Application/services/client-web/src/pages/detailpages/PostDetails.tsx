@@ -43,6 +43,9 @@ interface IProps {
 
 type Props = IProps & LinkStateProps & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class PostDetails extends Component<Props> {
 
     /**

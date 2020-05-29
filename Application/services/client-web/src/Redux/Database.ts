@@ -7,6 +7,9 @@ import ShiftDataInterface from '../interfaces/ShiftDataInterface';
 import MessageDataInterface from '../interfaces/MessageDataInterface';
 import Auth from "../utils/Auth";
 
+/**
+ * @author Michiel Swaanen
+ */
 class ServerRequest {
 
     static getRestApiEndpoint(): string | undefined {
@@ -50,6 +53,9 @@ class ServerRequest {
 
 }
 
+/**
+ * @author Michiel Swaanen & Wouter Grootjans
+ */
 export default class Database {
 
     async authenticate() : Promise<string> {
@@ -292,11 +298,19 @@ export default class Database {
         return ServerRequest.post('/message/add', {
             title: title,
             message: content,
-            created_by_id: 3,   //TODO admin id
+            created_by_id: adminId,
             send_to_id: receiverId,
             priority: 1,
         })
-
+    }
+    async postNewMessageMulitple(receiverIds: number [], title: string, content: string, adminId: number) {
+        return ServerRequest.post('/message/add/bulk', {
+            title: title,
+            message: content,
+            created_by_id: adminId,  
+            send_to_ids: receiverIds,
+            priority: 1,
+        })
     }
 
     async patchMessageRead(messageId: number) {

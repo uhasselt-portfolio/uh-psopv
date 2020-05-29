@@ -24,6 +24,9 @@ interface IState {
     dropdown: boolean
 }
 
+/**
+ * @author Wouter Grootjans
+ */
 class ShiftElement extends Component<IProps> {
     state : IState = {
         dropdown: false

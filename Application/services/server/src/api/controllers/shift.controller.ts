@@ -2,6 +2,19 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import ShiftModel from "../models/shift.model";
 
+/**
+ * Shift controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch all the shifts from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const shifts = await ShiftModel.findAll();
@@ -24,6 +37,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Fetch a specific shift from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const shiftID = req.params.id;
 
@@ -39,7 +58,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -48,6 +67,12 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Add an shift to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -73,6 +98,12 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Modify a specific column for a shift
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const shiftID = req.params.id;
     const shift = req.body.shift;
@@ -109,6 +140,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Delete a specific shift
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const shiftID = req.params.id;
 

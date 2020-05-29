@@ -2,6 +2,19 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import ProblemTypeModel from "../models/problem_type.model";
 
+/**
+ * Problem Type controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch all the problem types from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const problemTypes = await ProblemTypeModel.findAll();
@@ -24,6 +37,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Fetch a specific problem type from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const problemTypeID = req.params.id;
 
@@ -39,7 +58,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -48,7 +67,12 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Add a problem type to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -74,6 +98,12 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Modify a specific column for a problem type
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const problemTypeID = req.params.id;
     const problemType = req.body.problemType;
@@ -86,7 +116,7 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await ProblemTypeModel .update(problemType, {
+        const result = await ProblemTypeModel.update(problemType, {
             returning: true, where: {id: problemTypeID}
         });
 
@@ -110,6 +140,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Delete a specific problem type
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const problemTypeID = req.params.id;
 

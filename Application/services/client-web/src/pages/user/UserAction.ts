@@ -2,6 +2,9 @@ import Redux from 'redux';
 import UserDataInterface from '../../interfaces/UserDataInterface';
 import Database from '../../Redux/Database';
 
+/**
+ * @author Wouter Grootjans
+ */
 export enum UsersActions {
     USERS_FETCH_START = 'USERS_FETCH_STRART',
     USERS_FETCH_SUCCES = 'USERS_FETCH_SUCCES',

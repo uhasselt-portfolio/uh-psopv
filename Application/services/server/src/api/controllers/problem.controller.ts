@@ -4,12 +4,21 @@ import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PlanningModel from "../models/planning.model";
 import ProblemTypeModel from "../models/problem_type.model";
-import ItemModel from "../models/item.model";
 import {Op} from "sequelize";
 import PostModel from "../models/post.model";
 import ShiftModel from "../models/shift.model";
 import MessageModel from "../models/message.model";
 
+/**
+ * Problem controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch/Load all the behind the foreign keys associated with this model
+ */
 const eagerLoadingOptions = {
     include: [{
         model: ProblemModel, all: true,
@@ -17,6 +26,12 @@ const eagerLoadingOptions = {
     }]
 }
 
+/**
+ * Fetch all the problems from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const problems = await ProblemModel.findAll(eagerLoadingOptions);
@@ -39,7 +54,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Fetch a specific problem from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const problemID = req.params.id;
 
@@ -64,6 +84,13 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+
+/**
+ * Fetch a specific problem by using the planning id
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchProblemsViaPlanningID = async (req: Request, res: Response) => {
     const planningID = req.params.id;
 
@@ -94,6 +121,12 @@ export const fetchProblemsViaPlanningID = async (req: Request, res: Response) =>
     }
 };
 
+/**
+ * Fetch all the problems for a specific user
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchProblemsViaUserID = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
@@ -125,6 +158,12 @@ export const fetchProblemsViaUserID = async (req: Request, res: Response) => {
 }
 
 
+/**
+ * Fetch all unsolved problems
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchUnsolvedProblems = async (req: Request, res: Response) => {
     try {
         const problems = await ProblemModel.findAll({
@@ -153,7 +192,12 @@ export const fetchUnsolvedProblems = async (req: Request, res: Response) => {
     }
 }
 
-
+/**
+ * Add a problem to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -195,6 +239,12 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Report a user functionality
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const reportUser = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
@@ -245,7 +295,7 @@ export const reportUser = async (req: Request, res: Response) => {
         const problemType = await ProblemTypeModel.findOne({where: {title: 'Post verlaten', priority}})
 
         // Send message to user
-        if(priority == 10) {
+        if (priority == 10) {
             await MessageModel.create({
                 title: 'Ga terug naar uw post!',
                 message: 'U bent voor 2de keer op rij uit uw post vandaag, gelieve zo snel mogelijk terug te gaan.',
@@ -277,6 +327,12 @@ export const reportUser = async (req: Request, res: Response) => {
 
 }
 
+/**
+ * Modify a specific column for a problem
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const problemID = req.params.id;
     const problem = req.body.problem;
@@ -313,6 +369,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Toggle the problem solved column to true and false (Modification shortcut)
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const toggleProblemSolve = async (req: Request, res: Response) => {
     const problemID = req.params.id;
 
@@ -350,6 +412,12 @@ export const toggleProblemSolve = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Delete a specific problem
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const problemID = req.params.id;
 

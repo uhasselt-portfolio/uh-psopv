@@ -2,6 +2,19 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import ItemTypeModel from "../models/item_type.model";
 
+/**
+ * Item Type controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch all the item types from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const itemTypes = await ItemTypeModel.findAll();
@@ -24,7 +37,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Fetch a specific item type from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const itemTypeID = req.params.id;
 
@@ -40,7 +58,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -49,7 +67,12 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Add an item type to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -73,6 +96,12 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Modify a specific column for an item type
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const itemTypeID = req.params.id;
     const itemType = req.body.itemType;
@@ -85,7 +114,7 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await ItemTypeModel .update(itemType, {
+        const result = await ItemTypeModel.update(itemType, {
             returning: true, where: {id: itemTypeID}
         });
 
@@ -109,6 +138,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Delete a specific item type
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const itemTypeID = req.params.id;
 
