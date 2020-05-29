@@ -252,7 +252,7 @@ function getProblems(responseProblems: any, volunteers: any){
 
     let problems: any[] = []
     responseProblems.data.data.problems.forEach((problem: any) => {
-        if(my_volunteers.includes(problem.planning.user.id)){
+        if(my_volunteers.includes(problem.planning.user_id)){
             problems.push({
                 type: "Problem",
                 id: problem.id,
@@ -318,12 +318,16 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         const todoCommands = await getActionList();
 
         todoCommands.forEach(async (element: any) => {
-            if(element.id == undefined){
-                const result = await database.postRequest(element.url, element.params);
-            } else{
-                const result = await database.patchRequest(element.url, element.id, element.params);
-
+            try{
+                if(element.id == undefined){
+                        const result = await database.postRequest(element.url, element.params);
+                    } else{
+                        const result = await database.patchRequest(element.url, element.id, element.params);
+                    }
+            } catch(error){
+                console.log(error)
             }
+            
         });
 
         const user_id = Auth.getAuthenticatedUser().id;
@@ -380,18 +384,19 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             setListLocalStorage('problem_types', problemTypes.data.data.problemTypes);
         }
 
-
-
         resetActionList();
         dispatch({type: UNROLL_ACTIONS})
-
     } catch(error){
         console.log(error.message)
     }
 }
 
-export const UPDATE_MESSAGES = 'UPDATE_MESSAGES'
 
+/**
+ * Created by: Maria Hendrikx
+ * Updates the messages
+ */
+export const UPDATE_MESSAGES = 'UPDATE_MESSAGES'
 export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
     try{
         const database = new Database();
@@ -400,6 +405,13 @@ export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
         const responseMessages = await database.fetchMessagesFrom(user_id);
         let messages =  getMessages(responseMessages);
         setListLocalStorage('messages', messages);
+
+        const responseProblems = await database.fetchAllProblems();
+        let volunteers = await getListLocalStorage('my_volunteers');
+        let problems =  getProblems(responseProblems, volunteers);
+        setListLocalStorage('problems', problems);
+
+
 
         dispatch({type: UPDATE_MESSAGES})
 

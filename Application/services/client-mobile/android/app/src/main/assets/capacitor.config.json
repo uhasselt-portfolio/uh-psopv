@@ -1,6 +1,6 @@
 {
   "appId": "io.ionic.starter",
-  "appName": "client-mobile",
+  "appName": "Pukkelpop",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "build",
