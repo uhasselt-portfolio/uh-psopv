@@ -27,7 +27,6 @@ export const fetchAll = async (req: Request, res: Response) => {
             message: null
         });
     } catch (error) {
-        console.log(error)
         res.status(500).send({
             status: 'error',
             data: null,

@@ -1,13 +1,10 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover, IonToast } from '@ionic/react';
-import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
-import { RouteComponentProps } from 'react-router';
-import { caretDown } from 'ionicons/icons';
+import { IonItem, IonLabel, IonButton, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover, IonToast } from '@ionic/react';
+import React, {  Component} from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import {messageAddMessage, fetchUsers} from './SendMessageAction'
-import CustomDropdown from '../../list/components/CustomDropdown';
 import  SelectContactWindow  from './components/SelectContactPage';
-import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
+import { setListLocalStorage } from '../../../save/saveFunction';
 import './SendMessage.css'
 import Auth from '../../../../utils/Auth';
 import TemplateMessage from './components/TemplateMessage';

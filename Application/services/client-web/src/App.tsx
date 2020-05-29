@@ -6,7 +6,6 @@ import PostDetails from './pages/detailpages/PostDetails';
 import Problems from './pages/problem/ProblemPage';
 
 import Planning from './pages/planning/PlanningPage';
-import Settings from './pages/settings/SettingsPage';
 import PukkelpopMap from './pages/map/MapPage';
 import Posts from './pages/post/PostPage';
 import Users from './pages/user/UserPage';
@@ -15,13 +14,13 @@ import Overview from './pages/overview/OverviewPage';
 
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
-import { Grid } from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 
 const appStyle = {
-  background: '#eee',
-  minheight: '100vh',
-  height: '100%',
-  paddingBottom: '5px'
+    background: '#eee',
+    minheight: '100vh',
+    height: '100%',
+    paddingBottom: '5px'
 }
 
 //TODO op veel plekken nog loading and failed messages maken
@@ -45,7 +44,6 @@ function App() {
             <Route path="/Data/Problem" component={ProblemDetails} />
             <Route path="/Data/Post" component={PostDetails} />
             <Route path="/Data/Shifts" component={Planning} />
-            <Route path="/Settings" component={Settings} />
           </Switch>
           </Grid>
         </Grid>

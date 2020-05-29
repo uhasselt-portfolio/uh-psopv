@@ -1,13 +1,8 @@
 import jwt, {SignOptions} from 'jsonwebtoken';
-import fs from 'fs';
-// import Cryptr from 'cryptr'
-
-const warning = "Path for private and/or public key not defined in the .env file.";
 
 class JWTUtil {
 
     private publicKey: string;
-    // private cypherTool: Cryptr;
 
     constructor() {
         this.publicKey = "-----BEGIN PUBLIC KEY-----\n" +
@@ -21,7 +16,7 @@ class JWTUtil {
             // issuer: process.env.JWT_PROVIDER,
             // expiresIn: process.env.JWT_EXPIRATION,
             issuer: "localhost",
-            expiresIn: "5m",
+            expiresIn: "60d",
             algorithm: "RS256"
         };
     }

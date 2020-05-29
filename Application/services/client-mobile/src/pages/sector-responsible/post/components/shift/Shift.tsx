@@ -5,9 +5,9 @@ import { IonButton,
     IonCardHeader,
     IonCardContent,
     IonCardTitle,
-    IonCard, IonIcon, IonSlide, IonRow, IonCol, IonGrid, IonItem, IonLabel, IonCheckbox, IonInput, IonTextarea, IonList, IonPopover, IonToast } from '@ionic/react';
+    IonCard, IonIcon, IonRow, IonCol, IonGrid, IonItem, IonLabel, IonCheckbox, IonList, IonPopover, IonToast } from '@ionic/react';
 import './Shift.css';
-import { arrowBack, arrowForward, caretDown } from 'ionicons/icons';
+import { caretDown } from 'ionicons/icons';
 import {formatDateTime} from '../../../../../utils/DateUtil';
 import {itemToggle, problemToggle, addProblem} from '../../PostAction' 
 import { connect } from 'react-redux';

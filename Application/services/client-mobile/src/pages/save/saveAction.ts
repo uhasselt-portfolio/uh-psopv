@@ -1,8 +1,6 @@
-import axios from "axios"
 import Redux from 'redux';
 import Database from '../../database/Database'
 import {resetActionList, getActionList, setListLocalStorage, getListLocalStorage} from './saveFunction'
-import { push } from "ionicons/icons";
 import Auth from "../../utils/Auth";
 
 function sortPlanningsByDate(a: any, b: any){

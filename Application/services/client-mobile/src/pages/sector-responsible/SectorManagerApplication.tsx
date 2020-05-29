@@ -1,15 +1,14 @@
-import {IonIcon, IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, withIonLifeCycle} from "@ionic/react";
-import {Route, Link, Redirect} from "react-router-dom";
+import {IonIcon, IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from "@ionic/react";
+import {Route} from "react-router-dom";
 import ListView from "./list/ListPage";
 import MapPage from "./map/MapPage";
 import PostView from "./post/PostPage";
 import PersonPage from "./person/PersonPage";
 import MessageGeneral from './messages_general/MessageGeneralPage'
 import Contacts from "./contact/ContactPage";
-import {listOutline, mapOutline, notificationsOutline, paperPlaneOutline, personOutline} from "ionicons/icons";
-import React, {useState, Component} from "react";
+import {listOutline, mapOutline, notificationsOutline, personOutline} from "ionicons/icons";
+import React, {Component} from "react";
 import RequireSignIn from "../../utils/RequireSignin";
-import {IonLoading, IonButton, IonContent} from '@ionic/react';
 import {bindActionCreators} from "redux";
 import {doDatabase} from "../save/saveAction";
 import {connect} from "react-redux";

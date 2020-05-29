@@ -5,28 +5,21 @@ import UserDataInterface from '../interfaces/UserDataInterface';
 import PostDataInterface from '../interfaces/PostDataInterface';
 import ShiftDataInterface from '../interfaces/ShiftDataInterface';
 import MessageDataInterface from '../interfaces/MessageDataInterface';
-import {User, Parser} from '../pages/data/Parser';
 import Auth from "../utils/Auth";
 
 class ServerRequest {
 
     static getRestApiEndpoint(): string | undefined {
-        console.log("PROCESS", process.env);
         // @ts-ignore
-        if (process.env.NODE_ENV == "development")
-            return "http://localhost/api";
+        if (process.env.NODE_ENV === "development")
+            return "https://psopv.herokuapp.com/api";
         return "https://psopv.herokuapp.com/api";
     }
 
     public static get(endpoint: string, authorized: boolean = true): Promise<any> | null {
         const url = this.getRestApiEndpoint() + endpoint;
 
-        console.log("Authenticating...")
-
         if (authorized && !Auth.isAuthenticated()) return null;
-
-        console.log("GET REQUEST TO...", url);
-
 
         return axios.get(url, {headers: {'Authorization': Auth.getToken()}});
     }
@@ -59,21 +52,21 @@ class ServerRequest {
 
 export default class Database {
 
-    async authenticate() {
+    async authenticate() : Promise<string> {
         const response = await ServerRequest.post('/user/authenticate', {
             email: 'michiel.swaanen@student.uhasselt.be',
             password: '12345'
         })
 
-        const token = response.data.data.jwt;
+        const token : string = response.data.data.jwt;
         localStorage.setItem('token', token);
+
+        return token;
     }
 
     async fetchProblems() {
 
         const response = await ServerRequest.get('/problem/fetch/all/unsolved', true)
-
-
         let problems: ProblemDataInterface[] = [];
 
         for (let i = 0; i < response.data.data.problems.length; ++i) {
@@ -310,53 +303,5 @@ export default class Database {
         return ServerRequest.patch('/message/toggle-seen', messageId, {})
     }
 
-    async postFile(file : File, fileKind : string, isupdateMode: boolean) {    //TODO
-        if (isupdateMode) {
-
-        } else {
-
-        }
-        const res = await axios.get('http://localhost/api/user/fetch/all');
-        console.log(res);
-        console.log("in database");
-        var formData = new FormData();
-        formData.append('file',file);
-        const respone = await axios.post('http://localhost/api/import/user',
-        formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-        console.log(respone);
-    }
-
-    async postNewData(users : User[], posts: any, shifts : any, associations : any, planning : any, 
-        items : any, generalPosts : any, sectors : any, parser : Parser ) {
-        // console.log("users", parser.getUsers());
-        // console.log("posten",parser.getPosts());
-        // console.log("shiften",parser.getShifts());
-        // console.log("verenegingen",parser.getAssociations());
-        // console.log("planning",parser.getPlanning());
-        // console.log("items",parser.getItems());
-        // console.log("generalPosts",parser.getGeneralPosts());
-        // console.log("sectors",parser.getSectors());
-
-        let test : any[] = [{test: 'test', test2: 'test'},{test: 'test', test2: 'test'},{test: 'test', test2: 'test'}]
-
-
-        // const response = await axios.post('http://localhost/api/import/all', {
-        //     users :test,
-        //     posts :parser.getPosts(),
-        //     shifts :'bla',
-        //     associations :'bla',
-        //     planning :'bla',
-        //     items :'bla',
-        //     generalPosts :'bla',
-        //     sectors :'bla',
-        // });
-        console.log("users",parser.getPosts());
-        console.log("json",JSON.stringify(users[0]));
-
-    }
 }
 

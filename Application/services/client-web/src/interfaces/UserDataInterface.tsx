@@ -1,4 +1,3 @@
-// TODO: Wouter permission changed
 interface UserInterface {
     id: number,
     name: string,

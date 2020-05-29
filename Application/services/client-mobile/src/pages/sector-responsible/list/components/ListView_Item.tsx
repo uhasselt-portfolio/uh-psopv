@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Component } from 'react';
 import {IonItem, 
     IonLabel,} from '@ionic/react';
-import { call } from 'ionicons/icons';
 
 import WarningSign from "../../../images/warning_sign"
 import '../ListPage.css'

@@ -10,7 +10,6 @@ export enum UsersActions {
 
 
 export const fetchUsers = () => async (dispatch : Redux.Dispatch) => {
-    console.log("in settings fetch");
     try {
         dispatch({type: UsersActions.USERS_FETCH_START});
 
@@ -22,19 +21,6 @@ export const fetchUsers = () => async (dispatch : Redux.Dispatch) => {
         });
 
     } catch(error) {
-        if (error.response) {
-            // Server responded with a code high than 2xx
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-
-            dispatch({type: UsersActions.USERS_FETCH_FAIL, payload: error.response.data.message});
-        } else if (error.request) {
-            // No response was received from the server
-            console.log(error.request);
-        } else {
-            // Request couldn't get send
-            console.log('Error', error.message);
-        }   
+        dispatch({type: UsersActions.USERS_FETCH_FAIL, payload: error.response.data.message});
     }
 }

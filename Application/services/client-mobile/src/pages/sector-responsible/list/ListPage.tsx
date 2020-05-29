@@ -3,26 +3,19 @@ import './ListPage.css';
 import ListViewItem from './components/ListView_Item';
  
 import { IonButton, 
-  IonListHeader, 
   IonHeader, 
   IonPage, 
   IonTitle, 
   IonToolbar, 
   IonList, 
-  IonItem, 
-  IonLabel,
-  IonText,
   IonSelect,
   IonSelectOption,
   IonRow,
-  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol, IonRadioGroup, withIonLifeCycle } from '@ionic/react';
+  IonContent, IonGrid, IonCol, withIonLifeCycle } from '@ionic/react';
 import { bindActionCreators } from 'redux';
 import {fetchPosts} from './ListAction'
 import { connect } from 'react-redux';
-import { getDefaultSector, ConcatListToActionList } from '../../save/saveFunction';
-import CustomDropdown from './components/CustomDropdown';
 import { Plugins } from '@capacitor/core';
-import { link } from 'fs';
  
 const { Geolocation } = Plugins;
  

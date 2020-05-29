@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Paper, Grid, Button, IconButton} from '@material-ui/core';
+import {Paper, Grid, IconButton} from '@material-ui/core';
 import PostDataInterface from '../../interfaces/PostDataInterface';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
@@ -18,20 +18,11 @@ const PaperStyle = {
     padding: '10px',
     background: '#eee'
 }
-const UserPaperStyle = {
-    margin: '10px',
-    padding: '10px',
-    background: 'rgb(225, 225, 232)'
-}
 const LeftColumnStyle = {
     width: '70%'
 }
 const RightColumnStyle = {
     width: '30%'
-}
-const ButtonStyle = {
-    background: 'rgb(3,57,108)',    
-    color: 'white',
 }
 
 const flexHorizontal = {
@@ -50,7 +41,7 @@ type Props = LinkStateToProps & PostDataInterface;
 class PostPreview extends Component<Props> {
     state: IState = {
         redirecting: false,
-        currentShift: 0, //TODO how to calculate currentShift,
+        currentShift: 0,
         anchorEl: null,
     }
 
@@ -110,7 +101,6 @@ class PostPreview extends Component<Props> {
         }
 
         let parsedDate : string = 'geen shiften op deze post';
-        let CurrentUsers : Array<JSX.Element> = [];
         let this_users : string = "";
 
         if (this.props.planning.length > 0) {
@@ -120,57 +110,9 @@ class PostPreview extends Component<Props> {
             let enddate: Date = new Date(this.props.planning[this.state.currentShift].endDate);
             let endTime : string = formatTime(enddate.toString());
             parsedDate = tempDate + " " + startTime + " tot " + endTime;
-            CurrentUsers = this.props.workingUsers[this.state.currentShift].map(x => (
-                <Grid item>
-                <Paper style={UserPaperStyle}>
-                    <h5>{x.name + " " + x.lastname}</h5>
-                </Paper>
-                </Grid>
-            ));
         }
 
         return(
-            // <Paper style={PaperStyle}>
-            // <ListItem button divider onClick={this.handleLink}>
-            //     <Grid container direction="row"> 
-            //     <Grid container direction="column">             
-            //         <Grid item xs={8} justify="flex-start" alignItems="flex-start"><strong>{this.props.title}</strong>: {this.props.addres}</Grid>
-            //         <Grid container xs={4} justify="flex-end" alignContent="flex-start">
-            //             {parsedDate}
-            //             {/* <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>details</Button> */}
-            //         </Grid>
-            //     </Grid>  
-            //     <Grid container direction="column">
-            //                     <Grid item>
-            //                          <IconButton onClick={this.handleShiftprev}>
-            //                              <ArrowLeftIcon />
-            //                          </IconButton>
-            //                      </Grid>
-            //                      <Grid item>
-            //                          <p>{parsedDate}</p>
-            //                      </Grid>
-            //                      <Grid item>
-            //                      <IconButton onClick={this.handleNextShift}>
-            //                              <ArrowRightIcon />
-            //                          </IconButton>
-            //                      </Grid>
-            //                  </Grid>
-            //         <Grid container direction="column" justify="space-around" style={RightColumnStyle}>
-            //     <Grid container direction="row" justify="center">
-            //         {this.props.hasProblem && <ReportProblemOutlinedIcon fontSize="large" style={{color: 'red'}}/>}
-            //     </Grid>
-            //         <Grid container direction="row" justify="center">
-            //             <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>Details</Button>
-            //         </Grid> 
-            //     <Grid container direction="row">
-            //             {CurrentUsers}
-            //         </Grid>
-            // </Grid>
-
-            // </Grid>
-            // </ListItem>
-            // </Paper>
-
             <Paper style={PaperStyle} elevation={5}>
                 <Grid container direction="column">
                     <Grid container direction="row">
@@ -201,9 +143,6 @@ class PostPreview extends Component<Props> {
                             <Grid container direction="row" justify="center">
                                 {this.props.hasProblem && <ReportProblemOutlinedIcon fontSize="large" style={{color: 'red'}}/>}
                             </Grid>
-                            <Grid container direction="row" justify="center">
-                                <Button variant="outlined" onClick={this.handleLink} style={ButtonStyle}>Details</Button>
-                            </Grid> 
                         </Grid>
                     </Grid>
                 </Grid>

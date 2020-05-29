@@ -64,6 +64,7 @@ export class Parser {
     sectors : Sector[]
     itemTypes : string[]
     error : boolean;
+    serverResponse : any;
 
     constructor() {
         this.generalposts = [];
@@ -87,6 +88,8 @@ export class Parser {
         let postIndex : number = -1;
         let sectorIndex : number = -1;
         let addressIndex : number = -1;
+        let latitudeIndex : number = -1;
+        let LongitudeIndex : number = -1;
         for (let i = 0; i < data[2].length; ++i) {
             if (data[2][i] === 'HOOFDFUNCTIE')
                 headFunctieIndex = i;
@@ -100,14 +103,19 @@ export class Parser {
                 sectorIndex = i;
             else if (data[2][i] === 'LOCATIE')
                 addressIndex = i;
+            else if (data[2][i] === 'LATITUDE')
+                latitudeIndex = i;
+            else if (data[2][i] === 'LONGITUDE')
+                LongitudeIndex = i;
         }
         if (headFunctieIndex === -1 || minAgeIndex === -1 || discriptionIndex === -1 || postIndex === -1 
-            || sectorIndex === -1 || addressIndex === -1) {
+            || sectorIndex === -1 || addressIndex === -1 || latitudeIndex === -1 || LongitudeIndex === -1) {
                 this.error = true;
                 return ;
             }
     
         for (let i = 3; i < data.length; ++i) {
+            console.log(i);
             if (data[i][discriptionIndex] === undefined) {
                 let temp : GeneralPost = {
                     name: data[i][headFunctieIndex],
@@ -132,13 +140,28 @@ export class Parser {
                 generalpost = generalpost + " " + discription;
             let title : string = data[i][postIndex];
             let sector : number = data[i][sectorIndex];
-            let address : string;
-            if (data[i][addressIndex] === undefined)
-                address  = "/"
-            else
-                address = data[i][addressIndex];
+
             let latitude : number = 5;
             let longitude : number = 5;
+            let address : string;
+
+            if (data[i][addressIndex] === undefined || data[i][addressIndex] === "") {
+                address  = "/"
+                if (data[i][latitudeIndex] !== undefined && data[i][LongitudeIndex] !== undefined) {
+                    latitude = data[i][latitudeIndex];
+                    longitude = data[i][LongitudeIndex];
+                }
+            } else {
+                address = data[i][addressIndex];
+                const response  = await axios.get("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&singleLine=" + address + "&outFields=Match_addr,Addr_type");
+
+                if (response.data.candidates.length > 0) {
+                    latitude = response.data.candidates[0].location.x;
+                    longitude = response.data.candidates[0].location.y;
+                }
+            }
+                
+
             let radius : number = 10;
     
             this.posts.push({
@@ -158,12 +181,16 @@ export class Parser {
                     type: sector
                 });
         }
-        console.log(this.generalposts);
-        const response = await axios.post('http://localhost/api/import/createGeneralAndPost', {
-            sector : this.sectors,
-            post: this.posts,
-            generalpost: this.generalposts
-        });
+        try {
+            this.serverResponse = await axios.post('http://localhost/api/import/createGeneralAndPost', {
+                sector : this.sectors,
+                post: this.posts,
+                generalpost: this.generalposts
+            });
+        } catch(error) {
+            this.serverResponse = error.response;
+        }
+
     }
     checkGeneralPostInside = (newpost : GeneralPost, array : GeneralPost[]) : boolean => {
         for (let i = 0; i < array.length; ++i) {
@@ -184,13 +211,13 @@ export class Parser {
         for (let i = 0; i < data[1].length; ++i) {
             if (data[1][i] === 'voornaam')
                 first_nameIndex = i;
-            else if (data[1][i] === 'telefoon nummber')
+            else if (data[1][i] === 'telefoon nummer')
                 phone_numberIndex = i;
             else if (data[1][i] === 'email')
                 emailIndex = i;
             else if (data[1][i] === 'vrijwilliger?')
                 permissionIndex = i;
-            else if (data[1][i] === 'vereneging')
+            else if (data[1][i] === 'vereniging')
                 associationIndex = i;
             else if (data[1][i] === 'achternaam')
                 last_nameIndex = i;
@@ -237,11 +264,15 @@ export class Parser {
                     name: association
                 });
         }
-
-        const response = await axios.post('http://localhost/api/import/createUser', {
-            users : this.users,
-            association: this.associations
-        });
+        try {
+            this.serverResponse = await axios.post('http://localhost/api/import/createUser', {
+                users : this.users,
+                association: this.associations
+            });
+        } catch(error) {
+            console.log(error.response);
+            this.serverResponse = error.response;
+        }
     }
 
     createPlanning = async (data: any) => {
@@ -266,18 +297,22 @@ export class Parser {
         
         }
 
-        let response;
-        let count = 0;
-        while (count < this.planning.length) {
-            if (count + 500 < this.planning.length)
-                response = await axios.post('http://localhost/api/import/createPlanning', {
-                    planning : this.planning.slice(count, count + 500)
-                });
-            else
-                response = await axios.post('http://localhost/api/import/createPlanning', {
-                    planning : this.planning.slice(count)
-                });
-            count += 500;
+        try {
+            let count = 0;
+            while (count < this.planning.length) {
+                if (count + 500 < this.planning.length)
+                    this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
+                        planning : this.planning.slice(count, count + 500)
+                    });
+                else
+                    this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
+                        planning : this.planning.slice(count)
+                    });
+                count += 500;
+            }
+        } catch(error) {
+            this.serverResponse = error.response;
+            
         }
     }
 
@@ -307,9 +342,13 @@ export class Parser {
                 name, begin, end
             });
         }
-        const response = await axios.post('http://localhost/api/import/createShift', {
-            shifts : this.shifts
-        });
+        try {
+            this.serverResponse = await axios.post('http://localhost/api/import/createShift', {
+                shifts : this.shifts
+            });
+        } catch(error) {
+            this.serverResponse = error.response; 
+        }
     }
     
     createItemtype = async (data : any) => {
@@ -352,19 +391,28 @@ export class Parser {
                 this.itemTypes.push(data[i][typeIndex]);
         }
 
-        console.log("hey")
+        try {
 
-        const response = await axios.post('http://localhost/api/import/createItemType', {
-            items : this.items,
-            itemType: this.itemTypes
-        });
+            this.serverResponse = await axios.post('http://localhost/api/import/createItemType', {
+                items : this.items,
+                itemType: this.itemTypes
+            });
+        } catch(error) {
+            this.serverResponse = error.response;
+            
+        }
     }
 
     deleteAll = async () => {
-        const response = await axios.post('http://localhost/api/import/deleteAll', {
-            users : this.users,
-            association: this.associations
-        });
+        try {
+            this.serverResponse = await axios.post('http://localhost/api/import/deleteAll', {
+                users : this.users,
+                association: this.associations
+            });
+                    } catch(error) {
+            this.serverResponse = error.response;
+            
+        }
     }
 
     getGeneralPosts = () : GeneralPost[] => {return this.generalposts;}
@@ -376,4 +424,5 @@ export class Parser {
     getAssociations = () : Association[] => {return this.associations;}
     getSectors = () : Sector[] => {return this.sectors;}
     getError = () : boolean => {return this.error;}
+    getResponse = () => {return this.serverResponse;}
 }

@@ -20,45 +20,6 @@ const eagerLoadingOptions = {
     include: [{model: UserModel, all: true}]
 }
 
-
-export const importUsers = async (req: Request, res: Response) => {
-    console.log('Entering user import');
-    const excel = req.file;
-
-    //let parser : Parser = new Parser();
-    //parser.parseGebruikers(req.file);
-    //let users : User[] = parser.getUsers();
-
-    console.log(req);
-    console.log(req.body);
-    console.log("fjkslmqe");
-
-    // const workbook : XLSX.WorkBook = XLSX.read(excel.buffer, {type: "buffer"});
-    // console.log(workbook)
-    // const sheetName = workbook.SheetNames[0];
-    // const data = utils.sheet_to_json(workbook.Sheets[sheetName]);
-
-    // // console.log((workbook.Sheets[sheetName]))
-    // console.log(data);
-
-    // console.log(workbook);
-    // console.log(JSON.stringify(workbook.Sheets.Sheet1.A1));
-
-    //res.status(200).send({data: workbook});
-    res.status(200).send();
-};
-
-export const importAll = async (req: Request, res: Response) => {
-    console.log('Entering all import');
-
-    //if (!checkRequiredParameters(req, res)) console.log("fout");
-
-    console.log(req.body);
-    // console.log('everything',req);
-
-    res.status(200).send();
-}
-
 export const deleteAll = async (req: Request, res: Response) => {
     await ProblemModel.destroy({
         truncate: true
@@ -111,6 +72,7 @@ export const importUserAndAssociation = async (req: Request, res: Response) => {
             }
         } else {
             console.log('false association');
+            res.send();
         }
 }
 export const importGeneralPostAndPost = async (req: Request, res: Response) => {
@@ -169,13 +131,10 @@ const insertAssoxiation = async (associations : any[], res: Response) => {
     try {
         for (let i = 0; i < associations.length; ++i) {
             const associationExists = await AssociationModel.findOne({where: {name: associations[i].name}});
-
-            // const userExists = await UserModel.findOne({where: {phone_number: req.body.phone_number}});
-            // const associationExists = await AssociationModel.findByPk(req.body.association_id);
     
             if(associationExists) {
                 console.log('association exists');
-                res.status(404).send({
+                res.status(500).send({
                     status: 'fail',
                     data: null,
                     message: 'Association allready exists'
@@ -229,7 +188,7 @@ const insertUser = async (user : any[], res: Response) => {
             });
         } else {
             for (let i = 0; i < user.length; ++i) {
-                const userExists = await UserModel.findOne({where: {phone_number: user[i].phone_number}});
+                const userExists = await UserModel.findOne({where: {phone_number: user[i].phone_number.toString()}});
     
                 let permission_id : number = -1;
                 if (user[i].permission === 'vrijwilliger') {
@@ -319,9 +278,6 @@ const insertGeneralPost = async (posts : any[], res: Response) => {
                 });
             }
         }
-        // const association = await AssociationModel.create({
-        //     name: 'CREW'
-        // });
     } catch (error) {
         console.log("error",error);
         res.status(500).send({
@@ -337,6 +293,20 @@ const insertGeneralPost = async (posts : any[], res: Response) => {
 
 const insertSector = async (sectors: any[], res: Response) => {
     console.log('inserting sector');
+
+    let Permission_ids = await getpermissionIds();
+
+    let Users = await UserModel.findAll({where: {permission_type_id: Permission_ids[1]}});
+
+    if (Users.length === 0) {
+        console.log('No responsible');
+        res.status(404).send({
+            status: 'fail',
+            data: null,
+            message: 'no responsible exists'
+        });
+        return false;
+    }
     try {
         for (let i = 0; i < sectors.length; ++i) {
             const sectorsExists = await SectorModel.findOne({where: {sector_type: sectors[i].type}});
@@ -350,22 +320,15 @@ const insertSector = async (sectors: any[], res: Response) => {
                 return false;
             } else {
 
-                let Permission_ids = await getpermissionIds();
+                let index = i;
+                if (i >= Users.length)
+                    index = 0;
 
-                let User = await UserModel.findAll({where: {permission_type_id: Permission_ids[1]}});
-
-                if (User.length === 0) {
-                    console.log('No responsible');
-                    res.status(404).send({
-                        status: 'fail',
-                        data: null,
-                        message: 'no responsible exists'
-                    });
-                    return false;
-                }
+                console.log('users',Users.length);
+                console.log(index);
 
                 const Sector = await SectorModel.create({
-                    user_id: User[0].id,
+                    user_id: Users[index].id,
                     sector_type: sectors[i].type
                 });
             }
@@ -406,7 +369,7 @@ const insertPost = async (posts: any[], res: Response) => {
         }
 
         for (let i = 0; i < posts.length; ++i) {
-            const postExists = await AssociationModel.findOne({where: {name: posts[i].title}});
+            const postExists = await PostModel.findOne({where: {title: posts[i].title.toString()}});
 
     
             if(postExists) {
@@ -532,9 +495,8 @@ const insertPlanning = async (planning: any[], res: Response) => {
         for (let i = 0; i < planning.length; ++i) {
 
             let userId = usersMap.get(planning[i].user);
-            let postsId = postsMap.get(planning[i].post);
+            let postsId = postsMap.get(planning[i].post.toString());
             let shiftId = shiftMap.get(planning[i].shift);
-
 
             if (userId === undefined || postsId === undefined || shiftId === undefined) {
                 console.log('wrong data', planning[i]);

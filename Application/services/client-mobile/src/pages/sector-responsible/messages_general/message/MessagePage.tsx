@@ -8,15 +8,7 @@ import {fetchMessagesOf, loadMessages} from './MessageAction'
 import {updateMessages} from '../../../save/saveAction'
 
 import { IonButton, 
-  IonListHeader, 
-  IonHeader, 
-  IonPage, 
-  IonTitle, 
-  IonToolbar, 
-  IonList, 
-  IonItem, 
-  IonLabel,
-  IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonTabBar, IonTabButton, IonIcon, withIonLifeCycle } from '@ionic/react';
+  IonList, withIonLifeCycle } from '@ionic/react';
 import { setListLocalStorage } from '../../../save/saveFunction';
 import Auth from '../../../../utils/Auth';
 
