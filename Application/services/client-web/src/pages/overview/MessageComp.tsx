@@ -23,6 +23,9 @@ const ButtonStyle = {
 
 type Props = LinkDispatchToProps & MessageInterface;
 
+/**
+ * @author Wouter Grootjans
+ */
 class Message extends Component<Props> {
     state: IState = {
         data: {

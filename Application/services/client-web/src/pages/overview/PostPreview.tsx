@@ -38,6 +38,9 @@ interface IState {
 
 type Props = LinkStateToProps & PostDataInterface;
 
+/**
+ * @author Wouter Grootjans
+ */
 class PostPreview extends Component<Props> {
     state: IState = {
         redirecting: false,

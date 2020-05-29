@@ -3,7 +3,9 @@ import ItemDataInterface from '../../interfaces/ItemDataInterface';
 import ShiftDatainterface from '../../interfaces/ShiftDataInterface';
 import Database from '../../Redux/Database';
 
-
+/**
+ * @author Wouter Grootjans
+ */
 export enum DetailActions {
     DETAIL_PLANNING_FETCH_START = 'DETAIL_PLANNING_FETCH_STRART',
     DETAIL_PLANNING_FETCH_SUCCES = 'DETAIL_PLANNING_FETCH_SUCCES',

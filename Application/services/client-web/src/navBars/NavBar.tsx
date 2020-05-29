@@ -47,6 +47,9 @@ interface IState {
     active: Number
 }
 
+/**
+ * @author Wouter Grootjans
+ */
 class NavBar extends Component<IProps, IState> {
     state = {
         value: "/",

@@ -38,6 +38,9 @@ interface IState {
     user: UserDataInterface | null
 }
 
+/**
+ * @author Wouter Grootjans
+ */
 class MyMap extends React.Component<IProps> {
     state : IState = {
         problemClicked: false,

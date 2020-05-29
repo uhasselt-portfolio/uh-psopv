@@ -2,7 +2,11 @@ import Redux from 'redux';
 import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import MessageDataInterface from '../../interfaces/MessageDataInterface';
 import Database from '../../Redux/Database';
+import Auth from '../../utils/Auth';
 
+/**
+ * @author Wouter Grootjans
+ */
 export enum OverviewActions {
     OVERVIEW_FETCH_START = 'OVERVIEW_FETCH_STRART',
     OVERVIEW_FETCH_FAIL = 'OVERVIEW_FETCH_FAIL',
@@ -135,17 +139,60 @@ export const fetch = () => async (dispatch: Redux.Dispatch) => {
  * inserts the new message into the database
  * @param receiver the id of the receiver of the message
  * @param title the title of the message
- * @param content the content of the message
+ * @param content the content of the message    
  * @param adminId the id of the sender always the admin
  */
-export const postNewMessage = (receiver: Number,title: string, content: string, adminId: Number) => async (dispatch: Redux.Dispatch) => {
+export const postNewMessage = (receiver: Number,title: string, content: string) => async (dispatch: Redux.Dispatch) => {
     console.log("post new message");
     try {
         dispatch({
             type: OverviewActions.OVERVIEW_POST_NEW_MESSAGE_START
         });
 
+        let adminId : number = Auth.getAuthenticatedUser().id;
         const response = await new Database().postNewMessage(receiver,title,content,adminId);
+
+        console.log(response);
+
+
+        dispatch({
+            type: OverviewActions.OVERVIEW_POST_NEW_MESSAGE_SUCCES,
+        })
+
+    } catch(error) {
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: OverviewActions.OVERVIEW_POST_NEW_MESSAGE_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    }
+}
+/**
+ * inserts the new messages into the database
+ * @param receiverIds the ids of the receivers
+ * @param title the title of the message
+ * @param content the content of the message
+ * @param adminId the id of the sender always the admin
+ */
+export const postNewMessages = (receiverIds: number[],title: string, content: string) => async (dispatch: Redux.Dispatch) => {
+    console.log("post new messages");
+    try {
+        dispatch({
+            type: OverviewActions.OVERVIEW_POST_NEW_MESSAGE_START
+        });
+
+        let adminId : number = Auth.getAuthenticatedUser().id;
+
+        const response = await new Database().postNewMessageMulitple(receiverIds,title,content,adminId);
 
         console.log(response);
 

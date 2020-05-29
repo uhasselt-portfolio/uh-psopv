@@ -40,6 +40,9 @@ interface IState {
 
 type Props = LinkStateProps & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class Posts extends Component<Props> {
     state: IState = {
             filter: "Geen filter",

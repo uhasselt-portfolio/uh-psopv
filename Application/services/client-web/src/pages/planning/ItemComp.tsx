@@ -11,6 +11,9 @@ interface IProps {
     name: string
 }
 
+/**
+ * @author Wouter Grootjans
+ */
 class Item extends Component<IProps> {
 
 

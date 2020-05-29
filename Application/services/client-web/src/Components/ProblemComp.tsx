@@ -28,6 +28,9 @@ const ButtonStyle = {
 
 type Props = LinkDispatchToProps & ProblemInterface & LinkStateToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class Problem extends Component<Props> {
     state: IState = {
         Data: {

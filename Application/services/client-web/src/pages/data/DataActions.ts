@@ -2,7 +2,9 @@ import Redux from 'redux';
 import XLSX from 'xlsx';
 import {Parser} from './Parser';
 
-
+/**
+ * @author Wouter Grootjans
+ */
 export enum DataActions {
     Data_POST_START = 'Data_POST_START',
     DATA_POST_SUCCES = 'DATA_POST_SUCCES',

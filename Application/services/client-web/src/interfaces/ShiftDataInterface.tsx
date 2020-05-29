@@ -7,7 +7,7 @@ export default interface ShiftInterface {
     endDate: string,
     post_id: Number,
     post: string,
-    User_id: Number,
+    User_id: number,
     user: string,
     sector: number
 }

@@ -9,6 +9,9 @@ import {Grid } from '@material-ui/core';
 
 type Props = LinkStateProps  & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class Problems extends Component<Props> {
 
     componentWillMount = () => {
