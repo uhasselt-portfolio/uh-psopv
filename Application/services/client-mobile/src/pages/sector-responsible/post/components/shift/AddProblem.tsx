@@ -1,21 +1,9 @@
 import * as React from 'react';
-import { Component } from 'react';
 import { IonButton, 
-    IonListHeader, 
     IonHeader, 
-    IonPage, 
-    IonTitle, 
-    IonToolbar, 
-    IonList, 
     IonItem, 
-    IonLabel,
-    IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonIcon, IonRadioGroup, IonPopover, IonGrid, IonRow, IonCard, IonItemDivider, IonCol, IonRefresher, IonRefresherContent, IonSelect, IonSelectOption, IonVirtualScroll, IonItemGroup } from '@ionic/react';
-import { call, checkbox } from 'ionicons/icons';
+   IonSelect, IonSelectOption, IonItemGroup } from '@ionic/react';
 
-import { render } from '@testing-library/react';
-import { radioButtonOff } from 'ionicons/icons';
-import { getListLocalStorage, setListLocalStorage, removeListLocalStorage } from '../../../../save/saveFunction';
-import { RefresherEventDetail } from '@ionic/core';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 

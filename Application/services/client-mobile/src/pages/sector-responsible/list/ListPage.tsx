@@ -3,24 +3,18 @@ import './ListPage.css';
 import ListViewItem from './components/ListView_Item';
  
 import { IonButton, 
-  IonListHeader, 
   IonHeader, 
   IonPage, 
   IonTitle, 
   IonToolbar, 
   IonList, 
-  IonItem, 
-  IonLabel,
-  IonText,
   IonSelect,
   IonSelectOption,
   IonRow,
-  IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonGrid, IonCol, IonRadioGroup, withIonLifeCycle } from '@ionic/react';
+  IonContent, IonGrid, IonCol, withIonLifeCycle } from '@ionic/react';
 import { bindActionCreators } from 'redux';
 import {fetchPosts} from './ListAction'
 import { connect } from 'react-redux';
-import { getDefaultSector, ConcatListToActionList } from '../../save/saveFunction';
-import CustomDropdown from './components/CustomDropdown';
 import { Plugins } from '@capacitor/core';
  
 const { Geolocation } = Plugins;
@@ -28,7 +22,10 @@ const { Geolocation } = Plugins;
 const sort_types = {alfabetisch: "alfabetisch", afstand: "afstand", best_route: "beste route"}
  
  
- 
+ /**
+  * Created by Maria Hendrikx
+  * It generates all the different posts
+  */
 class ListView extends Component<any> {
   constructor(props: any) {
     super(props);  
@@ -41,23 +38,9 @@ class ListView extends Component<any> {
     default_sector: this.props.localStorage.default_sector, // -1 = none
   }
  
- 
-  // interval: NodeJS.Timeout | undefined;
- 
-  // componentWillUnmount() {
-  //   if(this.interval != undefined){
-  //     clearInterval(this.interval);
-  //   }
-  // }
- 
   async componentDidMount(){
     this.props.fetchPosts();
     this.handleSectorChange(this.props.localStorage.default_sector)
- 
-    // this.interval = setInterval(() => {
-    //   console.log("interval MessagePage")
-    //   this.props.fetchPosts(); // TODO interval
-    // }, 5000);
   }
  
   async getCurrentLocation() {
@@ -114,7 +97,7 @@ class ListView extends Component<any> {
     return selected_element;
   }
   
-  async sortDataByBestRoute(){
+  async sortDataByBestRouteNearestNeighbour(){
     const position = await Geolocation.getCurrentPosition();
     let pos = {lat: position.coords.latitude, lng: position.coords.longitude}
  
@@ -299,150 +282,190 @@ class ListView extends Component<any> {
     return 0;
   }
  
-  makeEdges(){
+  async makeEdgesWithCurrentPosition(){
     let data_list:any[] = this.state.data_posts;
-    console.log("datalist", data_list);
+
+    let currentUserLocation = await this.getCurrentLocation();
+
+    let post: any = {
+      post_id: -1,
+      latitude: currentUserLocation.coords.latitude,
+      longitude: currentUserLocation.coords.longitude
+    }
+    data_list.push(post);
  
     let result_list: any[] = [];
       for(let i = 0; i < data_list.length; i++){
-        for(let j = i+1; j < data_list.length; j++){
-            if(data_list[i] != data_list[j]){
+        for(let j = 0; j < data_list.length; j++){
+            if(data_list[i].post_id != data_list[j].post_id){
               let distance =  Math.sqrt(Math.pow( (data_list[i].latitude - data_list[j].latitude) ,2) + Math.pow( (data_list[i].longitude - data_list[j].longitude) ,2));
-              result_list.push({pos_1: data_list[i], pos_2: data_list[j], distance: distance})
+              result_list.push({start_vertex: data_list[i], end_vertex: data_list[j], distance: distance})
             }
         }
     }
-     
-    console.log("result_list", result_list);
- 
-    result_list.sort(this.funcSortEdges);
+      
     return result_list
   }
  
   getEdge(edges: any[], shortest_to_current: any){
     for(let i = 0; i < edges.length; i++){
       let edge = edges[i];
-      console.log(edge)
-      if(edge.pos_1.post_id == shortest_to_current.post_id){
+      if(edge.start_vertex.post_id == shortest_to_current.post_id){
         return edge;
-      } else if(edge.pos_2.post_id == shortest_to_current.post_id){
+      } else if(edge.end_vertex.post_id == shortest_to_current.post_id){
         return edge;
       }
     }
     return []
   }
- 
-  addPostToBestRest(post: any, new_edge: any, best_route: any[], best_route_edges: any[]){
-    let link: any;
- 
-    if(post.post_id == new_edge.pos_1.post_id){
-      link = new_edge.pos_2;
-    } else{
-      link = new_edge.pos_1;
-    }
- 
-    for(let i = 0; i < best_route.length; i++){
-      if(best_route[i].post_id == link.post_id){
-        // check if it must be added before or after -> i->i+1 exists -> before, else after
-        let result;
-        if(i != best_route.length - 1){
-           result = best_route_edges.find((element: any) => {
-            return (
-              (element.pos_1.post_id == link.post_id && element.pos_2.post_id == best_route[i+1].post_id)
-              ||  (element.pos_2.post_id == link.post_id && element.pos_1.post_id == best_route[i+1].post_id)
-            )
-          })
-        }
-         
-        // if the link after exists, add before, if it doesnt exist, add after
-        if(result == undefined){
-          best_route.splice(i+1, 0, post);
-        } else{
-          best_route.splice(i, 0, post);
-        }
-        return best_route
+
+  async getCurrent(){
+      //  get the post closest to current position and add it as first element to the best_route
+      const position = await Geolocation.getCurrentPosition();
+      let pos = {latitude: position.coords.latitude, longitude: position.coords.longitude}
+      return pos;
+  }
+
+  checkIfRouteHasCycle(best_route: any[], candidate: any){
+    let counter = 0;
+    let vertex_route: any = {}
+
+    for(let edge of best_route){
+      // if first exists, check where 2 should be
+      if("vertex" + edge.start_vertex.post_id in vertex_route &&
+            !("vertex" + edge.end_vertex.post_id in vertex_route)){
+        vertex_route["vertex" + edge.end_vertex.post_id] = vertex_route["vertex" + edge.start_vertex.post_id]
+      }
+      // if 2 exists, check where 1 should be
+      else if("vertex" + edge.end_vertex.post_id in vertex_route &&
+            !("vertex" + edge.start_vertex.post_id in vertex_route)){
+        vertex_route["vertex" + edge.start_vertex.post_id] = vertex_route["vertex" + edge.end_vertex.post_id]
+      }
+      // if none exists
+      else if(!("vertex" + edge.end_vertex.post_id in vertex_route) &&
+            !("vertex" + edge.start_vertex.post_id in vertex_route)){
+        counter++;
+        vertex_route["vertex" + edge.start_vertex.post_id] = counter;
+        vertex_route["vertex" + edge.end_vertex.post_id] = counter;
+      }
+      // if both exists
+      else {
+        vertex_route["vertex" + edge.start_vertex.post_id] = vertex_route["vertex" + edge.end_vertex.post_id];
+        let new_counter = vertex_route["vertex" + edge.start_vertex.post_id];
+        let old_counter = vertex_route["vertex" + edge.end_vertex.post_id];
+        Object.keys(vertex_route).forEach(function (key) { 
+          let value = vertex_route[key]
+          if(value === old_counter){
+            vertex_route[value] = new_counter;
+          }
+      })
       }
     }
- 
-    console.log("adding at end", post, new_edge)
-    best_route.push(post)
-    return best_route
-  }
- 
-  addEdgeToRoute(best_route: any[], new_edge: any, forbidden: any[], to_be_aligned: any[], best_route_edges: any[]){
-    let post1 = new_edge.pos_1;
-    let post2 = new_edge.pos_2;
-    console.log("START ADD EDGE HERE")
- 
-      // check if the post is already enclosed: if it's in forbidden, it's enclosed, if it is in to_bo_aligned, it is a corner
-      // existing in the current route
-      let forbidden1 = forbidden.find((element: any) => {return (element.post_id == post1.post_id)})
-      let forbidden2 = forbidden.find((element: any) => {return (element.post_id == post2.post_id)})
-      let to_be_aligned1 = to_be_aligned.find((element: any) => {return (element.post_id == post1.post_id)})
-      let to_be_aligned2 = to_be_aligned.find((element: any) => {return (element.post_id == post2.post_id)})
- 
-      // if not in forbidden, search if there is a link already, else just add them both
-      console.log({forbidden1: forbidden1, forbidden2: forbidden2, to_be_aligned1: to_be_aligned1, to_be_aligned2: to_be_aligned2})
-      if((forbidden1 == undefined ) && (forbidden2 == undefined)){
-        if(to_be_aligned1 != undefined){
-          forbidden.push(post1)
-          to_be_aligned = to_be_aligned.filter((element: any) => {
-           return (element.post_id != post1.post_id)});
-        } else{
-          to_be_aligned.push(post1);
-          best_route = this.addPostToBestRest(post1, new_edge, best_route, best_route_edges)
-        }
-        if(to_be_aligned2 != undefined){
-          forbidden.push(post2)
-          to_be_aligned = to_be_aligned.filter((element: any) => {
-           return (element.post_id != post2.post_id)});
-        } else{
-          to_be_aligned.push(post2);
-          best_route = this.addPostToBestRest(post2, new_edge, best_route, best_route_edges)
-        }
-        best_route_edges.push(new_edge) // add so we know the used edges
-    } else{
-      // do nothing, cause one in forbidden
+
+    counter = 0;
+    if("vertex" + candidate.start_vertex.post_id in vertex_route){
+        counter += 1
     }
- 
-    console.log({best_route: best_route, forbidden: forbidden, to_be_aligned: to_be_aligned})
-    return {best_route, forbidden, to_be_aligned, best_route_edges} ;
+    if("vertex" + candidate.end_vertex.post_id in vertex_route){
+        counter += 1
+    }
+
+    if(counter == 2 && (vertex_route["vertex" + candidate.start_vertex.post_id] !==
+        vertex_route["vertex" + candidate.end_vertex.post_id])){
+        return false;
+    }
+    if(counter < 2){
+        return false;
+    }
+
+    return true;
   }
- 
+
+  getRouteFromEdges(best_route: any){
+
+    // get current location edge
+    let route: any[] = [];
+    let edge = best_route.find((edge: any) => {return (edge.start_vertex.post_id == -1 || edge.end_vertex.post_id == -1)})
+
+    // get first post
+    let post: any;
+    let prev_post: any;
+    if (edge.start_vertex.post_id == -1){
+      post = edge.end_vertex
+      prev_post = edge.start_vertex
+    } else{
+      post = edge.start_vertex
+      prev_post = edge.end_vertex
+    }
+    route.push(post);
+
+    // get route by findind start_vertex that is the same as the end_vertex of the previous
+    let route_length = best_route.length;
+    for(let i = 0; i < route_length; i++){
+      edge = best_route.find((edge: any) => {return ((edge.start_vertex.post_id === post.post_id && edge.end_vertex.post_id !== prev_post.post_id) ||
+                                                    (edge.end_vertex.post_id === post.post_id && edge.start_vertex.post_id !== prev_post.post_id))})
+      if (edge.start_vertex.post_id == post.post_id){
+        post = edge.end_vertex
+        prev_post = edge.start_vertex
+      } else{
+        post = edge.start_vertex
+        prev_post = edge.end_vertex
+      }
+
+      if(!route.includes(post)){
+        route.push(post);
+      }
+    }
+
+    route = route.filter((post: any) => {return post.post_id !== -1})
+    
+    return route
+
+  }
+  
   async sortDataByBestRouteGreedy(){
     try{
       let new_data = this.state.data_posts
- 
       // sorting an array below 1 is useless
       if(new_data.length > 1){ 
-        let edges: any[] = this.makeEdges();
+        let cycle_allowed = new_data.length;
+        let edges: any[] = await this.makeEdgesWithCurrentPosition();
+        edges.sort(this.funcSortEdges);
+
+        let vertex_degrees: any = {};
         let best_route: any[] = [];
-        let best_route_edges: any[] = [];
-        let forbidden: any[] = [];
-        let to_be_aligned: any[] = [];
- 
-        //  get the post closest to current position and at it as first element to the best_route
-        const position = await Geolocation.getCurrentPosition();
-        let pos = {lat: position.coords.latitude, lng: position.coords.longitude}
-        let shortest_post_to_current = this.getShortest(pos, new_data);
-        best_route.push(shortest_post_to_current);
-        to_be_aligned.push(shortest_post_to_current)
- 
-        // loop over all the edges, add them one by one, beginning from the shortest
-        // keep an array with: to_be_aligned and forbidden --> to prevent making a circle
-        let edges_length: number = edges.length;
-        for(let i = 0; i < edges_length; i++){
-          let x = this.addEdgeToRoute(best_route, edges[i], forbidden, to_be_aligned, best_route_edges) // add the shortest route (if it doesnt make a circle, else it just gets ignored)
-          best_route = x.best_route
-          forbidden = x.forbidden;
-          to_be_aligned = x.to_be_aligned
-          best_route_edges = x.best_route_edges          
+
+        // make vertex hashmap
+        for(let candidate of edges){
+          vertex_degrees["vertex" + candidate.start_vertex.post_id] = 0;
+          vertex_degrees["vertex" + candidate.end_vertex.post_id] = 0;
         }
- 
+
+        // check for all edges if vertex < 2 and if the new edge doesnt make it a cycle
+        for(let candidate of edges){
+           if(vertex_degrees["vertex" + candidate.start_vertex.post_id] < 2 &&
+                vertex_degrees["vertex" + candidate.end_vertex.post_id] < 2){
+
+              if(!this.checkIfRouteHasCycle(best_route, candidate)){
+                vertex_degrees["vertex" + candidate.start_vertex.post_id] += 1
+                vertex_degrees["vertex" + candidate.end_vertex.post_id] += 1
+                best_route.push(candidate);
+                
+              } else if(best_route.length == cycle_allowed){
+                vertex_degrees["vertex" + candidate.start_vertex.post_id] += 1
+                vertex_degrees["vertex" + candidate.end_vertex.post_id] += 1
+    
+                best_route.push(candidate);
+              }
+            
+          }
+        }
+
+        new_data = this.getRouteFromEdges(best_route)
+
         this.setState((state, props) => ({
-          selected_sort: sort_types.best_route, data_posts: best_route
+          selected_sort: sort_types.best_route, data_posts: new_data
         }));
-        console.log("best_route", best_route)
       }
     } catch(error){
       console.log(error)
@@ -467,7 +490,6 @@ class ListView extends Component<any> {
   ionViewWillEnter() {
     this.props.fetchPosts();
     this.handleSectorChange(this.props.localStorage.default_sector)
-    console.log('Test ionViewWillEnter event fired')
   }
    
 };
