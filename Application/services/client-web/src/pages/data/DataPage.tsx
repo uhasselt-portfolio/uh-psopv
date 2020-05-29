@@ -45,6 +45,9 @@ interface IState  {
 
 type Props = LinkStateProps & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class Data extends Component<Props> {
     state : IState = {
         functiesFile : null,

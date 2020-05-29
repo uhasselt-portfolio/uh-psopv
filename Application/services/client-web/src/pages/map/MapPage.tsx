@@ -10,6 +10,9 @@ import MyMap from './Map';
 
 type Props = LinkStateProps & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class PukkelpopMap extends Component<Props> {
 
     /**

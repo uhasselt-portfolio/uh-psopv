@@ -1,5 +1,8 @@
 import jwt, {SignOptions} from 'jsonwebtoken';
 
+/**
+ * @author Michiel Swaanen
+ */
 class JWTUtil {
 
     private publicKey: string;

@@ -21,6 +21,9 @@ const labelStyle = {
 
 type Props = LinkDispatchToProps & LinkStateToProps & IProps
 
+/**
+ * @author Wouter Grootjans
+ */
 class User extends Component<Props> {
 
     /**

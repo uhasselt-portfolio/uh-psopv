@@ -3,6 +3,9 @@ import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import Database from '../../Redux/Database';
 import jsPDF from 'jspdf';
 
+/**
+ * @author Wouter Grootjans
+ */
 export enum PDFActions {
     PDF_FETCH_START = 'PDF_FETCH_START',
     PDF_FETCH_SUCCES = 'PDF_FETCH__SUCCES',

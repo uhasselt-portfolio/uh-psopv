@@ -2,12 +2,14 @@ import Redux from 'redux';
 import ProblemDataInterface from '../../interfaces/ProblemDataInterface';
 import Database from '../../Redux/Database';
 
+/**
+ * @author Wouter Grootjans
+ */
 export enum PostActions {
     PROBLEM_FETCH_START = 'PROBLEM_FETCH_START',
     PROBLEM_FETCH_SUCCESS = 'PROBLEM_FETCH_SUCCESS',
     PROBLEM_FETCH_FAIL = 'PROBLEM_FETCH_FAIL'
 };
-
 
 export const fetchProblem = () => async (dispatch : Redux.Dispatch) => {
     console.log("in problem fetch");

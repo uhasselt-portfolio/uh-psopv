@@ -78,6 +78,9 @@ interface IState {
 
 type Props = LinkStateProps & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class OverviewComp extends Component<Props> {
     state: IState = {
         value: 0,

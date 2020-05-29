@@ -14,6 +14,9 @@ interface IProps {
     content: string
 }
 
+/**
+ * @author Wouter Grootjans
+ */
 class Notification extends Component<IProps> {
     render() {
         return (

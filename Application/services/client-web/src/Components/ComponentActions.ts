@@ -2,7 +2,9 @@ import Redux from 'redux';
 import UserDataInterface from '../interfaces/UserDataInterface';
 import DataBase from '../Redux/Database';
 
-
+/**
+ * @author Wouter Grootjans
+ */
 export enum ComponentActions {
     PROBLEM_SOLVED_POST_START = 'PROBLEM_SOLVED_POST_START',
     PROBLEM_SOLVED_POST_SUCCES = 'PROBLEM_SOLVED_POST_SUCCES',

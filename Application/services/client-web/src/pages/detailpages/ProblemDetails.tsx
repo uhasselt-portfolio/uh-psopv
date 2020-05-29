@@ -29,6 +29,9 @@ interface IProps {
 
 type props = LinkDispatchToProps & IProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class ProblemDetails extends Component<props> {
 
     /**

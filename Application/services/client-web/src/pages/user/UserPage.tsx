@@ -30,6 +30,9 @@ interface UserssState {
 
 type Props = LinkStateProps & LinkDispatchToProps;
 
+/**
+ * @author Wouter Grootjans
+ */
 class Users extends Component<Props> {
     state: UserssState = {
             filter: "",

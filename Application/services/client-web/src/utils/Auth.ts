@@ -1,5 +1,8 @@
 import JWTUtil from "./JWTUtil";
 
+/**
+ * @author Michiel Swaanen
+ */
 class Auth {
 
     private authenticated: boolean;

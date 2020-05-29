@@ -7,6 +7,9 @@ import ShiftDataInterface from '../interfaces/ShiftDataInterface';
 import MessageDataInterface from '../interfaces/MessageDataInterface';
 import Auth from "../utils/Auth";
 
+/**
+ * @author Michiel Swaanen
+ */
 class ServerRequest {
 
     static getRestApiEndpoint(): string | undefined {
@@ -50,6 +53,9 @@ class ServerRequest {
 
 }
 
+/**
+ * @author Michiel Swaanen & Wouter Grootjans
+ */
 export default class Database {
 
     async authenticate() : Promise<string> {

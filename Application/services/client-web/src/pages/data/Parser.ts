@@ -52,6 +52,7 @@ export interface Sector {
 
 /**
  * class that parses all the data from the input excel files
+ * @author Wouter Grootjans
  */
 export class Parser {
     generalposts : GeneralPost[];

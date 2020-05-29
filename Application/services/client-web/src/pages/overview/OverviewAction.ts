@@ -4,6 +4,9 @@ import MessageDataInterface from '../../interfaces/MessageDataInterface';
 import Database from '../../Redux/Database';
 import Auth from '../../utils/Auth';
 
+/**
+ * @author Wouter Grootjans
+ */
 export enum OverviewActions {
     OVERVIEW_FETCH_START = 'OVERVIEW_FETCH_STRART',
     OVERVIEW_FETCH_FAIL = 'OVERVIEW_FETCH_FAIL',

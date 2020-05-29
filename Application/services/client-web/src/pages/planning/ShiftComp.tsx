@@ -34,6 +34,9 @@ interface IState {
     dropdwon: boolean
 }
 
+/**
+ * @author Wouter Grootjans
+ */
 class Shift extends Component<IProps> {
     state: IState = {
         dropdwon : false

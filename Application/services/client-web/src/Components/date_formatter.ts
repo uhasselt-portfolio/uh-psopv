@@ -1,3 +1,7 @@
+/**
+ * @author Maria Hendrikx
+ *  aanpassingen door Wouter Grootjans
+ */
 export function formatDate(data: string){
     let d: Date = new Date(data);
     const ye = new Intl.DateTimeFormat('nl', { year: 'numeric' }).format(d);

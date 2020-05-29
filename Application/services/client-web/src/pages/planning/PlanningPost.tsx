@@ -32,6 +32,9 @@ interface IState {
     dropdownItems: boolean
 }
 
+/**
+ * @author Wouter Grootjans
+ */
 class Post extends Component<IProps> {
     state: IState = {
         dropdownUsers: false,
