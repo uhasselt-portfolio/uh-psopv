@@ -55,12 +55,16 @@ class SendNotifications extends Component<any> {
   async handleQuickBtnChange(value: string){
     if (value === select_types.nobody){
       await this.selectNobody()
+      this.setState({...this.state, selected_type: select_types.nobody})
     } else if(value === select_types.everybody){
       await this.selectEverybody();
+      this.setState({...this.state, selected_type: select_types.everybody})
     } else if(value === select_types.volunteers){
       await this.selectVolunteers();
+      this.setState({...this.state, selected_type: select_types.volunteers})
     }else if(value === select_types.sectors){
       await this.selectSectors();
+      this.setState({...this.state, selected_type: select_types.sectors})
     } else if (value === select_types.specific){
       this.setState({...this.state, selected_type: select_types.specific});
       this.showPopOver();

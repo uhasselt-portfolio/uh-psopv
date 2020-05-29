@@ -10,9 +10,10 @@ import {listOutline, mapOutline, notificationsOutline, personOutline} from "ioni
 import React, {Component} from "react";
 import RequireSignIn from "../../utils/RequireSignin";
 import {bindActionCreators} from "redux";
-import {doDatabase} from "../save/saveAction";
+import {doDatabase, updateMessages} from "../save/saveAction";
 import {connect} from "react-redux";
 import { getListLocalStorage } from "../save/saveFunction";
+
 
 
 class SectorManagerApplication extends Component<any> {
@@ -39,6 +40,7 @@ class SectorManagerApplication extends Component<any> {
         this.interval = setInterval(() => {
           if(navigator.onLine){
             this.props.doDatabase();
+            this.props.updateMessages();
           } else{
             // do nothing
           }
@@ -102,7 +104,8 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-        doDatabase
+        doDatabase,
+        updateMessages
     }, dispatch);
 }
 
