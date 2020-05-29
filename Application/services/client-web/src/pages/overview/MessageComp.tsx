@@ -57,9 +57,6 @@ class Message extends Component<Props> {
         this.props.postMessageRead(this.props.id);
     }
 
-    /**
-     * renders the component
-     */
     render() {
         return (
             <Paper style={PaperStyle}>

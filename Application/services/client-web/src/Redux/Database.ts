@@ -11,8 +11,8 @@ class ServerRequest {
 
     static getRestApiEndpoint(): string | undefined {
         // @ts-ignore
-        if (process.env.NODE_ENV == "development")
-            return "http://localhost/api";
+        if (process.env.NODE_ENV === "development")
+            return "https://psopv.herokuapp.com/api";
         return "https://psopv.herokuapp.com/api";
     }
 
@@ -50,7 +50,6 @@ class ServerRequest {
 
 }
 
-
 export default class Database {
 
     async authenticate() : Promise<string> {
@@ -68,8 +67,6 @@ export default class Database {
     async fetchProblems() {
 
         const response = await ServerRequest.get('/problem/fetch/all/unsolved', true)
-
-
         let problems: ProblemDataInterface[] = [];
 
         for (let i = 0; i < response.data.data.problems.length; ++i) {
@@ -306,12 +303,5 @@ export default class Database {
         return ServerRequest.patch('/message/toggle-seen', messageId, {})
     }
 
-    async postFile(file: File, isupdateMode: boolean) {    //TODO
-        if (isupdateMode) {
-
-        } else {
-
-        }
-    }
 }
 

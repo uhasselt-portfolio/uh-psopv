@@ -6,7 +6,6 @@ import PostDetails from './pages/detailpages/PostDetails';
 import Problems from './pages/problem/ProblemPage';
 
 import Planning from './pages/planning/PlanningPage';
-import Settings from './pages/settings/SettingsPage';
 import PukkelpopMap from './pages/map/MapPage';
 import Posts from './pages/post/PostPage';
 import Users from './pages/user/UserPage';
@@ -27,31 +26,30 @@ const appStyle = {
 //TODO op veel plekken nog loading and failed messages maken
 
 function App() {
-    return (
-        <Provider store={store}>
-            <BrowserRouter>
-                <Grid className="App" style={appStyle}>
-                    <Grid>
-                        <NavBar/>
-                    </Grid>
-                    <Grid>
-                        <Switch>
-                            <Route exact path='/' component={Overview}/>
-                            <Route exact path='/Data' component={Data}/>
-                            <Route path="/Data/Users" component={Users}/>
-                            <Route path="/Data/Posts" component={Posts}/>
-                            <Route path="/Data/Problems" component={Problems}/>
-                            <Route path="/Map" component={PukkelpopMap}/>
-                            <Route path="/Data/Problem" component={ProblemDetails}/>
-                            <Route path="/Data/Post" component={PostDetails}/>
-                            <Route path="/Data/Shifts" component={Planning}/>
-                            <Route path="/Settings" component={Settings}/>
-                        </Switch>
-                    </Grid>
-                </Grid>
-            </BrowserRouter>
-        </Provider>
-    );
+  return (
+    <Provider store={store}>
+      <BrowserRouter>
+        <Grid className="App" style={appStyle}>
+          <Grid>
+          <NavBar />
+          </Grid>
+          <Grid>
+          <Switch>
+            <Route exact path='/' component={Overview} />
+            <Route exact path='/Data' component={Data} /> 
+            <Route path="/Data/Users" component={Users} />
+            <Route path="/Data/Posts" component={Posts} />  
+            <Route path="/Data/Problems" component={Problems} />  
+            <Route path="/Map" component={PukkelpopMap} />
+            <Route path="/Data/Problem" component={ProblemDetails} />
+            <Route path="/Data/Post" component={PostDetails} />
+            <Route path="/Data/Shifts" component={Planning} />
+          </Switch>
+          </Grid>
+        </Grid>
+      </BrowserRouter>
+    </Provider>
+  );
 }
 
 export default App;

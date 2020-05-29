@@ -104,7 +104,7 @@ class Planning extends Component<Props> {
     }
 
     /**
-     * 
+     * updates the state with the shift the user wants to view
      */
     handleShiftFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
@@ -113,7 +113,7 @@ class Planning extends Component<Props> {
     }
 
     /**
-     * 
+     * filters all the shifts to user can view depending on the filter option he has chosen
      */
     organizePlanningFilter = () :ShiftProps[] => {
         let allShifts : ShiftInterface[] = this.props.planning;
@@ -151,10 +151,15 @@ class Planning extends Component<Props> {
         }
         return shifts
     }
+
     getItems = (shiftId: Number) : ItemInterface[] => {
         return this.props.items.filter(item => item.shiftId === shiftId);
     }
 
+    /**
+     * takes the shifts from this.props and returns a Shift component array with only the shifts the user 
+     * wants to see
+     */
     filter = () : Array<JSX.Element> => {
         let shifts: ShiftProps[] = this.organizePlanningFilter().sort((x,y) => {
             if (x.shiftname <= y.shiftname)
@@ -177,14 +182,6 @@ class Planning extends Component<Props> {
                     <Shift shiftname={x.shiftname} begindate={x.begindate} enddate={x.enddate} jobs={x.jobs}/>
                 ));
         }
-    } //TODO filter nakijken
-
-    filterShift = () : Array<JSX.Element> => {
-
-
-        return (
-            [<Post postName="post2" items={['item1','item2','item3']} users={[]} />]
-        )
     }
 
     render () {      
@@ -222,9 +219,8 @@ class Planning extends Component<Props> {
                 );
             });
 
-            let selectedShiftId : Number = -1;
             let selectedShiftIndex : number = -1;
-            for (let i = 0; i <  filterdShifts.length; ++i) { //TODO misschien code verbeteren
+            for (let i = 0; i <  filterdShifts.length; ++i) {
                 let date: Date = new Date(filterdShifts[i][0].beginDate);
                 let parsedBeginDate: string = date.toLocaleString().split(" ")[1];
                 if ((date.getHours()-2) < 10) 
@@ -233,14 +229,12 @@ class Planning extends Component<Props> {
                     parsedBeginDate = (date.getHours()-2) + ":" + parsedBeginDate.split(":")[1];
 
                 if (filterdShifts[i][0].shiftName + date.toString() + parsedBeginDate === this.state.shiftFilter) {
-                    selectedShiftId = filterdShifts[i][0].shiftId;
                     selectedShiftIndex = i;
                     break;
                 }
             }
 
 
-            let postsOfShift : PostInterface[] = [];
             if (selectedShiftIndex !== -1) {
                 let shiftsPerPost : ShiftInterface[][] = this.sortShiftsperPost(filterdShifts[selectedShiftIndex]);
                 let posts : PostInterface[] = [];
@@ -248,9 +242,9 @@ class Planning extends Component<Props> {
                 let items : string[][] = [];
                 for (let i = 0; i < shiftsPerPost.length; ++i) {
                     //search the current posts
-                    for (let j = 0; j < this.props.posts.length; ++j) {
-                        if (this.props.posts[j].id === shiftsPerPost[i][0].post_id) {
-                            posts.push(this.props.posts[j]);
+                    for (let j = 0; j < filteredPosts.length; ++j) {
+                        if (filteredPosts[j].id === shiftsPerPost[i][0].post_id) {
+                            posts.push(filteredPosts[j]);
                             break;
                         }
                     }
@@ -290,85 +284,6 @@ class Planning extends Component<Props> {
             }
 
         }
-
-        console.log(postsUi);
-
-        // let uniqueShifts : ShiftInterface[] = [];
-        // for (let i = 0; i < this.props.planning.length; ++i) {
-        //     let alreadyIn : boolean = false;
-        //     for (let j = 0; j < uniqueShifts.length; ++j) {
-        //         if (uniqueShifts[j].shiftId === this.props.planning[i].shiftId)
-        //             alreadyIn = true;
-        //     }
-        //     if (! alreadyIn)
-        //         uniqueShifts.push(this.props.planning[i]);
-        // }
-
-        // let shiftChoices : Array<JSX.Element> = uniqueShifts.map( x => {
-        //     let date: Date = new Date(x.beginDate);
-        //     let parsedBeginDate: string = date.toLocaleString();
-        //     let enddate: Date = new Date(x.endDate);
-        //     let parseEndDate : string = enddate.toLocaleString().split(" ")[1];
-        //     return (
-        //         <MenuItem value={x.shiftName + parsedBeginDate}>{parsedBeginDate + " tot " + parseEndDate}</MenuItem>
-        //     );
-        // });
-
-        // let selectedShiftId : Number = -1;
-        // for (let i = 0; i <  uniqueShifts.length; ++i) {
-        //     let date: Date = new Date(uniqueShifts[i].beginDate);
-        //     let parsedBeginDate: string = date.toLocaleString();
-        //     if (uniqueShifts[i].shiftName + parsedBeginDate === this.state.shiftFilter) {
-        //         selectedShiftId = uniqueShifts[i].shiftId;
-        //         break;
-        //     }
-        // }
-
-        // let posts3: PostInterface[] = [];
-        // for (let i = 0; i < filteredPosts.length; ++i) {
-        //     for (let j = 0; j < this.props.planning.length; ++j)
-        //         if (this.props.planning[j].post_id === filteredPosts[i].id && this.props.planning[j].shiftId === selectedShiftId) {
-        //             posts3.push(filteredPosts[i]);
-        //             break;
-        //         }
-        // }
-
-        // let users: UserInterface[][] = [];
-        // for (let i = 0; i < posts3.length; ++i) {
-        //     let usersid: Number[] = [];
-        //     for (let j = 0; j < this.props.planning.length; ++j) {
-        //         if (this.props.planning[j].shiftId === selectedShiftId && this.props.planning[i].post_id === posts3[i].id) {
-        //             usersid.push(this.props.planning[j].User_id);
-        //         }
-        //     }
-        //     console.log(this.props.planning);
-        //     let tempUsers : UserInterface[] = [];
-        //     for (let j = 0; j < this.props.users.length; ++j)
-        //         if (usersid.includes(this.props.users[j].id))
-        //             tempUsers.push(this.props.users[j]);
-        //     users.push(tempUsers);
-        // }
-
-        // let items: string[][] = [];
-        // for (let i = 0; i < posts3.length; ++i) {
-        //     let tempItems : string[] = [];
-        //     for (let j = 0; j < this.props.items.length; ++j) {
-        //         for (let k = 0; k < this.props.planning.length; ++k) {
-        //             if (this.props.items[j].shiftId === this.props.planning[k].id && this.props.planning[k].shiftId === selectedShiftId
-        //                     && this.props.planning[k].post_id === posts3[i].id)
-        //                 tempItems.push(this.props.items[j].itemType);
-        //         }
-        //     }
-        //     items.push(tempItems);
-        // }
-
-        // let postsUi : Array<JSX.Element> = [];
-        // for (let i = 0; i < posts3.length; ++i) {
-        //     postsUi.push(
-        //         <Post postName={posts3[i].title} items={items[i]} users={users[i]} />
-        //     );
-        // }
-
 
         return(
             <div>

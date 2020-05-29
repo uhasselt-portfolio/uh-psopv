@@ -99,6 +99,9 @@ class OverviewComp extends Component<Props> {
         this.props.fetchProblems(5);
     }
 
+    /**
+     * gets an extra 5 problems from the database to show
+     */
     fetchMoreProblems = () => {
         this.props.fetchProblems(this.props.problems.length + 5);
     }
@@ -308,12 +311,18 @@ class OverviewComp extends Component<Props> {
         }
     }
 
+    /**
+     * maps the messages from this.props to Message components to show them to the user
+     */
     renderMessages = () : Array<JSX.Element> => {
         return this.props.messages.filter(message => ! message.read).map(x => (
             <Message key={Math.random()} id={x.id} title={x.title} sender={x.sender} content={x.content} read={false}/>
         ));
     }
 
+    /**
+     * updates the state to the new post the user has selected
+     */
     handleMessagePostChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.setState({
             ...this.state,
@@ -321,6 +330,11 @@ class OverviewComp extends Component<Props> {
         });
     }
 
+    /**
+     * maps the post from this.posts to PostPreview components to show them
+     * alse keeps track of all the posts to display them in message post selection menu
+     * @param postChoices 
+     */
     renderPosts(postChoices : Array<JSX.Element>){
         return this.props.posts.map(x => {
             postChoices.push(<MenuItem value={x.id + " " + x.title}>{x.title}</MenuItem>)

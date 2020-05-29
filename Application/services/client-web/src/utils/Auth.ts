@@ -28,7 +28,7 @@ class Auth {
         if(this.isTokenExpired(verifiedToken))
             return this.logout();
 
-        if(verifiedToken.user.permission_type_id != 3)
+        if(verifiedToken.user.permission_type_id !== 3)
             return this.logout();
 
         this.expiresAt = verifiedToken.exp;

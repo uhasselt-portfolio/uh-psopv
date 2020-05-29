@@ -39,6 +39,9 @@ class Shift extends Component<IProps> {
         dropdwon : false
     }
 
+    /**
+     * updates the state to dipslay or hide the dropdown
+     */
     handleButton = () => {
         this.setState({
             dropdwon: ! this.state.dropdwon

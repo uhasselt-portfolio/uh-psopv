@@ -40,10 +40,17 @@ class Users extends Component<Props> {
         this.props.fetchUsers();
     }
 
+    /**
+     * handles the automatic submin of a form
+     * prevents the default html form page reload and calls handleFilter
+     */
     handleFilterForm = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         this.handleFilter();
     }
+    /**
+     * sets the state to the new filter
+     */
     handleFilter = () => {
         let element = (document.getElementById("filterinput")) as HTMLInputElement;
         var value = element.value;
@@ -52,6 +59,11 @@ class Users extends Component<Props> {
                 filterValue: value
         })
     }
+    
+    /**
+     * gets called when the user switches filter
+     * updates the state to the new filter
+     */
     handleFilterChanged = (event: React.ChangeEvent<HTMLInputElement>) => {
         let element = (document.getElementById("filterinput")) as HTMLInputElement;
         var value = element.value;
@@ -105,8 +117,6 @@ class Users extends Component<Props> {
                         break;
             }
         }
-
-        console.log(this.props);
 
         return(
             <div>

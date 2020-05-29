@@ -53,7 +53,8 @@ export const problemSolved = (problemID: number) => async (dispatch : Redux.Disp
 }
 
 /**
- * lets the database fetch all the users
+ * asks the server database for a updated user list and updates the redux state with
+ * this new list
  */
 export const fetchuser = () => async (dispatch: Redux.Dispatch) => {
     console.log("in fetch user");

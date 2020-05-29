@@ -18,7 +18,7 @@ export default async () => {
         first_name: 'Maria',
         last_name: 'Hendrikx',
         password: '12345',
-        phone_number: '0495812455',
+        phone_number: '0483209571',
         email: 'maria.hendrikx@student.uhasselt.be',
         permission_type_id: 2,
         association_id: 1
@@ -31,6 +31,36 @@ export default async () => {
         phone_number: '0495812458',
         email: 'michiel.swaanen@student.uhasselt.be',
         permission_type_id: 3,
+        association_id: 1
+    }).save();
+
+    await new UserModel({
+        first_name: 'Lena',
+        last_name: 'Wouter',
+        password: '12345',
+        phone_number: '0495812451',
+        email: 'Lena.Wouter@student.uhasselt.be',
+        permission_type_id: 1,
+        association_id: 1
+    }).save();
+
+    await new UserModel({
+        first_name: 'Joeri',
+        last_name: 'Wouter',
+        password: '12345',
+        phone_number: '0495812452',
+        email: 'Joeri.Wouter@student.uhasselt.be',
+        permission_type_id: 1,
+        association_id: 1
+    }).save();
+
+    await new UserModel({
+        first_name: 'Seppe',
+        last_name: 'Wouter',
+        password: '12345',
+        phone_number: '0495812453',
+        email: 'Seppe.Wouter@student.uhasselt.be',
+        permission_type_id: 1,
         association_id: 1
     }).save();
 
