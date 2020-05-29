@@ -1,25 +1,30 @@
 import {AllowNull, AutoIncrement, Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt} from "sequelize-typescript";
-import PlanningModel from "./planning.model";
 
+/**
+ * GeneralPost model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "general_posts"})
 class GeneralPostModel extends Model<GeneralPostModel> {
 
     @PrimaryKey
     @AutoIncrement
     @Column
-    id! : number;
+    id!: number;
 
     @AllowNull(false)
     @Column
-    name! : string;
+    name!: string;
 
     @AllowNull(false)
     @Column
-    minimum_age! : string;
+    minimum_age!: string;
 
     @AllowNull(false)
     @Column
-    description! : string;
+    description!: string;
 
     @UpdatedAt
     @Column

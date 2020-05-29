@@ -1,9 +1,12 @@
 import {
     AllowNull,
-    AutoIncrement, BelongsTo,
+    AutoIncrement,
+    BelongsTo,
     Column,
-    CreatedAt, DataType,
-    Default, ForeignKey,
+    CreatedAt,
+    DataType,
+    Default,
+    ForeignKey,
     Model,
     PrimaryKey,
     Table,
@@ -13,17 +16,23 @@ import * as GeoLib from "geolib"
 import GeneralPostModel from "./general_post.model";
 import {GeolibInputCoordinates} from "geolib/es/types";
 
+/**
+ * Post model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "posts"})
 class PostModel extends Model<PostModel> {
 
     @PrimaryKey
     @AutoIncrement
     @Column
-    id! : number;
+    id!: number;
 
     @AllowNull(false)
     @Column
-    title! : string;
+    title!: string;
 
     @AllowNull(false)
     @Column
@@ -31,24 +40,24 @@ class PostModel extends Model<PostModel> {
 
     @AllowNull(false)
     @Column(DataType.DOUBLE)
-    latitude! : number;
+    latitude!: number;
 
     @AllowNull(false)
     @Column(DataType.DOUBLE)
-    longitude! : number;
+    longitude!: number;
 
     @Default(5)
     @Column
-    radius! : number;
+    radius!: number;
 
     @AllowNull(false)
     @Column
-    sector_id! : number;
+    sector_id!: number;
 
     @ForeignKey(() => GeneralPostModel)
     @AllowNull(false)
     @Column
-    general_post_id! : number;
+    general_post_id!: number;
 
     @BelongsTo(() => GeneralPostModel)
     general_post!: GeneralPostModel;
@@ -61,9 +70,9 @@ class PostModel extends Model<PostModel> {
     @Column
     created_at!: Date;
 
-    isUserOnPost(userCoords : GeolibInputCoordinates) {
-        const postCoords : GeolibInputCoordinates = {latitude: this.latitude, longitude: this.longitude};
-        const distanceInMeters : number = GeoLib.getDistance(userCoords, postCoords);
+    isUserOnPost(userCoords: GeolibInputCoordinates) {
+        const postCoords: GeolibInputCoordinates = {latitude: this.latitude, longitude: this.longitude};
+        const distanceInMeters: number = GeoLib.getDistance(userCoords, postCoords);
         return distanceInMeters < this.radius;
     }
 }

@@ -1,17 +1,22 @@
 import {AllowNull, AutoIncrement, Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt} from "sequelize-typescript";
-import PlanningModel from "./planning.model";
 
+/**
+ * Item Type model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "item_types"})
 class ItemTypeModel extends Model<ItemTypeModel> {
 
     @PrimaryKey
     @AutoIncrement
     @Column
-    id! : number;
+    id!: number;
 
     @AllowNull(false)
     @Column
-    name! : string;
+    name!: string;
 
     @UpdatedAt
     @Column

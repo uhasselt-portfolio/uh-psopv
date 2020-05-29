@@ -1,19 +1,32 @@
 import AssociationModel from './association.model';
 import {
-    Model,
-    Table,
-    Column,
-    PrimaryKey,
+    AllowNull,
     AutoIncrement,
-    IsEmail,
+    BeforeSave,
+    BelongsTo,
+    Column,
+    CreatedAt,
+    DataType,
     Default,
-    ForeignKey, AllowNull, CreatedAt, Unique, BeforeSave, UpdatedAt, BelongsTo, DataType
+    ForeignKey,
+    IsEmail,
+    Model,
+    PrimaryKey,
+    Table,
+    Unique,
+    UpdatedAt
 } from "sequelize-typescript";
 import bcrypt from 'bcrypt';
 import PermissionTypeModel from "./permission_type.model";
 
 type PermissionLevel = 1 | 2 | 3;
 
+/**
+ * User model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "users"})
 class UserModel extends Model<UserModel> {
 

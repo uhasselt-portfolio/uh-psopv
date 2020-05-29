@@ -1,8 +1,10 @@
 import {
     AllowNull,
-    AutoIncrement, BelongsTo,
+    AutoIncrement,
+    BelongsTo,
     Column,
-    CreatedAt, Default,
+    CreatedAt,
+    Default,
     ForeignKey,
     Model,
     PrimaryKey,
@@ -13,6 +15,12 @@ import {
 import PlanningModel from "./planning.model";
 import ItemTypeModel from "./item_type.model";
 
+/**
+ * Item model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "items"})
 class ItemModel extends Model<ItemModel> {
 

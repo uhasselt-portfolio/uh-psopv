@@ -1,20 +1,26 @@
 import {AllowNull, AutoIncrement, Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt} from "sequelize-typescript";
 
+/**
+ * Problem Type model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "problem_types"})
 class ProblemTypeModel extends Model<ProblemTypeModel> {
 
     @PrimaryKey
     @AutoIncrement
     @Column
-    id! : number;
+    id!: number;
 
     @AllowNull(false)
     @Column
-    title! : string;
+    title!: string;
 
     @AllowNull(false)
     @Column
-    priority! : number;
+    priority!: number;
 
     @AllowNull(false)
     @Column

@@ -1,8 +1,10 @@
 import {
     AllowNull,
-    AutoIncrement, BelongsTo,
+    AutoIncrement,
+    BelongsTo,
     Column,
-    CreatedAt, Default,
+    CreatedAt,
+    Default,
     ForeignKey,
     Model,
     PrimaryKey,
@@ -13,6 +15,12 @@ import UserModel from "./user.model";
 import PlanningModel from "./planning.model";
 import ProblemTypesModel from "./problem_type.model";
 
+/**
+ * Problem model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "problems"})
 class ProblemModel extends Model<ProblemModel> {
 
