@@ -1,9 +1,11 @@
-import axios from "axios"
 import Redux from 'redux';
 import Database from '../../database/Database'
 import {resetActionList, getActionList, setListLocalStorage, getListLocalStorage} from './saveFunction'
-import { push } from "ionicons/icons";
 import Auth from "../../utils/Auth";
+import { Plugins } from '@capacitor/core';
+const { LocalNotifications } = Plugins;
+
+
 
 function sortPlanningsByDate(a: any, b: any){
     var a_data = new Date(a.shift.begin)
@@ -254,7 +256,7 @@ function getProblems(responseProblems: any, volunteers: any){
 
     let problems: any[] = []
     responseProblems.data.data.problems.forEach((problem: any) => {
-        if(my_volunteers.includes(problem.planning.user.id)){
+        if(my_volunteers.includes(problem.planning.user_id)){
             problems.push({
                 type: "Problem",
                 id: problem.id,
@@ -302,12 +304,10 @@ function getMyManagers(managers: any){
 
 function getTotalUnreadMessages(problems: any, messages: any){
     problems = problems.filter((problem: any) => {
-        console.log(problem)
         return(problem.solved == false)
     })
 
     messages = messages.filter((message: any) => {
-        console.log(message)
         return(message.solved == false)
     })
 
@@ -322,12 +322,16 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         const todoCommands = await getActionList();
 
         todoCommands.forEach(async (element: any) => {
-            if(element.id == undefined){
-                const result = await database.postRequest(element.url, element.params);
-            } else{
-                const result = await database.patchRequest(element.url, element.id, element.params);
-
+            try{
+                if(element.id == undefined){
+                        const result = await database.postRequest(element.url, element.params);
+                    } else{
+                        const result = await database.patchRequest(element.url, element.id, element.params);
+                    }
+            } catch(error){
+                console.log(error)
             }
+            
         });
 
         const user_id = Auth.getAuthenticatedUser().id;
@@ -384,26 +388,105 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             setListLocalStorage('problem_types', problemTypes.data.data.problemTypes);
         }
 
-
-
         resetActionList();
         dispatch({type: UNROLL_ACTIONS})
-
     } catch(error){
         console.log(error.message)
     }
 }
 
-export const UPDATE_MESSAGES = 'UPDATE_MESSAGES'
 
+/**
+ * Created by: Maria Hendrikx
+ * Updates the messages
+ */
+export const UPDATE_MESSAGES = 'UPDATE_MESSAGES'
 export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
     try{
         const database = new Database();
 
         const user_id = Auth.getAuthenticatedUser().id;
+        let old_messages = await getListLocalStorage('messages');
         const responseMessages = await database.fetchMessagesFrom(user_id);
         let messages =  getMessages(responseMessages);
         setListLocalStorage('messages', messages);
+
+        let msg_notifications = [];
+        // see if there are new message
+        if(messages.length != old_messages.length){
+            for(let i = 0; i < messages.length; i++){
+                let search_message = messages[i];
+                let new_check = old_messages.find((element: any) => {
+                    return search_message.id == element.id
+                })
+
+                console.log(new_check)
+                if(new_check == undefined){
+                    msg_notifications.push(search_message)
+                }
+            }
+        }
+
+        console.log("notifications", msg_notifications)
+
+        msg_notifications.map(async (msg: any) => {
+            const notifs = await LocalNotifications.schedule({
+                notifications: [
+                  {
+                    title: msg.title,
+                    body: msg.message,
+                    id: msg.id,
+                    schedule: { at: new Date(Date.now() + 1000 * 5) },
+                    actionTypeId: "",
+                    extra: null
+                  }
+                ]
+              });
+              console.log('scheduled notifications', notifs);
+        })
+
+
+        // problems
+        const responseProblems = await database.fetchAllProblems();
+        let volunteers = await getListLocalStorage('my_volunteers');
+        let problems =  getProblems(responseProblems, volunteers);
+        let old_problems = await getListLocalStorage('problems');
+        setListLocalStorage('problems', problems);
+
+        let problem_notifications: any[] = [];
+        // see if there are new message
+        if(problems.length != old_problems.length){
+            for(let i = 0; i < problems.length; i++){
+                let search_message = problems[i];
+                let new_check = old_problems.find((element: any) => {
+                    return search_message.id == element.id
+                })
+
+                console.log(new_check)
+                if(new_check == undefined){
+                    problem_notifications.push(search_message)
+                }
+            }
+        }
+
+        console.log("notifications", problem_notifications)
+
+        problem_notifications.map(async (msg: any) => {
+            const notifs = await LocalNotifications.schedule({
+                notifications: [
+                  {
+                    title: msg.title,
+                    body: msg.mesasge,
+                    id: msg.id,
+                    schedule: { at: new Date(Date.now() + 1000 * 5) },
+                    actionTypeId: "",
+                    extra: null
+                  }
+                ]
+              });
+              console.log('scheduled notifications', notifs);
+        })
+
 
         dispatch({type: UPDATE_MESSAGES})
 

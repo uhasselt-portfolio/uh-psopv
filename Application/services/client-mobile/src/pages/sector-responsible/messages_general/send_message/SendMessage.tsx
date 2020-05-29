@@ -1,13 +1,10 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover, IonToast } from '@ionic/react';
-import React, { Fragment, useState, Component, ReactNode, useEffect } from 'react';
-import { RouteComponentProps } from 'react-router';
-import { caretDown } from 'ionicons/icons';
+import { IonItem, IonLabel, IonButton, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover, IonToast } from '@ionic/react';
+import React, {  Component} from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
 import {messageAddMessage, fetchUsers} from './SendMessageAction'
-import CustomDropdown from '../../list/components/CustomDropdown';
 import  SelectContactWindow  from './components/SelectContactPage';
-import { getListLocalStorage, setListLocalStorage } from '../../../save/saveFunction';
+import { setListLocalStorage } from '../../../save/saveFunction';
 import './SendMessage.css'
 import Auth from '../../../../utils/Auth';
 import TemplateMessage from './components/TemplateMessage';
@@ -58,12 +55,16 @@ class SendNotifications extends Component<any> {
   async handleQuickBtnChange(value: string){
     if (value === select_types.nobody){
       await this.selectNobody()
+      this.setState({...this.state, selected_type: select_types.nobody})
     } else if(value === select_types.everybody){
       await this.selectEverybody();
+      this.setState({...this.state, selected_type: select_types.everybody})
     } else if(value === select_types.volunteers){
       await this.selectVolunteers();
+      this.setState({...this.state, selected_type: select_types.volunteers})
     }else if(value === select_types.sectors){
       await this.selectSectors();
+      this.setState({...this.state, selected_type: select_types.sectors})
     } else if (value === select_types.specific){
       this.setState({...this.state, selected_type: select_types.specific});
       this.showPopOver();
@@ -133,10 +134,14 @@ class SendNotifications extends Component<any> {
 
   renderManagersOfVolunteer(){
     let my_managers = this.props.localStorage.managers;
+    console.log(my_managers)
+    if(my_managers.length > 0){
+      return my_managers.map((manager: any) => {
+        console.log("manaer", manager)
+        return <IonSelectOption value={manager.user_id}>{manager.user_name}</IonSelectOption>
+      })
+    }
 
-    return my_managers.map((manager: any) => {
-      return <IonSelectOption value={manager.user_id}>{manager.user_name}</IonSelectOption>
-    })
   }
 
   renderListOfUser(){
@@ -145,13 +150,15 @@ class SendNotifications extends Component<any> {
       let manager;
       if(this.props.localStorage.managers.length > 0){
         manager = this.props.localStorage.managers[0]
-      }
-
+      
       return(
         <IonSelect interface="popover" value={manager.user_id} placeholder={manager.user_name} onIonChange={e => this.handleQuickBtnChange(e.detail.value)}>
           {this.renderManagersOfVolunteer()}
         </IonSelect>
       )
+      } else{
+        return <div>Niemand is beschikbaar</div>
+      }
     } else{
       return (
         <IonSelect interface="popover" value={this.state.selected_type} placeholder={this.state.selected_type} onIonChange={e => this.handleQuickBtnChange(e.detail.value)}>

@@ -9,8 +9,6 @@ export const POST_FETCH_PLANNING_SUCCESS = 'POST_FETCH_PLANNING_SUCCESS'
 export const POST_FETCH_PLANNING_FAIL = 'POST_FETCH_PLANNING_FAIL'
 
 
-
-
 export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redux.Dispatch) => {
     try{
         
@@ -21,10 +19,13 @@ export const fetchPlanningsFromPost = (post_id: number) => async (dispatch: Redu
         let postData = posts.find((element: any) => {
             return (post_id == element.post_id)
         })
+        
+        console.log(postData, problemTypes, my_user_id)
+        let result: any =  {... postData, problemTypes: problemTypes, my_user_id: my_user_id}
 
-        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: {... postData, problemTypes: problemTypes, my_user_id: my_user_id}})
+        dispatch({type: POST_FETCH_PLANNING_SUCCESS, payload: result})
     } catch(error){
-        console.log(error)
+        console.log(error.message)
     }
 }
 

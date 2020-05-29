@@ -9,10 +9,6 @@ class ContactItem extends Component<any> {
         super(props)
     }
 
-    ionViewDidEnter() {
-        console.log('ionViewDidEnter event fired')
-      }
-
     render() {
         return (
             <IonItem detail button onClick={() => {

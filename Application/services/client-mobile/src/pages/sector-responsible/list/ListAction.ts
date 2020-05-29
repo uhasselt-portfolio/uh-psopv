@@ -19,8 +19,6 @@ export const fetchPosts = () => async (dispatch: Redux.Dispatch) => {
             posts_sectors: posts_sectors,
             sector_colors: sectorColors
         }
-        console.log(data)
-
 
         dispatch({type: PLANNING_FETCH_SUCCESS, payload: data})
     } catch (error) {

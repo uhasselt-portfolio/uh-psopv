@@ -1,7 +1,10 @@
 import { Plugins } from '@capacitor/core';
 const { Storage } = Plugins; 
 
-
+/**
+ * Created by Maria Hendrikx
+ * This class is the connection between localstorage and the application data.
+ */
 
 
 export async function resetActionList() {
