@@ -1,18 +1,32 @@
 import {Request, Response} from "express";
-import UserModel from "../models/user.model";
-import ProblemModel from "../models/problem.model";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PlanningModel from "../models/planning.model";
-import ProblemTypeModel from "../models/problem_type.model";
 import ItemModel from "../models/item.model";
 import ItemTypeModel from "../models/item_type.model";
 
+/**
+ * Item controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch/Load all the behind the foreign keys associated with this model
+ */
 const eagerLoadingOptions = {
-    include: [{model: ItemModel, all: true,
+    include: [{
+        model: ItemModel, all: true,
         include: [{model: ItemTypeModel, all: true}, {model: PlanningModel, all: true}]
     }]
 }
 
+/**
+ * Fetch all the items from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const items = await ItemModel.findAll(eagerLoadingOptions);
@@ -35,7 +49,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Fetch a specific item from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const itemID = req.params.id;
 
@@ -51,7 +70,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -60,14 +79,23 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Fetch all the items for a specific planning
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchItemsViaPlanningID = async (req: Request, res: Response) => {
     const planningID = req.params.id;
 
     try {
-        const items = await ItemModel.findAll({where: {planning_id: planningID},
-            include: [{model: ItemModel, all: true,
+        const items = await ItemModel.findAll({
+            where: {planning_id: planningID},
+            include: [{
+                model: ItemModel, all: true,
                 include: [{model: ItemTypeModel, all: true}, {model: PlanningModel, all: true}]
-            }]});
+            }]
+        });
         const statusCode = items == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
@@ -78,7 +106,7 @@ export const fetchItemsViaPlanningID = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -87,15 +115,21 @@ export const fetchItemsViaPlanningID = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Add an item to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const planningExists : PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id, eagerLoadingOptions);
-        const itemTypeExists : ItemTypeModel | null = await ItemTypeModel.findByPk(req.body.item_type_id, eagerLoadingOptions);
+        const planningExists: PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id, eagerLoadingOptions);
+        const itemTypeExists: ItemTypeModel | null = await ItemTypeModel.findByPk(req.body.item_type_id, eagerLoadingOptions);
 
-        if(planningExists && itemTypeExists) {
+        if (planningExists && itemTypeExists) {
             const item = await ItemModel.create({
                 planning_id: req.body.planning_id,
                 item_type_id: req.body.item_type_id
@@ -125,13 +159,19 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Toggle the item lost column to true and false (Modification shortcut)
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const toggleItemLost = async (req: Request, res: Response) => {
     try {
         const itemID = req.params.id;
 
         const item = await ItemModel.findByPk(itemID);
 
-        if(!item) {
+        if (!item) {
             return res.status(404).send({
                 status: 'fail',
                 data: null,
@@ -162,6 +202,12 @@ export const toggleItemLost = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Modify a specific column for an item
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const itemID = req.params.id;
     const item = req.body.item;
@@ -198,6 +244,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Delete a specific item
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const itemID = req.params.id;
 

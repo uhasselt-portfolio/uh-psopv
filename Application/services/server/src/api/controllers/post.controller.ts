@@ -4,11 +4,26 @@ import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PostModel from "../models/post.model";
 import GeneralPostModel from "../models/general_post.model";
 
+/**
+ * Post controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch/Load all the behind the foreign keys associated with this model
+ */
 const eagerLoadingOptions = {
     include: [{model: PostModel, all: true}]
 }
 
-
+/**
+ * Fetch all the posts from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const posts = await PostModel.findAll(eagerLoadingOptions);
@@ -31,7 +46,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Fetch a specific post from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const postID = req.params.id;
 
@@ -47,7 +67,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -56,13 +76,19 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Add a post to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
 
     const generalPostExists = await GeneralPostModel.findByPk(req.body.general_post_id);
 
-    if(!generalPostExists) {
+    if (!generalPostExists) {
         return res.status(404).send({
             status: 'fail',
             data: null,
@@ -95,6 +121,12 @@ export const add = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Modify a specific column for a post
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const postID = req.params.id;
     const post = req.body.post;
@@ -131,6 +163,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Delete a specific post
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const postID = req.params.id;
 

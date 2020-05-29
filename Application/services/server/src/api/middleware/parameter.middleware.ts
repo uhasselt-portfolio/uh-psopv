@@ -1,6 +1,16 @@
 import {body, ValidationChain, validationResult} from "express-validator";
 import {Request, Response} from "express";
 
+/**
+ * Parameter checker
+ *
+ * This function checks for POST routes if the right parameters are provided
+ * If not, it will send a detailed error message back
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
 export const validateBodyParameters = (method: string): any => {
     switch (method) {
         case 'user/add': {

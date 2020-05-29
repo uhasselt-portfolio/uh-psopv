@@ -4,13 +4,28 @@ import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import PlanningModel from "../models/planning.model";
 import ShiftModel from "../models/shift.model";
 import PostModel from "../models/post.model";
-import {Sequelize} from "sequelize-typescript";
 import {Op} from "sequelize";
 
+/**
+ * Planning controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch/Load all the behind the foreign keys associated with this model
+ */
 const eagerLoadingOptions = {
     include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}]
 }
 
+/**
+ * Fetch all the planning from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const plannings = await PlanningModel.findAll(eagerLoadingOptions);
@@ -33,7 +48,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Fetch a specific planning from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const planningID = req.params.id;
 
@@ -49,7 +69,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -58,12 +78,19 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Fetch all all the plannings for a specific post
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchPosts = async (req: Request, res: Response) => {
     const postID = req.params.id;
 
     try {
-        const plannings = await PlanningModel.findAll({where:
-                {post_id: postID}, include: [{model: PlanningModel, all: true }]
+        const plannings = await PlanningModel.findAll({
+            where:
+                {post_id: postID}, include: [{model: PlanningModel, all: true}]
         });
 
         const statusCode = plannings == null ? 404 : 200;
@@ -76,7 +103,7 @@ export const fetchPosts = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -85,10 +112,16 @@ export const fetchPosts = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Fetch a planning, that is currently active, for a specific user
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchActivePlaningViaUserID = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
-    try{
+    try {
 
         const tenMinutes = 10 * 60 * 1000
 
@@ -100,7 +133,12 @@ export const fetchActivePlaningViaUserID = async (req: Request, res: Response) =
         console.log(where);
 
         const activePlanning = await PlanningModel.findOne({
-            where: {user_id: userID},include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}, {model: ShiftModel, all:true, where: where}]
+            where: {user_id: userID},
+            include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}, {
+                model: ShiftModel,
+                all: true,
+                where: where
+            }]
         });
 
         const statusCode = activePlanning == null ? 404 : 200;
@@ -113,7 +151,7 @@ export const fetchActivePlaningViaUserID = async (req: Request, res: Response) =
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         console.log(error);
         res.status(500).send({
             status: 'error',
@@ -123,7 +161,12 @@ export const fetchActivePlaningViaUserID = async (req: Request, res: Response) =
     }
 }
 
-
+/**
+ * Fetch a future planning, for a specific user
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchFuturePlanningsByUserID = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
@@ -132,9 +175,14 @@ export const fetchFuturePlanningsByUserID = async (req: Request, res: Response) 
     }
 
     try {
-        const plannings = await PlanningModel.findAll({where:
+        const plannings = await PlanningModel.findAll({
+            where:
                 {user_id: userID},
-            include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}, {model: ShiftModel, all:true, where: where}]
+            include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}, {
+                model: ShiftModel,
+                all: true,
+                where: where
+            }]
         });
 
         const statusCode = plannings == null ? 404 : 200;
@@ -147,7 +195,7 @@ export const fetchFuturePlanningsByUserID = async (req: Request, res: Response) 
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -156,12 +204,19 @@ export const fetchFuturePlanningsByUserID = async (req: Request, res: Response) 
     }
 };
 
+/**
+ * Fetch all the users that have ever will have or had a shift together on the same post
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchUsersInSameShiftAndPost = async (req: Request, res: Response) => {
     const shiftID = req.params.shift_id;
     const postID = req.params.post_id;
 
     try {
-        const plannings = await PlanningModel.findAll({where:
+        const plannings = await PlanningModel.findAll({
+            where:
                 {shift_id: shiftID, post_id: postID}, include: [{model: UserModel}]
         });
 
@@ -175,7 +230,7 @@ export const fetchUsersInSameShiftAndPost = async (req: Request, res: Response) 
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -184,16 +239,26 @@ export const fetchUsersInSameShiftAndPost = async (req: Request, res: Response) 
     }
 };
 
+/**
+ * Fetch all the shifts that are currently active
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchCurrentShift = async (req: Request, res: Response) => {
-     try {
+    try {
 
-         const where = {
-             begin: {[Op.lt]: new Date().getTime()},
-             end: {[Op.gt]: new Date().getTime()},
-         }
+        const where = {
+            begin: {[Op.lt]: new Date().getTime()},
+            end: {[Op.gt]: new Date().getTime()},
+        }
 
         const plannings = await PlanningModel.findAll({
-            include: [{model: UserModel, all: true},{model: PostModel, all: true}, {model: ShiftModel, all: true, where: where}]
+            include: [{model: UserModel, all: true}, {model: PostModel, all: true}, {
+                model: ShiftModel,
+                all: true,
+                where: where
+            }]
         });
         const statusCode = plannings == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
@@ -206,7 +271,7 @@ export const fetchCurrentShift = async (req: Request, res: Response) => {
             message: null
         });
     } catch (error) {
-         console.log(error);
+        console.log(error);
         res.status(500).send({
             status: 'error',
             data: null,
@@ -215,17 +280,22 @@ export const fetchCurrentShift = async (req: Request, res: Response) => {
     }
 }
 
-
+/**
+ * Add a planning to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(req.body.user_id, eagerLoadingOptions);
-        const shiftExists : ShiftModel | null = await ShiftModel.findByPk(req.body.shift_id, eagerLoadingOptions);
-        const postExists : PostModel | null = await PostModel.findByPk(req.body.post_id, eagerLoadingOptions);
+        const userExists: UserModel | null = await UserModel.findByPk(req.body.user_id, eagerLoadingOptions);
+        const shiftExists: ShiftModel | null = await ShiftModel.findByPk(req.body.shift_id, eagerLoadingOptions);
+        const postExists: PostModel | null = await PostModel.findByPk(req.body.post_id, eagerLoadingOptions);
 
-        if(userExists && shiftExists && postExists) {
+        if (userExists && shiftExists && postExists) {
             const planning = await PlanningModel.create({
                 user_id: req.body.user_id,
                 shift_id: req.body.shift_id,
@@ -257,6 +327,12 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Toggle the user shift checkin column to true and false (Modification shortcut)
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const toggleCheckedIn = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
@@ -266,9 +342,9 @@ export const toggleCheckedIn = async (req: Request, res: Response) => {
     }
 
     try {
-        const userExists : UserModel | null = await UserModel.findByPk(userID, eagerLoadingOptions);
+        const userExists: UserModel | null = await UserModel.findByPk(userID, eagerLoadingOptions);
 
-        if(!userExists) {
+        if (!userExists) {
             return res.status(404).send({
                 status: 'fail',
                 data: null,
@@ -280,7 +356,7 @@ export const toggleCheckedIn = async (req: Request, res: Response) => {
             where: {user_id: userID}, include: [{model: ShiftModel, where: where}]
         });
 
-        if(activePlanning == undefined) {
+        if (activePlanning == undefined) {
             return res.status(404).send({
                 status: 'fail',
                 data: null,
@@ -297,7 +373,7 @@ export const toggleCheckedIn = async (req: Request, res: Response) => {
             message: 'message'
         });
 
-    } catch(error) {
+    } catch (error) {
         console.log(error);
         res.status(500).send({
             status: 'error',
@@ -307,6 +383,12 @@ export const toggleCheckedIn = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Modify a specific column for a planning
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const planningID = req.params.id;
     const planning = req.body.planning;
@@ -343,6 +425,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Delete a specific planning
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const planningID = req.params.id;
 

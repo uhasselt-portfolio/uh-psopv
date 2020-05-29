@@ -4,7 +4,7 @@ import {
     addBulk,
     fetch,
     fetchAll,
-    fetchMessagesSendTo,
+    fetchMessagesSentTo,
     modify,
     remove,
     toggleSeen
@@ -35,7 +35,7 @@ router.get('/fetch/all', verify, fetchAll);
 router.get('/fetch/:id', verify, fetch);
 
 // Fetch all the messages where send_to id is ...
-router.get('/fetch/send-to/:id', verify, fetchMessagesSendTo);
+router.get('/fetch/send-to/:id', verify, fetchMessagesSentTo);
 
 router.post('/add', verify, validateBodyParameters('message/add'), add);
 

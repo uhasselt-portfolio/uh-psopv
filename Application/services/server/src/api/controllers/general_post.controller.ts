@@ -2,6 +2,19 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import GeneralPostModel from "../models/general_post.model";
 
+/**
+ * Association controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch all the general posts from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const generalPosts = await GeneralPostModel.findAll();
@@ -24,7 +37,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Fetch a specific general post from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const generalPostID = req.params.id;
 
@@ -40,7 +58,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -49,7 +67,12 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Add a general post to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -75,6 +98,12 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Modify a specific column for a general post
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const generalPostID = req.params.id;
     const generalPost = req.body.generalPost;
@@ -111,6 +140,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Delete a specific general post
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const generalPostID = req.params.id;
 

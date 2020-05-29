@@ -2,6 +2,19 @@ import {Request, Response} from "express";
 import {checkRequiredParameters} from "../middleware/parameter.middleware";
 import AssociationModel from "../models/association.model";
 
+/**
+ * Association controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch all the associations from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const associations = await AssociationModel.findAll();
@@ -24,7 +37,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Fetch a specific association from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const associationID = req.params.id;
 
@@ -40,7 +58,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -49,7 +67,12 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
-
+/**
+ * Add an association to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -73,6 +96,12 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Modify a specific column for an association
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const associationID = req.params.id;
     const association = req.body.association;
@@ -85,7 +114,7 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     try {
-        const result = await AssociationModel .update(association, {
+        const result = await AssociationModel.update(association, {
             returning: true, where: {id: associationID}
         });
 
@@ -109,6 +138,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Delete a specific association
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const associationID = req.params.id;
 

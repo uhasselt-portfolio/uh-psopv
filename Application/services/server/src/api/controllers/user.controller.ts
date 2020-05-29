@@ -7,12 +7,27 @@ import PlanningModel from "../models/planning.model";
 import ShiftModel from "../models/shift.model";
 import {Op} from "sequelize";
 import {GeolibInputCoordinates} from "geolib/es/types";
-import ProblemModel from "../models/problem.model";
 
+/**
+ * User controller
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
+/**
+ * Fetch/Load all the behind the foreign keys associated with this model
+ */
 const eagerLoadingOptions = {
     include: [{model: UserModel, all: true}]
 }
 
+/**
+ * Fetch all the users from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchAll = async (req: Request, res: Response) => {
     try {
         const users = await UserModel.findAll(eagerLoadingOptions);
@@ -35,6 +50,12 @@ export const fetchAll = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Fetch a specific user from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetch = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
@@ -50,7 +71,7 @@ export const fetch = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -59,6 +80,12 @@ export const fetch = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Fetch a specific user by its phone number from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const fetchByPhoneNumber = async (req: Request, res: Response) => {
     const phoneNumber = req.params.phone_number;
 
@@ -74,7 +101,7 @@ export const fetchByPhoneNumber = async (req: Request, res: Response) => {
             },
             message: null
         });
-    } catch(error) {
+    } catch (error) {
         res.status(500).send({
             status: 'error',
             data: null,
@@ -83,13 +110,19 @@ export const fetchByPhoneNumber = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Check if the user is on its post
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const isUserOnPost = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
     try {
         const userExists = await UserModel.findByPk(userID);
 
-        if(!userExists) {
+        if (!userExists) {
             return res.status(404).send({
                 status: 'fail',
                 data: null,
@@ -102,11 +135,13 @@ export const isUserOnPost = async (req: Request, res: Response) => {
             end: {[Op.gt]: new Date().getTime()},
         }
 
-        const planning = await PlanningModel.findOne({where: {user_id: userID}, include: [{
-            model: ShiftModel, all:true, where: where
-        }]});
+        const planning = await PlanningModel.findOne({
+            where: {user_id: userID}, include: [{
+                model: ShiftModel, all: true, where: where
+            }]
+        });
 
-        if(!planning) {
+        if (!planning) {
             return res.status(404).send({
                 status: 'fail',
                 data: null,
@@ -114,9 +149,9 @@ export const isUserOnPost = async (req: Request, res: Response) => {
             })
         }
 
-        const latitude : number = userExists.current_latitude;
-        const longitude : number = userExists.current_longitude;
-        const userCoords : GeolibInputCoordinates = {latitude, longitude};
+        const latitude: number = userExists.current_latitude;
+        const longitude: number = userExists.current_longitude;
+        const userCoords: GeolibInputCoordinates = {latitude, longitude};
         const isUserOnPost = planning.post.isUserOnPost(userCoords);
         const statusCode = !isUserOnPost ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
@@ -138,6 +173,12 @@ export const isUserOnPost = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Add a user to the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const add = async (req: Request, res: Response) => {
 
     if (!checkRequiredParameters(req, res)) return;
@@ -146,7 +187,7 @@ export const add = async (req: Request, res: Response) => {
         const userExists = await UserModel.findOne({where: {phone_number: req.body.phone_number}});
         const associationExists = await AssociationModel.findByPk(req.body.association_id);
 
-        if(!associationExists) {
+        if (!associationExists) {
             return res.status(404).send({
                 status: 'fail',
                 data: null,
@@ -187,6 +228,12 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Modify a specific column for a user
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const modify = async (req: Request, res: Response) => {
     const userID = req.params.id;
     const user = req.body.user;
@@ -223,6 +270,12 @@ export const modify = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Toggle user connection column to true and false (Modification shortcut)
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const toggleUserConnection = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
@@ -260,6 +313,12 @@ export const toggleUserConnection = async (req: Request, res: Response) => {
     }
 }
 
+/**
+ * Delete a specific user
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const remove = async (req: Request, res: Response) => {
     const userID = req.params.id;
 
@@ -283,22 +342,22 @@ export const remove = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * Authenticate a specific user
+ * Authentication happens using e-mail for possible application expandability and flexibility
+ * Sends back a JWT
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
 export const authenticate = async (req: Request, res: Response) => {
-
-    // Validate provided parameters
-    // if (!checkRequiredParameters(req, res)) return;
 
     try {
         const user: UserModel | null = await UserModel.findOne({where: {email: req.body.email}});
 
         if (user && await user.validatePassword(req.body.password)) {
-            const payload = {user
-                // first_name: user.first_name,
-                // last_name: user.last_name,
-                // phone_number: user.phone_number,
-                // email: user.email,
-                // permission_type_id: user.permission_type_id.
-                // association_id: user.association_id
+            const payload = {
+                user
             };
 
             res.status(200).send({

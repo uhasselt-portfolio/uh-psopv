@@ -69,7 +69,7 @@ class LoginPage extends React.Component<any, any> {
                         <IonHeader>
                             <IonToolbar>
                                 <IonTitle>
-                                    We kennen jouw niet?
+                                    We kennen jou niet?
                                 </IonTitle>
                             </IonToolbar>
                         </IonHeader>
