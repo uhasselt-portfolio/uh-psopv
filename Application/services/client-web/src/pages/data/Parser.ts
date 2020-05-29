@@ -211,13 +211,13 @@ export class Parser {
         for (let i = 0; i < data[1].length; ++i) {
             if (data[1][i] === 'voornaam')
                 first_nameIndex = i;
-            else if (data[1][i] === 'telefoon nummber')
+            else if (data[1][i] === 'telefoon nummer')
                 phone_numberIndex = i;
             else if (data[1][i] === 'email')
                 emailIndex = i;
             else if (data[1][i] === 'vrijwilliger?')
                 permissionIndex = i;
-            else if (data[1][i] === 'vereneging')
+            else if (data[1][i] === 'vereniging')
                 associationIndex = i;
             else if (data[1][i] === 'achternaam')
                 last_nameIndex = i;
