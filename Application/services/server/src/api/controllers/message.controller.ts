@@ -150,14 +150,15 @@ export const addBulk = async (req: Request, res: Response) => {
 
 
         for (let send_to_id of req.body.send_to_ids) {
-            const sendToUserExists: UserModel | null = await UserModel.findByPk(req.body.send_to_id);
+            console.log(send_to_id);
+            const sendToUserExists: UserModel | null = await UserModel.findByPk(send_to_id);
 
             if(sendToUserExists) {
                 await MessageModel.create({
                     title: req.body.title,
                     message: req.body.message,
                     created_by_id: req.body.created_by_id,
-                    send_to_id: req.body.send_to_id,
+                    send_to_id: send_to_id,
                     priority: req.body.priority
                 });
             }
@@ -171,6 +172,7 @@ export const addBulk = async (req: Request, res: Response) => {
         })
 
     } catch (error) {
+        console.log(error)
         res.status(500).send({
             status: 'error',
             data: null,
