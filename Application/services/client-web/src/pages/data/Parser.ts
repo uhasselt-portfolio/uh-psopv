@@ -80,7 +80,11 @@ export class Parser {
     }
 
 
-
+    /**
+     * creates the general posts, sectors and posts from the given data
+     * sends post request to the database
+     * @param data the parsed excel file
+     */
     createGeneralAndPosts = async (data: any) => {
         let headFunctieIndex : number = -1;
         let minAgeIndex : number = -1;
@@ -200,6 +204,11 @@ export class Parser {
         return false;
     }
 
+    /**
+     * creates the associations and the users from the given data
+     * sends post request to the database
+     * @param data the parsed excel file
+     */
     createuser = async (data : any)=> {
         let first_nameIndex : number = -1;
         let last_nameIndex : number = -1;
@@ -275,6 +284,11 @@ export class Parser {
         }
     }
 
+    /**
+     * creates the planning from the given data
+     * sends post request to the database
+     * @param data the parsed excel file
+     */
     createPlanning = async (data: any) => {
         console.log('creating planning');
         let shiftIndex : number = 0;
@@ -316,6 +330,11 @@ export class Parser {
         }
     }
 
+    /**
+     * creates the shifts from the given data
+     * sends post request to the database
+     * @param data the parsed excel file
+     */
     createShift = async (data: any) => {
         let ShiftIndex : number = -1;
         let StartIndex : number = -1;
@@ -351,6 +370,11 @@ export class Parser {
         }
     }
     
+    /**
+     * creates the item types and the items from the given data
+     * sends post request to the database
+     * @param data the parsed excel file
+     */
     createItemtype = async (data : any) => {
         console.log("crating items");
         let typeIndex : number = -1;
@@ -403,6 +427,11 @@ export class Parser {
         }
     }
 
+    /**
+     * Sends a post request to the server to delete all the data
+     * sends post request to the database
+     * @param data the parsed excel file
+     */
     deleteAll = async () => {
         try {
             this.serverResponse = await axios.post('http://localhost/api/import/deleteAll', {
