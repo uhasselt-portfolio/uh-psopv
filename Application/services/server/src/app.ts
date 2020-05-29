@@ -15,6 +15,10 @@ import itemTypeRoutes from "./api/routes/item_type.routes";
 import planningRoutes from "./api/routes/planning.routes"
 import sectorRoutes from "./api/routes/sector.routes"
 
+/**
+ * @author Michiel Swaanen
+ * @
+ */
 class App {
 
     public express: express.Application;
@@ -25,6 +29,9 @@ class App {
         this.routes();
     }
 
+    /**
+     *
+     */
     private middleware() : void {
         this.express.use(express.json());
         this.express.use(express.urlencoded({extended: false}));

@@ -1,5 +1,5 @@
 import * as express from "express";
-import {add, fetch, fetchAll, modify, remove, toggleSeen, fetchMessagesSendTo} from "../controllers/message.controller";
+import {add, fetch, fetchAll, modify, remove, toggleSeen, fetchMessagesSendTo, addBulk} from "../controllers/message.controller";
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 import {verify} from "../middleware/jwt.middleware";
 
@@ -13,6 +13,8 @@ router.get('/fetch/:id', verify, fetch);
 router.get('/fetch/send-to/:id', verify, fetchMessagesSendTo);
 
 router.post('/add', verify, validateBodyParameters('message/add'), add);
+
+router.post('/add/bulk', verify, validateBodyParameters('message/add/bulk'), addBulk);
 
 router.patch('/modify/:id', verify, modify);
 
