@@ -70,7 +70,6 @@ class App extends React.Component<any, any> {
 
     renderApplication(): React.ReactNode {
         const loggedIn = Auth.isAuthenticated();
-        console.log("LOGGED IN ?", loggedIn);
 
         if (loggedIn || this.props.isUserLoggedIn) {
 

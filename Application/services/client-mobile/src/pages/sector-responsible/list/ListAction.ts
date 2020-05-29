@@ -1,7 +1,5 @@
-import axios from "axios"
 import Redux from 'redux';
-import Database from '../../../database/Database'
-import { getDefaultSector, getListLocalStorage } from "../../save/saveFunction";
+import {getDefaultSector, getListLocalStorage} from "../../save/saveFunction";
 
 
 export const PLANNING_FETCH_START = 'PLANNING_FETCH_START'
