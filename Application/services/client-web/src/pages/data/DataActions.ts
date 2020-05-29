@@ -67,6 +67,11 @@ export const uploadUsers = (file : File) => async (dispatch : Redux.Dispatch) =>
                         type: DataActions.DATA_POST_FAIL,
                         payload: 'ParseError'
                     });
+                } else if (parser.getResponse() === undefined || parser.getResponse().data === undefined) {
+                    dispatch({
+                        type: DataActions.DATA_POST_FAIL,
+                        payload: 'internal server error'
+                    });
                 } else if (parser.getResponse().data.status === 'fail') {
                     console.log("server error");
                     dispatch({
@@ -134,6 +139,11 @@ export const uploadFuncties = (file : File) => async (dispatch : Redux.Dispatch)
                         type: DataActions.DATA_POST_FAIL,
                         payload: 'ParseError'
                     });
+                } else if (parser.getResponse() === undefined || parser.getResponse().data === undefined) {
+                    dispatch({
+                        type: DataActions.DATA_POST_FAIL,
+                        payload: 'internal server error'
+                    });
                 } else if (parser.getResponse().data.status === 'fail') {
                     console.log("server error");
                     dispatch({
@@ -196,6 +206,11 @@ export const uploadAppellijst = (file : File) => async (dispatch : Redux.Dispatc
                     dispatch({
                         type: DataActions.DATA_POST_FAIL,
                         payload: 'ParseError'
+                    });
+                } else if (parser.getResponse() === undefined || parser.getResponse().data === undefined) {
+                    dispatch({
+                        type: DataActions.DATA_POST_FAIL,
+                        payload: 'internal server error'
                     });
                 } else if (parser.getResponse().data.status === 'fail') {
                     console.log("server error");
@@ -260,6 +275,11 @@ export const uploadShifts = (file : File) => async (dispatch : Redux.Dispatch) =
                         type: DataActions.DATA_POST_FAIL,
                         payload: 'ParseError'
                     });
+                } else if (parser.getResponse() === undefined || parser.getResponse().data === undefined) {
+                    dispatch({
+                        type: DataActions.DATA_POST_FAIL,
+                        payload: 'internal server error'
+                    });
                 } else if (parser.getResponse().data.status === 'fail') {
                     console.log("server error");
                     dispatch({
@@ -322,6 +342,11 @@ export const uploadItems = (file : File) => async (dispatch : Redux.Dispatch) =>
                     dispatch({
                         type: DataActions.DATA_POST_FAIL,
                         payload: 'ParseError'
+                    });
+                } else if (parser.getResponse() === undefined || parser.getResponse().data === undefined) {
+                    dispatch({
+                        type: DataActions.DATA_POST_FAIL,
+                        payload: 'internal server error'
                     });
                 } else if (parser.getResponse().data.status === 'fail') {
                     console.log("server error");

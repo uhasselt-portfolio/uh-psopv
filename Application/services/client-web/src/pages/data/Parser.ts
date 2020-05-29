@@ -270,6 +270,7 @@ export class Parser {
                 association: this.associations
             });
         } catch(error) {
+            console.log(error.response);
             this.serverResponse = error.response;
         }
     }
