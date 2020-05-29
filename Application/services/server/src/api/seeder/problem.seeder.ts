@@ -1,5 +1,10 @@
 import ProblemModel from "../models/problem.model";
 
+/**
+ * Problem database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the problem table...")
 

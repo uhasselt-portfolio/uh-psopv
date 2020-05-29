@@ -1,5 +1,10 @@
 import SectorModel from "../models/sector.model";
 
+/**
+ * Sector database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the sector table...")
 

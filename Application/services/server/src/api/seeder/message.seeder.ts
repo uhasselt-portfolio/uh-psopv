@@ -1,5 +1,10 @@
 import MessageModel from "../models/message.model";
 
+/**
+ * Message database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the item table...")
 

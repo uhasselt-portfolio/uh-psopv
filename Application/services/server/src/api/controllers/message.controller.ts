@@ -132,6 +132,55 @@ export const add = async (req: Request, res: Response) => {
     }
 };
 
+export const addBulk = async (req: Request, res: Response) => {
+    if (!checkRequiredParameters(req, res)) return;
+
+    try {
+        const createdByUserExists: UserModel | null = await UserModel.findByPk(req.body.created_by_id);
+
+        if(!createdByUserExists) {
+            res.status(404).send({
+                status: 'fail',
+                data: {
+                    created_by: createdByUserExists,
+                },
+                message: 'User doesn\'t exist with that ID'
+            });
+        }
+
+
+        for (let send_to_id of req.body.send_to_ids) {
+            console.log(send_to_id);
+            const sendToUserExists: UserModel | null = await UserModel.findByPk(send_to_id);
+
+            if(sendToUserExists) {
+                await MessageModel.create({
+                    title: req.body.title,
+                    message: req.body.message,
+                    created_by_id: req.body.created_by_id,
+                    send_to_id: send_to_id,
+                    priority: req.body.priority
+                });
+            }
+
+        }
+
+        res.status(201).send({
+            status: 'success',
+            data: null,
+            message: null
+        })
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+}
+
 export const toggleSeen = async (req: Request, res: Response) => {
     const messageID = req.params.id
 

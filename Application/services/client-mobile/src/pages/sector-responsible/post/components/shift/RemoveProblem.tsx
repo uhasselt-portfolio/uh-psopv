@@ -44,7 +44,6 @@ class RemoveProblem extends React.Component<any> {
 
 
     render(){
-      console.log(this.props)
         return (
           <IonCard>
               <IonCardHeader>

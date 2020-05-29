@@ -1,8 +1,10 @@
 import {
     AllowNull,
-    AutoIncrement, BelongsTo,
+    AutoIncrement,
+    BelongsTo,
     Column,
-    CreatedAt, Default,
+    CreatedAt,
+    Default,
     ForeignKey,
     Model,
     PrimaryKey,
@@ -13,6 +15,12 @@ import UserModel from "./user.model";
 import PostModel from "./post.model";
 import ShiftModel from "./shift.model";
 
+/**
+ * Planning model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "plannings"})
 class PlanningModel extends Model<PlanningModel> {
 

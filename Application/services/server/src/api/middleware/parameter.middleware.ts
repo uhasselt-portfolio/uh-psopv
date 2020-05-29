@@ -56,6 +56,15 @@ export const validateBodyParameters = (method: string): any => {
                 body("priority", "You must specify the priority of the message").exists().isNumeric(),
             ]
         }
+        case 'message/add/bulk': {
+            return [
+                body("title", "You must specify a title for the message").exists(),
+                body("message", "You must specify a message").exists(),
+                body("created_by_id", "You must specify the user that sent the message").exists().isNumeric(),
+                body("send_to_ids", "You must specify the receivers for the message").exists().isArray(),
+                body("priority", "You must specify the priority of the message").exists().isNumeric(),
+            ]
+        }
         case 'association/add': {
             return [
                 body("name", "You must specify a name for the association").exists()

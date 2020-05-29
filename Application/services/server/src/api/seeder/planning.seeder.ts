@@ -1,5 +1,10 @@
 import PlanningModel from "../models/planning.model";
 
+/**
+ * Planning database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the planning table...")
 

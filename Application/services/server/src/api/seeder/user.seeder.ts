@@ -1,6 +1,10 @@
-import AssociationModel from "../models/association.model";
 import UserModel from "../models/user.model";
 
+/**
+ * User database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the user table...")
 

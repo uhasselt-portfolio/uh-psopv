@@ -1,5 +1,10 @@
 import GeneralPostModel from "../models/general_post.model";
 
+/**
+ * General post database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the general post table...")
 

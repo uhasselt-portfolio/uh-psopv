@@ -1,16 +1,12 @@
-import {
-    AllowNull,
-    AutoIncrement, BelongsToMany,
-    Column,
-    CreatedAt,
-    Model,
-    PrimaryKey,
-    Table,
-    UpdatedAt
-} from "sequelize-typescript";
-import UserModel from "./user.model";
+import {AllowNull, AutoIncrement, Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt} from "sequelize-typescript";
 
-@Table({tableName: "associations", })
+/**
+ * Association model
+ *
+ * @author Michiel Swaanen
+ *
+ */
+@Table({tableName: "associations",})
 class AssociationModel extends Model {
     @PrimaryKey
     @AutoIncrement

@@ -1,5 +1,5 @@
 import Redux from 'redux';
-import { getListLocalStorage } from "../../save/saveFunction";
+import {getListLocalStorage} from "../../save/saveFunction";
 
 export const USER_FETCH_START = 'USER_FETCH_START'
 export const USER_FETCH_SUCCESS = 'USER_FETCH_SUCCESS'

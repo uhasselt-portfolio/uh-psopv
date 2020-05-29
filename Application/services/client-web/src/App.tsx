@@ -14,13 +14,13 @@ import Overview from './pages/overview/OverviewPage';
 
 import {Provider} from 'react-redux';
 import {store} from './Redux/store';
-import { Grid } from '@material-ui/core';
+import {Grid} from '@material-ui/core';
 
 const appStyle = {
-  background: '#eee',
-  minheight: '100vh',
-  height: '100%',
-  paddingBottom: '5px'
+    background: '#eee',
+    minheight: '100vh',
+    height: '100%',
+    paddingBottom: '5px'
 }
 
 //TODO op veel plekken nog loading and failed messages maken

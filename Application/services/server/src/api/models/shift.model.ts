@@ -1,34 +1,30 @@
-import {
-    AllowNull,
-    AutoIncrement,
-    Column,
-    CreatedAt,
-    Model,
-    NotNull,
-    PrimaryKey,
-    Table,
-    UpdatedAt
-} from "sequelize-typescript";
+import {AllowNull, AutoIncrement, Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt} from "sequelize-typescript";
 
+/**
+ * Shift model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "shifts"})
 class ShiftModel extends Model<ShiftModel> {
 
     @PrimaryKey
     @AutoIncrement
     @Column
-    id! : number;
+    id!: number;
 
     @AllowNull(false)
     @Column
-    name! : string;
+    name!: string;
 
     @AllowNull(false)
     @Column
-    begin! : Date;
+    begin!: Date;
 
     @AllowNull(false)
     @Column
-    end! : Date;
+    end!: Date;
 
     @UpdatedAt
     @Column

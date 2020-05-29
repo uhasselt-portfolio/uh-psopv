@@ -5,5 +5,11 @@
   "npmClient": "npm",
   "webDir": "build",
   "cordova": {},
-  "linuxAndroidStudioPath": "/opt/android-studio/bin/studio.sh"
+  "linuxAndroidStudioPath": "/opt/android-studio/bin/studio.sh",
+  "plugins": {
+    "SplashScreen": {
+      "launchAutoHide": true,
+      "launchShowDuration": 10
+    }
+  }
 }

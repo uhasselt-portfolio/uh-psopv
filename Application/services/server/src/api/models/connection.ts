@@ -1,18 +1,26 @@
 import {Sequelize} from 'sequelize-typescript';
 
+/**
+ * PostgreSQL connection class
+ *
+ * @author Michiel Swaanen
+ *
+ */
+
 const warning = "Create .env file with your database credentials.";
 
+/**
+ * Connection credentials
+ */
 function getConnectionCredentials(): Sequelize {
     const sslMode: boolean = process.env.NODE_ENV == 'production';
-
-    console.log("CONNECTING WITH...", process.env.POSTGRES_URI)
-    console.log("ENV..", process.env);
 
     return new Sequelize(
         process.env.POSTGRES_URI || warning, {
             dialectOptions: {
                 ssl: sslMode
             },
+            logging: false,
             dialect: 'postgres',
             pool: {
                 max: 5,
@@ -20,10 +28,13 @@ function getConnectionCredentials(): Sequelize {
                 acquire: 30000,
                 idle: 10000
             },
-            models: [__dirname + '/*.model.ts'] // TODO: When ran on windows change / to \\
+            models: [__dirname + '/*.model.ts']
         });
 }
 
+/**
+ * Establishes a pool between the server and the database
+ */
 const getConnection = async (): Promise<Sequelize> =>  {
 
     const connectionCredentials = getConnectionCredentials();

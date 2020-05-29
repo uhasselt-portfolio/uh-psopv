@@ -1,5 +1,10 @@
 import ItemModel from "../models/item.model";
 
+/**
+ * Item database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the item table...")
 

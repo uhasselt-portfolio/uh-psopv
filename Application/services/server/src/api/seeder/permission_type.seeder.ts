@@ -1,5 +1,10 @@
 import PermissionTypeModel from "../models/permission_type.model";
 
+/**
+ * Permission Type database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the permission type table...")
 

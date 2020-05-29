@@ -12,6 +12,12 @@ import {
 } from "sequelize-typescript";
 import UserModel from "./user.model";
 
+/**
+ * Sector model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "sector"})
 class SectorModel extends Model<SectorModel> {
 

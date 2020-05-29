@@ -1,5 +1,7 @@
 import {
-    AllowNull, AutoIncrement, BelongsTo,
+    AllowNull,
+    AutoIncrement,
+    BelongsTo,
     Column,
     CreatedAt,
     Default,
@@ -11,6 +13,12 @@ import {
 } from "sequelize-typescript";
 import UserModel from "./user.model";
 
+/**
+ * Message model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "messages"})
 class MessageModel extends Model<MessageModel> {
 

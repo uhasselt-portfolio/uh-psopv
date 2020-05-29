@@ -1,16 +1,22 @@
 import {AllowNull, AutoIncrement, Column, CreatedAt, Model, PrimaryKey, Table, UpdatedAt} from "sequelize-typescript";
 
+/**
+ * Permission Type model
+ *
+ * @author Michiel Swaanen
+ *
+ */
 @Table({tableName: "permission_type"})
 class PermissionTypeModel extends Model<PermissionTypeModel> {
 
     @PrimaryKey
     @AutoIncrement
     @Column
-    id! : number;
+    id!: number;
 
     @AllowNull(false)
     @Column
-    name! : string;
+    name!: string;
 
     @UpdatedAt
     @Column
