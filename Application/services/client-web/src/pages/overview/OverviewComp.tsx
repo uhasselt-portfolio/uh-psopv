@@ -9,7 +9,7 @@ import PostDataInterface from '../../interfaces/PostDataInterface';
 import ShiftDataInterface from '../../interfaces/ShiftDataInterface';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
-import {fetchMessages, postNewMessage, fetchProblems, fetchPosts} from './OverviewAction';
+import {fetchMessages, postNewMessage, fetchProblems, fetchPosts,postNewMessages} from './OverviewAction';
 import {bindActionCreators} from 'redux';
 import ReportProblemOutlinedIcon from '@material-ui/icons/ReportProblemOutlined';
 import ListOutlinedIcon from '@material-ui/icons/ListOutlined';
@@ -142,12 +142,13 @@ class OverviewComp extends Component<Props> {
         let messageContent = ((document.getElementById("messageContent")) as HTMLTextAreaElement).value;
         let receiver : string = "";
 
+        console.log(messageReceiver);
         switch (messageReceiver) {
-            case "Verantwoordelijke": {
+            case "verantwoordelijken": {
                 this.sendMessageToVerantwoordelijke(messageTitle,messageContent);
                 break;
             }
-            case "Vrijwilliger" : {
+            case "vrijwilligers" : {
                 this.sendMessageToVrijwilligers(messageTitle,messageContent);
                 break;
             }
@@ -157,7 +158,7 @@ class OverviewComp extends Component<Props> {
                     let receiverId : UserDataInterface[] = this.props.users.filter(user => (user.name === receiver.split(" ")[0] && 
                         user.lastname === receiver.split(" ")[1]));
                     if (receiverId.length > 0) {
-                        this.props.postNewMessage(receiverId[0].id,messageTitle,messageContent,this.props.admin.id);
+                        this.props.postNewMessage(receiverId[0].id,messageTitle,messageContent);
                         this.setState({
                             ...this.state,
                             messageSend: true,
@@ -215,9 +216,12 @@ class OverviewComp extends Component<Props> {
      * sends a message to all users
      */
     sendMessageToAll = (title: string, content: string) => { //TODO niet in loop
+        let receiverIds : number[] = [];
         for (let i = 0; i < this.props.users.length; ++i) {
-            this.props.postNewMessage(this.props.users[i].id,title,content,this.props.admin.id);
+            receiverIds.push(this.props.users[i].id);
         }
+        console.log(receiverIds);
+        this.props.postNewMessages(receiverIds,title,content);
         this.setState({
             ...this.state,
             messageSend: true,
@@ -230,10 +234,14 @@ class OverviewComp extends Component<Props> {
      * sends a message to only the volunteers
      */
     sendMessageToVrijwilligers = (title: string, content: string) =>{
+        console.log("hey");
+        let receiverIds : number[] = [];
         for (let i = 0; i < this.props.users.length; ++i) {
             if (this.props.users[i].permission === 1)
-                this.props.postNewMessage(this.props.users[i].id,title,content,this.props.admin.id);
+                receiverIds.push(this.props.users[i].id);
         }
+        console.log(receiverIds);
+        this.props.postNewMessages(receiverIds,title,content);
         this.setState({
             ...this.state,
             messageSend: true,
@@ -246,10 +254,12 @@ class OverviewComp extends Component<Props> {
      * sends a message to only the sector-responsible
      */
     sendMessageToVerantwoordelijke = (title: string, content: string) => {
+        let receiverIds : number[] = [];
         for (let i = 0; i < this.props.users.length; ++i) {
             if (this.props.users[i].permission === 2)
-                this.props.postNewMessage(this.props.users[i].id,title,content,this.props.admin.id);
+                receiverIds.push(this.props.users[i].id);
         }
+        this.props.postNewMessages(receiverIds,title,content);
         this.setState({
             ...this.state,
             messageSend: true,
@@ -262,6 +272,19 @@ class OverviewComp extends Component<Props> {
     sendMessageToPost = (title: string, content: string) => { //TODO
         console.log(this.state.currentPost);
         let postId : number = parseInt(this.state.currentPost.split(" ")[0]);
+        let receiverIds : number[] = [];
+        for (let i = 0; i < this.props.planning.length; ++i) {
+            if (this.props.planning[i].post_id === postId)
+                receiverIds.push(this.props.planning[i].User_id);
+        }
+        this.props.postNewMessages(receiverIds,title,content);
+        this.setState({
+            ...this.state,
+            messageSend: true,
+            wrongUser: false
+        });
+        ((document.getElementById("messageTitle")) as HTMLInputElement).value = "";
+        ((document.getElementById("messageContent")) as HTMLTextAreaElement).value = "";
     }
 
     /**
@@ -534,16 +557,18 @@ const MapStateToProps = (state : AppState): LinkStateProps => {
 
 interface LinkDispatchToProps {
     fetchMessages: () => any,
-    postNewMessage: (receiverId: Number, title: string, content: string, adminId: Number) => any,
+    postNewMessage: (receiverId: Number, title: string, content: string) => any,
     fetchProblems: (amount: number) => any,
-    fetchPosts: () => any
+    fetchPosts: () => any,
+    postNewMessages : (receiverIds: number[], title: string, content: string) => any
 }
 const MapDispatchToProps = (dispatch: any) : LinkDispatchToProps => {
     return bindActionCreators({
         fetchMessages,
         postNewMessage,
         fetchProblems,
-        fetchPosts
+        fetchPosts,
+        postNewMessages
     }, dispatch);
 }
 

@@ -298,7 +298,15 @@ export default class Database {
             send_to_id: receiverId,
             priority: 1,
         })
-
+    }
+    async postNewMessageMulitple(receiverIds: number [], title: string, content: string, adminId: number) {
+        return ServerRequest.post('/message/add/bulk', {
+            title: title,
+            message: content,
+            created_by_id: adminId,   //TODO admin id
+            send_to_ids: receiverIds,
+            priority: 1,
+        })
     }
 
     async patchMessageRead(messageId: number) {
