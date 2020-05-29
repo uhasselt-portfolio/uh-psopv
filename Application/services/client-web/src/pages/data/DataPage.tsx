@@ -255,7 +255,7 @@ class Data extends Component<Props> {
                 <Grid item style={styleRight}>
                     <h3>Hoe bestanden uploaden</h3>
                     <div style={explanationStyle}>
-                        Om bestanden up te loaden dient u op de knop 'Bestand kiezen' te klikken en het 
+                        Om bestanden toe te voegen dient u op de knop 'Bestand kiezen' te klikken en het 
                          correcte bestand te selecteren. Hieronder volgt wat elk bestand moet bevatten.    
                          Het is zeer belangrijk dat u de juiste volgorde aanhoud. Indien dit niet het geval is, kan het zijn dat u opnieuw moet
                          beginnen.
@@ -264,15 +264,15 @@ class Data extends Component<Props> {
                     <div style={explanationStyle}>
                         Dit bestand bevat een opsomming van al de gebruikers, zowel vrijwilligers en verantwoordelijken. Gelieve 
                         de volgende regels te volgen bij het maken van dit bestand. De 2de rij bevat de titels van de kolommen. Deze bevatten
-                        minstens 'voornaam', 'achternaam', 'telefoon nummber', 'vereneging', 'wachtwoord', 'email', 'vrijwilliger?'. De kolom 'vrijwilliger?'
+                        minstens 'voornaam', 'achternaam', 'telefoon nummer', 'vereniging', 'wachtwoord', 'email', 'vrijwilliger?'. De kolom 'vrijwilliger?'
                         mag enkel de waarden 'vrijwilliger' of 'verantwoordelijke' bevatten.
                     </div>
                     <h5 style={explanationStyle}>Functies:</h5>
                     <div style={explanationStyle}>
                         Dit bestand bevat de functies die op het festival voorkomen. Gelieve de volgende regels te volgen 
                         bij het maken van dit bestand. In rij 3 van het bestand staan de titels van de kolommen, gelieve de. Deze bevatten minstens
-                        'HOOFDFUNCTIE', 'SUBFUNCTIE', 'SECTOR', 'LOCATIE', 'MINIMUMLEEFTIJD' en optioneel 'OPMERKING'. Gelieve bij de locatie een correct address
-                        in te geven, bijvoorbeeld: 3500 Hasselt, Kempische Steenweg. Indien het address niet gevonden wordt, zal de locatie niet gebruikt kunnen worden.
+                        'HOOFDFUNCTIE', 'SUBFUNCTIE', 'SECTOR', 'LOCATIE', 'MINIMUMLEEFTIJD' en optioneel 'OPMERKING'. Gelieve bij de locatie een correct adres
+                        in te geven, bijvoorbeeld: 3500 Hasselt, Kempische Steenweg. Indien het adres niet gevonden wordt, zal de locatie niet gebruikt kunnen worden.
                         In dit geval zal het een standaard locatie krijgen.
                     </div>
                     <h5 style={explanationStyle}>Shiften:</h5>
@@ -293,10 +293,15 @@ class Data extends Component<Props> {
                     <h5 style={explanationStyle}>Items: </h5>
                     <div style={explanationStyle}>
                         Dit bestand bevat een opsomming van de verschillende voorwerpen gebruikt tijdens het festival. Gelieve 
-                        de volgende regels te volgen bij het maken van dit bestand. de 2de rij bevat de titles van de kolommen. Deze zijn 
+                        de volgende regels te volgen bij het maken van dit bestand. de 2de rij bevat de titels van de kolommen. Deze zijn 
                         'itemType', 'shift', 'functie' en 'naam'. Waarbij itemType het soort van item is, bijvoorbeeld een fluohesje, shift is de shift Waarbij
                         het wordt gebruikt, functie is de subfunctie uit de functiesfile en de naam bestaat uit de voornaam, achternaam en telefoon nummer van de 
                         gebruiker gescheiden door een spatie. De shift, functie en naam komen overeen met de shift, functie en naam uit de appellijst.
+                    </div>
+                    <h5 style={explanationStyle}>Gegevens verwijderen:</h5>
+                    <div style={explanationStyle}>
+                        Deze knop dient om de huidige gegevens uit de database te verwijderen. Belangrijk hierbij is dat al de gegevens
+                        definitief verwijdert worden.
                     </div>
                 </Grid>
             </Grid>
