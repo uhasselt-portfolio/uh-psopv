@@ -1,5 +1,10 @@
 import ItemTypeModel from "../models/item_type.model";
 
+/**
+ * Item Type database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the item type table...")
 

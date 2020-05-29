@@ -1,5 +1,10 @@
 import PostModel from "../models/post.model";
 
+/**
+ * Post database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the post table...")
 

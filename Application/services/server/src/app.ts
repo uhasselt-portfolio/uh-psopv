@@ -1,5 +1,4 @@
 import express, {NextFunction, Request, Response} from 'express';
-
 // Routes
 import userRoutes from "./api/routes/user.routes";
 import importRoutes from "./api/routes/import.routes";
@@ -17,7 +16,9 @@ import sectorRoutes from "./api/routes/sector.routes"
 
 /**
  * @author Michiel Swaanen
- * @
+ * @version 1.0
+ *
+ * Starts up the server application
  */
 class App {
 
@@ -30,9 +31,9 @@ class App {
     }
 
     /**
-     *
+     * Apply middleware to every route call that happens
      */
-    private middleware() : void {
+    private middleware(): void {
         this.express.use(express.json());
         this.express.use(express.urlencoded({extended: false}));
         this.express.use((req: Request, res: Response, next: NextFunction) => {
@@ -45,7 +46,10 @@ class App {
         })
     }
 
-    private routes() : void {
+    /**
+     * Connect all the controllers with the parent routes
+     */
+    private routes(): void {
         this.express.use("/api/user", userRoutes);
         this.express.use("/api/import", importRoutes);
         this.express.use("/api/problem", problemRoutes);

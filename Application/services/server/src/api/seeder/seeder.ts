@@ -14,13 +14,21 @@ import sectorSeeder from './sector.seeder'
 
 import PermissionTypeModel from "../models/permission_type.model";
 
+/**
+ * Lazy database check if it's already seeded
+ */
 export const databaseAlreadySeeded = async () => {
     const result = await PermissionTypeModel.findAll();
     return result.length > 0;
 }
 
+/**
+ * Database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
-    if(!await databaseAlreadySeeded()) {
+    if (!await databaseAlreadySeeded()) {
         // Not associated with any table
         await associationSeeder();
         await permissionTypeSeeder();

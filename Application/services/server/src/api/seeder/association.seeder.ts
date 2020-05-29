@@ -1,5 +1,10 @@
 import AssociationModel from "../models/association.model";
 
+/**
+ * Association database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the association table...")
 

@@ -1,12 +1,22 @@
 import ShiftModel from "../models/shift.model";
 import {DateTime} from "luxon";
 
-const dateFormat : string = "dd/MM/yyyy HH:mm";
+const dateFormat: string = "dd/MM/yyyy HH:mm";
 
-const createDate = (localDate : string) : string => {
+/**
+ * Transform a readable date into a UTC timezoned date
+ *
+ * @param localDate Readable date string
+ */
+const createDate = (localDate: string): string => {
     return DateTime.fromFormat(localDate, dateFormat, {zone: 'Europe/Brussels'}).toUTC().toISO()
 }
 
+/**
+ * Shift database seeder
+ *
+ * @author Michiel Swaanen
+ */
 export default async () => {
     console.log("Started seeding the shift table...")
 
