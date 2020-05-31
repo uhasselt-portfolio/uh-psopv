@@ -1,0 +1,498 @@
+[33mcommit 2ccbf5ab24dcaaf9939d4f4d55f74a2fbf2e7e28[m[33m ([m[1;36mHEAD -> [m[1;32mdevelopment[m[33m, [m[1;31morigin/development[m[33m)[m
+Merge: 623db236 a9e5342a
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 16:22:04 2020 +0200
+
+    Merge branch 'development' of https://didactiek-scm.edm.uhasselt.be:8181/scm/git/psopv-2020-groep6 into development
+
+[33mcommit 623db236a811b28b49e05b9924c217536fb0635c[m
+Merge: 52158d58 8dd260a9
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 16:21:44 2020 +0200
+
+    Merge branch 'development' of https://didactiek-scm.edm.uhasselt.be:8181/scm/git/psopv-2020-groep6 into development
+
+[33mcommit 52158d58993dc736de6073ce6e623a1035c0489f[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 16:21:32 2020 +0200
+
+    Changed localhost to server for dataupload
+
+[33mcommit a9e5342a73e622c649afc6140ee6bd0eca11b90e[m
+Merge: 1e581f1a 8dd260a9
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Fri May 29 16:21:13 2020 +0200
+
+    Merge branch 'development' of https://didactiek-scm.edm.uhasselt.be:8181/scm/git/psopv-2020-groep6 into development
+
+[33mcommit 1e581f1aa3cbe050d1ebfcd05b18a83ca99d5b6a[m
+Merge: a74a78ea 0c01b8be
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Fri May 29 16:19:14 2020 +0200
+
+    Merge branch 'development-maria' into development
+
+[33mcommit 0c01b8be16c805a163941268772e78a34e9f0731[m[33m ([m[1;31morigin/development-maria[m[33m)[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Fri May 29 16:18:37 2020 +0200
+
+    small
+
+[33mcommit 8dd260a9f351c9607532db909cabb74dc7c57b49[m
+Merge: c591cd98 082731d1
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 15:54:26 2020 +0200
+
+    Merge branch 'development' of https://didactiek-scm.edm.uhasselt.be:8181/scm/git/psopv-2020-groep6 into development
+
+[33mcommit c591cd986e38688e16817a64a456206223744fd4[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 15:54:06 2020 +0200
+
+    Provided docs for the controllers
+
+[33mcommit 8091b06372f5c4241e8ba58a3356de8f48bc6ec8[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Fri May 29 15:25:48 2020 +0200
+
+    added push notications?
+
+[33mcommit 58cdc43b9d954e76989ce1ae5e8bdb4f2aff715a[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Fri May 29 15:07:19 2020 +0200
+
+    addde untested local notifications
+
+[33mcommit 082731d1d74e53504149d71de2e756949853e89e[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 15:04:24 2020 +0200
+
+    changed doc
+
+[33mcommit fc7f0cc9fdb0a8a80ce6ec98ed22c1b5ec021c60[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 14:54:32 2020 +0200
+
+    Merged
+
+[33mcommit 9e3734c0ec956d208caef62c19449620265bc7e8[m
+Merge: ec00d829 ac98f1d3
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 14:51:42 2020 +0200
+
+    Merge branch 'development' of https://didactiek-scm.edm.uhasselt.be:8181/scm/git/psopv-2020-groep6 into development
+
+[33mcommit ec00d829fc607a768afb6ae4b75faf661b7078d4[m
+Merge: a3fc0b00 f9982e9f
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 14:51:38 2020 +0200
+
+    Merge branch 'development-wouter' into development
+
+[33mcommit f9982e9f7e94d0ceed3407a8b17a66e7186401d6[m[33m ([m[1;31morigin/development-wouter[m[33m)[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 14:51:18 2020 +0200
+
+    Changed messagesbulk implementation
+
+[33mcommit 682c0df2d8f0c89aa31575cf14b4c6add2ccf21f[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Fri May 29 14:38:08 2020 +0200
+
+    prlbems
+
+[33mcommit ac98f1d3b9fd6916643beb1d602d630eb08c65d7[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 14:24:52 2020 +0200
+
+    Message bulk adder bug fix
+
+[33mcommit a74a78ea7d4ada0f9edca821f9e8082fde67f822[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 14:09:07 2020 +0200
+
+    Provided docs for models
+
+[33mcommit 00c1be71989a579ab7403077491ea6aef5e32766[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 13:56:02 2020 +0200
+
+    Provided docs for routing
+
+[33mcommit 7f78807f28dc0ff5f6d356a808b525b3bb5263e2[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 13:38:47 2020 +0200
+
+    Provided docs for seeder, utils and App
+
+[33mcommit a4a797bc0d7ef5c3f44c41b067124089f45a92e5[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 13:11:24 2020 +0200
+
+    Bulk message added
+
+[33mcommit 819e7e13f1e0b4d5c1506c0413b3a9a943e857b3[m
+Merge: 0b476fb1 c9eabb8e
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Fri May 29 13:11:21 2020 +0200
+
+    deleted unused libs
+
+[33mcommit c9eabb8e74baa9185451728f2d0126fa5b3bde1b[m
+Merge: f8662e83 a3fc0b00
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 12:25:53 2020 +0200
+
+    Merge branch 'development' of https://didactiek-scm.edm.uhasselt.be:8181/scm/git/psopv-2020-groep6 into development
+
+[33mcommit f8662e838d053d6a4b7c8d607520289621eeaf06[m
+Merge: 28481d3b db6b7769
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 12:25:25 2020 +0200
+
+    Merged with development
+
+[33mcommit a3fc0b00a6d55c1112d66860405604fadc653092[m
+Merge: db6b7769 4e04805d
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 11:18:34 2020 +0200
+
+    Merge branch 'development-wouter' into development
+
+[33mcommit 4e04805d6f3c5ed12d0e3bab130b397dba7a752d[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 11:18:10 2020 +0200
+
+    Fixed bug with file upload
+
+[33mcommit 28481d3b32659c181f66a834ec117c4db29b5184[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Fri May 29 11:09:25 2020 +0200
+
+    console.log clear
+
+[33mcommit db6b7769ec0361c30ede19fc90908ca47d5c44dc[m
+Merge: e8a2b9cc b8e3a28c
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 10:57:21 2020 +0200
+
+    Merge branch 'development-wouter' into development
+
+[33mcommit b8e3a28caf45d266325e33eff6af802b9bc23d99[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Fri May 29 10:56:55 2020 +0200
+
+    Removed type-errors in data upload
+
+[33mcommit 0b476fb113a9c64f3f596ea551ac268df6740d0c[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Fri May 29 00:42:26 2020 +0200
+
+    added offline update volunteer
+
+[33mcommit e775acc7b0bf1fa287fc1d8b7c89d456ea8e491f[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Thu May 28 23:55:44 2020 +0200
+
+    added greedy
+
+[33mcommit e8a2b9ccb36d9992c8e5d5189d004934d98d68b4[m
+Merge: f3adfb53 7d9b7bb7
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Thu May 28 22:00:13 2020 +0200
+
+    Merge branch 'development-wouter' into development
+
+[33mcommit 7d9b7bb7be494ec0df74054e5b6d72b6a548d610[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Thu May 28 21:59:49 2020 +0200
+
+    Fixed bugs
+
+[33mcommit f3adfb53a9bcd095d5ce2e4716b620aa0d0bda18[m
+Merge: 34ff0419 663fc18b
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Thu May 28 15:23:21 2020 +0200
+
+    Merge branch 'development-wouter' into development
+
+[33mcommit 663fc18b8cc112267dbf71f9a8e08ce9080c58c4[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Thu May 28 15:21:50 2020 +0200
+
+    Updated sector parsing
+
+[33mcommit 34ff0419232405a467c461d211e47c06df59bcc7[m
+Merge: 6f2b6011 ff0ba024
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Thu May 28 10:28:37 2020 +0200
+
+    Merge branch 'development-wouter' into development
+
+[33mcommit ff0ba024d0f17c0f3e9dfb91a5fe251735fb4df8[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Thu May 28 10:28:15 2020 +0200
+
+    Finished data loading with error visualization for user
+
+[33mcommit 45d0d6d0717f1f6599f49656e567573ae64736dd[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Thu May 28 10:11:26 2020 +0200
+
+    fixed render component bug
+
+[33mcommit 7206783cd638ccda23d31159e3d24401f6cd005a[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Wed May 27 22:22:08 2020 +0200
+
+    Added cookies experation
+
+[33mcommit 6f2b601104758ede9f0c0f1f281f990eafc650cf[m
+Merge: 6065e516 37679ef8
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Wed May 27 21:40:03 2020 +0200
+
+    Merge branch 'development' of https://didactiek-scm.edm.uhasselt.be:8181/scm/git/psopv-2020-groep6 into development
+
+[33mcommit 6065e5165009abfc4dc839783ee5915e0c12a46d[m
+Merge: 9f81e147 cc56f64f
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Wed May 27 21:39:51 2020 +0200
+
+    Merge branch 'development-wouter' into development
+
+[33mcommit cc56f64f933002bef7f84b1efbe1d08493c0d875[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Wed May 27 21:39:32 2020 +0200
+
+    fixed bugs
+
+[33mcommit 7e624cc4cb320a68e876eb7c8dbf5f94a9e8a570[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Wed May 27 20:18:28 2020 +0200
+
+    error in postpage with updating props
+
+[33mcommit 37679ef86ad4e95b8d787ec809465673eefade15[m
+Merge: 9f81e147 533e1b1d
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Wed May 27 18:17:40 2020 +0200
+
+    `Merge branch 'development-maria' into development
+
+[33mcommit 533e1b1d698c932c2405329e23062a4a52251e18[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Wed May 27 18:17:30 2020 +0200
+
+    phone
+
+[33mcommit 3d917db3d4a04c0869386835d4bac086a3046e63[m
+Merge: 423502c9 9f81e147
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Wed May 27 18:10:44 2020 +0200
+
+    Merge branch 'development' into development-maria
+
+[33mcommit 423502c97c4e4fd51e0bdc751b6b3f6ad496bf54[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Wed May 27 18:09:45 2020 +0200
+
+    small changes
+
+[33mcommit 20a9dc95e43f6a342f1ecdfab9d5cef2456322fe[m
+Merge: d350e220 9f81e147
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Wed May 27 18:09:07 2020 +0200
+
+    Merge branch 'development' into development-wouter
+
+[33mcommit 9f81e147623a7b26ab26017890f36a304e0a6959[m
+Merge: a8245b18 a4bb609e
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Wed May 27 18:08:29 2020 +0200
+
+    Merging with wouter
+
+[33mcommit a8245b182fd2db319a0ebcb2d3dabb3766df7591[m
+Merge: 270c50a1 d350e220
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Wed May 27 17:19:14 2020 +0200
+
+    Merge branch 'development-wouter' into development
+
+[33mcommit d350e22018dca1dc3c3aa2344abd5a0a255c1966[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Wed May 27 17:07:56 2020 +0200
+
+    added data upload
+
+[33mcommit a4bb609e7f0f4cd79f866218fb5a5443eb26eb55[m
+Merge: 8bf3b1b2 8d52d57a
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Wed May 27 15:57:54 2020 +0200
+
+    Merge branch 'development-maria' into development
+
+[33mcommit 8d52d57a6340684e136239942f33b110174718ad[m
+Merge: bbcbaeb3 8bf3b1b2
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Wed May 27 15:57:38 2020 +0200
+
+    merged
+
+[33mcommit bbcbaeb3a910b300012e0a18965be46323c8338c[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Wed May 27 15:45:34 2020 +0200
+
+    tried to fix some bugs
+
+[33mcommit 8bf3b1b20ce47b9d70c01baa97cbdfcccc592ea8[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Wed May 27 15:35:25 2020 +0200
+
+    Start Page wouldn't show if you had an empty planning
+
+[33mcommit 4e8193b871d976bd3ff9726b3f50778eac5a90c8[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Wed May 27 15:13:26 2020 +0200
+
+    fixed some bugs with withIonLifeCycle
+
+[33mcommit 5efae132399a8f681168463e6f7c1f63f62f5f60[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Wed May 27 14:21:47 2020 +0200
+
+    StartPage added
+
+[33mcommit 1103ea6260570a7123aa2d928a16f477c86b1d18[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Wed May 27 14:09:15 2020 +0200
+
+    Start Page added
+
+[33mcommit 2f4bd4154f1499f2ffd9f9559ea5c27b8abb02ff[m
+Merge: ef8f1110 db7b12a6
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Tue May 26 22:58:43 2020 +0200
+
+    added manager to volunteer
+
+[33mcommit ef8f1110bc377818888082705327bcab7437e79c[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Tue May 26 22:09:12 2020 +0200
+
+    added templates
+
+[33mcommit 899682275e9610e23571dc287caf8518d0903755[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Tue May 26 22:01:37 2020 +0200
+
+    Added user inserting via excel to localhost
+
+[33mcommit db7b12a6ecea352b52bafc5e6dee7518d74dba9b[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Tue May 26 21:42:19 2020 +0200
+
+    Fixed all server timings
+
+[33mcommit d2bc605d5ca0a2ae0839d1c65e1cf828a636ee65[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Tue May 26 21:12:12 2020 +0200
+
+    Get the current/next sector manager of the user
+
+[33mcommit ccf30e868b0903a01bd05f205e1634b4df657f69[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Tue May 26 19:43:55 2020 +0200
+
+    added postview back
+
+[33mcommit 63460a0abe80d1aacd4175ea7f3b11ef840d1980[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Tue May 26 19:35:12 2020 +0200
+
+    Deleted some comment
+
+[33mcommit a92929f68dbf182e57f48b607f6d25dfc68056c3[m
+Merge: 58c25e8d 8f7d0f0e
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Tue May 26 19:32:51 2020 +0200
+
+    Merge branch 'development' into development-maria
+
+[33mcommit 58c25e8da67acd97daeb0e0947fab3d7f670a8ae[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Tue May 26 19:32:23 2020 +0200
+
+    with error
+
+[33mcommit 8f7d0f0e999d891bdd3b1cddc60b97d214d8837e[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Tue May 26 19:23:57 2020 +0200
+
+    Contact item auth visible
+
+[33mcommit f6426fbed057bf9cffd4a68de8a01bceaff57b7e[m
+Merge: 4c887691 254c01c9
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Tue May 26 18:42:49 2020 +0200
+
+    Merge branch 'development-michiel' into development
+
+[33mcommit 254c01c93c93c75af61030a1d28d07bf0f17ecff[m[33m ([m[1;31morigin/development-michiel[m[33m)[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Tue May 26 18:37:06 2020 +0200
+
+    Is using the development database now
+
+[33mcommit 4c8876916c6de8b99ca85a9f3e686d119796eca0[m
+Merge: 63c01cd5 83515700
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Tue May 26 18:31:23 2020 +0200
+
+    Merge branch 'development-maria' into development
+
+[33mcommit 83515700052bafb37f7d5ca94e91cd4b10d77e28[m
+Merge: 14cb6d65 63c01cd5
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Tue May 26 18:29:43 2020 +0200
+
+    Merge branch 'development' into development-maria
+
+[33mcommit 63c01cd5d666d97168f46473f83708ec1fe1d8ad[m
+Merge: 921242e3 270c50a1
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Tue May 26 17:41:25 2020 +0200
+
+    Merged with development
+
+[33mcommit 921242e32087c3e06aac9328cdf46252af558c7f[m
+Author: Michiel Swaanen <michiel.swaanen.gsm@gmail.com>
+Date:   Tue May 26 17:37:43 2020 +0200
+
+    Added back-end and front-end server authentication
+
+[33mcommit 14cb6d6576ae3d812ec4c268768ff49a28620261[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Tue May 26 16:59:09 2020 +0200
+
+    load more with problems
+
+[33mcommit 270c50a165d4cc438dbd724becfc06a2f9257612[m
+Merge: f7adc297 2afd54ed
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Tue May 26 09:19:49 2020 +0200
+
+    Merge branch 'development-wouter' into development
+
+[33mcommit 2afd54ed8721090ffa9e698580be5b4ed21fbf0f[m
+Author: Wouter <Wouter.Grootjans@student.uhasselt.be>
+Date:   Tue May 26 09:17:45 2020 +0200
+
+    Admin finished client side data parsing
+
+[33mcommit a0faf942c84fe322546abba7e130c7bdc77b9484[m
+Author: maria.hendrikx <maria.hendrikx@student.uhasselt.be>
+Date:   Mon May 25 20:43:35 2020 +0200
+
+    added initialise for volunteer aswell
