@@ -14,8 +14,6 @@ import {doDatabase, updateMessages} from "../save/saveAction";
 import {connect} from "react-redux";
 import { getListLocalStorage } from "../save/saveFunction";
 
-
-
 class SectorManagerApplication extends Component<any> {
     interval: NodeJS.Timeout | undefined;
 
@@ -33,7 +31,6 @@ class SectorManagerApplication extends Component<any> {
         this.setState({msg_count: amount})
     }
 
-    // TODO: Add message count back
     componentDidMount() {
         this.props.doDatabase();
 
@@ -44,7 +41,7 @@ class SectorManagerApplication extends Component<any> {
           } else{
             // do nothing
           }
-        }, 5000); //TODO interval
+        }, 5000);
     }
 
     componentWillUnmount() {
@@ -67,7 +64,6 @@ class SectorManagerApplication extends Component<any> {
                 <Route path="/PersonPage"  >
                     <Route path="/PersonPage/:id/" component={RequireSignIn(PersonPage)} />
                 </Route>
-                {/* <Route path="/PersonPage/:id/" component={RequireSignIn(PersonPage)} /> */}
                 <Route path="/Notifications" component={RequireSignIn(MessageGeneral)} />
                 <Route path="/Contacts" component={RequireSignIn(Contacts)} />
             </IonRouterOutlet>
@@ -94,9 +90,6 @@ class SectorManagerApplication extends Component<any> {
         )
     }
 }
-
-
-
 
 function mapStateToProps(state: any) {
     return ({})
