@@ -2,11 +2,14 @@ import * as React from 'react';
 import {Component} from 'react';
 import {
     IonButton,
+    IonContent,
     IonHeader,
+    IonLoading,
     IonPage,
+    IonSelect,
+    IonSelectOption,
     IonTitle,
-    IonToolbar,
-    IonContent, IonSelect, IonSelectOption, IonLoading
+    IonToolbar
 } from '@ionic/react';
 
 import './MapPage.css';
@@ -14,7 +17,6 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
 import Map from './components/Map';
-import {logOut} from 'ionicons/icons';
 import {resetLocalStorage} from '../../save/saveFunction';
 import {withRouter} from 'react-router';
 
@@ -132,9 +134,8 @@ class MapPage extends Component<any> {
 
     async logOut() {
         await resetLocalStorage();
-        // location.reload();
+        this.props.history.push("/LoginPage")
     }
-
 
     render() {
         if (this.state.loaded) {
