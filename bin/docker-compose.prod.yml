@@ -1,0 +1,33 @@
+version: '3.6'
+
+services:
+  client-web-prod:
+    build:
+      context: ../src/client-web # Location of the Dockerfile
+      dockerfile: Dockerfile.prod # Which Dockerfile
+    volumes: # Which locations on the local machine must be synced with the container
+      - '../src/client-web:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    depends_on:
+      - server-prod
+
+  server-prod:
+    build:
+      context: ../src/server # Location of the Dockerfile
+      dockerfile: Dockerfile.prod # Which Dockerfile
+    volumes: # Which locations on the local machine must be synced with the container
+      - '../src/server:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    environment: # Variables that can be used in the code
+      - NODE_ENV=production
+
+  nginx-prod:
+    build:
+      context: ../src/nginx # Location of the Dockerfile
+      dockerfile: Dockerfile.prod # Which Dockerfile
+    ports:
+      - 80:80 # Application entry port
+    restart: always # If crashes, keep restarting
+    depends_on:
+      - client-web-prod
+      - server-prod

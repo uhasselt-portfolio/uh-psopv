@@ -1,1 +1,0 @@
-insert into association (name) values ('Chiro Kiewit');
