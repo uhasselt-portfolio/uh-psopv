@@ -134,7 +134,6 @@ class MapPage extends Component<any> {
 
     async logOut() {
         await resetLocalStorage();
-        this.props.history.push( "/LoginPage")
         window.location.reload();
     }
 

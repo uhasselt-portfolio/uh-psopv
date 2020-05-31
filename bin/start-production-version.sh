@@ -13,3 +13,7 @@ ionic cap sync
 
 ionic cap run android --prod
 
+echo "wanneer android studio is opgestart, zal u het volgende moeten toevoegen aan android/app/src/main/res/values/string.xml"
+echo '<string name="mauron85_bgloc_account_name">$ACCOUNT_NAME</string> \n
+    <string name="mauron85_bgloc_account_type">$ACCOUNT_TYPE</string> \n
+    <string name="mauron85_bgloc_content_authority">$CONTENT_AUTHORITY</string>'
