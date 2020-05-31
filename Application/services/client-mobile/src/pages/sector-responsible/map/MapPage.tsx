@@ -12,6 +12,9 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPosts} from '../list/ListAction'
 import Map from './components/Map';
+import { logOut } from 'ionicons/icons';
+import { resetLocalStorage } from '../../save/saveFunction';
+import { withRouter } from 'react-router';
  
 const TIME_IN_MS = 2000;
 
@@ -122,6 +125,11 @@ class MapPage extends Component<any> {
        }
   }
 
+  async logOut(){
+    await resetLocalStorage();
+    this.props.history.push( "/LoginPage")
+  }
+
   
   render(){
     if(this.state.loaded){
@@ -129,7 +137,7 @@ class MapPage extends Component<any> {
         <IonPage>
           <IonHeader>
             <IonToolbar>
-              <IonTitle>Kaart met posten</IonTitle>
+              <IonTitle>Kaart met posten <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton></IonTitle>
             </IonToolbar>
           </IonHeader>
           <IonContent>
@@ -169,4 +177,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(MapPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MapPage));
