@@ -125,6 +125,7 @@ class SendNotifications extends Component<any> {
     this.setShowToast(true)
   }
 
+
   handleTitleChange(new_title: string | null | undefined){
     title_value = String(new_title);
   }
@@ -180,7 +181,6 @@ class SendNotifications extends Component<any> {
   }
 
   ionViewWillEnter() {
-    let offlineMessage = "";
     if(!navigator.onLine){
       this.setState({...this.state, offlineMessage: "U bent offline, berichten worden pas verstuurd eens u terug online gaat."})
     } else{

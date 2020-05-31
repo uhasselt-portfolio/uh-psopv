@@ -40,7 +40,6 @@ class MessageGeneral extends React.Component<any> {
     constructor(props: any) {
         super(props);
         this.setAmountMessagesChanged = this.setAmountMessagesChanged.bind(this);
-
     }
 
     state = {
@@ -87,7 +86,7 @@ class MessageGeneral extends React.Component<any> {
                     <ProblemsPage/>
                 </IonSlide>
                 <IonSlide className="fullWidth">
-                    <SendNotifications/>
+                    <SendNotifications />
                 </IonSlide>
             </IonSlides>
         )
