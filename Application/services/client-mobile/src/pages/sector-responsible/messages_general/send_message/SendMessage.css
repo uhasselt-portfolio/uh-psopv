@@ -3,13 +3,11 @@
 }
 
 .sendBtn{
-    margin: 20px;
-    float: right;
+    float: right
 }
 
 .templateBtn{
     margin:20px;
-    float: left;
 }
 
 .offlineMsg{

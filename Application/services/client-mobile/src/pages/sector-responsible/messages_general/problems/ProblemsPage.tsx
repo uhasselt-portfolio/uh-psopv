@@ -27,7 +27,7 @@ class ProblemsPage extends Component<any> {
 
 
   componentWillUnmount() {
-    if(this.interval != undefined){
+    if(this.interval !== undefined){
       clearInterval(this.interval);
     }
   }
@@ -59,7 +59,7 @@ class ProblemsPage extends Component<any> {
   }
 
   render(){
-    if(this.props.localStorage != undefined){
+    if(this.props.localStorage !== undefined){
       if(this.props.localStorage.problems.length <= 0){
           return <div> No messages found. </div>
       } else{

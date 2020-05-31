@@ -1,4 +1,4 @@
-import { IonItem, IonLabel, IonButton, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover, IonToast } from '@ionic/react';
+import { IonItem, IonLabel, IonButton, IonSelect, IonSelectOption, IonInput, IonTextarea, IonPopover, IonToast, withIonLifeCycle, IonGrid, IonCol, IonRow } from '@ionic/react';
 import React, {  Component} from 'react';
 import { bindActionCreators, Dispatch } from 'redux';
 import { connect } from 'react-redux';
@@ -29,6 +29,7 @@ class SendNotifications extends Component<any> {
     showPopover: false,
     showPopoverTemplate: false,
     showToast: false,
+    offlineMessage: ""
   }
 
   hidePopover(){
@@ -78,7 +79,7 @@ class SendNotifications extends Component<any> {
     let list: number[] =[]
 
     let sectors = this.props.localStorage.contacts.filter((item: any)=> {
-      return (item.function_type == "Sectorverantwoordelijke")
+      return (item.function_type === "Sectorverantwoordelijke")
     })
 
     sectors.map((item: any)=> {
@@ -106,7 +107,7 @@ class SendNotifications extends Component<any> {
   async selectEverybody(){
     let list: number[] =[]
 
-    if(this.props.localStorage != undefined && this.props.localStorage.checkboxList != undefined){
+    if(this.props.localStorage !== undefined && this.props.localStorage.checkboxList !== undefined){
       this.props.localStorage.checkboxList.map((item: any)=> {
         list.push(item.value_id)
       })
@@ -146,7 +147,7 @@ class SendNotifications extends Component<any> {
 
   renderListOfUser(){
      // 1 = vrijwilliger 
-    if(Auth.getAuthenticatedUser().permission_type_id == 1){
+    if(Auth.getAuthenticatedUser().permission_type_id === 1){
       let manager;
       if(this.props.localStorage.managers.length > 0){
         manager = this.props.localStorage.managers[0]
@@ -178,16 +179,21 @@ class SendNotifications extends Component<any> {
     this.hidePopoverTemplate();
   }
 
-  render(){
-  
+  ionViewWillEnter() {
     let offlineMessage = "";
     if(!navigator.onLine){
-      offlineMessage = "U bent offline, berichten worden pas verstuurd eens u terug online gaat."
-    } 
-    if(this.props.localStorage != undefined){
+      this.setState({...this.state, offlineMessage: "U bent offline, berichten worden pas verstuurd eens u terug online gaat."})
+    } else{
+      this.setState({...this.state, offlineMessage: ""})
+    }
+  }
+
+  render(){
+
+    if(this.props.localStorage !== undefined){
         return (
         <div>
-            <div className="offlineMsg">{offlineMessage}</div>
+            <div className="offlineMsg">{this.state.offlineMessage}</div>
             <IonItem>
               <IonLabel>Aan: </IonLabel>
               {this.renderListOfUser()}
@@ -209,18 +215,30 @@ class SendNotifications extends Component<any> {
                 <IonTextarea className="textArea" value={content_value} placeholder="Bericht..." onIonChange={e => this.handleContentChange(e.detail.value)}></IonTextarea>
             </IonItem>
 
+            <IonItem>
+              <IonGrid>
+                <IonRow>
+                  <IonCol size="6">
+                    <IonButton float-left  onClick={() => this.showPopOverTemplate()}> Template bericht</IonButton>
+                      <>
+                      <IonPopover
+                        isOpen={this.state.showPopoverTemplate}
+                        onDidDismiss={() => this.hidePopoverTemplate()}
+                      >
+                      <TemplateMessage sendData={this.getTemplateText}/>
+                      </IonPopover>
+                    </>
+                  </IonCol>
+                  <IonCol size="6">
+                    <IonButton float-right onClick={() => this.handleSendMessage()}>Verstuur</IonButton>
+                  </IonCol>
+                </IonRow>
+              </IonGrid>
+           
 
-            <IonButton className="templateBtn" onClick={() => this.showPopOverTemplate()}> Template bericht</IonButton>
-              <>
-                <IonPopover
-                  isOpen={this.state.showPopoverTemplate}
-                  onDidDismiss={() => this.hidePopoverTemplate()}
-                >
-                <TemplateMessage sendData={this.getTemplateText}/>
-                </IonPopover>
-              </>
+            </IonItem>
 
-            <IonButton className="sendBtn" onClick={() => this.handleSendMessage()}>Verstuur</IonButton>
+            
 
             <IonToast
               isOpen={this.state.showToast}
@@ -251,4 +269,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(SendNotifications);
+export default connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(SendNotifications));

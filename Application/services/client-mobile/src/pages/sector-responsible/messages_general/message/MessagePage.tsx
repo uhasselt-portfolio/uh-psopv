@@ -27,7 +27,7 @@ class Notifications extends Component<any> {
 
 
   componentWillUnmount() {
-    if(this.interval != undefined){
+    if(this.interval !== undefined){
       clearInterval(this.interval);
     }
   }
@@ -46,13 +46,13 @@ class Notifications extends Component<any> {
   }
 
   renderList(){
-    if(this.props.localStorage != undefined){
+    if(this.props.localStorage !== undefined){
       if(this.props.localStorage.length <= 0){
           return <div> No messages found. </div>
       } else{
         return this.props.localStorage.messages.map((data: any, index: number) =>{
           // 1 = vrijwilliger
-          if(Auth.getAuthenticatedUser().permission_type_id == 1){
+          if(Auth.getAuthenticatedUser().permission_type_id === 1){
             return (
               <NotificationItem {... data}/>
               )
@@ -75,7 +75,7 @@ class Notifications extends Component<any> {
 
 
   render(){
-    if(this.props.localStorage != undefined){
+    if(this.props.localStorage !== undefined){
       let button;
       if(!this.props.localStorage.loaded){
         button = <IonButton className="marginBottom" onClick={() => this.loadMoreMessage()}> Meer berichten laden ... </IonButton>
