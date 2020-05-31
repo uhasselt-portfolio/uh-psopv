@@ -1,19 +1,21 @@
 #!/bin/env bash
 
-GREEN='\033[0;32m'
-RESET='\033[0m'
+cd ../src/server
 
-echo -e "${GREEN}Starting production services... ${RESET}"
+if test -f ".env";
+then
+	echo file exists
+else
+	echo file not exists
+	cd ../
+	cp server.env server/.env
+	cd server
+fi
 
-cd ../src/client-mobile
+cd ../../bin
 
-npm install
+docker system prune
 
-ionic cap sync
+docker-compose -f docker-compose.production.yml up --build
 
-ionic cap run android --prod
-
-echo "wanneer android studio is opgestart, zal u het volgende moeten toevoegen aan android/app/src/main/res/values/string.xml"
-echo '<string name="mauron85_bgloc_account_name">$ACCOUNT_NAME</string> \n
-    <string name="mauron85_bgloc_account_type">$ACCOUNT_TYPE</string> \n
-    <string name="mauron85_bgloc_content_authority">$CONTENT_AUTHORITY</string>'
+# Check waarom de update niet gebeurd in de database, error console geplaatst in modify, uitlezen
