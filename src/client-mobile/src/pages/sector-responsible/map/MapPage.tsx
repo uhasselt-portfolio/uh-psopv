@@ -132,7 +132,7 @@ class MapPage extends Component<any> {
 
     async logOut() {
         await resetLocalStorage();
-        location.reload();
+        // location.reload();
     }
 
 
