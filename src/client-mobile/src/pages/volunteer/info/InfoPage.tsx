@@ -155,8 +155,8 @@ class InfoPage extends React.Component<any, any> {
 
     async logOut() {
         await resetLocalStorage();
-        // location.reload();
         this.props.history.push( "/LoginPage")
+        window.location.reload();
     }
     
     render() {

@@ -2,12 +2,13 @@ import React, {Component, ReactNode} from 'react';
 import {connect} from "react-redux";
 import {fetchPlannings, updateUserCheckInStatus} from './StartAction'
 import {bindActionCreators} from "redux";
-import {IonCard, IonCardContent, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar} from '@ionic/react';
-import {Redirect} from "react-router";
+import {IonCard, IonCardContent, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar, IonButton} from '@ionic/react';
+import {Redirect, withRouter} from "react-router";
 import Auth from "../../../utils/Auth";
 import PlanningItem from "./components/PlanningItem";
 import {doDatabase} from '../../save/saveAction'
 import FuturePlanningItem from './components/FuturePlanningItem';
+import { resetLocalStorage } from '../../save/saveFunction';
 
 
 const TIME_IN_MS: number = 2000;
@@ -22,8 +23,14 @@ class StartPage extends Component<any> {
     }
 
     componentDidMount() {
-        this.props.fetchPlannings();
         this.props.doDatabase();
+        this.props.fetchPlannings();
+    }
+
+    async logOut() {
+        await resetLocalStorage();
+        this.props.history.push( "/LoginPage")
+        window.location.reload();
     }
     
     private handleUpdateUserCheckInStatus(event: any): void {
@@ -141,6 +148,7 @@ class StartPage extends Component<any> {
                 <IonHeader>
                     <IonToolbar>
                         <IonTitle>Pukkelpop</IonTitle>
+                        <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton>
                     </IonToolbar>
                 </IonHeader>
                 <IonContent>
@@ -175,4 +183,4 @@ function mapDispatchToProps(dispatch: any) {
     }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(StartPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StartPage));
