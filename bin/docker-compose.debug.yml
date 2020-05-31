@@ -1,0 +1,60 @@
+version: '3.6'
+
+services:
+  client-web-debug:
+    build:
+      context: ../src/client-web # Location of the Dockerfile
+      dockerfile: Dockerfile.debug # Which Dockerfile
+    stdin_open: true # Enables react-script start to run (interactive mode)
+    environment:
+      - PORT=3000
+    volumes: # Which locations on the local machine must be synced with the container
+      - '../src/client-web:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    depends_on:
+      - server-debug
+
+  client-mobile-debug:
+    build:
+      context: ../src/client-mobile # Location of the Dockerfile
+      dockerfile: Dockerfile.debug # Which Dockerfile
+    stdin_open: true # Enables react-script start to run (interactive mode)
+    environment:
+      - PORT=3002
+    volumes: # Which locations on the local machine must be synced with the container
+      - '../src/client-mobile:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    depends_on:
+      - server-debug
+
+  server-debug:
+    build:
+      context: ../src/server # Location of the Dockerfile
+      dockerfile: Dockerfile.debug # Which Dockerfile
+    volumes: # Which locations on the local machine must be synced with the container
+      - '../src/server:/usr/src/app'
+      - '/usr/src/app/node_modules'
+    environment: # Variables that can be used in the code
+      - NODE_ENV=debug
+    depends_on:
+      - database-debug
+
+  database-debug:
+    build:
+      context: ../src/database
+      dockerfile: Dockerfile.debug
+    ports:
+      - '5432:5432' # Local port : Remote port
+
+  nginx-debug:
+    build:
+      context: ../src/nginx # Location of the Dockerfile
+      dockerfile: Dockerfile.debug # Which Dockerfile
+    ports:
+      - 80:80 # Web application entry point
+      - 81:81 # Mobile application entry point
+    restart: always # If crashes, keep restarting
+    depends_on:
+      - client-web-debug
+      - client-mobile-debug
+      - server-debug
