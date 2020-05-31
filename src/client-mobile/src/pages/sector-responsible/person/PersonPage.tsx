@@ -106,7 +106,7 @@ class PersonPage extends Component<any> {
 
     renderContact() {
         if (this.props.loading === true) {
-            return <IonPage>Loading...</IonPage>
+            return <IonPage>Laden...</IonPage>
         } else {
             if (this.props.isUserFetched !== undefined) {
                 if (this.props.isUserFetched.length <= 0) {

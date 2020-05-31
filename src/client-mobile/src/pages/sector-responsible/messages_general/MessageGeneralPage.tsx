@@ -23,12 +23,11 @@ import {
     warning,
     warningOutline
 } from "ionicons/icons";
-import Notifications from './message/MessagePage'
-import SendNotifications from './send_message/SendMessage'
+import NotificationPage from './message/MessagePage'
+import SendNotificationPage from './send_message/SendMessage'
 import './MessageGeneralPage.css'
-import ProblemsPage from "./problems/ProblemsPage";
+import ProblemPage from "./problems/ProblemsPage";
 import {getListLocalStorage} from "../../save/saveFunction";
-import {connect} from 'react-redux';
 
 let swiper: any = null;
 
@@ -72,7 +71,7 @@ class MessageGeneral extends React.Component<any> {
         this.setAmountMessage();
     }
 
-    setAmountMessagesChanged(){
+    setAmountMessagesChanged() {
         this.setState({...this.state, amount_msg: this.state.amount_msg - 1})
     }
 
@@ -80,13 +79,13 @@ class MessageGeneral extends React.Component<any> {
         return (
             <IonSlides onIonSlidesDidLoad={init} pager={true} onIonSlideDidChange={() => this.handleSlideChange()}>
                 <IonSlide className="fullWidth">
-                    <Notifications sendData={this.setAmountMessagesChanged}/>
+                    <NotificationPage sendData={this.setAmountMessagesChanged}/>
                 </IonSlide>
                 <IonSlide className="fullWidth">
-                    <ProblemsPage/>
+                    <ProblemPage/>
                 </IonSlide>
                 <IonSlide className="fullWidth">
-                    <SendNotifications />
+                    <SendNotificationPage/>
                 </IonSlide>
             </IonSlides>
         )
@@ -141,7 +140,7 @@ class MessageGeneral extends React.Component<any> {
 
     ionViewWillEnter() {
         this.setAmountMessage();
-      }
+    }
 
     render() {
         return (

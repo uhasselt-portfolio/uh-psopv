@@ -134,7 +134,7 @@ class InfoPage extends React.Component<any, any> {
                     return this.showShiftInfo(plannings.current_planning)
             }
         } else {
-            return <div>Loading...</div>
+            return <div>Laden...</div>
         }
     }
     private renderFutureShiftList() {
@@ -149,7 +149,7 @@ class InfoPage extends React.Component<any, any> {
                 })
             }
         } else {
-            return <div>Loading...</div>
+            return <div>Laden...</div>
         }
     }
 
@@ -172,7 +172,7 @@ class InfoPage extends React.Component<any, any> {
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>
-                        <IonTitle className="marginTop">Hudige shift</IonTitle>
+                        <IonTitle className="marginTop">Huidige shift</IonTitle>
                         {this.renderCurrentShiftList()}
                         <IonTitle className="marginTop">Toekomstige shift(en)</IonTitle>
                         {this.renderFutureShiftList()}
@@ -186,7 +186,7 @@ class InfoPage extends React.Component<any, any> {
                         cssClass='my-custom-class'
                         isOpen={!this.state.loaded}
                         onDidDismiss={() => this.setState({...this.state, loaded: true})}
-                        message={'Initializeren...'}
+                        message={'Gegevens Laden...'}
                         duration={TIME_IN_MS}
                     />
                 </IonPage>

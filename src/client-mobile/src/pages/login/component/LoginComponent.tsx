@@ -79,7 +79,7 @@ class LoginComponent extends React.Component<any, IState> {
         if (isUserLoggedIn) {
             return(
                 <div>
-                    Loading...
+                    Laden...
                 </div>
             )
         } else {

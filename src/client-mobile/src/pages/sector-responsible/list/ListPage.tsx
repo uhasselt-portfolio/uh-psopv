@@ -24,7 +24,7 @@ import {Plugins} from '@capacitor/core';
 
 const {Geolocation} = Plugins;
 
-const sort_types = {alfabetisch: "Afstand", afstand: "Afstand", best_route: "Beste route"}
+const sort_types = {alfabetisch: "Alfabetisch", afstand: "Afstand", best_route: "Beste route"}
 
 
 /**

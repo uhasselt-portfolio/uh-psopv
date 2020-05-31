@@ -28,7 +28,7 @@ class MapPage extends Component<any> {
     constructor(props: any) {
         super(props);
 
-        let hideFooterTimeout = setTimeout(() => {
+        setTimeout(() => {
             this.setState({...this.state, loaded: true})
             this.props.fetchPosts();
         }, TIME_IN_MS);
@@ -99,9 +99,6 @@ class MapPage extends Component<any> {
         }
     }
 
-    showInfo() {
-    }
-
     filterProblems = (problems: any[]): any[][] => {
         let filteredProblems: any[][] = [];
         for (let i = 0; i < problems.length; ++i) {
@@ -129,6 +126,11 @@ class MapPage extends Component<any> {
                 )
             }
         } else {
+            return (
+                <div>
+                    Laden...
+                </div>
+            )
         }
     }
 
@@ -158,7 +160,7 @@ class MapPage extends Component<any> {
                     cssClass='my-custom-class'
                     isOpen={!this.state.loaded}
                     onDidDismiss={() => this.setState({...this.state, loaded: true})}
-                    message={'Initializeren...'}
+                    message={'Gegevens Inladen...'}
                     duration={TIME_IN_MS}
                 />
             )
