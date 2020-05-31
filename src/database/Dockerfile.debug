@@ -3,5 +3,3 @@ FROM postgres:12.2
 # Create user and postgres
 ENV POSTGRES_URI 'postgres://postgres:12345@database-debug:5432/postgres'
 ENV POSTGRES_PASSWORD 12345
-
-#COPY init.sql /docker-entrypoint-initdb.d/
