@@ -1,19 +1,31 @@
 import React, {Component, ReactNode} from 'react';
 import {connect} from "react-redux";
-import {fetchActivePlanningOfUser, fetchPlannings, updateUserCheckInStatus} from './StartAction'
+import {fetchPlannings, updateUserCheckInStatus} from './StartAction'
 import {bindActionCreators} from "redux";
 import {IonCard, IonCardContent, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar} from '@ionic/react';
 import {Redirect} from "react-router";
 import Auth from "../../../utils/Auth";
 import PlanningItem from "./components/PlanningItem";
+import {doDatabase} from '../../save/saveAction'
+import FuturePlanningItem from './components/FuturePlanningItem';
+
+
+const TIME_IN_MS: number = 2000;
 
 class StartPage extends Component<any> {
 
-    componentDidMount() {
-        const user = Auth.getAuthenticatedUser();
-        this.props.fetchActivePlanningOfUser(user.id);
+    constructor(props: any){
+        super(props)
+        let hideFooterTimeout = setTimeout( () => {
+            this.props.fetchPlannings();
+        }, TIME_IN_MS);
     }
 
+    componentDidMount() {
+        this.props.fetchPlannings();
+        this.props.doDatabase();
+    }
+    
     private handleUpdateUserCheckInStatus(event: any): void {
         console.log("Updating checkin status")
         event.preventDefault();
@@ -21,41 +33,26 @@ class StartPage extends Component<any> {
         console.log("Updated checking status")
     }
 
-    private renderNextShift(nextPlanning: any): ReactNode {
-        if (!nextPlanning) {
+    private renderFutureShifts(): ReactNode {
+        const future_plannings = this.props.isUserPlanningFetched.future_plannings
+       
+        if (future_plannings.length == 0) {
             return (
-                <IonCard>
-                    <IonCardContent>
-                        Geen nieuwe shiften gevonden!
-                    </IonCardContent>
-                </IonCard>
-            )
-        }
-
-        return <PlanningItem planning={nextPlanning}/>
-
-    }
-
-    private renderFutureShifts(planning: any): ReactNode {
-        if (planning.length == 0) {
-            return (
-                <IonCard>
-                    <IonCardContent>
-                        Geen nieuwe shiften gevonden!
-                    </IonCardContent>
-                </IonCard>
+                <IonCardContent>
+                    Geen nieuwe shiften gevonden!
+                </IonCardContent>
             )
         } else {
-            return (
-                <IonList>
-                    {planning}
-                </IonList>
-            )
+            return future_plannings.map((planning: any) => {
+                return <FuturePlanningItem planning={planning} button={true} action={this.handleUpdateUserCheckInStatus.bind(this)}/>
+            }) 
         }
     }
 
-    private renderActiveShift(planning : any) : ReactNode {
-        if(planning == undefined) {
+    private renderActiveShift() : ReactNode {
+        const current_planning = this.props.isUserPlanningFetched.current_planning;
+
+        if(current_planning === undefined) {
             return (
                 <IonCard>
                     <IonCardContent>
@@ -63,9 +60,9 @@ class StartPage extends Component<any> {
                     </IonCardContent>
                 </IonCard>
             )
-        }
+        } 
 
-        if(!planning) {
+        if(current_planning === undefined) {
             return(
                 <IonCard>
                     <IonCardContent>
@@ -76,14 +73,12 @@ class StartPage extends Component<any> {
         }
 
         return(
-            <PlanningItem planning={planning} button={true} action={this.handleUpdateUserCheckInStatus.bind(this)}/>
+            <PlanningItem planning={current_planning} button={true} action={this.handleUpdateUserCheckInStatus.bind(this)}/>
         )
     }
 
     private renderPlanning() {
-        const activePlanning = this.props.isActivePlanningFetched;
-        const plannings = this.props.isUserPlanningFetched;
-        console.log("plannings", plannings);
+        const plannings = this.props.isUserPlanningFetched
 
         if (plannings == undefined) {
             const user = Auth.getAuthenticatedUser();
@@ -97,32 +92,26 @@ class StartPage extends Component<any> {
             )
         }
 
-        const firstPlanning = plannings.shift();
-
-        const planningItems = plannings.map((planning: any) => {
-            return <PlanningItem planning={planning}/>
-        })
-
         return (
             <div>
                 <IonTitle className="ion-padding-bottom ion-padding-top">
                     Huidige Shift
                 </IonTitle>
-                {this.renderActiveShift(activePlanning)}
-                <IonTitle className="ion-padding-bottom">
-                    Volgende Shift
-                </IonTitle>
-                {this.renderNextShift(firstPlanning)}
+                {this.renderActiveShift()}
                 <IonTitle className="ion-padding-bottom">
                     Toekomstige Shiften
                 </IonTitle>
-                {this.renderFutureShifts(planningItems)}
+                <IonCard>
+                    <IonCardContent>
+                    {this.renderFutureShifts()}
+                    </IonCardContent>
+                </IonCard>
             </div>
         )
     }
 
     private showContent() {
-        const planning = this.props.isActivePlanningFetched;
+        const planning = this.props.isUserPlanningFetched;
         const isCheckedIn = this.props.isCheckInStatusUpdated;
 
         if (planning == undefined) {
@@ -171,7 +160,6 @@ class StartPage extends Component<any> {
 
 function mapStateToProps(state: any) {
     return ({
-        isActivePlanningFetched: state.start.isActivePlanningFetched,
         isUserPlanningFetched: state.start.isUserPlanningFetched,
         isCheckInStatusUpdated: state.start.isCheckInStatusUpdated,
         errorMessage: state.start.errorMessage,
@@ -181,9 +169,9 @@ function mapStateToProps(state: any) {
 
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-        fetchActivePlanningOfUser,
         fetchPlannings,
         updateUserCheckInStatus,
+        doDatabase
     }, dispatch);
 }
 

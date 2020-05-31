@@ -317,6 +317,59 @@ function getTotalUnreadMessages(problems: any, messages: any){
 
     return problems.length + messages.length
 }
+function getActivePlanning(data_current: any){
+    let current_planning = {
+        id: data_current.id,
+        user_id: data_current.user_id,
+        shift_id: data_current.shift_id,
+        post_id: data_current.post_id,
+        sector_id: data_current.post.sector_id,
+        checked_in: data_current.checked_in,
+        user_name: data_current.user.first_name + " " + data_current.user.last_name,
+        latitude: data_current.post.latitude,
+        longitude: data_current.post.longitude,
+        radius: data_current.post.radius,
+        post_address: data_current.post.address,
+        post_title: data_current.post.title,
+        post_description: data_current.post.general_post.description,
+        plan_name: data_current.post.general_post.name,
+        shift_begin: data_current.shift.begin,
+        shift_end: data_current.shift.end,
+        shift_name: data_current.shift.name
+    }
+    console.log(current_planning)
+    return current_planning
+}
+function getPlanningsFromVolunteer(data_future: any){
+    let future_plannings: { id: number; user_id: number; shift_id: number; post_id: number; sector_id: number;
+        checked_in: boolean; user_name: string; latitude: number; longitude: number; radius: number; post_address: string;
+        post_title: string; post_description: string; plan_name: string; shift_begin: any; shift_end: any; shift_name: string; }[] = []
+
+    data_future.sort(sortPlanningsByDate)
+    data_future.map((plan: any) => {
+        future_plannings.push({
+            id: plan.id,
+            user_id: plan.user_id,
+            shift_id: plan.shift_id,
+            post_id: plan.post_id,
+            sector_id: plan.post.sector_id,
+            checked_in: plan.checked_in,
+            user_name: plan.user.first_name + " " + plan.user.last_name,
+            latitude: plan.post.latitude,
+            longitude: plan.post.longitude,
+            radius: plan.post.radius,
+            post_address: plan.post.address,
+            post_title: plan.post.title,
+            post_description: plan.post.general_post.description,
+            plan_name: plan.post.general_post.name,
+            shift_begin: plan.shift.begin,
+            shift_end: plan.shift.end,
+            shift_name: plan.shift.name
+        })
+    })
+
+    return future_plannings
+}
 
 export const UNROLL_ACTIONS = 'UNROLL_ACTIONS'
 
@@ -324,6 +377,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
     try{
         const database = new Database();
         const todoCommands = await getActionList();
+        console.log("doing database")
 
         todoCommands.forEach(async (element: any) => {
             try{
@@ -347,12 +401,14 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
 
         // 1 = vrijwilliger
         if(Auth.getAuthenticatedUser().permission_type_id == 1){
+            const responsePlanning =  await database.fetchActivePlanning(user_id);
             const responsePlannings =  await database.fetchPlanningsWithUserId(user_id);
             const responseSectors =  await database.fetchMyManager(user_id);
             let my_managers = getMyManagers(responseSectors.data.data.sectors);
-            let plannings = responsePlannings.data.data.plannings;
-            plannings.sort(sortPlanningsByDate)
+            let plannings = getPlanningsFromVolunteer(responsePlannings.data.data.plannings);
+            let activePlanning = getActivePlanning(responsePlanning.data.data.planning);
             setListLocalStorage('plannings', plannings);
+            setListLocalStorage('active_planning', activePlanning);
             setListLocalStorage('my_managers', my_managers);
         }
         // 2 = sector_verantwoordelijke

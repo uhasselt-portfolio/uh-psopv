@@ -1,5 +1,6 @@
 import Redux from 'redux';
 import Database from "../../../database/Database";
+import { getListLocalStorage } from '../../save/saveFunction';
 
 export const START_FETCH_ACTIVE_PLANNING_START = 'START_FETCH_ACTIVE_PLANNING_START'
 export const START_FETCH_ACTIVE_PLANNING_SUCCESS = 'START_FETCH_ACTIVE_PLANNING_SUCCESS'
@@ -74,9 +75,13 @@ export const fetchPlannings = (userID : number) => async (dispatch: Redux.Dispat
     try{
         dispatch({type: START_FETCH_USER_PLANNINGS_START})
 
-        const result = await new Database().fetchPlanningsWithUserId(userID);
+        console.log("fetchplannings")
 
-        dispatch({type: START_FETCH_USER_PLANNINGS_SUCCESS, payload: result.data.data.plannings});
+        let future_plannings: any[] = await getListLocalStorage('plannings');
+        let current_planning: any[] = await getListLocalStorage('active_planning');
+
+        dispatch({type: START_FETCH_USER_PLANNINGS_SUCCESS, payload: {future_plannings: future_plannings, current_planning: current_planning}})
+
     } catch(error){
         dispatch({type: START_FETCH_USER_PLANNINGS_FAIL, payload: false})
     }

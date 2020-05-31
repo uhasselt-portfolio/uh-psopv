@@ -1,4 +1,4 @@
-import {IonIcon, IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs} from "@ionic/react";
+import {IonIcon, IonBadge, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, withIonLifeCycle} from "@ionic/react";
 import {Route} from "react-router-dom";
 import ListView from "./list/ListPage";
 import MapPage from "./map/MapPage";
@@ -110,4 +110,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(SectorManagerApplication);
+export default connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(SectorManagerApplication));
