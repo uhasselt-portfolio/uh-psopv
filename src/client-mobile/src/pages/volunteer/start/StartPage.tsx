@@ -96,7 +96,7 @@ class StartPage extends Component<any> {
 
         if (plannings == undefined) {
             const user = Auth.getAuthenticatedUser();
-            this.props.fetchPlannings(Auth.getAuthenticatedUser().id);
+            this.props.fetchPlannings(user.id);
             return (
                 <IonCard>
                     <IonCardContent>
@@ -184,7 +184,6 @@ class StartPage extends Component<any> {
                 </IonPage>
             )
         }
-        
     }
 };
 
