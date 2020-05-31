@@ -141,8 +141,8 @@ class InfoPage extends React.Component<any, any> {
         const plannings = this.props.localStorage;
 
         if (plannings !== undefined) {
-            if (plannings.length <= 0) {
-                return <div> No messages found. </div>
+            if (plannings.future_plannings.length <= 0) {
+                return <IonCard> <IonCardHeader> Geen toekomstige shiften. </IonCardHeader></IonCard>
             } else {
                 return plannings.future_plannings.map((data: any, index:number) => {
                     return this.showShiftInfo(data)

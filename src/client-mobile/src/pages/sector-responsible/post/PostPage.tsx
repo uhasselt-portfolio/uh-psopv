@@ -31,8 +31,8 @@ class PostView extends Component<any, any> {
 
   state = {
     checkListActive: false,
-    show_shift: -1, // niets
-    current_shift: -1, 
+    show_shift: 0, // niets
+    current_shift: 0, 
     showPopover: false,
     swiper: null,
     first_render: true
@@ -94,11 +94,10 @@ class PostView extends Component<any, any> {
 
       if((current_time > shift_begin) && (current_time < shift_end)){
         this.setState({...this.state, show_shift: index, current_shift: index});
+        swiper.slideTo(index);
       }
     })
   }
-
-  // interval: NodeJS.Timeout | undefined;
 
   componentDidMount(){
     console.log("componentDidMount")
@@ -116,14 +115,12 @@ class PostView extends Component<any, any> {
   }
 
   handleSlideChange(slider: any){
-    // this.getActiveIndex()
     if(slider !== null){
       this.handleShiftSwitch(slider.activeIndex)
     }
   }
 
   setShiftActive(shift_id: number){
-    // this.getActiveIndex()
       this.handleShiftSwitch(shift_id)
   }
   

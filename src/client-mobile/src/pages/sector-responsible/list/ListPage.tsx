@@ -491,7 +491,6 @@ class ListView extends Component<any> {
     }
 
     render() {
-        console.log(this.state)
         if (this.props.localStorage != undefined) {
             if (this.props.localStorage.posts_sectors <= 0) {
                 return <div> No posts found </div>

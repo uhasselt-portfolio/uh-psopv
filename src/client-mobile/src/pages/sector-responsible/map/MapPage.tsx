@@ -9,7 +9,8 @@ import {
     IonSelect,
     IonSelectOption,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    withIonLifeCycle
 } from '@ionic/react';
 
 import './MapPage.css';
@@ -37,8 +38,10 @@ class MapPage extends Component<any> {
     state = {
         selected_sector: -1, //if -1 = selected all sectors
         data_posts: [],
-        loaded: false
+        loaded: false,
+        default_sector: -1, // -1 = none
     }
+    
 
     static defaultProps = {
         center: {
@@ -50,6 +53,9 @@ class MapPage extends Component<any> {
 
     componentDidMount() {
         this.props.fetchPosts();
+        if(this.props.localStorage !== undefined){
+            this.handleSectorChange(this.props.localStorage.default_sector)
+        }
     }
 
     renderButtons() {
@@ -67,6 +73,13 @@ class MapPage extends Component<any> {
             </IonButton>
         )
 
+    }
+
+    ionViewWillEnter() {
+        this.props.fetchPosts();
+        if(this.props.localStorage !== undefined){
+            this.handleSectorChange(this.props.localStorage.default_sector)
+        }
     }
 
     handleSectorChange(sector: number) {
@@ -186,4 +199,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(MapPage));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(MapPage)));

@@ -14,3 +14,8 @@
     padding: 0;
     position: absolute;
 }
+
+.swiper-pagination {
+    position: relative;
+    padding-top: 3px;
+}

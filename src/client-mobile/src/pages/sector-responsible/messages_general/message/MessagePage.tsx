@@ -6,7 +6,7 @@ import {bindActionCreators} from "redux";
 import {fetchMessagesOf, loadMessages} from './MessageAction'
 import {updateMessages} from '../../../save/saveAction'
 
-import {IonButton, IonList, withIonLifeCycle} from '@ionic/react';
+import {IonButton, IonList, withIonLifeCycle, IonCard, IonCardContent, IonCardHeader} from '@ionic/react';
 import {setListLocalStorage} from '../../../save/saveFunction';
 import Auth from '../../../../utils/Auth';
 
@@ -45,8 +45,8 @@ class NotificationPage extends Component<any> {
 
     renderList() {
         if (this.props.localStorage !== undefined) {
-            if (this.props.localStorage.length <= 0) {
-                return <div> No messages found. </div>
+            if (this.props.localStorage.messages.length <= 0) {
+                return <IonCard> <IonCardHeader> Geen berichten </IonCardHeader></IonCard>
             } else {
                 return this.props.localStorage.messages.map((data: any, index: number) => {
                     // 1 = vrijwilliger

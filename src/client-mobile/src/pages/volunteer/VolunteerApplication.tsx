@@ -54,7 +54,6 @@ class VolunteerApplication extends Component<any> {
                             <IonLabel>Info</IonLabel>
                         </IonTabButton>
                         <IonTabButton tab="Messages" href="/Messages">
-                            <IonBadge color="primary">{0}</IonBadge>
                             <IonIcon icon={notificationsOutline}/>
                             <IonLabel>Berichten</IonLabel>
                         </IonTabButton>
