@@ -42,6 +42,7 @@ class Notifications extends Component<any> {
 
   async ionViewWillEnter() {
     await setListLocalStorage('msg_end_index', 5)
+    this.props.fetchMessagesOf();
     console.log('fetchMessagesOf ionViewWillEnter event fired')
   }
 

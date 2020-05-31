@@ -26,7 +26,8 @@ class NotificationItem extends Component<any> {
         if(this.state.seen === false){
             this.props.MessageToggle(data.id);
             this.setState({...this.state, seen: !this.state.seen});
-            if(Auth.getAuthenticatedUser().permission_type_id == 1){
+            // 2 = sector-verantwoordelijke
+            if(Auth.getAuthenticatedUser().permission_type_id == 2){
                 this.props.sendData()
             }
         }

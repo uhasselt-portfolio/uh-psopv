@@ -5,7 +5,9 @@ import Auth from "../../utils/Auth";
 import { Plugins } from '@capacitor/core';
 const { LocalNotifications } = Plugins;
 
-
+/**
+ * Created by: Maria Hendrikx
+ */
 
 function sortPlanningsByDate(a: any, b: any){
     var a_data = new Date(a.shift.begin)
@@ -127,7 +129,9 @@ function sortMessagesByDate(a: any, b: any){
             if(!sectors_number.includes(post.sector_id)){
                 sectors_number.push(post.sector_id)
                 sectors.push({sector_id: post.sector_id, color: list_colors[colorindex]})
-                colorindex++;
+                if(colorindex < list_colors.length - 1){
+                    colorindex++;
+                }
             }
 
             // add param "problem"
@@ -398,7 +402,6 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
 
 /**
  * Created by: Maria Hendrikx
- * Updates the messages
  */
 export const UPDATE_MESSAGES = 'UPDATE_MESSAGES'
 export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
@@ -420,14 +423,11 @@ export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
                     return search_message.id == element.id
                 })
 
-                console.log(new_check)
                 if(new_check == undefined){
                     msg_notifications.push(search_message)
                 }
             }
         }
-
-        console.log("notifications", msg_notifications)
 
         msg_notifications.map(async (msg: any) => {
             const notifs = await LocalNotifications.schedule({
@@ -442,7 +442,6 @@ export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
                   }
                 ]
               });
-              console.log('scheduled notifications', notifs);
         })
 
 
@@ -462,14 +461,11 @@ export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
                     return search_message.id == element.id
                 })
 
-                console.log(new_check)
                 if(new_check == undefined){
                     problem_notifications.push(search_message)
                 }
             }
         }
-
-        console.log("notifications", problem_notifications)
 
         problem_notifications.map(async (msg: any) => {
             const notifs = await LocalNotifications.schedule({
@@ -484,7 +480,6 @@ export const updateMessages = () => async (dispatch: Redux.Dispatch) => {
                   }
                 ]
               });
-              console.log('scheduled notifications', notifs);
         })
 
 

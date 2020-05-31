@@ -35,10 +35,14 @@ export const itemToggle = (item_id: number, shift_id: number, post_id: number) =
     try{
         const response = await new Database().toggleItemLostStatus(item_id);
 
+        console.log("itemToggle", response)
+
         let result = await toggleItem(item_id, shift_id, post_id);
+        
         
         dispatch({type: ITEM_TOGGLE_SUCCESS, payload: result})
     } catch(error){
+        console.log(error)
         addObjectToActionList('/item/toggle-lost/', item_id, {})
         let result = toggleItem(item_id, shift_id, post_id);
 
@@ -53,14 +57,15 @@ export const problemToggle = (probem_id: number, shift_id: number, post_id: numb
     try{
         const response = await new Database().toggleProblemSolvedStatus(probem_id); // TODO GETUSERID
 
+        console.log("problemToggle", response)
         let result = await toggleProblem(probem_id, shift_id, post_id);
 
         dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: result})
 
         // dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: response})
     } catch(error){
+        console.log(error)
         addObjectToActionList('/problem/toggle-solve/', probem_id, {})
-
         let result = toggleProblem(probem_id, shift_id, post_id);
         
         dispatch({type: PROBLEM_TOGGLE_SUCCESS, payload: result})
@@ -247,7 +252,7 @@ export const removeProblem = (shift_id: number, post_id: number, problem_id: any
     try{
         console.log("REMOVEEE PROBLEEEM")
 
-        // const response = await new Database().removeProblem(problem_id); // TODO REMOVE DATABASE
+        const response = await new Database().deleteProblem(problem_id);
 
         let result = await removeProblemToLocalStorage(shift_id, post_id, problem_id);
 
