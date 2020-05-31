@@ -2,7 +2,7 @@ import {IonButton, IonCol, IonGrid, IonItem, IonLabel, IonRow} from "@ionic/reac
 import React, {Component} from "react";
 import {formatDateTime} from "../../../../utils/DateUtil";
 
-class PlanningItem extends Component<any, any> {
+class FuturePlanningItem extends Component<any, any> {
 
     constructor(props : any) {
         super(props);
@@ -14,7 +14,7 @@ class PlanningItem extends Component<any, any> {
         return(
             <IonItem className="ion-margin-bottom">
                 <IonLabel>
-                    <IonGrid className="MessageBorder">
+                    <IonGrid>
                         <IonRow>
                             <p><b>{planning.post_name}</b></p>
                         </IonRow>
@@ -32,11 +32,6 @@ class PlanningItem extends Component<any, any> {
                                 <p className="lightgrey"><b>Beschrijving</b> {planning.post_description} </p>
                             </IonCol>
                         </IonRow>
-                        <IonRow className={this.props.button != null ? "" : "ion-hide"} onClick={this.props.action}>
-                            <IonButton color="primary" >
-                                Start Shift
-                            </IonButton>
-                        </IonRow>
                     </IonGrid>
                 </IonLabel>
             </IonItem>
@@ -44,4 +39,4 @@ class PlanningItem extends Component<any, any> {
     }
 }
 
-export default PlanningItem
+export default FuturePlanningItem

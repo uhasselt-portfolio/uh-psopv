@@ -1,8 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {fetchPlanningsFromId, updateGeolocation} from './InfoAction';
-import {checkIfUserInPost, reportUserNotInPost} from "../start/StartAction";
+import {updateGeolocation} from './InfoAction'; 
+import {fetchPlannings, checkIfUserInPost, reportUserNotInPost} from "../start/StartAction";
 import {
     IonCard,
     IonCardHeader,
@@ -16,13 +16,16 @@ import {
     IonHeader,
     IonToolbar,
     IonTitle,
-    IonLoading
+    IonLoading,
+    IonButton
 } from '@ionic/react';
 import './InfoPage.css'
 import {BackgroundGeolocation, BackgroundGeolocationEvents} from "@ionic-native/background-geolocation";
 import Map from '../../sector-responsible/map/components/Map';
 import { formatDateTime } from '../../../utils/DateUtil';
 import Auth from '../../../utils/Auth';
+import { resetLocalStorage } from '../../save/saveFunction';
+import { withRouter } from 'react-router';
 
 const TIME_IN_MS: number = 2000;
 class InfoPage extends React.Component<any, any> {
@@ -31,7 +34,7 @@ class InfoPage extends React.Component<any, any> {
 
         let hideFooterTimeout = setTimeout( () => {
             this.setState({...this.state, loaded: true})
-            this.props.fetchPlanningsFromId();
+            this.props.fetchPlannings();
         }, TIME_IN_MS);
     }
 
@@ -40,6 +43,8 @@ class InfoPage extends React.Component<any, any> {
     }
 
     componentDidMount() {
+        this.props.fetchPlannings();
+
         let HIGH = 10;
         const config = {
             desiredAccuracy: HIGH,
@@ -68,10 +73,10 @@ class InfoPage extends React.Component<any, any> {
             });
         BackgroundGeolocation.start();
         BackgroundGeolocation.stop();
-        this.props.fetchPlanningsFromId(Auth.getAuthenticatedUser().id);
     }
 
-    private showShiftInfo(shift_data: any, index: number) {
+    showShiftInfo(shift_data: any) {
+        console.log(shift_data)
         return (
             <IonCard key={shift_data.id}>
                 <IonCardHeader>
@@ -83,35 +88,35 @@ class InfoPage extends React.Component<any, any> {
                     <IonGrid>
                         <IonRow>
                             <IonCol size="2">Wie</IonCol>
-                            <IonCol>{shift_data.user.first_name + " " +shift_data.user.last_name}</IonCol>
+                            <IonCol>{shift_data.user_name}</IonCol>
                         </IonRow>
                         <IonRow>
                             <IonCol size="2">Wat</IonCol>
-                            <IonCol>{shift_data.post.general_post.description}</IonCol>
+                            <IonCol>{shift_data.post_description}</IonCol>
                         </IonRow>
                         <IonRow>
                             <IonCol size="2">Waar</IonCol>
-                            <IonCol> {shift_data.post.title}, 
-                            <p>{shift_data.post.address}</p></IonCol>
+                            <IonCol> {shift_data.post_title}, 
+                            <p>{shift_data.post_address}</p></IonCol>
                         </IonRow>
 
                         <IonRow>
                             <IonCol size="2">Start</IonCol>
-                            <IonCol>{formatDateTime(shift_data.shift.begin)}</IonCol>
+                            <IonCol>{formatDateTime(shift_data.shift_begin)}</IonCol>
                         </IonRow>
                         <IonRow>
                             <IonCol size="2">Einde</IonCol>
-                            <IonCol>{formatDateTime(shift_data.shift.end)}</IonCol>
+                            <IonCol>{formatDateTime(shift_data.shift_end)}</IonCol>
                         </IonRow>
                     </IonGrid>
 
                     <div className="GoogleMapsInfo">
                        <Map problems={[]} users={[]} posts={[{
-                            latitude: shift_data.post.latitude, 
-                            longitude: shift_data.post.longitude,
-                            title: shift_data.post.title}]} isMarkerClickable={false} containerId={"map" + shift_data.id} 
-                            centerLat={shift_data.post.latitude}
-                            centerLong={ shift_data.post.longitude}
+                            latitude: shift_data.latitude, 
+                            longitude: shift_data.longitude,
+                            title: shift_data.post_title}]} isMarkerClickable={false} containerId={"map" + shift_data.id} 
+                            centerLat={shift_data.latitude}
+                            centerLong={ shift_data.longitude}
                            mapHeight={200}/>
                         </div>
                 </IonCardContent>
@@ -119,15 +124,28 @@ class InfoPage extends React.Component<any, any> {
         )
     }
 
-    private renderShiftList() {
+    renderCurrentShiftList(){
+        const plannings = this.props.localStorage;
+
+        if (plannings !== undefined) {
+            if (plannings.current_planning === undefined) {
+                return <div> Geen actieve shift </div>
+            } else {
+                    return this.showShiftInfo(plannings.current_planning)
+            }
+        } else {
+            return <div>Loading...</div>
+        }
+    }
+    private renderFutureShiftList() {
         const plannings = this.props.localStorage;
 
         if (plannings !== undefined) {
             if (plannings.length <= 0) {
                 return <div> No messages found. </div>
             } else {
-                return plannings.map((data: any, index:number) => {
-                    return this.showShiftInfo(data, index)
+                return plannings.future_plannings.map((data: any, index:number) => {
+                    return this.showShiftInfo(data)
                 })
             }
         } else {
@@ -135,17 +153,29 @@ class InfoPage extends React.Component<any, any> {
         }
     }
 
+    async logOut() {
+        await resetLocalStorage();
+        this.props.history.push( "/LoginPage")
+        window.location.reload();
+    }
+    
     render() {
+        console.log(this.props)
         if(this.state.loaded){
             return (
                 <IonPage>
                     <IonHeader>
                         <IonToolbar>
-                            <IonTitle>Shift info</IonTitle>
+                            <IonTitle>Shift info 
+                            <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton>
+                            </IonTitle>
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>
-                        {this.renderShiftList()}
+                        <IonTitle className="marginTop">Hudige shift</IonTitle>
+                        {this.renderCurrentShiftList()}
+                        <IonTitle className="marginTop">Toekomstige shift(en)</IonTitle>
+                        {this.renderFutureShiftList()}
                     </IonContent>
                 </IonPage>
                 )
@@ -167,7 +197,7 @@ class InfoPage extends React.Component<any, any> {
 
 function mapStateToProps(state: any) {
     return ({
-        localStorage: state.VRinfo.arePlanningsFromIdFetched,
+        localStorage: state.start.isUserPlanningFetched,
         isUserOnPost: true, //TODO state.start.isUserOnPost gaf error
         isLocationUpdated: state.VRinfo.isLocationUpdated,
         errorMessage: state.VRinfo.errorMessage,
@@ -178,12 +208,12 @@ function mapStateToProps(state: any) {
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
         updateGeolocation,
-        fetchPlanningsFromId,
+        fetchPlannings,
         checkIfUserInPost,
         reportUserNotInPost
     }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(InfoPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(InfoPage));
 
   

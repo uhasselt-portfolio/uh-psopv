@@ -19,18 +19,18 @@ import '@ionic/react/css/display.css';
 import {connect} from 'react-redux';
 /* Theme variables */
 import './theme/variables.css';
-
+ 
 import SectorManagerApplication from "./pages/sector-responsible/SectorManagerApplication";
 import VolunteerApplication from "./pages/volunteer/VolunteerApplication";
 import Auth from "./utils/Auth";
 import StartPage from "./pages/volunteer/start/StartPage";
 import {bindActionCreators} from "redux";
-
+ 
 class App extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
     }
-
+ 
     renderLoginPage(): React.ReactNode {
         return (
             <IonRouterOutlet>
@@ -38,11 +38,11 @@ class App extends React.Component<any, any> {
             </IonRouterOutlet>
         )
     }
-
+ 
     renderVolunteerApplication(): React.ReactNode {
         const isActivePlanningFetched = this.props.isActivePlanningFetched;
-
-        if(this.props.isCheckInStatusUpdated || (isActivePlanningFetched !== null && isActivePlanningFetched.checked_in))
+ 
+        if(this.props.isCheckInStatusUpdated || (isActivePlanningFetched != null && isActivePlanningFetched.checked_in))
             return (
                 <div>
                     <Redirect from="/StartPage" to="/InfoPage"/>
@@ -50,15 +50,15 @@ class App extends React.Component<any, any> {
                     <VolunteerApplication/>
                 </div>
             )
-
+ 
         return(
             <IonRouterOutlet>
                 <Route path="/" component={StartPage} />
             </IonRouterOutlet>
         )
-
+ 
     }
-
+ 
     renderManagerApplication(): React.ReactNode {
         return (
             <div>
@@ -67,14 +67,14 @@ class App extends React.Component<any, any> {
             </div>
         )
     }
-
+ 
     renderApplication(): React.ReactNode {
         const loggedIn = Auth.isAuthenticated();
-
+ 
         if (loggedIn || this.props.isUserLoggedIn) {
-
+ 
             const user = Auth.getAuthenticatedUser();
-
+ 
             if (user.permission_type_id == '1') {
                 return this.renderVolunteerApplication();
             } else {
@@ -84,7 +84,7 @@ class App extends React.Component<any, any> {
             return this.renderLoginPage();
         }
     }
-
+ 
     render() {
         return (
             <IonApp>
@@ -97,8 +97,8 @@ class App extends React.Component<any, any> {
         )
     }
 }
-
-
+ 
+ 
 function mapStateToProps(state: any) {
     return ({
         isUserLoggedIn: state.login.isUserLoggedIn,
@@ -106,12 +106,12 @@ function mapStateToProps(state: any) {
         isActivePlanningFetched: state.start.isActivePlanningFetched
     })
 }
-
+ 
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
-
+ 
     }, dispatch);
 }
-
-
+ 
+ 
 export default connect(mapStateToProps)(App);

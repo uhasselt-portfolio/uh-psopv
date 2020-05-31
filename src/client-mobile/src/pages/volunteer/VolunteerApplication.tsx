@@ -1,4 +1,4 @@
-import {IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonBadge, IonPage} from "@ionic/react";
+import {IonIcon, IonLabel, IonRouterOutlet, IonTabBar, IonTabButton, IonTabs, IonBadge, IonPage, withIonLifeCycle} from "@ionic/react";
 import {Route} from "react-router-dom";
 import InfoPage from "./info/InfoPage";
 import Message from '../volunteer/messages/MessagePage'
@@ -25,8 +25,12 @@ class VolunteerApplication extends Component<any> {
         this.props.doDatabase();
 
         this.interval = setInterval(() => {
+          if(navigator.onLine){
             this.props.doDatabase();
-        }, 10000); //TODO interval
+          } else{
+            // do nothing
+          }
+        }, 5000); //TODO interval
     }
 
     componentWillUnmount() {
@@ -77,4 +81,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(VolunteerApplication);
+export default connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(VolunteerApplication));
