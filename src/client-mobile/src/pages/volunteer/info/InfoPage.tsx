@@ -172,7 +172,7 @@ class InfoPage extends React.Component<any, any> {
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>
-                        <IonTitle className="marginTop">Hudige shift</IonTitle>
+                        <IonTitle className="marginTop">Huidige shift</IonTitle>
                         {this.renderCurrentShiftList()}
                         <IonTitle className="marginTop">Toekomstige shift(en)</IonTitle>
                         {this.renderFutureShiftList()}

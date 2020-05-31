@@ -2,13 +2,13 @@ import React, {Component, ReactNode} from 'react';
 import {connect} from "react-redux";
 import {fetchPlannings, updateUserCheckInStatus} from './StartAction'
 import {bindActionCreators} from "redux";
-import {IonCard, IonCardContent, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar, IonButton} from '@ionic/react';
+import {IonCard, IonCardContent, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar, IonButton, IonLoading} from '@ionic/react';
 import {Redirect, withRouter} from "react-router";
 import Auth from "../../../utils/Auth";
 import PlanningItem from "./components/PlanningItem";
 import {doDatabase} from '../../save/saveAction'
 import FuturePlanningItem from './components/FuturePlanningItem';
-import { resetLocalStorage } from '../../save/saveFunction';
+import { resetLocalStorage, getListLocalStorage } from '../../save/saveFunction';
 
 
 const TIME_IN_MS: number = 2000;
@@ -17,12 +17,19 @@ class StartPage extends Component<any> {
 
     constructor(props: any){
         super(props)
-        let hideFooterTimeout = setTimeout( () => {
+        setTimeout(() => {
+            this.setState({...this.state, loaded: true})
             this.props.fetchPlannings();
+            this.props.updateUserCheckInStatus(Auth.getAuthenticatedUser().id);
+
         }, TIME_IN_MS);
     }
 
-    componentDidMount() {
+    state = {
+        loaded: false
+    }
+
+    async componentDidMount() {
         this.props.doDatabase();
         this.props.fetchPlannings();
     }
@@ -143,26 +150,41 @@ class StartPage extends Component<any> {
     }
 
     render() {
-        return (
-            <IonPage>
-                <IonHeader>
-                    <IonToolbar>
-                        <IonTitle>Pukkelpop</IonTitle>
-                        <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton>
-                    </IonToolbar>
-                </IonHeader>
-                <IonContent>
-                    <IonHeader collapse="condense">
+        if(this.state.loaded){
+            return (
+                <IonPage>
+                    <IonHeader>
                         <IonToolbar>
-                            <IonTitle size="large">Pukkelpop</IonTitle>
+                            <IonTitle>Pukkelpop</IonTitle>
+                            <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton>
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>
-                        {this.showContent()}
+                        <IonHeader collapse="condense">
+                            <IonToolbar>
+                                <IonTitle size="large">Pukkelpop</IonTitle>
+                            </IonToolbar>
+                        </IonHeader>
+                        <IonContent>
+                            {this.showContent()}
+                        </IonContent>
                     </IonContent>
-                </IonContent>
-            </IonPage>
-        );
+                </IonPage>
+            );
+        } else{
+            return(
+                <IonPage>
+                    <IonLoading
+                        cssClass='my-custom-class'
+                        isOpen={!this.state.loaded}
+                        onDidDismiss={() => this.setState({...this.state, loaded: true})}
+                        message={'Initializeren...'}
+                        duration={TIME_IN_MS}
+                    />
+                </IonPage>
+            )
+        }
+        
     }
 };
 
