@@ -24,8 +24,11 @@ class LoginPage extends React.Component<any, any> {
 
     componentDidMount(): void {
         if(this.state.phoneNumber == undefined) {
-            GetPhoneNumber().then(phoneNumber => {
-                this.setState({phoneNumber: phoneNumber})
+            // GetPhoneNumber().then(phoneNumber => {
+            //     this.setState({phoneNumber: phoneNumber})
+            // });
+            this.setState({
+                phoneNumber : '0483209571'
             });
         }
     }
