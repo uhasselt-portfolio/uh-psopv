@@ -105,7 +105,7 @@ class LoginPage extends React.Component<any, any> {
     RenderDropdown(){
         return(             
             <IonItem>
-            <IonLabel>Selecteer een rol om te testen</IonLabel>
+            <IonLabel>Selecteer een test profiel:</IonLabel>
             <IonSelect value={this.state.phoneNumber} placeholder="Select One" onIonChange={e => this.setPhoneNumber(e.detail.value)}>
               <IonSelectOption value="0483209571">Sector-verantwoordelijke</IonSelectOption>
               <IonSelectOption value="0495812456">Vrijwilliger</IonSelectOption>
