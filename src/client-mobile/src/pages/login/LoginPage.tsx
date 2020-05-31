@@ -132,7 +132,6 @@ class LoginPage extends React.Component<any, any> {
                     <IonList>
                     {this.RenderDropdown()}
                     {login}
-                    <IonItem>wachtwoord: 12345</IonItem>
                     </IonList>
                 </IonContent>
         </IonPage>
