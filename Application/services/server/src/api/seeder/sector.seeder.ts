@@ -3,6 +3,8 @@ import SectorModel from "../models/sector.model";
 /**
  * Sector database seeder
  *
+ * Assign a specific sector manager to a sector
+ *
  * @author Michiel Swaanen
  */
 export default async () => {
