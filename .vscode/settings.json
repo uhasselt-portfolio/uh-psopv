@@ -1,9 +1,0 @@
-{
-    "editor.fontFamily": "'Fira Code' Consolas, 'Courier New', monospace",
-    "editor.fontWeight": "400",
-    "editor.fontLigatures": true,
-    "editor.tabCompletion": "on",
-    "editor.tabSize": 8,
-    "editor.lineHeight": 23,
-    "terminal.integrated.shell.windows":  "D:\\Programming Drivers\\Git\\bin\\bash.exe"
-}
