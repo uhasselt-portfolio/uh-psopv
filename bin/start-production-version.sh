@@ -16,6 +16,6 @@ cd ../../bin
 
 docker system prune
 
-docker-compose -f docker-compose.production.yml up --build
+docker-compose -f docker-compose.prod.yml up --build
 
 # Check waarom de update niet gebeurd in de database, error console geplaatst in modify, uitlezen
