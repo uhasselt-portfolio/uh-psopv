@@ -3,9 +3,6 @@ import { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {doDatabase} from './saveAction'
-import { IonButton } from '@ionic/react';
-import {resetActionList, getActionList, addObjectToActionList, setDefaultSector, getDefaultSector} from './saveFunction'
-import Auth from '../../utils/Auth';
 
 class Save  extends Component<any> {
     async handleActions(){

@@ -37,6 +37,7 @@
     "cordova-plugin-sim": "^1.3.3",
     "fancy-notifications": "0.0.2",
     "google-map-react": "^1.1.7",
+    "hashmap": "^2.4.0",
     "ionicons": "^5.0.0",
     "jsonwebtoken": "^8.5.1",
     "leaflet": "^1.6.0",

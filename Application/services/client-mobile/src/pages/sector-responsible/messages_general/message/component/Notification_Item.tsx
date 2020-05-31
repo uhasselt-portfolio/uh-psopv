@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Component } from 'react';
-// import 'bootstrap/dist/css/bootstrap.css';
 import {bindActionCreators} from "redux";
 
 import { 
@@ -11,6 +10,7 @@ import './Notification_Item.css';
 import { connect } from "react-redux";
 import {MessageToggle} from '../MessageAction'
 import {formatDateTime} from '../../../../../utils/DateUtil'
+import Auth from '../../../../../utils/Auth';
 
 
 class NotificationItem extends Component<any> {
@@ -26,7 +26,9 @@ class NotificationItem extends Component<any> {
         if(this.state.seen === false){
             this.props.MessageToggle(data.id);
             this.setState({...this.state, seen: !this.state.seen});
-            this.props.sendData()
+            if(Auth.getAuthenticatedUser().permission_type_id == 1){
+                this.props.sendData()
+            }
         }
     }
 

@@ -1,7 +1,8 @@
 import Redux from 'redux';
 import Database from "../../../database/Database";
 import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocation";
-import { getListLocalStorage } from '../../save/saveFunction';
+import { getListLocalStorage, addObjectToActionList } from '../../save/saveFunction';
+import Auth from '../../../utils/Auth';
 
 export const USER_UPDATE_GEOLOCATION_START = 'USER_UPDATE_GEOLOCATION_START'
 export const USER_UPDATE_GEOLOCATION_SUCCESS = 'USER_UPDATE_GEOLOCATION_SUCCESS'
@@ -11,13 +12,21 @@ export const updateGeolocation = (userLocation: BackgroundGeolocationResponse) =
     try {
         dispatch({type: USER_UPDATE_GEOLOCATION_START});
 
-        const response = await new Database().updateUserLocation(userLocation, 1);
+        const response = await new Database().updateUserLocation(userLocation, Auth.getAuthenticatedUser().id);
 
         const user = response.data.data.user;
         const coordinates = {latitude: user.current_latitude, longitude: user.current_longitude};
 
         dispatch({type: USER_UPDATE_GEOLOCATION_SUCCESS, payload: coordinates})
     } catch (error) {
+        // offline database
+        await addObjectToActionList('/user/modify', Auth.getAuthenticatedUser().id, {
+            user: {
+                current_latitude: userLocation.latitude,
+                current_longitude: userLocation.longitude
+            }
+        });
+
         if (error.response) {
             // Server responded with a code high than 2xx
             console.log(error.response.data);

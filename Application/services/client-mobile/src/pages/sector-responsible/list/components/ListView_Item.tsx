@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Component } from 'react';
 import {IonItem, 
     IonLabel,} from '@ionic/react';
-import { call } from 'ionicons/icons';
 
 import WarningSign from "../../../images/warning_sign"
 import '../ListPage.css'
@@ -28,8 +27,7 @@ class ListViewItem  extends Component<any> {
 
     render() {
         return (   
-            <IonItem  detail button onClick={() =>
-            this.props.history.push( "/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>
+            <IonItem  detail button onClick={() => this.props.history.push( "/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>
                 <IonLabel>
                     <h2>Post {this.props.post_id}</h2>
                     <h4>{this.props.loc_description}</h4>

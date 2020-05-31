@@ -2,22 +2,15 @@ import React, { Fragment, useState, Component} from 'react';
 import './ProblemsPage.css';
 import ProblemItem from './component/Problem_Item'
 import { connect } from "react-redux";
-import { ThunkDispatch } from "redux-thunk";
-import { Dispatch, bindActionCreators } from "redux";
+import {  bindActionCreators } from "redux";
 import {fetchProblemsOf, loadProblem} from './ProblemsAction'
 
 
 
 import { IonButton, 
-  IonListHeader, 
-  IonHeader, 
-  IonPage, 
-  IonTitle, 
-  IonToolbar, 
-  IonList, 
-  IonItem, 
-  IonLabel,
-  IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonTabBar, IonTabButton, IonIcon } from '@ionic/react';
+  IonList } from '@ionic/react';
+import { setListLocalStorage } from '../../../save/saveFunction';
+import { withRouter } from 'react-router';
 
 
 
@@ -26,8 +19,29 @@ class ProblemsPage extends Component<any> {
     super(props);
   }
 
+  interval: NodeJS.Timeout | undefined;
+
+  state = {
+    amount_msg: 0
+  }
+
+
+  componentWillUnmount() {
+    if(this.interval != undefined){
+      clearInterval(this.interval);
+    }
+  }
+
+  async ionViewWillEnter() {
+    await setListLocalStorage('problem_end_index', 5)
+  }
+
   componentDidMount(){
-    this.props.fetchProblemsOf(); // TODO USERID
+    this.props.fetchProblemsOf();
+
+    this.interval = setInterval(() => {
+      this.props.fetchProblemsOf();
+    }, 5000);
   }
 
   loadMoreProblems(){
@@ -43,7 +57,6 @@ class ProblemsPage extends Component<any> {
         })
         
   }
-
 
   render(){
     if(this.props.localStorage != undefined){
@@ -86,4 +99,4 @@ function mapDispatchToProps(dispatch: any) {
   }, dispatch);
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ProblemsPage);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(ProblemsPage));

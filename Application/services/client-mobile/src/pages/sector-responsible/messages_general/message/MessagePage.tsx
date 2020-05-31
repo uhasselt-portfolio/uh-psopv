@@ -8,16 +8,9 @@ import {fetchMessagesOf, loadMessages} from './MessageAction'
 import {updateMessages} from '../../../save/saveAction'
 
 import { IonButton, 
-  IonListHeader, 
-  IonHeader, 
-  IonPage, 
-  IonTitle, 
-  IonToolbar, 
-  IonList, 
-  IonItem, 
-  IonLabel,
-  IonText, IonInput, IonToggle, IonRadio, IonCheckbox, IonItemSliding, IonItemOption, IonItemOptions, IonContent, IonAvatar, IonTabBar, IonTabButton, IonIcon, withIonLifeCycle } from '@ionic/react';
+  IonList, withIonLifeCycle } from '@ionic/react';
 import { setListLocalStorage } from '../../../save/saveFunction';
+import Auth from '../../../../utils/Auth';
 
 
 
@@ -40,10 +33,10 @@ class Notifications extends Component<any> {
   }
 
   componentDidMount(){
-    this.props.fetchMessagesOf(); // TODO USERID
+    this.props.fetchMessagesOf();
 
     this.interval = setInterval(() => {
-      this.props.fetchMessagesOf(); // TODO USERID
+      this.props.fetchMessagesOf();
     }, 5000);
   }
 
@@ -58,9 +51,16 @@ class Notifications extends Component<any> {
           return <div> No messages found. </div>
       } else{
         return this.props.localStorage.messages.map((data: any, index: number) =>{
-          return (
-          <NotificationItem {... data} sendData={this.props.sendData}/>
-          )
+          // 1 = vrijwilliger
+          if(Auth.getAuthenticatedUser().permission_type_id == 1){
+            return (
+              <NotificationItem {... data}/>
+              )
+          } else{
+            return (
+              <NotificationItem {... data} sendData={this.props.sendData}/>
+              )
+          }
         })
         }
       } else{

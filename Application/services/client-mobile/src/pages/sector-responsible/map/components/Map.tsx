@@ -1,6 +1,5 @@
 import React from 'react'
 import L, { Point } from 'leaflet';
-import { Redirect } from 'react-router-dom';
 import postIcon from './NormalMarker'
 import ProblemIcon from './ProblemMarker'
 

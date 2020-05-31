@@ -1,13 +1,12 @@
-import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCardHeader, IonList, IonCard, IonCheckbox, IonItem, IonLabel, IonItemDivider, IonCardTitle, IonCardContent, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol, IonPopover, withIonLifeCycle } from '@ionic/react';
-import React, { Fragment, useState, Component, ReactNode, useEffect, useRef } from 'react';
+import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonCard, IonCardTitle, IonButton, IonIcon, IonSlides, IonSlide, IonGrid, IonRow, IonCol, IonPopover, withIonLifeCycle } from '@ionic/react';
+import React, { Component, } from 'react';
 import './PostPage.css';
 import Shift from './components/shift/Shift';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import {fetchPlanningsFromPost} from './PostAction'
-import { caretDown, arrowBack, arrowForward, constructOutline } from 'ionicons/icons';
-import { formatDateTime } from '../../../utils/DateUtil';
-import { Switch, withRouter } from 'react-router';
+import { arrowBack, arrowForward, constructOutline } from 'ionicons/icons';
+import { withRouter } from 'react-router';
 import SelectShiftWindow from './components/SelectShiftWindow';
 
 const slideOpts = {
@@ -35,7 +34,8 @@ class PostView extends Component<any, any> {
     show_shift: -1, // niets
     current_shift: -1, 
     showPopover: false,
-    swiper: null
+    swiper: null,
+    first_render: true
   }
 
   hidePopover(){
@@ -98,14 +98,12 @@ class PostView extends Component<any, any> {
     })
   }
 
-  // componentDidMount(){
-  //   this.props.fetchPlanningsFromPost(this.props.match.params.post);
-  // }
+  // interval: NodeJS.Timeout | undefined;
 
-  ionViewWillEnter() {
+  componentDidMount(){
+    console.log("componentDidMount")
     this.props.fetchPlanningsFromPost(this.props.match.params.post);
-    console.log('fetchPlanningsFromPost ionViewWillEnter event fired')
-  }
+    }
 
   renderPost(): any{
     if(this.state.show_shift === -1){
