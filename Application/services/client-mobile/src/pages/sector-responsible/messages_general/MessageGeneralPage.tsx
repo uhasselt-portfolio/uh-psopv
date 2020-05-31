@@ -52,12 +52,12 @@ class MessageGeneral extends React.Component<any> {
     async setAmountMessage() {
         let msg = await getListLocalStorage('messages');
         msg = msg.filter((element: any) => {
-            return (element.solved == false)
+            return (element.solved === false)
         })
 
         let problems = await getListLocalStorage('problems');
         problems = problems.filter((element: any) => {
-            return (element.solved == false)
+            return (element.solved === false)
         })
         this.setState({...this.state, amount_msg: msg.length, amount_problems: problems.length});
     }
@@ -95,17 +95,17 @@ class MessageGeneral extends React.Component<any> {
 
     renderNavBar() {
         let not_icon, pro_icon, send_icon
-        if (this.state.selected == 0) {
+        if (this.state.selected === 0) {
             not_icon = <IonIcon icon={notifications}/>
         } else {
             not_icon = <IonIcon icon={notificationsOutline}/>
         }
-        if (this.state.selected == 1) {
+        if (this.state.selected === 1) {
             pro_icon = <IonIcon icon={warning}/>
         } else {
             pro_icon = <IonIcon icon={warningOutline}/>
         }
-        if (this.state.selected == 2) {
+        if (this.state.selected === 2) {
             send_icon = <IonIcon icon={paperPlane}/>
         } else {
             send_icon = <IonIcon icon={paperPlaneOutline}/>

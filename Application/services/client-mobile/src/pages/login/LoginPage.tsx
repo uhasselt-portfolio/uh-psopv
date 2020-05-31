@@ -10,7 +10,11 @@ import {
     IonList, IonPage,
     IonText,
     IonTitle,
-    IonToolbar
+    IonToolbar,
+    IonLabel,
+    IonInput,
+    IonSelect,
+    IonSelectOption
 } from "@ionic/react";
 
 import GetPhoneNumber from "../../utils/GetPhoneNumber";
@@ -19,30 +23,23 @@ class LoginPage extends React.Component<any, any> {
 
     constructor(props: any) {
         super(props);
-        this.state = {phoneNumber: undefined};
+        this.state = {phoneNumber: "0483209571"};
     }
 
     componentDidMount(): void {
-        if(this.state.phoneNumber == undefined) {
-            // GetPhoneNumber().then(phoneNumber => {
-            //     this.setState({phoneNumber: phoneNumber})
-            // });
-            this.setState({
-                phoneNumber : '0483209571'
-            });
-        }
+        this.props.checkUserExists(this.state.phoneNumber);
     }
+
+   
 
     checkIfUserExists(phoneNumber: string) {
         this.props.checkUserExists(phoneNumber);
     }
 
-
-    render(): React.ReactNode {
+    renderFirstoption(): React.ReactNode{
         const doesUserExist = this.props.doesUserExist;
 
         if(doesUserExist === undefined) {
-
             if(this.state.phoneNumber != undefined) {
                 this.checkIfUserExists(this.state.phoneNumber);
             }
@@ -98,6 +95,49 @@ class LoginPage extends React.Component<any, any> {
                 )
             }
         }
+    }
+
+    setPhoneNumber(phone: string): void{
+        this.setState({phoneNumber: phone})
+        this.props.checkUserExists(phone);
+    }
+
+    RenderDropdown(){
+        return(             
+            <IonItem>
+            <IonLabel>Selecteer een rol om te testen</IonLabel>
+            <IonSelect value={this.state.phoneNumber} placeholder="Select One" onIonChange={e => this.setPhoneNumber(e.detail.value)}>
+              <IonSelectOption value="0483209571">Sector-verantwoordelijke</IonSelectOption>
+              <IonSelectOption value="0495812456">Vrijwilliger</IonSelectOption>
+            </IonSelect>
+            </IonItem>
+        )
+            
+    }
+
+    render(): React.ReactNode {
+        let login = <div></div>;
+        if(this.state.phoneNumber != undefined && this.props.doesUserExist != undefined){
+            login = <LoginComponent phoneNumber={this.state.phoneNumber} user={this.props.doesUserExist} />
+        }
+        console.log(this.state.phoneNumber, this.props)
+        return(
+        <IonPage>
+                <IonContent>
+                    <IonHeader collapse="condense">
+                        <IonToolbar>
+                            <IonTitle size="large">Login</IonTitle>
+                        </IonToolbar>
+                    </IonHeader>
+                    <IonList>
+                    {this.RenderDropdown()}
+                    {login}
+                    <IonItem>wachtwoord: 12345</IonItem>
+                    </IonList>
+                </IonContent>
+        </IonPage>
+        )
+        
     }
 }
 

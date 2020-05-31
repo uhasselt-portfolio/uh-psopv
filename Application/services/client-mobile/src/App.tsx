@@ -42,7 +42,7 @@ class App extends React.Component<any, any> {
     renderVolunteerApplication(): React.ReactNode {
         const isActivePlanningFetched = this.props.isActivePlanningFetched;
 
-        if(this.props.isCheckInStatusUpdated || (isActivePlanningFetched != null && isActivePlanningFetched.checked_in))
+        if(this.props.isCheckInStatusUpdated || (isActivePlanningFetched !== null && isActivePlanningFetched.checked_in))
             return (
                 <div>
                     <Redirect from="/StartPage" to="/InfoPage"/>

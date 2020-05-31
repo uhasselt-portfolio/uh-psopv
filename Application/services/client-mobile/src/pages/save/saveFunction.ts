@@ -6,6 +6,10 @@ const { Storage } = Plugins;
  * This class is the connection between localstorage and the application data.
  */
 
+export async function resetLocalStorage() {
+  await Storage.clear();
+  await localStorage.removeItem("token")
+}
 
 export async function resetActionList() {
     await Storage.remove({ key: 'action_list' });

@@ -117,7 +117,7 @@ class PostView extends Component<any, any> {
 
   handleSlideChange(slider: any){
     // this.getActiveIndex()
-    if(slider != null){
+    if(slider !== null){
       this.handleShiftSwitch(slider.activeIndex)
     }
   }
@@ -156,7 +156,7 @@ class PostView extends Component<any, any> {
     // do not forget to bind getData in constructor
     let index_shift = 0;
     this.props.localStorage.shifts.map((element: any, index: number) => {
-      if(element.shift_id == val.shift_id){
+      if(element.shift_id === val.shift_id){
         index_shift = index;
       }
     })
@@ -208,7 +208,7 @@ class PostView extends Component<any, any> {
   }
 
   render(){
-    if(this.props.localStorage != undefined){
+    if(this.props.localStorage !== undefined){
       return this.renderBasis();
     } else{
       return <IonPage> No internet connection </IonPage>
