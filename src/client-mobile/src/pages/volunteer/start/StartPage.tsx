@@ -178,7 +178,7 @@ class StartPage extends Component<any> {
                         cssClass='my-custom-class'
                         isOpen={!this.state.loaded}
                         onDidDismiss={() => this.setState({...this.state, loaded: true})}
-                        message={'Initializeren...'}
+                        message={'Shift Controleren...'}
                         duration={TIME_IN_MS}
                     />
                 </IonPage>
