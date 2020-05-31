@@ -86,7 +86,7 @@ function sortMessagesByDate(a: any, b: any){
             function_type: user.permission_type.name
         }
 
-        if(!done_workers.includes(user.id) && worker.function_type != "Vrijwilliger"){
+        if(!done_workers.includes(user.id) && worker.function_type != "Vrijwilliger" && worker.user_id !== user_id){
             done_workers.push(user.id);
             workers.push(worker)
         }
