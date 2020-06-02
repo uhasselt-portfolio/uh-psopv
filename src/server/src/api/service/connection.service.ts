@@ -1,6 +1,11 @@
 import UserModel from "../models/user.model";
 
-export const listen = async () => {
+export const listen = async (seconds : number) => {
+
+    setTimeout(() => {
+
+    }, seconds * 1000)
+
     const users = await UserModel.findAll({where: {is_connected: true}});
 
     for (let user of users) {
