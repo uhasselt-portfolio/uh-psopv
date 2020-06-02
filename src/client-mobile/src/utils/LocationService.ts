@@ -6,7 +6,7 @@ import {
 import {DateTime, Zone} from "luxon";
 
 let HIGH = 10;
-const config : BackgroundGeolocationConfig = {
+const config: BackgroundGeolocationConfig = {
     desiredAccuracy: HIGH,
     stationaryRadius: 5,
     interval: 2.000,
@@ -20,8 +20,8 @@ const config : BackgroundGeolocationConfig = {
 
 class LocationService {
 
-    private action : (userLocation: BackgroundGeolocationResponse) => void;
-    private endTracking : Date;
+    private action: (userLocation: BackgroundGeolocationResponse) => void;
+    private endTracking: Date;
 
     constructor(action: (userLocation: BackgroundGeolocationResponse) => void, trackingEnd: Date) {
         this.action = action;
@@ -35,22 +35,23 @@ class LocationService {
         // Set configuration
 
         try {
-            BackgroundGeolocation.configure(config).then(() => {
-            }).catch((error) => {
+            BackgroundGeolocation
+                .configure(config)
+                .then(() => {
+                }).catch((error) => {
                 console.log(error)
             });
 
             // Listener, every time a player moves
             BackgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((userLocation: BackgroundGeolocationResponse) => {
-                const trackingEnd : string | null = localStorage.getItem('time');
+                const trackingEnd: string | null = localStorage.getItem('time');
 
-                if(trackingEnd != null) {
+                if (trackingEnd != null) {
 
-                    if(Date.parse(trackingEnd) > Date.now()) {
-
+                    if (Date.parse(trackingEnd) > Date.now()) {
                         this.action(userLocation);
                     } else {
-
+                        console.log("Shift stopped tracking")
                         BackgroundGeolocation.stop();
                     }
                 }
@@ -60,7 +61,7 @@ class LocationService {
 
             await BackgroundGeolocation.start();
 
-        } catch(error) {
+        } catch (error) {
             console.log(error)
         }
     }
