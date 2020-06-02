@@ -52,7 +52,6 @@ export const PLANNING_FROM_ID_FETCH_FAIL = 'PLANNING_FROM_ID_FETCH_FAIL'
 
 export const fetchPlanningsFromId = ()  => async (dispatch: Redux.Dispatch) => {
     try{
-
         let future_plannings: any[] = await getListLocalStorage('plannings');
         let current_planning: any[] = await getListLocalStorage('active_planning');
         dispatch({type: PLANNING_FROM_ID_FETCH_SUCCESS, payload: {future_plannings: future_plannings, current_planning: current_planning}})
@@ -63,7 +62,7 @@ export const fetchPlanningsFromId = ()  => async (dispatch: Redux.Dispatch) => {
             console.log(error.response.status);
             console.log(error.response.headers);
 
-            dispatch({type: PLANNING_FROM_ID_FETCH_FAIL, payload: error.response.data.data.plannings})
+            dispatch({type: PLANNING_FROM_ID_FETCH_FAIL, payload: {future_plannings: [], current_planning: {}}})
         } else if (error.request) {
             // No response was received from the server
             console.log(error.request);

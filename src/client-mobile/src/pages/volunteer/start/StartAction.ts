@@ -10,7 +10,6 @@ export const fetchActivePlanningOfUser = (id: number) => async (dispatch: Redux.
         dispatch({type: START_FETCH_ACTIVE_PLANNING_START})
  
         const response = await new Database().fetchActivePlanning(id);
-        console.log("RESPONSE", response);
  
         dispatch({type: START_FETCH_ACTIVE_PLANNING_SUCCESS, payload: response.data.data.planning});
     } catch(error){

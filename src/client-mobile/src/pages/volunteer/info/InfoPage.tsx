@@ -43,7 +43,7 @@ class InfoPage extends React.Component<any, any> {
     }
 
     componentDidMount() {
-        this.props.fetchPlanningsFromId();
+        // this.props.fetchPlanningsFromId();
 
         console.log("locating...")
         try{
@@ -81,7 +81,7 @@ class InfoPage extends React.Component<any, any> {
     }
 
     showShiftInfo(shift_data: any) {
-        console.log(shift_data)
+        console.log("shift_data",shift_data)
         return (
             <IonCard key={shift_data.id}>
                 <IonCardHeader>
@@ -115,11 +115,17 @@ class InfoPage extends React.Component<any, any> {
                         </IonRow>
                     </IonGrid>
 
+                    {/* <Map posts={this.props.localStorage.posts_data} sectors={this.props.localStorage.posts_sectors}
+                     isMarkerClickable={true} containerId={"map"}
+                     centerLat={50.962595} centerLong={5.358503} mapHeight={700}/> */}
+
                     <div className="GoogleMapsInfo">
-                       <Map problems={[]} users={[]} posts={[{
-                            latitude: shift_data.latitude, 
+                       <Map posts={[{latitude: shift_data.latitude, 
                             longitude: shift_data.longitude,
-                            title: shift_data.post_title}]} isMarkerClickable={false} containerId={"map" + shift_data.id} 
+                            title: shift_data.post_title}]}
+                            
+                            isMarkerClickable={false}
+                            containerId={"map" + shift_data.id} 
                             centerLat={shift_data.latitude}
                             centerLong={ shift_data.longitude}
                            mapHeight={200}/>
@@ -131,9 +137,9 @@ class InfoPage extends React.Component<any, any> {
 
     renderCurrentShiftList(){
         const plannings = this.props.localStorage;
-
+        console.log("plannings", plannings)
         if (plannings !== undefined) {
-            if (plannings.current_planning === undefined) {
+            if (plannings.current_planning === null) {
                 return <div> Geen actieve shift </div>
             } else {
                     return this.showShiftInfo(plannings.current_planning)
@@ -146,7 +152,7 @@ class InfoPage extends React.Component<any, any> {
         const plannings = this.props.localStorage;
 
         if (plannings !== undefined) {
-            if (plannings.future_plannings.length <= 0) {
+            if (plannings.future_plannings.length < 1) {
                 return <IonCard> <IonCardHeader> Geen toekomstige shiften. </IonCardHeader></IonCard>
             } else {
                 return plannings.future_plannings.map((data: any, index:number) => {
@@ -165,7 +171,6 @@ class InfoPage extends React.Component<any, any> {
     }
     
     render() {
-        console.log(this.props)
         if(this.state.loaded){
             return (
                 <IonPage>
@@ -201,7 +206,6 @@ class InfoPage extends React.Component<any, any> {
 }
 
 function mapStateToProps(state: any) {
-    console.log("state", state)
     return ({
         localStorage: state.VRinfo.arePlanningsFromIdFetched,
         isUserOnPost: true, //TODO state.start.isUserOnPost gaf error

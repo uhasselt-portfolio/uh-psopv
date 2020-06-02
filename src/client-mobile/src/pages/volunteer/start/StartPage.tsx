@@ -83,7 +83,6 @@ class StartPage extends Component<any> {
     private renderPlanning() {
         const activePlanning = this.props.isActivePlanningFetched;
         const plannings = this.props.isUserPlanningFetched;
-        console.log("plannings", plannings);
  
         if (plannings == undefined) {
             const user = Auth.getAuthenticatedUser();
@@ -122,7 +121,6 @@ class StartPage extends Component<any> {
     }
  
     private showContent() {
-        console.log()
         const planning = this.props.isActivePlanningFetched;
 
         if (planning == undefined) {
