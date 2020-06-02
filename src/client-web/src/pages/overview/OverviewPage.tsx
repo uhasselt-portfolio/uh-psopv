@@ -31,8 +31,14 @@ class Overview extends Component<Props> {
      */
     componentWillMount = () => {
         this.props.fetch();         
-        setInterval(this.props.fetch(),300000);
+        this.timerId = setInterval(this.props.fetch(),300000);
     }
+
+    componentWillUnmount = () => {
+        if (this.timerId !== -1)
+            clearInterval(this.timerId);
+    }
+    timerId: any;
 
     render() {
         let sortedProblems : ProblemDataInterface[][] = [];

@@ -199,13 +199,18 @@ export const fetchUnsolvedProblems = async (req: Request, res: Response) => {
  * @param res Outgoing response
  */
 export const add = async (req: Request, res: Response) => {
+    console.log("hey");
 
     if (!checkRequiredParameters(req, res)) return;
 
+    console.log("jfsklmfj");
+    
     try {
         const userExists: UserModel | null = await UserModel.findByPk(req.body.created_by_id, eagerLoadingOptions);
         const planningExists: PlanningModel | null = await PlanningModel.findByPk(req.body.planning_id, eagerLoadingOptions);
         const problemTypeExists: ProblemTypeModel | null = await ProblemTypeModel.findByPk(req.body.problem_type_id, eagerLoadingOptions);
+
+        console.log("parat",userExists,planningExists,problemTypeExists);
 
         if (userExists && planningExists && problemTypeExists) {
             const problem = await ProblemModel.create({
@@ -231,6 +236,7 @@ export const add = async (req: Request, res: Response) => {
             });
         }
     } catch (error) {
+        console.log("error",error);
         res.status(500).send({
             status: 'error',
             data: null,

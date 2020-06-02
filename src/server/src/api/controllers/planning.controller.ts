@@ -142,6 +142,8 @@ export const fetchActivePlaningViaUserID = async (req: Request, res: Response) =
         const statusCode = activePlanning == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
+        console.log(statusCode);
+
         res.status(statusCode).send({
             status: statusMessage,
             data: {

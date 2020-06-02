@@ -46,6 +46,7 @@ class Auth {
     }
 
     getAuthenticatedUser() : any {
+        console.log(this.user);
         return this.user;
     }
 

@@ -265,6 +265,7 @@ export const add = async (req: Request, res: Response) => {
 export const modify = async (req: Request, res: Response) => {
     const userID = req.params.id;
     const user = req.body.user;
+    console.log("bla",user);
 
     if (!user)
         return res.status(404).send({
@@ -278,6 +279,8 @@ export const modify = async (req: Request, res: Response) => {
             returning: true, where: {id: userID}
         });
 
+        console.log("res",result)
+
         const updatedUser = result[1][0];
         const statusCode = updatedUser == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
@@ -290,6 +293,7 @@ export const modify = async (req: Request, res: Response) => {
         });
 
     } catch (error) {
+        console.log("error",error);
         res.status(500).send({
             status: 'error',
             data: null,
@@ -310,6 +314,8 @@ export const toggleUserConnection = async (req: Request, res: Response) => {
     try {
         const user = await UserModel.findByPk(userID);
 
+        console.log(user);
+
         if (!user) {
             return res.status(404).send({
                 status: 'fail',
@@ -327,12 +333,15 @@ export const toggleUserConnection = async (req: Request, res: Response) => {
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
         const message = statusMessage == 'fail' ? 'Update wasn\'t successful' : null;
 
+        console.log(message);
+
         res.status(statusCode).send({
             status: statusMessage,
             data: {user: updatedUser},
             message: message
         });
     } catch (error) {
+        console.log("errror",error);
         res.status(500).send({
             status: 'error',
             data: null,

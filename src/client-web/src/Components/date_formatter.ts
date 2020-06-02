@@ -12,8 +12,8 @@ export function formatDate(data: string){
 
 }
 
-export function  formatTime(data:string){
-    return (data.slice(11, 16));
+export function formatTime(data:string){
+    return (data.slice(16, 21));
 }
 
 export function formatDateTime(data: string){

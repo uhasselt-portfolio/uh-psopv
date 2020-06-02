@@ -52,12 +52,32 @@ export const deleteAll = async (req: Request, res: Response) => {
     await GeneralPostModel.truncate({
         cascade: true
     });
-    await UserModel.truncate({
-        cascade: true
-    });
-    await AssociationModel.truncate({
-        cascade: true
-    });
+    // await UserModel.truncate({
+    //     cascade: true
+    // });
+    await UserModel.destroy({
+        where : {
+            permission_type_id : 1
+        }
+    })
+    await UserModel.destroy({
+        where : {
+            permission_type_id : 2
+        }
+    })
+
+    
+    //TODO voor demo dit niet doen, maakt niet uit dat ze erin blijven staan, zijn nergens te zien
+    let association = await AssociationModel.findAll();
+    for (let i = 0; i < association.length; ++i) {
+        if (association[i].id !== 1)
+            await AssociationModel.destroy({
+                where : {id : association[i].id}
+            })
+    }
+    // await AssociationModel.truncate({
+    //     cascade: true
+    // });
     res.status(201).send();
     return true;
 }
@@ -455,8 +475,8 @@ const insertShift = async (shifts: any[], res: Response) => {
             } else {
                 let beginArray: number[] = dateparser(shifts[i].begin);
                 let endArray: number[] = dateparser(shifts[i].end);
-                let beginDate: Date = new Date(beginArray[0], beginArray[1], beginArray[2], beginArray[3], beginArray[4]);
-                let endDate: Date = new Date(endArray[0], endArray[1], endArray[2], endArray[3], endArray[4]);
+                let beginDate: Date = new Date(beginArray[0], beginArray[1] -1, beginArray[2], beginArray[3], beginArray[4]);
+                let endDate: Date = new Date(endArray[0], endArray[1] -1, endArray[2], endArray[3], endArray[4]);
                 const Shift = await ShiftModel.create({
                     name: shifts[i].name,
                     begin: beginDate,
@@ -509,6 +529,9 @@ const insertPlanning = async (planning: any[], res: Response) => {
 
             if (userId === undefined || postsId === undefined || shiftId === undefined) {
                 console.log('wrong data', planning[i]);
+                console.log("userid",userId);
+                console.log("post",postsId);
+                console.log("shift", shiftId);
                 res.status(404).send({
                     status: 'fail',
                     data: null,
@@ -628,7 +651,7 @@ const insertItem = async (item: any[], res: Response) => {
                 console.log("2");
 
             if (planningID === undefined || typeId === undefined) {
-                console.log('wrong data', item[i]);
+                console.log('wrong data', item[i],planningID,typeId);
                 res.status(404).send({
                     status: 'fail',
                     data: null,

@@ -15,6 +15,8 @@ type Props = LinkStateProps & LinkDispatchToProps;
  */
 class PukkelpopMap extends Component<Props> {
 
+    timerId : any = -1;
+
     /**
      * gets called before the component is mounted
      * gets all the data from the database
@@ -23,8 +25,14 @@ class PukkelpopMap extends Component<Props> {
     componentWillMount = () => {
         this.props.fetchMap();          
         // setInterval(this.props.fetchMap,300000);
-        setInterval(this.props.fetchMap,30000); //30 seconden
+        this.timerId =  setInterval(this.props.fetchMap,30000 * 2); //30 * 2 seconden
     }
+
+    componentWillUnmount = () => {
+        if (this.timerId !== -1)
+            clearInterval(this.timerId);
+    }
+    
 
 
     render() {

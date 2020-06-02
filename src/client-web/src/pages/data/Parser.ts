@@ -186,6 +186,9 @@ export class Parser {
                     type: sector
                 });
         }
+        console.log("sectors",this.sectors);
+        console.log("posts",this.posts);
+        console.log("generalpost",this.generalposts);
         try {
             this.serverResponse = await axios.post('http://localhost/api/import/createGeneralAndPost', {
                 sector : this.sectors,
@@ -302,7 +305,7 @@ export class Parser {
             console.log('i');
             if (data[i][shiftIndex] !== undefined)
                 shift = data[i][shiftIndex];
-            else if (data[i] !== " " && data[i][postIndex] !== "FUNCTIE") {
+            else if (data[i] !== " " && data[i][postIndex] !== "FUNCTIE" && data[i].length > 0) {
                 this.planning.push({
                     user: data[i][userIndex],
                     shift: shift,
@@ -311,6 +314,8 @@ export class Parser {
             }
         
         }
+
+        console.log(this.planning);
 
         try {
             let count = 0;
@@ -362,6 +367,7 @@ export class Parser {
                 name, begin, end
             });
         }
+        console.log("shifts",this.shifts);
         try {
             this.serverResponse = await axios.post('http://localhost/api/import/createShift', {
                 shifts : this.shifts

@@ -294,6 +294,7 @@ export default class Database {
         let messages: MessageDataInterface[] = await this.fetchMessages();
         let users: UserDataInterface[] = await this.fetchUsersconnected();
         let planning: ShiftDataInterface[] = await this.fetchPlanning();
+        console.log("planning length",planning.length);
         let items: ItemDataInterface[] = await this.fetchItems();
         let posts = await this.fetchPosts();
         let problems: ProblemDataInterface[] = await this.fetchProblems();
@@ -337,6 +338,75 @@ export default class Database {
 
     async patchMessageRead(messageId: number) {
         return ServerRequest.patch('/message/toggle-seen', messageId, {})
+    }
+
+    async addDemoProblems() {
+
+        let planning= await ServerRequest.get('/planning/fetch/all');
+        let users = await ServerRequest.get('/user/fetch/all');
+
+        console.log(users);
+
+        for (let i = 0; i < planning.data.data.plannings.length / 100; ++i) {
+            let response = await ServerRequest.post('/problem/add', {
+                planning_id : planning.data.data.plannings[i].id,
+                created_by_id : users.data.data.users[0].id,
+                problem_type_id : 1
+            });
+        }
+
+        let posts : any[] = await this.fetchPosts();
+
+        console.log("bla");
+        for (let i = 0; i < users.data.data.users.length / 2; ++i) {
+            if (users.data.data.users[i].phone_number !== "0483209571" || users.data.data.users[i].phone_number !== "0495812456") {
+                //this.patchUserConnection(users.data.data.users[i].id);
+                let lat : number = 0;
+                let long : number = 0;
+                if (i < posts.length) {
+                    lat= posts[i].latitude - 0.0001;
+                    long = posts[i].longitude + 0.0005;
+                }
+
+                console.log("latlong",lat,long);
+                await ServerRequest.patch('/user/modify', users.data.data.users[i].id,{
+                    user : {
+                        is_connected : true,
+                        current_latitude : lat,
+                        current_longitude : long
+                    }
+                })
+            }
+        }
+
+    }
+
+    async Scenario1() {
+        let users = await this.fetchUsers();
+
+        let user : any;
+        for (let i = 0; i < users.length; ++i) {
+            if (users[i].name === "Lars")
+                user = users[i];
+        }
+
+        console.log(users,user);
+
+        await ServerRequest.patch('/user/modify', user.id,{
+            user : {
+                current_latitude : user.latitude + 0.1,
+                current_longitude : user.longitude + 0.05
+            }
+        })
+
+        let planning = await this.fetchPlanning();
+
+        let res = await ServerRequest.post('/problem/add', {
+            planning_id: planning[0],
+            problem_type_id: 2,
+            created_by_id : user.id
+        })
+        console.log(res);
     }
 
 }

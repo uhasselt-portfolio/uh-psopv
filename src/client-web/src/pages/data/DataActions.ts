@@ -1,6 +1,8 @@
 import Redux from 'redux';
 import XLSX from 'xlsx';
 import {Parser} from './Parser';
+import Database from '../../Redux/Database';
+import Auth from '../../utils/Auth';
 
 /**
  * @author Wouter Grootjans
@@ -367,6 +369,68 @@ export const uploadItems = (file : File) => async (dispatch : Redux.Dispatch) =>
         if(rABS) reader.readAsBinaryString(file); else reader.readAsArrayBuffer(file);
 
     } catch(error) {
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    } 
+}
+
+export const addDemoData = () => async (dispatch : Redux.Dispatch) => {
+    try {
+
+        let database : Database = new Database();
+
+        let users = await database.fetchUsers();
+
+        let userIds : number[] = users.map(user => user.id);
+        let adminId : number = Auth.getAuthenticatedUser().id;
+
+        await database.postNewMessageMulitple(userIds,"bericht aan alle mensen", "gelieve u te melden aan de inkom",adminId);
+        await database.postNewMessageMulitple(userIds,"probleem post 2", "Gelieve hulp te sturen naar post 2",adminId);
+        
+        let response = await database.addDemoProblems();
+        console.log('r',response);
+
+    } catch(error) {
+        console.log(error);
+        if (error.response) {
+            // Server responded with a code high than 2xx
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            dispatch({type: DataActions.DATA_POST_FAIL, payload: error.response.data.message});
+        } else if (error.request) {
+            // No response was received from the server
+            console.log(error.request);
+        } else {
+            // Request couldn't get send
+            console.log('Error', error.message);
+        }   
+    } 
+}
+
+export const Scenario1 = () => async (dispatch : Redux.Dispatch) => {
+    try {
+
+        let database : Database = new Database();
+        await database.Scenario1();
+        
+
+
+    } catch(error) {
+        console.log(error);
         if (error.response) {
             // Server responded with a code high than 2xx
             console.log(error.response.data);

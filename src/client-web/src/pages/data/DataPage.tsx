@@ -4,7 +4,7 @@ import { Grid, Input } from '@material-ui/core';
 import { AppState } from '../../Redux/store';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers, deleteDatabase} from './DataActions';
+import {uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers, deleteDatabase, addDemoData,Scenario1} from './DataActions';
 
 const ButtonStyle = {
     background: 'rgb(21,95,160)',
@@ -253,6 +253,12 @@ class Data extends Component<Props> {
                     <Grid item style={itemStyle}>
                         <Button variant="outlined" style={ButtonStyle} onClick={() => {this.props.deleteDatabase()}}>Verwijder huidige gegevens</Button>
                     </Grid>
+                    <Grid item style={itemStyle}>
+                        <Button variant="outlined" style={ButtonStyle} onClick={() => {this.props.addDemoData()}}>Voeg demo data toe</Button>
+                    </Grid>
+                    <Grid item style={itemStyle}>
+                        <Button variant="outlined" style={ButtonStyle} onClick={() => {this.props.Scenario1()}}>Scenario1</Button>
+                    </Grid>
                 </Grid>
 
                 <Grid item style={styleRight}>
@@ -331,11 +337,13 @@ interface LinkDispatchToProps {
     uploadItems : any, 
     uploadShifts : any, 
     uploadUsers : any,
-    deleteDatabase: any
+    deleteDatabase: any,
+    addDemoData: any,
+    Scenario1: any
 }
 const MapDispatchToProp = (dispatch: any) : LinkDispatchToProps => {
     return bindActionCreators({
-        uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers,deleteDatabase
+        uploadAppellijst, uploadFuncties, uploadItems, uploadShifts, uploadUsers,deleteDatabase, addDemoData,Scenario1
     }, dispatch);
 }
 
