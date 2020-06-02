@@ -231,6 +231,28 @@ export default class Database {
         return users;
     }
 
+    async fetchUsersconnected() {
+        const responeUsers = await ServerRequest.get('/user/fetch/all/connected');
+
+        let users: UserDataInterface[] = [];
+        for (let i = 0; i < responeUsers.data.data.users.length; ++i) {
+            users.push({
+                id: responeUsers.data.data.users[i].id,
+                name: responeUsers.data.data.users[i].first_name,
+                lastname: responeUsers.data.data.users[i].last_name,
+                has_internet: responeUsers.data.data.users[i].is_connected,
+                gsmNumber: responeUsers.data.data.users[i].phone_number,
+                email: responeUsers.data.data.users[i].email,
+                permission: responeUsers.data.data.users[i].permission_type_id,
+                association: responeUsers.data.data.users[i].association.name,
+                latitude: responeUsers.data.data.users[i].current_latitude,
+                longitude: responeUsers.data.data.users[i].current_longitude
+            })
+        }
+
+        return users;
+    }
+
     async fetchPlanning() {
         const responePlanning = await ServerRequest.get('/planning/fetch/all');
 
@@ -270,7 +292,7 @@ export default class Database {
 
     async fetchAll() {
         let messages: MessageDataInterface[] = await this.fetchMessages();
-        let users: UserDataInterface[] = await this.fetchUsers();
+        let users: UserDataInterface[] = await this.fetchUsersconnected();
         let planning: ShiftDataInterface[] = await this.fetchPlanning();
         let items: ItemDataInterface[] = await this.fetchItems();
         let posts = await this.fetchPosts();

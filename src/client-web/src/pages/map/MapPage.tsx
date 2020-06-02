@@ -22,7 +22,8 @@ class PukkelpopMap extends Component<Props> {
      */
     componentWillMount = () => {
         this.props.fetchMap();          
-        setInterval(this.props.fetchMap,300000);
+        // setInterval(this.props.fetchMap,300000);
+        setInterval(this.props.fetchMap,30000); //30 seconden
     }
 
 
