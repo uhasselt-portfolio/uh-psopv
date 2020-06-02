@@ -4,6 +4,7 @@ import app from "./src/app";
 import getConnection from "./src/api/models/connection";
 import seedDatabase from "./src/api/seeder/seeder";
 import {Sequelize} from "sequelize-typescript";
+import {startUserConnectionListener} from "./src/api/service/connection.service";
 
 const startServer = async () => {
     config();
@@ -17,6 +18,8 @@ const startServer = async () => {
     server.listen(port); // Start server on port ...
 
     await seedDatabase();
+
+    await startUserConnectionListener(30);
 
     if(process.env.NODE_ENV == 'production') {
         console.log('Production back-end server started successfully!');
