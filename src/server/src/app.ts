@@ -13,6 +13,7 @@ import problemTypeRoutes from "./api/routes/problem_type.routes";
 import itemTypeRoutes from "./api/routes/item_type.routes";
 import planningRoutes from "./api/routes/planning.routes"
 import sectorRoutes from "./api/routes/sector.routes"
+import {startUserConnectionListener} from "./api/service/connection.service";
 
 /**
  * @author Michiel Swaanen
@@ -28,6 +29,7 @@ class App {
         this.express = express();
         this.middleware();
         this.routes();
+        startUserConnectionListener(30);
     }
 
     /**
