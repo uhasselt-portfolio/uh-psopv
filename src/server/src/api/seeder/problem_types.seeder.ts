@@ -38,6 +38,13 @@ export default async () => {
         description: 'Je hebt je post verlaten voor een tweede keer verlaten.'
     }).save();
 
+    // Must be id 6, used in connection.service.ts to add a connection problem
+    await new ProblemTypeModel({
+        title: 'Connectie verbroken',
+        priority: 5,
+        description: 'Je connectie was verbroken tijdens je shift.'
+    }).save();
+
 
     console.log("Successfully seeded the problem type table!")
 }

@@ -130,8 +130,6 @@ export const fetchActivePlaningViaUserID = async (req: Request, res: Response) =
             end: {[Op.gt]: new Date().getTime() + tenMinutes},
         }
 
-        console.log(where);
-
         const activePlanning = await PlanningModel.findOne({
             where: {user_id: userID},
             include: [{model: PlanningModel, all: true, include: [{model: UserModel, all: true}]}, {

@@ -28,6 +28,7 @@ export default async () => {
         association_id: 1
     }).save();
 
+    // Must be id 3, used in connection.service.ts to add a connection problem
     await new UserModel({
         first_name: 'Michiel',
         last_name: 'Swaanen',
