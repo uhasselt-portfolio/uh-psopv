@@ -161,8 +161,8 @@ export class Parser {
                 const response  = await axios.get("https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates?f=json&singleLine=" + address + "&outFields=Match_addr,Addr_type");
 
                 if (response.data.candidates.length > 0) {
-                    latitude = response.data.candidates[0].location.x;
-                    longitude = response.data.candidates[0].location.y;
+                    latitude = response.data.candidates[0].location.y;
+                    longitude = response.data.candidates[0].location.x;
                 }
             }
                 
