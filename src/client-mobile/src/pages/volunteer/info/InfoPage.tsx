@@ -1,8 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {updateGeolocation} from './InfoAction'; 
-import {fetchPlannings, checkIfUserInPost, reportUserNotInPost} from "../start/StartAction";
+import {updateGeolocation, fetchPlanningsFromId} from './InfoAction'; 
+import {checkIfUserInPost, reportUserNotInPost} from "../start/StartAction";
 import {
     IonCard,
     IonCardHeader,
@@ -34,7 +34,7 @@ class InfoPage extends React.Component<any, any> {
 
         let hideFooterTimeout = setTimeout( () => {
             this.setState({...this.state, loaded: true})
-            this.props.fetchPlannings();
+            this.props.fetchPlanningsFromId();
         }, TIME_IN_MS);
     }
 
@@ -43,36 +43,41 @@ class InfoPage extends React.Component<any, any> {
     }
 
     componentDidMount() {
-        this.props.fetchPlannings();
+        this.props.fetchPlanningsFromId();
 
-        let HIGH = 10;
-        const config = {
-            desiredAccuracy: HIGH,
-            stationaryRadius: 5,
-            interval: 30000,
-            distanceFilter: 5,
-            notificationTitle: 'Pukkelpop App',
-            notificationText: 'Locatie tracking',
-            debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-            stopOnTerminate: false, // enable this to clear background location settings when the app terminates
-        };
-
-        BackgroundGeolocation.configure(config)
-            .then(() => {
-                BackgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location) => {
-                    console.log("location: ", location)
-
-                    this.props.updateGeolocation(location);
-                    this.props.checkIfUserInPost(Auth.getAuthenticatedUser().id);
-                    if(!this.props.isUserOnPost) {
-                        this.props.reportUserNotInPost(Auth.getAuthenticatedUser().id);
-                    }
-
-                    BackgroundGeolocation.finish(); // FOR IOS ONLY
+        console.log("locating...")
+        try{
+            let HIGH = 10;
+            const config = {
+                desiredAccuracy: HIGH,
+                stationaryRadius: 5,
+                interval: 30000,
+                distanceFilter: 5,
+                notificationTitle: 'Pukkelpop App',
+                notificationText: 'Locatie tracking',
+                debug: true, //  enable this hear sounds for background-geolocation life-cycle.
+                stopOnTerminate: false, // enable this to clear background location settings when the app terminates
+            };
+    
+            BackgroundGeolocation.configure(config)
+                .then(() => {
+                    BackgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location) => {
+                        console.log("location: ", location)
+    
+                        this.props.updateGeolocation(location);
+                        this.props.checkIfUserInPost(Auth.getAuthenticatedUser().id);
+                        if(!this.props.isUserOnPost) {
+                            this.props.reportUserNotInPost(Auth.getAuthenticatedUser().id);
+                        }
+    
+                        BackgroundGeolocation.finish(); // FOR IOS ONLY
+                    });
                 });
-            });
-        BackgroundGeolocation.start();
-        BackgroundGeolocation.stop();
+            BackgroundGeolocation.start();
+            BackgroundGeolocation.stop();
+        } catch(error){
+            console.log(error)
+        }
     }
 
     showShiftInfo(shift_data: any) {
@@ -196,8 +201,9 @@ class InfoPage extends React.Component<any, any> {
 }
 
 function mapStateToProps(state: any) {
+    console.log("state", state)
     return ({
-        localStorage: state.start.isUserPlanningFetched,
+        localStorage: state.VRinfo.arePlanningsFromIdFetched,
         isUserOnPost: true, //TODO state.start.isUserOnPost gaf error
         isLocationUpdated: state.VRinfo.isLocationUpdated,
         errorMessage: state.VRinfo.errorMessage,
@@ -208,7 +214,7 @@ function mapStateToProps(state: any) {
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
         updateGeolocation,
-        fetchPlannings,
+        fetchPlanningsFromId,
         checkIfUserInPost,
         reportUserNotInPost
     }, dispatch);

@@ -1,72 +1,61 @@
 import React, {Component, ReactNode} from 'react';
 import {connect} from "react-redux";
-import {fetchPlannings, updateUserCheckInStatus} from './StartAction'
+import {fetchActivePlanningOfUser, fetchPlannings, updateUserCheckInStatus} from './StartAction'
 import {bindActionCreators} from "redux";
-import {IonCard, IonCardContent, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar, IonButton, IonLoading} from '@ionic/react';
-import {Redirect, withRouter} from "react-router";
+import {IonCard, IonCardContent, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar} from '@ionic/react';
+import {Redirect} from "react-router";
 import Auth from "../../../utils/Auth";
 import PlanningItem from "./components/PlanningItem";
-import {doDatabase} from '../../save/saveAction'
-import FuturePlanningItem from './components/FuturePlanningItem';
-import { resetLocalStorage, getListLocalStorage } from '../../save/saveFunction';
-
-
-const TIME_IN_MS: number = 2000;
-
+ 
 class StartPage extends Component<any> {
-
-    constructor(props: any){
-        super(props)
-        setTimeout(() => {
-            this.setState({...this.state, loaded: true})
-            this.props.fetchPlannings();
-            this.props.updateUserCheckInStatus(Auth.getAuthenticatedUser().id);
-
-        }, TIME_IN_MS);
+ 
+    componentDidMount() {
+        const user = Auth.getAuthenticatedUser();
+        this.props.fetchActivePlanningOfUser(user.id);
     }
-
-    state = {
-        loaded: false
-    }
-
-    async componentDidMount() {
-        this.props.doDatabase();
-        this.props.fetchPlannings();
-    }
-
-    async logOut() {
-        await resetLocalStorage();
-        this.props.history.push( "/LoginPage")
-        window.location.reload();
-    }
-    
+ 
     private handleUpdateUserCheckInStatus(event: any): void {
         console.log("Updating checkin status")
         event.preventDefault();
-        this.props.updateUserCheckInStatus(Auth.getAuthenticatedUser().id);
+        this.props.updateUserCheckInStatus(1);
         console.log("Updated checking status")
     }
-
-    private renderFutureShifts(): ReactNode {
-        const future_plannings = this.props.isUserPlanningFetched.future_plannings
-       
-        if (future_plannings.length == 0) {
+ 
+    private renderNextShift(nextPlanning: any): ReactNode {
+        if (!nextPlanning) {
             return (
-                <IonCardContent>
-                    Geen nieuwe shiften gevonden!
-                </IonCardContent>
+                <IonCard>
+                    <IonCardContent>
+                        Geen nieuwe shiften gevonden!
+                    </IonCardContent>
+                </IonCard>
+            )
+        }
+ 
+        return <PlanningItem planning={nextPlanning}/>
+ 
+    }
+ 
+    private renderFutureShifts(planning: any): ReactNode {
+        if (planning.length == 0) {
+            return (
+                <IonCard>
+                    <IonCardContent>
+                        Geen nieuwe shiften gevonden!
+                    </IonCardContent>
+                </IonCard>
             )
         } else {
-            return future_plannings.map((planning: any) => {
-                return <FuturePlanningItem planning={planning} button={true} action={this.handleUpdateUserCheckInStatus.bind(this)}/>
-            }) 
+            return (
+                <IonList>
+                    {planning}
+                </IonList>
+            )
         }
     }
-
-    private renderActiveShift() : ReactNode {
-        const current_planning = this.props.isUserPlanningFetched.current_planning;
-
-        if(current_planning === undefined) {
+ 
+    private renderActiveShift(planning : any) : ReactNode {
+        if(planning == undefined) {
             return (
                 <IonCard>
                     <IonCardContent>
@@ -74,9 +63,9 @@ class StartPage extends Component<any> {
                     </IonCardContent>
                 </IonCard>
             )
-        } 
-
-        if(current_planning === undefined) {
+        }
+ 
+        if(!planning) {
             return(
                 <IonCard>
                     <IonCardContent>
@@ -85,15 +74,17 @@ class StartPage extends Component<any> {
                 </IonCard>
             )
         }
-
+ 
         return(
-            <PlanningItem planning={current_planning} button={true} action={this.handleUpdateUserCheckInStatus.bind(this)}/>
+            <PlanningItem planning={planning} button={true} action={this.handleUpdateUserCheckInStatus.bind(this)}/>
         )
     }
-
+ 
     private renderPlanning() {
-        const plannings = this.props.isUserPlanningFetched
-
+        const activePlanning = this.props.isActivePlanningFetched;
+        const plannings = this.props.isUserPlanningFetched;
+        console.log("plannings", plannings);
+ 
         if (plannings == undefined) {
             const user = Auth.getAuthenticatedUser();
             this.props.fetchPlannings(user.id);
@@ -105,28 +96,34 @@ class StartPage extends Component<any> {
                 </IonCard>
             )
         }
-
+ 
+        const firstPlanning = plannings.shift();
+ 
+        const planningItems = plannings.map((planning: any) => {
+            return <PlanningItem planning={planning}/>
+        })
+ 
         return (
             <div>
                 <IonTitle className="ion-padding-bottom ion-padding-top">
                     Huidige Shift
                 </IonTitle>
-                {this.renderActiveShift()}
+                {this.renderActiveShift(activePlanning)}
+                <IonTitle className="ion-padding-bottom">
+                    Volgende Shift
+                </IonTitle>
+                {this.renderNextShift(firstPlanning)}
                 <IonTitle className="ion-padding-bottom">
                     Toekomstige Shiften
                 </IonTitle>
-                <IonCard>
-                    <IonCardContent>
-                    {this.renderFutureShifts()}
-                    </IonCardContent>
-                </IonCard>
+                {this.renderFutureShifts(planningItems)}
             </div>
         )
     }
-
+ 
     private showContent() {
-        const planning = this.props.isUserPlanningFetched;
-        const isCheckedIn = this.props.isCheckInStatusUpdated;
+        console.log()
+        const planning = this.props.isActivePlanningFetched;
 
         if (planning == undefined) {
             return (
@@ -137,10 +134,10 @@ class StartPage extends Component<any> {
                 </IonCard>
             )
         }
-
-        if(!isCheckedIn)
+ 
+        if(!planning.checked_in)
             return this.renderPlanning();
-
+ 
         return (
             <div>
                 Redirecting...
@@ -148,60 +145,46 @@ class StartPage extends Component<any> {
             </div>
         )
     }
-
+ 
     render() {
-        if(this.state.loaded){
-            return (
-                <IonPage>
-                    <IonHeader>
+        return (
+            <IonPage>
+                <IonHeader>
+                    <IonToolbar>
+                        <IonTitle>Pukkelpop</IonTitle>
+                    </IonToolbar>
+                </IonHeader>
+                <IonContent>
+                    <IonHeader collapse="condense">
                         <IonToolbar>
-                            <IonTitle>Pukkelpop</IonTitle>
-                            <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton>
+                            <IonTitle size="large">Pukkelpop</IonTitle>
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>
-                        <IonHeader collapse="condense">
-                            <IonToolbar>
-                                <IonTitle size="large">Pukkelpop</IonTitle>
-                            </IonToolbar>
-                        </IonHeader>
-                        <IonContent>
-                            {this.showContent()}
-                        </IonContent>
+                        {this.showContent()}
                     </IonContent>
-                </IonPage>
-            );
-        } else{
-            return(
-                <IonPage>
-                    <IonLoading
-                        cssClass='my-custom-class'
-                        isOpen={!this.state.loaded}
-                        onDidDismiss={() => this.setState({...this.state, loaded: true})}
-                        message={'Shift Controleren...'}
-                        duration={TIME_IN_MS}
-                    />
-                </IonPage>
-            )
-        }
+                </IonContent>
+            </IonPage>
+        );
     }
 };
-
+ 
 function mapStateToProps(state: any) {
     return ({
+        isActivePlanningFetched: state.start.isActivePlanningFetched,
         isUserPlanningFetched: state.start.isUserPlanningFetched,
         isCheckInStatusUpdated: state.start.isCheckInStatusUpdated,
         errorMessage: state.start.errorMessage,
         loading: state.start.loading
     })
 }
-
+ 
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
+        fetchActivePlanningOfUser,
         fetchPlannings,
         updateUserCheckInStatus,
-        doDatabase
     }, dispatch);
 }
-
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(StartPage));
+ 
+export default connect(mapStateToProps, mapDispatchToProps)(StartPage);
