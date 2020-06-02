@@ -51,6 +51,34 @@ export const fetchAll = async (req: Request, res: Response) => {
 };
 
 /**
+ * Fetch all the users from the database
+ *
+ * @param req Incoming request
+ * @param res Outgoing response
+ */
+export const fetchAllConnected = async (req: Request, res: Response) => {
+    try {
+        const users = await UserModel.findAll({include: [{model: UserModel, all: true}], where: {is_connected: true}});
+        const statusCode = users == null ? 404 : 200;
+        const statusMessage = statusCode == 200 ? 'success' : 'fail';
+
+        res.status(statusCode).send({
+            status: statusMessage,
+            data: {
+                users: users
+            },
+            message: null
+        });
+    } catch (error) {
+        res.status(500).send({
+            status: 'error',
+            data: null,
+            message: 'Internal Server Error'
+        });
+    }
+};
+
+/**
  * Fetch a specific user from the database
  *
  * @param req Incoming request

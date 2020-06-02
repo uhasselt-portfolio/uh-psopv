@@ -8,7 +8,8 @@ import {
     isUserOnPost,
     modify,
     remove,
-    toggleUserConnection
+    toggleUserConnection,
+    fetchAllConnected
 } from '../controllers/user.controller';
 import {validateBodyParameters} from "../middleware/parameter.middleware";
 import {verify} from "../middleware/jwt.middleware";
@@ -33,6 +34,8 @@ import {verify} from "../middleware/jwt.middleware";
 const router = express.Router();
 
 router.get('/fetch/all', fetchAll);
+
+router.get('/fetch/all/connected', fetchAllConnected);
 
 router.get('/fetch/:id', verify, fetch);
 
