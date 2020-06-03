@@ -82,7 +82,6 @@ class InfoPage extends React.Component<any, any> {
     }
 
     showShiftInfo(shift_data: any) {
-        console.log("shift_data",shift_data)
         return (
             <IonCard key={shift_data.id}>
                 <IonCardHeader>
