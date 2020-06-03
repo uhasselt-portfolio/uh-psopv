@@ -21,6 +21,7 @@ import {bindActionCreators} from 'redux';
 import {fetchPosts} from './ListAction'
 import {connect} from 'react-redux';
 import {Plugins} from '@capacitor/core';
+import { withRouter } from 'react-router';
 
 const {Geolocation} = Plugins;
 
@@ -527,4 +528,4 @@ function mapDispatchToProps(dispatch: any) {
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(ListView));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(ListView)));
