@@ -19,6 +19,7 @@ class StartPage extends Component<any> {
         await resetLocalStorage();
         this.props.history.push( "/LoginPage")
         window.location.reload();
+        
     }
  
     private handleUpdateUserCheckInStatus(event: any): void {
@@ -163,7 +164,8 @@ class StartPage extends Component<any> {
                     <IonHeader collapse="condense">
                         <IonToolbar>
                             <IonTitle size="large">Pukkelpop
-                            <IonButton onClick={() => this.logOut()}></IonButton></IonTitle>
+                            <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton>
+                            </IonTitle>
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>

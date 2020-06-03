@@ -168,6 +168,7 @@ class InfoPage extends React.Component<any, any> {
         await resetLocalStorage();
         this.props.history.push( "/LoginPage")
         window.location.reload();
+        BackgroundGeolocation.stop();
     }
     
     render() {
