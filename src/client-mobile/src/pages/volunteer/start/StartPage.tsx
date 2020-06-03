@@ -2,10 +2,11 @@ import React, {Component, ReactNode} from 'react';
 import {connect} from "react-redux";
 import {fetchActivePlanningOfUser, fetchPlannings, updateUserCheckInStatus} from './StartAction'
 import {bindActionCreators} from "redux";
-import {IonCard, IonCardContent, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar} from '@ionic/react';
+import {IonCard, IonCardContent, IonContent, IonHeader, IonList, IonPage, IonTitle, IonToolbar, IonButton} from '@ionic/react';
 import {Redirect} from "react-router";
 import Auth from "../../../utils/Auth";
 import PlanningItem from "./components/PlanningItem";
+import { resetLocalStorage } from '../../save/saveFunction';
  
 class StartPage extends Component<any> {
  
@@ -13,12 +14,22 @@ class StartPage extends Component<any> {
         const user = Auth.getAuthenticatedUser();
         this.props.fetchActivePlanningOfUser(user.id);
     }
+
+    async logOut() {
+        await resetLocalStorage();
+        this.props.history.push( "/LoginPage")
+        window.location.reload();
+    }
  
     private handleUpdateUserCheckInStatus(event: any): void {
         console.log("Updating checkin status")
         event.preventDefault();
+<<<<<<< HEAD
         const user = Auth.getAuthenticatedUser();
         this.props.updateUserCheckInStatus(user.id);
+=======
+        this.props.updateUserCheckInStatus(Auth.getAuthenticatedUser().id);
+>>>>>>> 65d45b4457238dec5141ad17f61b9f661ab06b8b
         console.log("Updated checking status")
     }
  
@@ -156,7 +167,8 @@ class StartPage extends Component<any> {
                 <IonContent>
                     <IonHeader collapse="condense">
                         <IonToolbar>
-                            <IonTitle size="large">Pukkelpop</IonTitle>
+                            <IonTitle size="large">Pukkelpop
+                            <IonButton onClick={() => this.logOut()}></IonButton></IonTitle>
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>
