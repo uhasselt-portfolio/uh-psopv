@@ -42,44 +42,6 @@ class InfoPage extends React.Component<any, any> {
         loaded: false
     }
 
-    componentDidMount() {
-        // this.props.fetchPlanningsFromId();
-
-        console.log("locating...")
-        try{
-            let HIGH = 10;
-            const config = {
-                desiredAccuracy: HIGH,
-                stationaryRadius: 5,
-                interval: 30000,
-                distanceFilter: 5,
-                notificationTitle: 'Pukkelpop App',
-                notificationText: 'Locatie tracking',
-                debug: true, //  enable this hear sounds for background-geolocation life-cycle.
-                stopOnTerminate: false, // enable this to clear background location settings when the app terminates
-            };
-    
-            BackgroundGeolocation.configure(config)
-                .then(() => {
-                    BackgroundGeolocation.on(BackgroundGeolocationEvents.location).subscribe((location) => {
-                        console.log("location: ", location)
-    
-                        this.props.updateGeolocation(location);
-                        this.props.checkIfUserInPost(Auth.getAuthenticatedUser().id);
-                        if(!this.props.isUserOnPost) {
-                            this.props.reportUserNotInPost(Auth.getAuthenticatedUser().id);
-                        }
-    
-                        BackgroundGeolocation.finish(); // FOR IOS ONLY
-                    });
-                });
-            BackgroundGeolocation.start();
-            BackgroundGeolocation.stop();
-        } catch(error){
-            console.log(error)
-        }
-    }
-
     showShiftInfo(shift_data: any) {
         console.log("shift_data",shift_data)
         return (
@@ -166,8 +128,14 @@ class InfoPage extends React.Component<any, any> {
 
     async logOut() {
         await resetLocalStorage();
-        this.props.history.push( "/LoginPage")
+
+        this.props.history.push( "/LoginPage");
+
         window.location.reload();
+
+        await BackgroundGeolocation.stop();
+
+        await BackgroundGeolocation.finish();
     }
     
     render() {

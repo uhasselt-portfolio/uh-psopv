@@ -33,8 +33,8 @@ class PlanningItem extends Component<any, any> {
                                 <p className="lightgrey"><b>Beschrijving</b> {planning.post.general_post.description} </p>
                             </IonCol>
                         </IonRow>
-                        <IonRow className={this.props.button != null ? "" : "ion-hide"} onClick={this.props.action}>
-                            <IonButton color="primary" >
+                        <IonRow className={this.props.button != null ? "" : "ion-hide"} >
+                            <IonButton color="primary" routerLink="/BackgroundLocation" >
                                 Start Shift
                             </IonButton>
                         </IonRow>

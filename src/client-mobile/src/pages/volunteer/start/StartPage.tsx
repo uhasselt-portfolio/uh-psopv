@@ -7,10 +7,11 @@ import {Redirect} from "react-router";
 import Auth from "../../../utils/Auth";
 import PlanningItem from "./components/PlanningItem";
 import { resetLocalStorage } from '../../save/saveFunction';
- 
+
 class StartPage extends Component<any> {
  
     componentDidMount() {
+        console.log("START")
         const user = Auth.getAuthenticatedUser();
         this.props.fetchActivePlanningOfUser(user.id);
     }
@@ -20,15 +21,7 @@ class StartPage extends Component<any> {
         this.props.history.push( "/LoginPage")
         window.location.reload();
     }
- 
-    private handleUpdateUserCheckInStatus(event: any): void {
-        console.log("Updating checkin status")
-        event.preventDefault();
-        const user = Auth.getAuthenticatedUser();
-        this.props.updateUserCheckInStatus(user.id);
-        console.log("Updated checking status")
-    }
- 
+
     private renderNextShift(nextPlanning: any): ReactNode {
         if (!nextPlanning) {
             return (
@@ -84,7 +77,7 @@ class StartPage extends Component<any> {
         }
  
         return(
-            <PlanningItem planning={planning} button={true} action={this.handleUpdateUserCheckInStatus.bind(this)}/>
+            <PlanningItem planning={planning} button={true} />
         )
     }
  
@@ -180,7 +173,6 @@ function mapStateToProps(state: any) {
     return ({
         isActivePlanningFetched: state.start.isActivePlanningFetched,
         isUserPlanningFetched: state.start.isUserPlanningFetched,
-        isCheckInStatusUpdated: state.start.isCheckInStatusUpdated,
         errorMessage: state.start.errorMessage,
         loading: state.start.loading
     })

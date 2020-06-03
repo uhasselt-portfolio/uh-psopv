@@ -77,8 +77,10 @@ class LoginComponent extends React.Component<any, IState> {
         const isUserLoggedIn = this.props.isUserLoggedIn;
 
         if (isUserLoggedIn) {
+            window.location.reload();
             return(
                 <div>
+                    <Redirect to={"/"} />
                     Laden...
                 </div>
             )

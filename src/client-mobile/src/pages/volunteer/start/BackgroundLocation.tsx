@@ -9,11 +9,10 @@ import {
     IonToolbar,
     IonContent,
 } from '@ionic/react';
-import {Redirect} from "react-router";
 import LocationService from "../../../utils/LocationService";
 import {updateGeolocation} from "../info/InfoAction";
-import {checkIfUserInPost, reportUserNotInPost} from "./StartAction";
-import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocation";
+import {checkIfUserInPost, reportUserNotInPost, updateUserCheckInStatus} from "./StartAction";
+import {BackgroundGeolocation, BackgroundGeolocationResponse} from "@ionic-native/background-geolocation";
 import Auth from "../../../utils/Auth";
 
 class BackgroundLocation extends Component<any> {
@@ -27,14 +26,14 @@ class BackgroundLocation extends Component<any> {
 
     private async startTracking() {
         const planning = this.props.isActivePlanningFetched;
+
         if (planning != undefined) {
             const trackingEnd: Date = planning.shift.end;
             const ls : LocationService = new LocationService(this.onLocationUpdate.bind(this), trackingEnd);
-            try {
-                await ls.start();
-            } catch(error) {
-                console.log(error);
-            }
+            ls.start().then(() => {
+                this.props.updateUserCheckInStatus(this.userID);
+                BackgroundGeolocation.start();
+            });
         } else {
             this.props.fetchActivePlanningOfUser(this.userID);
         }
@@ -50,22 +49,8 @@ class BackgroundLocation extends Component<any> {
 
 
     private showContent() {
-        this.startTracking()
-            .then(() => {
-                return (
-                    <div>
-                        Inloggen...
-                        <Redirect to={'/InfoPage'}/>
-                    </div>
-                )
-            })
-            .catch(() => {
-                return(
-                    <div>
-                        Traceren niet gelukt!
-                    </div>
-                )
-            })
+        this.startTracking();
+
         return(
             <div>
                 Coördinaten laden...
@@ -99,6 +84,7 @@ class BackgroundLocation extends Component<any> {
 function mapStateToProps(state: any) {
     return ({
         isActivePlanningFetched: state.start.isActivePlanningFetched,
+        isCheckInStatusUpdated: state.start.isCheckInStatusUpdated,
         isUserReported: state.start.isUserReported,
         isUserOnPost: state.start.isUserOnPost,
         errorMessage: state.start.errorMessage,
@@ -109,6 +95,7 @@ function mapStateToProps(state: any) {
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
         fetchActivePlanningOfUser,
+        updateUserCheckInStatus,
         updateGeolocation,
         checkIfUserInPost,
         reportUserNotInPost

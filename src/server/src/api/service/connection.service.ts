@@ -40,8 +40,9 @@ const getUserActivePlanningID : (userID: number) => Promise<Number> = async (use
     const activePlanning = await PlanningModel.findOne({
         where: {user_id: userID},
         include: [{
-            model: PlanningModel, include: [{
+            model: PlanningModel, all:true, include: [{
                 model: ShiftModel,
+                all: true,
                 where: where
             }]
         }]

@@ -1,5 +1,5 @@
 import React from 'react';
-import {Redirect, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Redirect, Route, Switch} from 'react-router-dom';
 import {IonApp, IonRouterOutlet} from '@ionic/react';
 import {IonReactRouter} from '@ionic/react-router';
 import LoginPage from './pages/login/LoginPage';
@@ -19,18 +19,19 @@ import '@ionic/react/css/display.css';
 import {connect} from 'react-redux';
 /* Theme variables */
 import './theme/variables.css';
- 
+
 import SectorManagerApplication from "./pages/sector-responsible/SectorManagerApplication";
 import VolunteerApplication from "./pages/volunteer/VolunteerApplication";
 import Auth from "./utils/Auth";
 import StartPage from "./pages/volunteer/start/StartPage";
 import {bindActionCreators} from "redux";
- 
+import BackgroundLocation from "./pages/volunteer/start/BackgroundLocation";
+
 class App extends React.Component<any, any> {
     constructor(props: any) {
         super(props);
     }
- 
+
     renderLoginPage(): React.ReactNode {
         return (
             <IonRouterOutlet>
@@ -38,44 +39,51 @@ class App extends React.Component<any, any> {
             </IonRouterOutlet>
         )
     }
- 
+
     renderVolunteerApplication(): React.ReactNode {
         const isActivePlanningFetched = this.props.isActivePlanningFetched;
- 
-        if(this.props.isCheckInStatusUpdated || (isActivePlanningFetched != null && isActivePlanningFetched.checked_in))
+
+        if (this.props.isCheckInStatusUpdated || (isActivePlanningFetched != null && isActivePlanningFetched.checked_in)) {
+            console.log("VOLUNTEER APP")
             return (
                 <div>
-                    <Redirect from="/StartPage" to="/InfoPage"/>
+                    <Redirect from="/BackgroundLocation" to="/InfoPage"/>
                     <Redirect from="/" to="/InfoPage"/>
                     <VolunteerApplication/>
                 </div>
             )
- 
-        return(
+        }
+
+        return (
             <IonRouterOutlet>
-                <Route path="/" component={StartPage} />
+                <Route path="/BackgroundLocation" component={BackgroundLocation} exact />
+                <Route path="/" component={StartPage} exact />
             </IonRouterOutlet>
         )
- 
+
     }
- 
+
     renderManagerApplication(): React.ReactNode {
         return (
             <div>
-                <Redirect from="/" to="/MapPage" />
-                <SectorManagerApplication />
+                <Redirect from="/" to="/MapPage"/>
+                <SectorManagerApplication/>
             </div>
         )
     }
- 
+
     renderApplication(): React.ReactNode {
         const loggedIn = Auth.isAuthenticated();
- 
+        console.log("IS USER LOGGED IN TRIGGER ON RENDER APPLICATION")
+        console.log(loggedIn || this.props.isUserLoggedIn);
+        console.log(loggedIn);
+        console.log(this.props.isUserLoggedIn);
         if (loggedIn || this.props.isUserLoggedIn) {
- 
+
             const user = Auth.getAuthenticatedUser();
- 
+
             if (user.permission_type_id == '1') {
+                console.log("Rendering vol app..")
                 return this.renderVolunteerApplication();
             } else {
                 return this.renderManagerApplication();
@@ -84,7 +92,7 @@ class App extends React.Component<any, any> {
             return this.renderLoginPage();
         }
     }
- 
+
     render() {
         return (
             <IonApp>
@@ -97,8 +105,8 @@ class App extends React.Component<any, any> {
         )
     }
 }
- 
- 
+
+
 function mapStateToProps(state: any) {
     return ({
         isUserLoggedIn: state.login.isUserLoggedIn,
@@ -106,12 +114,10 @@ function mapStateToProps(state: any) {
         isActivePlanningFetched: state.start.isActivePlanningFetched
     })
 }
- 
+
 function mapDispatchToProps(dispatch: any) {
-    return bindActionCreators({
- 
-    }, dispatch);
+    return bindActionCreators({}, dispatch);
 }
- 
- 
+
+
 export default connect(mapStateToProps)(App);

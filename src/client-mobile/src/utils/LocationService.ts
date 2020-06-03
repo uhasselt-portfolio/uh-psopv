@@ -28,7 +28,7 @@ class LocationService {
         this.endTracking = trackingEnd;
     }
 
-    async start() {
+    async start() : Promise<any> {
 
         // Set end for tracking time
         localStorage.setItem('time', new Date(this.endTracking).toUTCString());
@@ -59,10 +59,10 @@ class LocationService {
                 BackgroundGeolocation.finish();
             });
 
-            await BackgroundGeolocation.start();
+            return Promise.resolve()
 
         } catch (error) {
-            console.log(error)
+            return new Promise((res, rej) => { rej() })
         }
     }
 }

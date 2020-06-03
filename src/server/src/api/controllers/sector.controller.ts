@@ -146,7 +146,7 @@ export const fetchSectorManagerWithUserID = async (req: Request, res: Response) 
 
         const sectorID = activePlanning.post.sector_id;
 
-        const sectors = await SectorModel.findAll({where: {sector_type: sectorID}, include: [{all: true}]});
+        const sectors = await SectorModel.findAll({where: {id: sectorID}, include: [{all: true}]});
         const statusCode = sectors == null ? 404 : 200;
         const statusMessage = statusCode == 200 ? 'success' : 'fail';
 
