@@ -13,27 +13,27 @@ import {bindActionCreators} from "redux";
 import {doDatabase, updateMessages} from "../save/saveAction";
 import {connect} from "react-redux";
 import { getListLocalStorage } from "../save/saveFunction";
-
+ 
 class SectorManagerApplication extends Component<any> {
     interval: NodeJS.Timeout | undefined;
-
+ 
     constructor(props: any) {
         super(props);
         this.updateMessageCount();
     }
-
+ 
     state = {
         msg_count: 0
     }
-
+ 
     async updateMessageCount(){
         let amount = Number(await getListLocalStorage('total_msg'));
         this.setState({msg_count: amount})
     }
-
+ 
     componentDidMount() {
         this.props.doDatabase();
-
+ 
         this.interval = setInterval(() => {
           if(navigator.onLine){
             this.props.doDatabase();
@@ -41,16 +41,16 @@ class SectorManagerApplication extends Component<any> {
           } else{
             // do nothing
           }
-        }, 10000);
+        }, 5000);
     }
-
+ 
     componentWillUnmount() {
         if (this.interval != undefined) {
             clearInterval(this.interval);
         }
     }
-
-
+ 
+ 
     render() {
         console.log(this.props)
         return (
@@ -90,17 +90,17 @@ class SectorManagerApplication extends Component<any> {
         )
     }
 }
-
+ 
 function mapStateToProps(state: any) {
     return ({})
 }
-
+ 
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
         doDatabase,
         updateMessages
     }, dispatch);
 }
-
-
+ 
+ 
 export default connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(SectorManagerApplication));
