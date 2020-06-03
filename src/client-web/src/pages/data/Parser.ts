@@ -190,7 +190,7 @@ export class Parser {
         console.log("posts",this.posts);
         console.log("generalpost",this.generalposts);
         try {
-            this.serverResponse = await axios.post('https://psopv.herokuapp.com/api/import/createGeneralAndPost', {
+            this.serverResponse = await axios.post('http://localhost/api/import/createGeneralAndPost', {
                 sector : this.sectors,
                 post: this.posts,
                 generalpost: this.generalposts
@@ -278,7 +278,7 @@ export class Parser {
                 });
         }
         try {
-            this.serverResponse = await axios.post('https://psopv.herokuapp.com/api/import/createUser', {
+            this.serverResponse = await axios.post('http://localhost/api/import/createUser', {
                 users : this.users,
                 association: this.associations
             });
@@ -321,11 +321,11 @@ export class Parser {
             let count = 0;
             while (count < this.planning.length) {
                 if (count + 500 < this.planning.length)
-                    this.serverResponse = await axios.post('https://psopv.herokuapp.com/api/import/createPlanning', {
+                    this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
                         planning : this.planning.slice(count, count + 500)
                     });
                 else
-                    this.serverResponse = await axios.post('https://psopv.herokuapp.com/api/import/createPlanning', {
+                    this.serverResponse = await axios.post('http://localhost/api/import/createPlanning', {
                         planning : this.planning.slice(count)
                     });
                 count += 500;
@@ -369,7 +369,7 @@ export class Parser {
         }
         console.log("shifts",this.shifts);
         try {
-            this.serverResponse = await axios.post('https://psopv.herokuapp.com/api/import/createShift', {
+            this.serverResponse = await axios.post('http://localhost/api/import/createShift', {
                 shifts : this.shifts
             });
         } catch(error) {
@@ -424,7 +424,7 @@ export class Parser {
 
         try {
 
-            this.serverResponse = await axios.post('https://psopv.herokuapp.com/api/import/createItemType', {
+            this.serverResponse = await axios.post('http://localhost/api/import/createItemType', {
                 items : this.items,
                 itemType: this.itemTypes
             });
@@ -442,7 +442,7 @@ export class Parser {
     deleteAll = async () => {
         console.log("delteing");
         try {
-            this.serverResponse = await axios.post('https://psopv.herokuapp.com/api/import/deleteAll', {  
+            this.serverResponse = await axios.post('http://localhost/api/import/deleteAll', {  
                 users : this.users,
                 association: this.associations
             });
