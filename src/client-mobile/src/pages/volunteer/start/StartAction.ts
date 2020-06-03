@@ -43,9 +43,11 @@ export const checkIfUserInPost = (id: number) => async (dispatch: Redux.Dispatch
         dispatch({type: START_CHECK_USER_IN_POST_START})
  
         const result = await new Database().fetchActivePlanning(Auth.getAuthenticatedUser().id);
+        console.log("checkIfUserInPost")
  
         dispatch({type: START_CHECK_USER_IN_POST_SUCCESS, payload: result.data.data.planning.checked_in});
     } catch(error){
+        console.log(error)
         dispatch({type: START_CHECK_USER_IN_POST_FAIL, payload: false})
     }
 }
