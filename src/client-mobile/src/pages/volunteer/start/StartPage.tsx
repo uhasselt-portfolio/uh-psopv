@@ -24,12 +24,8 @@ class StartPage extends Component<any> {
     private handleUpdateUserCheckInStatus(event: any): void {
         console.log("Updating checkin status")
         event.preventDefault();
-<<<<<<< HEAD
         const user = Auth.getAuthenticatedUser();
         this.props.updateUserCheckInStatus(user.id);
-=======
-        this.props.updateUserCheckInStatus(Auth.getAuthenticatedUser().id);
->>>>>>> 65d45b4457238dec5141ad17f61b9f661ab06b8b
         console.log("Updated checking status")
     }
  
