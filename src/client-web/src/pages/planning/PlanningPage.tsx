@@ -10,7 +10,7 @@ import {bindActionCreators} from 'redux';
 import {fetchPlanning} from './PlanningAction';
 import Post from './PlanningPost';
 import UserInterface from '../../interfaces/UserDataInterface';
-import {formatTime, formatDate} from '../../Components/date_formatter';
+import {formatTime2, formatDate} from '../../Components/date_formatter';
 
 
 const styleFilter = {
@@ -214,8 +214,8 @@ class Planning extends Component<Props> {
 
                 let date: Date = new Date(x[0].beginDate);
                 let tempDate: string = formatDate(date.toString());
-                let beginTime : string = formatTime(x[0].beginDate);
-                let endtTime : string = formatTime(x[0].endDate);
+                let beginTime : string = formatTime2(x[0].beginDate);
+                let endtTime : string = formatTime2(x[0].endDate);
 
                 return (
                     <MenuItem value={x[0].shiftName + date + beginTime}>{tempDate + " " + beginTime + " tot " + endtTime}</MenuItem>
@@ -287,6 +287,8 @@ class Planning extends Component<Props> {
             }
 
         }
+
+        console.log(postsUi);
 
         return(
             <div>

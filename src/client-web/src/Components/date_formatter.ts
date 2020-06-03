@@ -15,6 +15,9 @@ export function formatDate(data: string){
 export function formatTime(data:string){
     return (data.slice(16, 21));
 }
+export function formatTime2(data:string){
+    return (data.slice(11, 16));
+}
 
 export function formatDateTime(data: string){
     let d: Date = new Date(data);

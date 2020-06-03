@@ -15,7 +15,7 @@ class ServerRequest {
     static getRestApiEndpoint(): string | undefined {
         // @ts-ignore
         if (process.env.NODE_ENV === "development")
-            return "http://localhost/api";
+            return "https://psopv.herokuapp.com/api";
         return "https://psopv.herokuapp.com/api";
     }
 
@@ -150,6 +150,7 @@ export default class Database {
     }
 
     async fetchPosts() {
+        console.log("in fetch posts");
 
         const responsePosts = await ServerRequest.get('/post/fetch/all');
 
@@ -327,13 +328,15 @@ export default class Database {
         })
     }
     async postNewMessageMulitple(receiverIds: number [], title: string, content: string, adminId: number) {
-        return ServerRequest.post('/message/add/bulk', {
+        console.log("in mulitple");
+        let resutl = await ServerRequest.post('/message/add/bulk', {
             title: title,
             message: content,
             created_by_id: adminId,  
             send_to_ids: receiverIds,
             priority: 1,
         })
+        return resutl;
     }
 
     async patchMessageRead(messageId: number) {
