@@ -164,9 +164,8 @@ class StartPage extends Component<any> {
                 <IonContent>
                     <IonHeader collapse="condense">
                         <IonToolbar>
-                            <IonTitle size="large">Pukkelpop
-                            <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton>
-                            </IonTitle>
+                        <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton>
+                            <IonTitle size="large">Pukkelpop</IonTitle>
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>

@@ -169,6 +169,7 @@ class InfoPage extends React.Component<any, any> {
         this.props.history.push( "/LoginPage")
         window.location.reload();
         BackgroundGeolocation.stop();
+        BackgroundGeolocation.finish();
     }
     
     render() {
