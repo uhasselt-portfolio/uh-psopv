@@ -76,6 +76,7 @@ class Shift  extends Component<any> {
 
     showCheckList() {
         let checklist_data = this.props.shift.shift_items
+        console.log(this.props.shift);
         if(this.state.checkListActive){
         return(
             <IonCardContent>

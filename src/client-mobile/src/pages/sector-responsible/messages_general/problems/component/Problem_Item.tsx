@@ -25,10 +25,6 @@ class ProblemItem extends Component<any> {
         super(props)
     }
 
-    handleOnMenuItemClicked = (data: any) => {
-        this.props.MessageToggle(data.id);
-    }
-
     // setStateClicked(clicked: boolean){
     //     if(clicked === true && this.state.seen === false){
     //         this.setState({...this.state, seen: clicked});
@@ -102,7 +98,7 @@ class ProblemItem extends Component<any> {
                 );
             } else{
                 return(
-                    <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
+                    <IonItem className="NotReadItem">
                         {this.renderMessage()}
                     </IonItem>
                 )
@@ -110,13 +106,13 @@ class ProblemItem extends Component<any> {
         } else{
             if(this.props.solved){
                 return (
-                    <IonItem className="ReadItem" onClick={() => this.handleOnMenuItemClicked(this.props)}>
+                    <IonItem className="ReadItem">
                         {this.renderProblem()}
                     </IonItem>
                 );
             } else{
                 return(
-                    <IonItem className="NotReadItem" onClick={() => this.handleOnMenuItemClicked(data)}>
+                    <IonItem className="NotReadItem">
                         {this.renderProblem()}
                     </IonItem>
                 )

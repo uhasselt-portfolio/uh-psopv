@@ -1,5 +1,6 @@
 import Redux from 'redux';
 import Database from "../../../database/Database";
+import Auth from '../../../utils/Auth';
  
 export const START_FETCH_ACTIVE_PLANNING_START = 'START_FETCH_ACTIVE_PLANNING_START'
 export const START_FETCH_ACTIVE_PLANNING_SUCCESS = 'START_FETCH_ACTIVE_PLANNING_SUCCESS'
@@ -41,10 +42,13 @@ export const checkIfUserInPost = (id: number) => async (dispatch: Redux.Dispatch
     try{
         dispatch({type: START_CHECK_USER_IN_POST_START})
  
-        const result = await new Database().toggleUserCheckInStatus(id);
+        console.log("checkIfUserInPost 1")
+        const result = await new Database().fetchActivePlanning(Auth.getAuthenticatedUser().id);
+        console.log("checkIfUserInPost 2")
  
-        dispatch({type: START_CHECK_USER_IN_POST_SUCCESS, payload: result.data.data.isUserOnPost});
+        dispatch({type: START_CHECK_USER_IN_POST_SUCCESS, payload: result.data.data.planning.checked_in});
     } catch(error){
+        console.log(error)
         dispatch({type: START_CHECK_USER_IN_POST_FAIL, payload: false})
     }
 }
@@ -57,7 +61,8 @@ export const reportUserNotInPost = (id: number) => async (dispatch: Redux.Dispat
     try{
         dispatch({type: START_REPORT_USER_START})
  
-        const result = await new Database().reportUser(id);
+        const result = await new Database().reportUser(Auth.getAuthenticatedUser().id);
+        console.log("reportUserNotInPost", result)
  
         dispatch({type: START_REPORT_USER_SUCCESS, payload: result.data.data.problem});
     } catch(error){

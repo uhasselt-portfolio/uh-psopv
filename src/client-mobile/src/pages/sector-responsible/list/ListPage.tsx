@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './ListPage.css';
 import ListViewItem from './components/ListView_Item';
-
+ 
 import {
     IonButton,
     IonCol,
@@ -21,12 +21,12 @@ import {bindActionCreators} from 'redux';
 import {fetchPosts} from './ListAction'
 import {connect} from 'react-redux';
 import {Plugins} from '@capacitor/core';
-
+ 
 const {Geolocation} = Plugins;
-
+ 
 const sort_types = {alfabetisch: "Alfabetisch", afstand: "Afstand", best_route: "Beste route"}
-
-
+ 
+ 
 /**
  * Created by Maria Hendrikx
  * It generates all the different posts
@@ -35,24 +35,24 @@ class ListView extends Component<any> {
     constructor(props: any) {
         super(props);
     }
-
+ 
     state = {
         selected_sector: -1, //if -1 = selected all sectors
         selected_sort: sort_types.alfabetisch,
         data_posts: this.props.localStorage.posts_data,
         default_sector: this.props.localStorage.default_sector, // -1 = none
     }
-
+ 
     async componentDidMount() {
         this.props.fetchPosts();
         this.handleSectorChange(this.props.localStorage.default_sector)
     }
-
+ 
     async getCurrentLocation() {
         const position = await Geolocation.getCurrentPosition();
         return position;
     }
-
+ 
     handleSectorChange(sector: number) {
         let new_data: any;
         if (sector !== -1) {
@@ -66,7 +66,7 @@ class ListView extends Component<any> {
             selected_sector: sector, data_posts: new_data
         }));
     }
-
+ 
     handleSortChange(sort: string) {
         if (sort === sort_types.alfabetisch) {
             this.sortDataAlphabetical();
@@ -78,7 +78,7 @@ class ListView extends Component<any> {
             this.sortDataByBestRouteGreedy();
         }
     }
-
+ 
     getShortest(pos: { lat: number, lng: number }, list: any[]) {
         let distance = Math.sqrt(Math.pow((list[0].latitude - pos.lat), 2) + Math.pow((list[0].longitude - pos.lng), 2));
         ;
@@ -87,10 +87,10 @@ class ListView extends Component<any> {
             let element = list[i];
             let lat = element.latitude;
             let lng = element.longitude;
-
+ 
             let new_distance = Math.sqrt(Math.pow((lat - pos.lat), 2) +
                 Math.pow((lng - pos.lng), 2));
-
+ 
             if (distance == 0) {
                 distance = new_distance;
                 selected_element = element
@@ -102,16 +102,16 @@ class ListView extends Component<any> {
         }
         return selected_element;
     }
-
+ 
     async sortDataByBestRouteNearestNeighbour() {
         const position = await Geolocation.getCurrentPosition();
         let pos = {lat: position.coords.latitude, lng: position.coords.longitude}
-
+ 
         let new_data = this.state.data_posts
         let loop_data_length = this.state.data_posts.length;
         let best_route: any[] = [];
-
-
+ 
+ 
         for (let i = 0; i < loop_data_length; i++) {
             let new_shortest = this.getShortest(pos, new_data);
             new_data = new_data.filter((element: any) => {
@@ -119,12 +119,12 @@ class ListView extends Component<any> {
             })
             best_route.push(new_shortest);
         }
-
+ 
         this.setState((state, props) => ({
             selected_sort: sort_types.best_route, data_posts: best_route
         }));
     }
-
+ 
     funcSortDataAlphabetical(a: any, b: any) {
         if (a.sector_id < b.sector_id) {
             if (a.post_id < b.post_id) {
@@ -134,7 +134,7 @@ class ListView extends Component<any> {
             } else {
                 return 0
             }
-
+ 
         } else if (a.sector_id > b.sector_id) {
             if (a.post_id < b.post_id) {
                 return -1
@@ -153,7 +153,7 @@ class ListView extends Component<any> {
             }
         }
     }
-
+ 
     sortDataAlphabetical() {
         let new_data = this.state.data_posts
         new_data.sort(this.funcSortDataAlphabetical)
@@ -161,14 +161,14 @@ class ListView extends Component<any> {
             selected_sort: sort_types.alfabetisch, data_posts: new_data
         }));
     }
-
+ 
     funcSortDistance(currentUserLocation: any) {
         return function (o1: any, o2: any) {
             let distance1 = Math.sqrt(Math.pow((o1.latitude - currentUserLocation.coords.latitude), 2) +
                 Math.pow((o1.longitude - currentUserLocation.coords.longitude), 2));
             let distance2 = Math.sqrt(Math.pow((o2.latitude - currentUserLocation.coords.latitude), 2) +
                 Math.pow((o2.longitude - currentUserLocation.coords.longitude), 2));
-
+ 
             if (distance1 < distance2)
                 return -1;
             if (distance2 < distance1)
@@ -176,7 +176,7 @@ class ListView extends Component<any> {
             return 0;
         }
     }
-
+ 
     async sortDataByDistance() {
         let new_data = this.state.data_posts
         let currentUserLocation = await this.getCurrentLocation();
@@ -185,30 +185,28 @@ class ListView extends Component<any> {
             selected_sort: sort_types.afstand, data_posts: new_data
         }));
     }
-
+ 
     getSectorColor(sector_id: number) {
         let sector_info = this.props.localStorage.posts_sectors.find((element: any) => {
             return (element.sector_id == sector_id);
         })
         return sector_info.color
     }
-
+ 
     renderListOfItems() {
-        console.log(this.state.data_posts);
-        console.log(this.props);
         if (this.state.data_posts.length <= 0) {
             if (this.props.localStorage.default_sector !== -1) {
                 let new_data = this.props.localStorage.posts_data.filter((element: any) => {
                     return element.sector_id === this.props.localStorage.default_sector
                 })
-
+ 
                 return new_data.map((data: any) => {
                     return (
                         <ListViewItem {...data} color={this.getSectorColor(data.sector_id)}/>
                     )
                 })
             }
-
+ 
         } else {
             return this.state.data_posts.map((data: any) => {
                 return (
@@ -217,7 +215,7 @@ class ListView extends Component<any> {
             })
         }
     }
-
+ 
     renderButtons() {
         let list: { title: string; subinfo: string; }[] = [];
         this.props.localStorage.posts_sectors.map((element: any) => {
@@ -227,7 +225,7 @@ class ListView extends Component<any> {
             }
             list.push(item)
         })
-
+ 
         return (
             <IonGrid>
                 <IonRow>
@@ -261,7 +259,7 @@ class ListView extends Component<any> {
                                     }
                                 })}
                                 <IonSelectOption value={-1}>Alle sectors</IonSelectOption>
-
+ 
                             </IonSelect>
                         </IonButton>
                     </IonCol>
@@ -269,7 +267,7 @@ class ListView extends Component<any> {
             </IonGrid>
         )
     }
-
+ 
     renderBasis() {
         return (
             <IonPage>
@@ -287,7 +285,7 @@ class ListView extends Component<any> {
             </IonPage>
         );
     }
-
+ 
     funcSortEdges(a: any, b: any) {
         if (a.distance < b.distance)
             return -1;
@@ -295,19 +293,19 @@ class ListView extends Component<any> {
             return 1;
         return 0;
     }
-
+ 
     async makeEdgesWithCurrentPosition() {
         let data_list: any[] = this.state.data_posts;
-
+ 
         let currentUserLocation = await this.getCurrentLocation();
-
+ 
         let post: any = {
             post_id: -1,
             latitude: currentUserLocation.coords.latitude,
             longitude: currentUserLocation.coords.longitude
         }
         data_list.push(post);
-
+ 
         let result_list: any[] = [];
         for (let i = 0; i < data_list.length; i++) {
             for (let j = 0; j < data_list.length; j++) {
@@ -317,10 +315,10 @@ class ListView extends Component<any> {
                 }
             }
         }
-
+ 
         return result_list
     }
-
+ 
     getEdge(edges: any[], shortest_to_current: any) {
         for (let i = 0; i < edges.length; i++) {
             let edge = edges[i];
@@ -332,18 +330,18 @@ class ListView extends Component<any> {
         }
         return []
     }
-
+ 
     async getCurrent() {
         //  get the post closest to current position and add it as first element to the best_route
         const position = await Geolocation.getCurrentPosition();
         let pos = {latitude: position.coords.latitude, longitude: position.coords.longitude}
         return pos;
     }
-
+ 
     checkIfRouteHasCycle(best_route: any[], candidate: any) {
         let counter = 0;
         let vertex_route: any = {}
-
+ 
         for (let edge of best_route) {
             // if first exists, check where 2 should be
             if ("vertex" + edge.start_vertex.post_id in vertex_route &&
@@ -375,7 +373,7 @@ class ListView extends Component<any> {
                 })
             }
         }
-
+ 
         counter = 0;
         if ("vertex" + candidate.start_vertex.post_id in vertex_route) {
             counter += 1
@@ -383,7 +381,7 @@ class ListView extends Component<any> {
         if ("vertex" + candidate.end_vertex.post_id in vertex_route) {
             counter += 1
         }
-
+ 
         if (counter == 2 && (vertex_route["vertex" + candidate.start_vertex.post_id] !==
             vertex_route["vertex" + candidate.end_vertex.post_id])) {
             return false;
@@ -391,18 +389,18 @@ class ListView extends Component<any> {
         if (counter < 2) {
             return false;
         }
-
+ 
         return true;
     }
-
+ 
     getRouteFromEdges(best_route: any) {
-
+ 
         // get current location edge
         let route: any[] = [];
         let edge = best_route.find((edge: any) => {
             return (edge.start_vertex.post_id == -1 || edge.end_vertex.post_id == -1)
         })
-
+ 
         // get first post
         let post: any;
         let prev_post: any;
@@ -414,7 +412,7 @@ class ListView extends Component<any> {
             prev_post = edge.end_vertex
         }
         route.push(post);
-
+ 
         // get route by findind start_vertex that is the same as the end_vertex of the previous
         let route_length = best_route.length;
         for (let i = 0; i < route_length; i++) {
@@ -429,20 +427,20 @@ class ListView extends Component<any> {
                 post = edge.start_vertex
                 prev_post = edge.end_vertex
             }
-
+ 
             if (!route.includes(post)) {
                 route.push(post);
             }
         }
-
+ 
         route = route.filter((post: any) => {
             return post.post_id !== -1
         })
-
+ 
         return route
-
+ 
     }
-
+ 
     async sortDataByBestRouteGreedy() {
         try {
             let new_data = this.state.data_posts
@@ -451,38 +449,38 @@ class ListView extends Component<any> {
                 let cycle_allowed = new_data.length;
                 let edges: any[] = await this.makeEdgesWithCurrentPosition();
                 edges.sort(this.funcSortEdges);
-
+ 
                 let vertex_degrees: any = {};
                 let best_route: any[] = [];
-
+ 
                 // make vertex hashmap
                 for (let candidate of edges) {
                     vertex_degrees["vertex" + candidate.start_vertex.post_id] = 0;
                     vertex_degrees["vertex" + candidate.end_vertex.post_id] = 0;
                 }
-
+ 
                 // check for all edges if vertex < 2 and if the new edge doesnt make it a cycle
                 for (let candidate of edges) {
                     if (vertex_degrees["vertex" + candidate.start_vertex.post_id] < 2 &&
                         vertex_degrees["vertex" + candidate.end_vertex.post_id] < 2) {
-
+ 
                         if (!this.checkIfRouteHasCycle(best_route, candidate)) {
                             vertex_degrees["vertex" + candidate.start_vertex.post_id] += 1
                             vertex_degrees["vertex" + candidate.end_vertex.post_id] += 1
                             best_route.push(candidate);
-
+ 
                         } else if (best_route.length == cycle_allowed) {
                             vertex_degrees["vertex" + candidate.start_vertex.post_id] += 1
                             vertex_degrees["vertex" + candidate.end_vertex.post_id] += 1
-
+ 
                             best_route.push(candidate);
                         }
-
+ 
                     }
                 }
-
+ 
                 new_data = this.getRouteFromEdges(best_route)
-
+ 
                 this.setState((state, props) => ({
                     selected_sort: sort_types.best_route, data_posts: new_data
                 }));
@@ -491,7 +489,7 @@ class ListView extends Component<any> {
             console.log(error)
         }
     }
-
+ 
     render() {
         if (this.props.localStorage != undefined) {
             if (this.props.localStorage.posts_sectors <= 0) {
@@ -504,14 +502,14 @@ class ListView extends Component<any> {
             return <div>loading...</div>
         }
     }
-
+ 
     ionViewWillEnter() {
         this.props.fetchPosts();
         this.handleSectorChange(this.props.localStorage.default_sector)
     }
-
+ 
 };
-
+ 
 function mapStateToProps(state: any) {
     return ({
         localStorage: state.list.localStorage,
@@ -519,12 +517,12 @@ function mapStateToProps(state: any) {
         loading: state.list.loading
     })
 }
-
+ 
 function mapDispatchToProps(dispatch: any) {
     return bindActionCreators({
         fetchPosts
     }, dispatch);
 }
-
-
+ 
+ 
 export default connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(ListView));

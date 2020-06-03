@@ -154,7 +154,7 @@ export const importPlanning = async (req: Request, res: Response) => {
         res.status(200).send();
 }
 export const importItems = async (req: Request, res: Response) => {
-    console.log('int import items');
+    console.log('int import items', req.body);
     let itemTypeResult = await insertItemTypes(req.body.itemType, res);
     if (itemTypeResult) {
         let itemReult = await insertItem(req.body.items, res);
@@ -644,7 +644,7 @@ const insertItemTypes = async (itemTypes: any[], res: Response) => {
 
 const insertItem = async (item: any[], res: Response) => {
     try {
-
+        console.log("items");
         let types = await ItemTypeModel.findAll();
         let typeMap: Map<string, number> = new Map();
         for (let i = 0; i < types.length; ++i)

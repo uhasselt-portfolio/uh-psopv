@@ -42,6 +42,7 @@ class BackgroundLocation extends Component<any> {
     private onLocationUpdate(userCoordinates: BackgroundGeolocationResponse) {
         this.props.updateGeolocation(userCoordinates);
         this.props.checkIfUserInPost(this.userID);
+        console.log(this.props, "reportuser")
         if(!this.props.isUserOnPost) {
             this.props.reportUserNotInPost(this.userID);
         }

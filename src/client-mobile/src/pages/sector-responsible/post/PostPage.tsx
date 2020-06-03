@@ -8,27 +8,27 @@ import {fetchPlanningsFromPost} from './PostAction'
 import { arrowBack, arrowForward, constructOutline } from 'ionicons/icons';
 import { withRouter } from 'react-router';
 import SelectShiftWindow from './components/SelectShiftWindow';
-
+ 
 const slideOpts = {
   direction: 'horizontal',
   speed: 400,
 };
-
+ 
 let swiper: any = null;
-
+ 
 const init = async function(this: any) {
     swiper = await this.getSwiper();
 };
-
+ 
 let selectShiftWindow: any = null;
-
+ 
 class PostView extends Component<any, any> {
   constructor(props: any){
     super(props)
-
+ 
     this.getData = this.getData.bind(this);
   }
-
+ 
   state = {
     checkListActive: false,
     show_shift: 0, // niets
@@ -37,20 +37,20 @@ class PostView extends Component<any, any> {
     swiper: null,
     first_render: true
   }
-
+ 
   hidePopover(){
     this.setState({...this.state, showPopover: false});
   }
-
+ 
   showPopOver(){
       this.setState({...this.state, showPopover: true});
   }
-
-
+ 
+ 
   handleShiftSwitch(shift: number){
     this.setState({...this.state, show_shift: shift});
   }
-
+ 
   getNextShift(swiper: any){
     swiper.slideNext();
     if (this.state.show_shift < this.props.localStorage.shifts.length - 1){
@@ -58,7 +58,7 @@ class PostView extends Component<any, any> {
       this.handleShiftSwitch(new_shift);
     }
   }
-
+ 
   getPreviousShift(swiper: any){
     swiper.slidePrev();
     if (this.state.show_shift > 0) {
@@ -66,12 +66,12 @@ class PostView extends Component<any, any> {
       this.handleShiftSwitch(new_shift);
     }
   }
-
+ 
   getCurrentShiftText(){
     let show_shift = this.state.show_shift
     let current_shift = this.state.current_shift
     let distance = show_shift - current_shift
-
+ 
     if (distance === 0){
       return "Huidige Shift"
     } else if (distance > 0 && distance === 1) {
@@ -84,26 +84,26 @@ class PostView extends Component<any, any> {
       return Math.abs(distance) + "de vorige shift"
     }
   }
-
+ 
   setCurrentlyActiveShift(){
     var current_time = new Date();
-
+ 
     this.props.localStorage.shifts.map((element: any, index: number) => {
       var shift_begin = new Date(element.shift_start)
       var shift_end = new Date(element.shift_end)
-
+ 
       if((current_time > shift_begin) && (current_time < shift_end)){
         this.setState({...this.state, show_shift: index, current_shift: index});
         swiper.slideTo(index);
       }
     })
   }
-
+ 
   componentDidMount(){
     console.log("componentDidMount")
-    this.props.fetchPlanningsFromPost(this.props.match.params.post.split("=")[0]);
+    this.props.fetchPlanningsFromPost(this.props.match.params.post);
     }
-
+ 
   renderPost(): any{
     if(this.state.show_shift === -1){
       this.setCurrentlyActiveShift();
@@ -113,26 +113,27 @@ class PostView extends Component<any, any> {
       return <Shift shift={data} post={this.props.localStorage} problem_types={this.props.localStorage.problemTypes}/>
     }
   }
-
+ 
   handleSlideChange(slider: any){
     if(slider !== null){
       this.handleShiftSwitch(slider.activeIndex)
     }
   }
-
+ 
   setShiftActive(shift_id: number){
       this.handleShiftSwitch(shift_id)
   }
-  
-
+   
+ 
   renderShifts(){
     const slideOpts = {
       initialSlide: 0,
       speed: 400,
       direction: 'horizontal',
     };
-
+ 
     let shifts = this.props.localStorage.shifts.map((shift: any) => {
+      console.log("local",this.props.localStorage);
       return (<IonSlide>
               <Shift shift={shift} post={this.props.localStorage} 
               problemTypes={this.props.localStorage.problemTypes}
@@ -140,15 +141,15 @@ class PostView extends Component<any, any> {
               />
             </IonSlide>)
     })
-
-
+ 
+ 
     return (
     <IonSlides className="FullWidth" onIonSlidesDidLoad={init} pager={true} options={slideOpts} onIonSlideDidChange={()=> this.handleSlideChange(swiper)}>
       {shifts}
     </IonSlides>
     )
   }
-
+ 
   getData(val: any){
     // do not forget to bind getData in constructor
     let index_shift = 0;
@@ -157,12 +158,12 @@ class PostView extends Component<any, any> {
         index_shift = index;
       }
     })
-
+ 
     this.setShiftActive(val.shift_id);
     swiper.slideTo(index_shift);
     this.hidePopover();
   }
-
+ 
   renderSelectShiftWindow(){
     selectShiftWindow = <SelectShiftWindow shifts={this.props.localStorage.shifts} sendData={this.getData}/>
     return(
@@ -176,15 +177,14 @@ class PostView extends Component<any, any> {
     </>
     )
   }
-
+ 
   renderBasis(){
-    console.log(this.props);
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
             <IonTitle className="align_center"> 
-              <div className="text_start">Sector: {this.props.match.params.sector} - {this.props.match.params.post.split("=")[1]}</div>
+              <div className="text_start">Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</div>
               <IonButton className="text_end" onClick={() => this.showPopOver()}>Ga naar</IonButton>
             </IonTitle>
           </IonToolbar>
@@ -199,12 +199,12 @@ class PostView extends Component<any, any> {
           </div>
           {this.renderShifts()}
           {this.renderSelectShiftWindow()}
-          
+           
         </IonContent>
       </IonPage>
     );
   }
-
+ 
   render(){
     if(this.props.localStorage !== undefined){
       return this.renderBasis();
@@ -213,9 +213,9 @@ class PostView extends Component<any, any> {
     }
   };
 }
-  
-
-
+   
+ 
+ 
 function mapStateToProps(state: any) {
   return({
     localStorage: state.post.localStorage,
@@ -223,12 +223,12 @@ function mapStateToProps(state: any) {
     loading: state.post.loading,
   })
 }
-
+ 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators({
     fetchPlanningsFromPost,
   }, dispatch);
 }
-
-
+ 
+ 
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(withIonLifeCycle(PostView)));

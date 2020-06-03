@@ -20,6 +20,7 @@ class StartPage extends Component<any> {
         await resetLocalStorage();
         this.props.history.push( "/LoginPage")
         window.location.reload();
+        
     }
 
     private renderNextShift(nextPlanning: any): ReactNode {
@@ -156,8 +157,8 @@ class StartPage extends Component<any> {
                 <IonContent>
                     <IonHeader collapse="condense">
                         <IonToolbar>
-                            <IonTitle size="large">Pukkelpop
-                            <IonButton onClick={() => this.logOut()}></IonButton></IonTitle>
+                        <IonButton onClick={() => this.logOut()}>Uitloggen</IonButton>
+                            <IonTitle size="large">Pukkelpop</IonTitle>
                         </IonToolbar>
                     </IonHeader>
                     <IonContent>
