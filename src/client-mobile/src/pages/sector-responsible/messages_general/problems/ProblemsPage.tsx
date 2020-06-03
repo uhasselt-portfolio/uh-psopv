@@ -6,7 +6,7 @@ import {bindActionCreators} from "redux";
 import {fetchProblemsOf, loadProblem} from './ProblemsAction'
 
 
-import {IonButton, IonList} from '@ionic/react';
+import {IonButton, IonList, IonCard, IonCardHeader} from '@ionic/react';
 import {setListLocalStorage} from '../../../save/saveFunction';
 import {withRouter} from 'react-router';
 
@@ -58,7 +58,7 @@ class ProblemsPage extends Component<any> {
     render() {
         if (this.props.localStorage !== undefined) {
             if (this.props.localStorage.problems.length <= 0) {
-                return <div> No messages found. </div>
+                return <IonCard> <IonCardHeader> Geen problemen </IonCardHeader></IonCard>
             } else {
                 let button;
                 if (!this.props.localStorage.loaded) {

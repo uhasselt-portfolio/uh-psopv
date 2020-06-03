@@ -117,12 +117,12 @@ class MyMap extends React.Component<any> {
         for (let i = 0; i < posts.length; ++i) {
             let icon;
             if(Auth.getAuthenticatedUser().permission_type_id == 2){
-                icon = postIcon({sector_id: posts[i].post_id, sector_color: this.getSectorColor(posts[i].sector_id)});
+                icon = postIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
                 if(posts[i].problem){
-                    icon = ProblemIcon({sector_id: posts[i].post_id, sector_color: this.getSectorColor(posts[i].sector_id)});
+                    icon = ProblemIcon({sector_id: posts[i].sector_id, sector_color: this.getSectorColor(posts[i].sector_id)});
                 }
             } else{
-                icon = userIcon;
+                icon = postIcon({sector_id: 0, sector_color: "red"});
             }
             let marker : L.Marker = L.marker([posts[i].latitude,posts[i].longitude], {icon: icon})
 

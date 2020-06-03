@@ -66,6 +66,7 @@ class InfoPage extends React.Component<any, any> {
     
                         this.props.updateGeolocation(location);
                         this.props.checkIfUserInPost(Auth.getAuthenticatedUser().id);
+                        console.log(this.props.isUserOnPost)
                         if(!this.props.isUserOnPost) {
                             this.props.reportUserNotInPost(Auth.getAuthenticatedUser().id);
                         }
@@ -81,7 +82,6 @@ class InfoPage extends React.Component<any, any> {
     }
 
     showShiftInfo(shift_data: any) {
-        console.log("shift_data",shift_data)
         return (
             <IonCard key={shift_data.id}>
                 <IonCardHeader>
@@ -168,6 +168,8 @@ class InfoPage extends React.Component<any, any> {
         await resetLocalStorage();
         this.props.history.push( "/LoginPage")
         window.location.reload();
+        BackgroundGeolocation.stop();
+        BackgroundGeolocation.finish();
     }
     
     render() {

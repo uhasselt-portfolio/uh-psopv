@@ -30,7 +30,7 @@ class VolunteerApplication extends Component<any> {
           } else{
             // do nothing
           }
-        }, 5000); //TODO interval
+        }, 10000); //TODO interval
     }
 
     componentWillUnmount() {

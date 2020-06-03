@@ -30,6 +30,8 @@ class LocationService {
 
     async start() {
 
+        console.log("start location service")
+
         // Set end for tracking time
         localStorage.setItem('time', new Date(this.endTracking).toUTCString());
         // Set configuration
