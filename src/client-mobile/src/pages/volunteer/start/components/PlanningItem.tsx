@@ -11,25 +11,26 @@ class PlanningItem extends Component<any, any> {
     render() {
 
         const planning : any = this.props.planning;
+        console.log("planning", planning);
         return(
             <IonItem className="ion-margin-bottom">
                 <IonLabel>
                     <IonGrid className="MessageBorder">
                         <IonRow>
-                            <p><b>{planning.post_name}</b></p>
+                            <p><b>{planning.post.general_post.name}</b></p>
                         </IonRow>
                         <IonRow className="grey ion-padding-bottom">
-                            <p>{planning.post_address}</p>
+                            <p>{planning.post.address}</p>
                         </IonRow>
                         <IonRow className="noPadding">
-                            <p> Begint om {formatDateTime(planning.shift_begin)}</p>
+                            <p> Begint om {formatDateTime(planning.shift.begin)}</p>
                         </IonRow>
                         <IonRow className="ion-padding-bottom">
-                            <p>Eindigt om {formatDateTime(planning.shift_end)}</p>
+                            <p>Eindigt om {formatDateTime(planning.shift.end)}</p>
                         </IonRow>
                         <IonRow className="ion-padding-bottom">
                             <IonCol size="9" className="noPadding">
-                                <p className="lightgrey"><b>Beschrijving</b> {planning.post_description} </p>
+                                <p className="lightgrey"><b>Beschrijving</b> {planning.post.general_post.description} </p>
                             </IonCol>
                         </IonRow>
                         <IonRow className={this.props.button != null ? "" : "ion-hide"} onClick={this.props.action}>

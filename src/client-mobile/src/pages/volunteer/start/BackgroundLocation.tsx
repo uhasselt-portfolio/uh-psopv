@@ -14,8 +14,16 @@ import LocationService from "../../../utils/LocationService";
 import {updateGeolocation} from "../info/InfoAction";
 import {checkIfUserInPost, reportUserNotInPost} from "./StartAction";
 import {BackgroundGeolocationResponse} from "@ionic-native/background-geolocation";
+import Auth from "../../../utils/Auth";
 
 class BackgroundLocation extends Component<any> {
+
+    private userID : number;
+
+    constructor(props : any) {
+        super(props);
+        this.userID = Auth.getAuthenticatedUser().id;
+    }
 
     private async startTracking() {
         const planning = this.props.isActivePlanningFetched;
@@ -25,19 +33,18 @@ class BackgroundLocation extends Component<any> {
             try {
                 await ls.start();
             } catch(error) {
-                console.log('couldnt start LOCATION SERVICE');
                 console.log(error);
             }
         } else {
-            this.props.fetchActivePlanningOfUser(1);
+            this.props.fetchActivePlanningOfUser(this.userID);
         }
     }
 
     private onLocationUpdate(userCoordinates: BackgroundGeolocationResponse) {
         this.props.updateGeolocation(userCoordinates);
-        this.props.checkIfUserInPost(1);
+        this.props.checkIfUserInPost(this.userID);
         if(!this.props.isUserOnPost) {
-            this.props.reportUserNotInPost(1);
+            this.props.reportUserNotInPost(this.userID);
         }
     }
 
@@ -55,13 +62,13 @@ class BackgroundLocation extends Component<any> {
             .catch(() => {
                 return(
                     <div>
-                        Couldn't start tracking
+                        Traceren niet gelukt!
                     </div>
                 )
             })
         return(
             <div>
-                Loading coordinates...
+                Coördinaten laden...
             </div>
         )
     }

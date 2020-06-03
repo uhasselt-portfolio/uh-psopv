@@ -29,7 +29,6 @@ class App {
         this.express = express();
         this.middleware();
         this.routes();
-        startUserConnectionListener(30);
     }
 
     /**

@@ -337,7 +337,6 @@ function getActivePlanning(data_current: any){
         shift_end: data_current.shift.end,
         shift_name: data_current.shift.name
     }
-    console.log(current_planning)
     return current_planning
 }
 function getPlanningsFromVolunteer(data_future: any){
@@ -377,7 +376,6 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
     try{
         const database = new Database();
         const todoCommands = await getActionList();
-        console.log("doing database")
 
         todoCommands.forEach(async (element: any) => {
             try{

@@ -16,7 +16,7 @@ import {
     START_UPDATE_CHECK_IN_STATUS_SUCCESS
 } from "./StartAction";
 import {AnyAction} from "redux";
-
+ 
 export default function (state = {}, action : AnyAction) {
     switch(action.type) {
         case START_FETCH_ACTIVE_PLANNING_START:
@@ -25,28 +25,28 @@ export default function (state = {}, action : AnyAction) {
             return {...state, loading: false, isActivePlanningFetched: action.payload, errorMessage: ""}
         case START_FETCH_ACTIVE_PLANNING_FAIL:
             return {...state, loading: false, isActivePlanningFetched: false, errorMessage: action.payload}
-
+ 
         case START_UPDATE_CHECK_IN_STATUS_START:
             return {...state, loading: true, errorMessage: ""}
         case START_UPDATE_CHECK_IN_STATUS_SUCCESS:
             return {...state, loading: false, isCheckInStatusUpdated: action.payload, errorMessage: ""}
         case START_UPDATE_CHECK_IN_STATUS_FAIL:
             return {...state, loading: false, isCheckInStatusUpdated: false, errorMessage: action.payload}
-
+ 
         case START_CHECK_USER_IN_POST_START:
             return {...state, loading: true, errorMessage: ""}
         case START_CHECK_USER_IN_POST_SUCCESS:
             return {...state, loading: false, isUserOnPost: action.payload, errorMessage: ""}
         case START_CHECK_USER_IN_POST_FAIL:
             return {...state, loading: false, isUserOnPost: false, errorMessage: action.payload}
-
+ 
         case START_REPORT_USER_START:
             return {...state, loading: true, errorMessage: ""}
         case START_REPORT_USER_SUCCESS:
             return {...state, loading: false, isUserReported: action.payload, errorMessage: ""}
         case START_REPORT_USER_FAIL:
             return {...state, loading: false, isUserReported: false, errorMessage: action.payload}
-
+ 
         case START_FETCH_USER_PLANNINGS_START:
             return {...state, loading: true, errorMessage: ""}
         case START_FETCH_USER_PLANNINGS_SUCCESS:
