@@ -133,6 +133,7 @@ class PostView extends Component<any, any> {
     };
 
     let shifts = this.props.localStorage.shifts.map((shift: any) => {
+      console.log("local",this.props.localStorage);
       return (<IonSlide>
               <Shift shift={shift} post={this.props.localStorage} 
               problemTypes={this.props.localStorage.problemTypes}

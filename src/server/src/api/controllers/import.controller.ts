@@ -644,7 +644,7 @@ const insertItemTypes = async (itemTypes: any[], res: Response) => {
 
 const insertItem = async (item: any[], res: Response) => {
     try {
-
+        console.log("items");
         let types = await ItemTypeModel.findAll();
         let typeMap: Map<string, number> = new Map();
         for (let i = 0; i < types.length; ++i)
