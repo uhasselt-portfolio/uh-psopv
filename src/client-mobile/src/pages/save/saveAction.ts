@@ -380,15 +380,19 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         let todo_amount = todoCommands.length;
         for(let i = 0; i < todo_amount; i++){
             try{
-                console.log("todoCommands start", todoCommands)
                 let element: any = todoCommands.pop();
             
-                console.log("todoCommands einde", todoCommands)
-
                 if(element.id == undefined){
                     const result = await database.postRequest(element.url, element.params);
                 } else{
                     const result = await database.patchRequest(element.url, element.id, element.params);
+                }
+
+                if(todoCommands.length < 1){
+                    await resetActionList();
+                } else{
+                    await resetActionList();
+                    await ConcatListToActionList(todoCommands);
                 }
 
             } catch(error){
@@ -396,12 +400,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             }
         }
 
-        if(todoCommands.length < 1){
-            await resetActionList();
-        }
-
-        console.log("todoCommands EEINNDDEEE", todoCommands)
-
+        
 
         const user_id = Auth.getAuthenticatedUser().id;
 
@@ -411,7 +410,7 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         setListLocalStorage('messages', messages);
 
         // 1 = vrijwilliger
-        if(Auth.getAuthenticatedUser().permission_type_id == 1){
+        if(Auth.getAuthenticatedUser().permission_type_id === 1){
             const responsePlanning =  await database.fetchActivePlanning(user_id);
             const responsePlannings =  await database.fetchPlanningsWithUserId(user_id);
             const responseSectors =  await database.fetchMyManager(user_id);
@@ -422,8 +421,9 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
             setListLocalStorage('active_planning', activePlanning);
             setListLocalStorage('my_managers', my_managers);
         }
+
         // 2 = sector_verantwoordelijke
-        if(Auth.getAuthenticatedUser().permission_type_id == 2){
+        if(Auth.getAuthenticatedUser().permission_type_id === 2){
             const responsePosts = await database.fetchPosts();
             const responseUnsolvedProblems = await database.fetchUnsolvedProblems();
             const responseItems = await database.fetchAllItems();
