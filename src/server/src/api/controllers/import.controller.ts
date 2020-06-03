@@ -12,6 +12,18 @@ import PostModel from '../models/post.model';
 import ProblemModel from '../models/problem.model';
 import SectorModel from '../models/sector.model';
 import ShiftModel from '../models/shift.model';
+import {DateTime} from "luxon";
+
+const dateFormat: string = "dd/MM/yyyy HH:mm:ss";
+
+/**
+ * Transform a readable date into a UTC timezoned date
+ *
+ * @param localDate Readable date string
+ */
+const createDate = (localDate: string): string => {
+    return DateTime.fromFormat(localDate, dateFormat, {zone: 'Europe/Brussels'}).toUTC().toISO()
+}
 
 /**
  * Association controller
@@ -473,10 +485,15 @@ const insertShift = async (shifts: any[], res: Response) => {
                 });
                 return false;
             } else {
-                let beginArray: number[] = dateparser(shifts[i].begin);
-                let endArray: number[] = dateparser(shifts[i].end);
-                let beginDate: Date = new Date(beginArray[0], beginArray[1] -1, beginArray[2], beginArray[3], beginArray[4]);
-                let endDate: Date = new Date(endArray[0], endArray[1] -1, endArray[2], endArray[3], endArray[4]);
+                // let beginArray: number[] = dateparser(shifts[i].begin);
+                // let endArray: number[] = dateparser(shifts[i].end);
+                // let beginDate: Date = new Date(beginArray[0], beginArray[1] -1, beginArray[2], beginArray[3], beginArray[4]);
+                // let endDate: Date = new Date(endArray[0], endArray[1] -1, endArray[2], endArray[3], endArray[4]);
+                console.log("shift",shifts[i]);
+                let beginDate = createDate(shifts[i].begin);
+                let endDate = createDate(shifts[i].end);
+
+                console.log(beginDate);
                 const Shift = await ShiftModel.create({
                     name: shifts[i].name,
                     begin: beginDate,

@@ -27,10 +27,9 @@ class ListViewItem  extends Component<any> {
 
     render() {
         return (   
-            <IonItem  detail button onClick={() => this.props.history.push( "/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>
+            <IonItem  detail button onClick={() => this.props.history.push( "/PostView/" + this.props.sector_id +"/" + this.props.post_id + "=" + this.props.loc_description)}>
                 <IonLabel>
-                    <h2>Post {this.props.post_id}</h2>
-                    <h4>{this.props.loc_description}</h4>
+                    <h2>{this.props.loc_description}</h2>
                     <h4>{this.props.loc_address}</h4>
                     <p>{this.props.post_description}</p>
 

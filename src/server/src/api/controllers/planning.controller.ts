@@ -253,6 +253,9 @@ export const fetchCurrentShift = async (req: Request, res: Response) => {
             end: {[Op.gt]: new Date().getTime()},
         }
 
+        console.log("wher",where);
+        console.log("date",new Date());
+
         const plannings = await PlanningModel.findAll({
             include: [{model: UserModel, all: true}, {model: PostModel, all: true}, {
                 model: ShiftModel,

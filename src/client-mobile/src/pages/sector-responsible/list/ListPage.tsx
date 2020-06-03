@@ -194,6 +194,8 @@ class ListView extends Component<any> {
     }
 
     renderListOfItems() {
+        console.log(this.state.data_posts);
+        console.log(this.props);
         if (this.state.data_posts.length <= 0) {
             if (this.props.localStorage.default_sector !== -1) {
                 let new_data = this.props.localStorage.posts_data.filter((element: any) => {

@@ -101,7 +101,7 @@ class PostView extends Component<any, any> {
 
   componentDidMount(){
     console.log("componentDidMount")
-    this.props.fetchPlanningsFromPost(this.props.match.params.post);
+    this.props.fetchPlanningsFromPost(this.props.match.params.post.split("=")[0]);
     }
 
   renderPost(): any{
@@ -178,12 +178,13 @@ class PostView extends Component<any, any> {
   }
 
   renderBasis(){
+    console.log(this.props);
     return (
       <IonPage>
         <IonHeader>
           <IonToolbar>
             <IonTitle className="align_center"> 
-              <div className="text_start">Sector: {this.props.match.params.sector} - Post: {this.props.match.params.post}</div>
+              <div className="text_start">Sector: {this.props.match.params.sector} - {this.props.match.params.post.split("=")[1]}</div>
               <IonButton className="text_end" onClick={() => this.showPopOver()}>Ga naar</IonButton>
             </IonTitle>
           </IonToolbar>
