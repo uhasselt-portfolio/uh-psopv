@@ -1,6 +1,6 @@
 import Redux from 'redux';
 import Database from '../../database/Database'
-import {getActionList, setListLocalStorage, getListLocalStorage} from './saveFunction'
+import {getActionList, setListLocalStorage, getListLocalStorage, resetActionList, ConcatListToActionList} from './saveFunction'
 import Auth from "../../utils/Auth";
 import { Plugins } from '@capacitor/core';
 const { LocalNotifications } = Plugins;
@@ -380,9 +380,13 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
         let todo_amount = todoCommands.length;
         for(let i = 0; i < todo_amount; i++){
             try{
+                console.log("todoCommands start", todoCommands)
                 let element: any = todoCommands.pop();
+            
+                console.log("todoCommands einde", todoCommands)
+
                 if(element.id == undefined){
-                        const result = await database.postRequest(element.url, element.params);
+                    const result = await database.postRequest(element.url, element.params);
                 } else{
                     const result = await database.patchRequest(element.url, element.id, element.params);
                 }
@@ -391,6 +395,13 @@ export const doDatabase = () => async (dispatch: Redux.Dispatch) => {
                 console.log(error)
             }
         }
+
+        if(todoCommands.length < 1){
+            await resetActionList();
+        }
+
+        console.log("todoCommands EEINNDDEEE", todoCommands)
+
 
         const user_id = Auth.getAuthenticatedUser().id;
 

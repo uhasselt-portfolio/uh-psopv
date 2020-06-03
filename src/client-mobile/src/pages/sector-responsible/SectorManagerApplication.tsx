@@ -41,7 +41,7 @@ class SectorManagerApplication extends Component<any> {
           } else{
             // do nothing
           }
-        }, 5000);
+        }, 10000);
     }
 
     componentWillUnmount() {
