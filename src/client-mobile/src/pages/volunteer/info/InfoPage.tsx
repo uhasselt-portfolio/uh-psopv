@@ -66,6 +66,7 @@ class InfoPage extends React.Component<any, any> {
     
                         this.props.updateGeolocation(location);
                         this.props.checkIfUserInPost(Auth.getAuthenticatedUser().id);
+                        console.log(this.props.isUserOnPost)
                         if(!this.props.isUserOnPost) {
                             this.props.reportUserNotInPost(Auth.getAuthenticatedUser().id);
                         }
