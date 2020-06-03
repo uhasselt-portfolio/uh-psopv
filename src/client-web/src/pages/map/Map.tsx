@@ -96,7 +96,7 @@ class MyMap extends React.Component<IProps> {
                         icon={problemIcon}
                         onClick={() => {this.onProblemClicked(problems[i][0])}}
                     >
-                        <Tooltip permanent={true} offset={new L.Point(0,-15)} direction={'top'}>
+                        <Tooltip permanent={false} offset={new L.Point(0,-15)} direction={'top'}>
                             {problems[i][0].problemType}
                         </Tooltip>
                         {/* <Popup>
@@ -116,7 +116,7 @@ class MyMap extends React.Component<IProps> {
                     position={L.latLng(problems[i][0].latitude, problems[i][0].longitude)}
                     icon={problemIcon}
                     >
-                    <Tooltip permanent={true} offset={new L.Point(0,-15)} direction={'top'}>
+                    <Tooltip permanent={false} offset={new L.Point(0,-15)} direction={'top'}>
                         Er zijn {popup.length} problemen
                     </Tooltip>
                         <Popup>
@@ -143,7 +143,7 @@ class MyMap extends React.Component<IProps> {
                     icon={postIcon}
                     onclick={() => {this.onPostClicked(posts[i])}}
                 >
-                    <Tooltip permanent={true} offset={new L.Point(0,-15)} direction={'top'}>
+                    <Tooltip permanent={false} offset={new L.Point(0,-15)} direction={'top'}>
                         {posts[i].title}
                     </Tooltip>
                 </Marker>
@@ -164,7 +164,7 @@ class MyMap extends React.Component<IProps> {
                     icon={userIcon}
                     onClick={() => {this.onUserClicked(users[i])}}
                 >
-                    <Tooltip permanent={true} offset={new L.Point(0,-15)} direction={'top'}>
+                    <Tooltip permanent={false} offset={new L.Point(0,-15)} direction={'top'}>
                         {users[i].name}
                     </Tooltip>
                 </Marker>

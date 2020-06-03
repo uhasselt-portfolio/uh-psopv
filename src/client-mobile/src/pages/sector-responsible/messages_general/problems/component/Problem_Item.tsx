@@ -47,10 +47,10 @@ class ProblemItem extends Component<any> {
                     </IonRow>
                     <IonRow className="noPadding">
                         <IonCol size="9" className="noPadding">
-                        <p className="grey">{this.props.title}: {this.props.message} </p>
+                            <p className="grey">{this.props.title}: {this.props.message} </p>
                         </IonCol>
                         <IonCol size="3">
-                            <IonButton onClick={() => this.props.history.push( "/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>Ga naar</IonButton>
+                            <IonButton onClick={() => this.props.history.push("/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>Ga naar</IonButton>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -75,7 +75,7 @@ class ProblemItem extends Component<any> {
                             <p className="grey">{this.props.title}: {this.props.message} </p>
                         </IonCol>
                         <IonCol size="3">
-                            <IonButton onClick={() => this.props.history.push({path: "/PostView/" + this.props.sector_id +"/" + this.props.post_id})}>Ga naar</IonButton>
+                            <IonButton onClick={() => this.props.history.push("/PostView/" + this.props.sector_id +"/" + this.props.post_id)}>Ga naar</IonButton>
                         </IonCol>
                     </IonRow>
                 </IonGrid>
@@ -135,7 +135,7 @@ function mapStateToProps(state: any) {
     }, dispatch);
   }
   
-  export default (connect(mapStateToProps, mapDispatchToProps)(withRouter(ProblemItem)));
+  export default withRouter(connect(mapStateToProps, mapDispatchToProps)((ProblemItem)));
   
 
   
