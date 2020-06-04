@@ -21,6 +21,7 @@ import {bindActionCreators} from 'redux';
 import {fetchPosts} from './ListAction'
 import {connect} from 'react-redux';
 import {Plugins} from '@capacitor/core';
+import { doDatabase } from '../../save/saveAction';
  
 const {Geolocation} = Plugins;
  
