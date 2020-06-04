@@ -27,6 +27,10 @@ class PostView extends Component<any, any> {
     super(props)
  
     this.getData = this.getData.bind(this);
+    
+    setTimeout(() => {
+      this.setCurrentlyActiveShift();
+    }, 500);
   }
  
   state = {
