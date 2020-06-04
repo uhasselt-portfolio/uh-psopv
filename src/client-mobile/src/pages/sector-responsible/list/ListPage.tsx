@@ -43,15 +43,9 @@ class ListView extends Component<any> {
         default_sector: this.props.localStorage.default_sector, // -1 = none
     }
  
-    interval: NodeJS.Timeout | undefined;
-
     async componentDidMount() {
         this.props.fetchPosts();
         this.handleSectorChange(this.props.localStorage.default_sector)
-
-        this.interval = setInterval(() => {
-              this.props.fetchPosts();
-          }, 5000);
     }
  
     async getCurrentLocation() {
